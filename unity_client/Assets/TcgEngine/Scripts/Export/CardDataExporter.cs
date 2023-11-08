@@ -33,28 +33,28 @@ namespace TcgEngine
                     string traits = "";
                     foreach (TraitData trait in cardData.traits)
                     {
-                        traits += trait.name + ",";
+                        traits += trait.id + "|";
                     }
 
-                    traits = traits.TrimEnd(',');
+                    traits = traits.TrimEnd('|');
 
                     string abilities = "";
                     foreach (AbilityData ability in cardData.abilities)
                     {
-                        abilities += ability.name + ",";
+                        abilities += ability.id + "|";
                     }
 
-                    abilities = abilities.TrimEnd(',');
+                    abilities = abilities.TrimEnd('|');
 
                     string packs = "";
                     foreach (PackData pack in cardData.packs)
                     {
-                        packs += pack.name + ",";
+                        packs += pack.id + "|";
                     }
 
-                    packs = packs.TrimEnd(',');
+                    packs = packs.TrimEnd('|');
 
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\",\"{14}\"",                        cardData.id,
+                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14}",                        cardData.id,
                         cardData.title,
                         cardData.type.ToString(),
                         cardData.team.name,
