@@ -1,87 +1,87 @@
-ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs
-ashes_snake,Ashes Snake,Character,fire,2-uncommon,5,6,4,,stealth,"Stealth",,True,100,standard|elite
-bull_heat,Heat Bull,Character,fire,1-common,3,2,5,,add_spell_damage1,"Spell damage +1.",,True,100,standard|elite
-cave,Cave,Artifact,fire,3-rare,2,0,5,,aura_ability_red,"All red creatures gain: Take 1 damage to gain +1 attack.",,True,100,standard|elite
-dark_stallion,Dark Stallion,Character,fire,2-uncommon,4,4,5,,activate_roll_send_hand,"<b>Cast (2):</b> Roll a D6, on 4+ return target to hand.",,True,100,standard|elite
-dragon_red,Red Dragon,Character,fire,4-mythic,7,9,7,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite
+ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs,ArtFull,ArtBoard
+ashes_snake,Ashes Snake,Character,fire,2-uncommon,5,6,4,,stealth,"Stealth",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/lava_snake.png,Assets/TcgEngine/Sprites/CardsBoard/lava_snake_board.png
+bull_heat,Heat Bull,Character,fire,1-common,3,2,5,,add_spell_damage1,"Spell damage +1.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/bull.png,Assets/TcgEngine/Sprites/CardsBoard/bull_board.png
+cave,Cave,Artifact,fire,3-rare,2,0,5,,aura_ability_red,"All red creatures gain: Take 1 damage to gain +1 attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/cave.png,Assets/TcgEngine/Sprites/CardsBoard/cave_board.png
+dark_stallion,Dark Stallion,Character,fire,2-uncommon,4,4,5,,activate_roll_send_hand,"<b>Cast (2):</b> Roll a D6, on 4+ return target to hand.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/fire_horse.png,Assets/TcgEngine/Sprites/CardsBoard/fire_horse_board.png
+dragon_red,Red Dragon,Character,fire,4-mythic,7,9,7,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/dragon_red.png,Assets/TcgEngine/Sprites/CardsBoard/dragon_red_board.png
 equip_sword,Fire Sword,Equipment,fire,2-uncommon,2,0,2,,equip_attack1|equip_attack_no_damage|equip_attack_use,"Attack +1.
-Bearer receives no damage when attacking.",,True,100,standard|elite
-fire_chicken,Roasted Chicken,Character,fire,1-common,2,1,1,,death_egg,"<b>Death:</b> Summon an egg.",,True,100,standard|elite
-fire_element,Fire Element,Character,fire,2-uncommon,5,7,3,,play_damage_all2,"<b>Play:</b> Damage all by 2.",,True,100,standard|elite
-firefox,Firefox,Character,fire,2-uncommon,4,4,4,,activate_select_discard_spell,"<b>Cast (2):</b> Return a spell to your hand.",,True,100,standard|elite
-hell_hound,Hell Hound,Character,fire,1-common,4,4,2,,fury,"Fury",,True,100,standard|elite
-imp,Imp,Character,fire,1-common,2,2,1,,play_deal_damage1,"<b>Play:</b> Deal 1 damage.",,True,100,standard|elite
-lava_beast,Lava Beast,Character,fire,1-common,3,2,3,,after_spell_attack2,"After playing a spell, gain +2 attack.",,True,100,standard|elite
+Bearer receives no damage when attacking.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/fire_sword.png,Assets/TcgEngine/Sprites/CardsBoard/fire_sword_board.png
+fire_chicken,Roasted Chicken,Character,fire,1-common,2,1,1,,death_egg,"<b>Death:</b> Summon an egg.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/fire_chicken.png,Assets/TcgEngine/Sprites/CardsBoard/fire_chicken_board.png
+fire_element,Fire Element,Character,fire,2-uncommon,5,7,3,,play_damage_all2,"<b>Play:</b> Damage all by 2.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/fire_element.png,Assets/TcgEngine/Sprites/CardsBoard/fire_element_board.png
+firefox,Firefox,Character,fire,2-uncommon,4,4,4,,activate_select_discard_spell,"<b>Cast (2):</b> Return a spell to your hand.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/firefox.png,Assets/TcgEngine/Sprites/CardsBoard/firefox_board.png
+hell_hound,Hell Hound,Character,fire,1-common,4,4,2,,fury,"Fury",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/hell_hound.png,Assets/TcgEngine/Sprites/CardsBoard/hell_hound_board.png
+imp,Imp,Character,fire,1-common,2,2,1,,play_deal_damage1,"<b>Play:</b> Deal 1 damage.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/imp.png,Assets/TcgEngine/Sprites/CardsBoard/imp_board.png
+lava_beast,Lava Beast,Character,fire,1-common,3,2,3,,after_spell_attack2,"After playing a spell, gain +2 attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/lava_beast.png,Assets/TcgEngine/Sprites/CardsBoard/lava_beast_board.png
 phoenix,Phoenix,Character,fire,4-mythic,6,6,6,,activate_damage2|death_egg,"<b>Cast (3):</b> Deal 2 damage.
-<b>Death:</b> Summon an egg.",,True,100,standard|elite
-potion_red,Red Potion,Spell,fire,1-common,2,0,0,,spell_attack1|spell_fury,"Target gains 1 attack and fury.",,True,100,standard|elite
-reaper,Hell Reaper,Character,fire,3-rare,6,6,6,,turn_kill_lowest,"<b>Each turn:</b> Kill characters with the lowest attack.",,True,100,standard|elite
-spell_aerial_strike,Aerial Strike,Spell,fire,4-mythic,3,0,0,,spell_summon_eagle,"Summon 3 eagles into your hand.",,True,100,standard|elite
-spell_armageddon,Armageddon,Spell,fire,3-rare,5,0,0,,spell_destroy_all,"Destroy all creatures on the board",,True,100,standard|elite
-spell_burn,Burn,Spell,fire,1-common,4,0,0,,spell_destroy,"Destroy target.",,True,100,standard|elite
-spell_split,Ground Split,Spell,fire,3-rare,2,0,0,,spell_add_attack_suffer,"Target creature gains Suffer 3 damage before attacking.",,True,100,standard|elite
+<b>Death:</b> Summon an egg.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/pheonix.png,Assets/TcgEngine/Sprites/CardsBoard/pheonix_board.png
+potion_red,Red Potion,Spell,fire,1-common,2,0,0,,spell_attack1|spell_fury,"Target gains 1 attack and fury.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/potion_red.png,
+reaper,Hell Reaper,Character,fire,3-rare,6,6,6,,turn_kill_lowest,"<b>Each turn:</b> Kill characters with the lowest attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/reaper.png,Assets/TcgEngine/Sprites/CardsBoard/reaper_board.png
+spell_aerial_strike,Aerial Strike,Spell,fire,4-mythic,3,0,0,,spell_summon_eagle,"Summon 3 eagles into your hand.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/aerial_strike.png,
+spell_armageddon,Armageddon,Spell,fire,3-rare,5,0,0,,spell_destroy_all,"Destroy all creatures on the board",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/armageddon.png,
+spell_burn,Burn,Spell,fire,1-common,4,0,0,,spell_destroy,"Destroy target.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/spell_fire.png,
+spell_split,Ground Split,Spell,fire,3-rare,2,0,0,,spell_add_attack_suffer,"Target creature gains Suffer 3 damage before attacking.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/trap_crack.png,
 spell_stones,Hot Stones,Spell,fire,2-uncommon,2,0,0,,spell_damage1|spell_draw1,"Deal 1 damage.
-Draw a card.",,True,100,standard|elite
-town_volcano,Volcano Town,Artifact,fire,1-common,3,0,7,,town_aura_red,"All red creatures have +2 attack.",,True,100,standard|elite
-trap_explosive,Bomb Trap,Secret,fire,2-uncommon,3,0,0,,trap_damage_all2,"<b>Trap:</b> Damage all by 2.",,True,100,standard|elite
+Draw a card.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/hot_stones.png,
+town_volcano,Volcano Town,Artifact,fire,1-common,3,0,7,,town_aura_red,"All red creatures have +2 attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/town_volano.png,Assets/TcgEngine/Sprites/CardsBoard/town_volcano_board.png
+trap_explosive,Bomb Trap,Secret,fire,2-uncommon,3,0,0,,trap_damage_all2,"<b>Trap:</b> Damage all by 2.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/trap_bomb.png,
 wolf_furious,Furious Wolf,Character,fire,3-rare,5,3,4,wolf,fury|turn_add_attack1,"Fury
-Each turn, gain +1 attack.",,True,100,standard|elite
-armored_beast,Armored Beast,Character,forest,1-common,4,3,6,,taunt,"Taunt",,True,100,standard|elite
-bear,Bear,Character,forest,2-uncommon,5,4,5,,play_choice_taunt_fury,"<b>Play:</b> Gain Taunt or Fury",,True,100,standard|elite
-dragon_green,Green Dragon,Character,forest,4-mythic,7,7,9,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite
-equip_shield,Wooden Shield,Equipment,forest,2-uncommon,2,0,2,,equip_armor2|equip_taunt|equip_defend_use,"Bearer gains 2 armor and taunt.",,True,100,standard|elite
-gorilla,Gorilla,Character,forest,2-uncommon,4,0,6,,play_roll_attack,"<b>Play:</b> Roll a D6 to know your attack.",,True,100,standard|elite
-mammoth,Mammoth,Character,forest,3-rare,6,7,6,,trample,"Trample",,True,100,standard|elite
-owl,Owl,Character,forest,2-uncommon,3,2,3,,play_silence,"Silence target card.",,True,100,standard|elite
-potion_green,Green Potion,Spell,forest,1-common,2,0,0,,spell_hp2|spell_taunt,"Target gains 2 HP and Taunt.",,True,100,standard|elite
-raccoon,Raccoon,Character,forest,1-common,2,2,3,,play_select_discard,"<b>Play:</b> Return a character to your hand.",,True,100,standard|elite
-sasquatch,Sasquatch,Character,forest,3-rare,5,6,4,,turn_stealth,"<b>End Turn:</b> Go in stealth if you have other characters.",,True,100,standard|elite
-snake_venom,Viper,Character,forest,1-common,2,1,3,,attack_poison|defend_poison,"<b>Attack:</b> Poison.",,True,100,standard|elite
-spell_extinct,Extinct,Spell,forest,3-rare,2,0,0,,spell_add_play_extinct,"Target card gains When an allied character enters play, destroy this.",,True,100,standard|elite
-spell_growth,Growth,Spell,forest,3-rare,5,0,0,,spell_ally_attack_2|spell_ally_hp_2,"All allied characters gain +2/2",,True,100,standard|elite
-spell_hibernate,Hibernate,Spell,forest,4-mythic,3,0,0,,spell_hibernate,"Target gains +4/4 and goes to sleep for the next 2 turns.",,True,100,standard|elite
-spell_roots,Roots,Spell,forest,1-common,3,0,0,,spell_paralyse,"Paralyse target for 3 turns.",,True,100,standard|elite
-spell_stomp,Stomp,Spell,forest,2-uncommon,2,0,0,,spell_kill_lowest_hp,"Destroy the character with the lowest HP.",,True,100,standard|elite
-town_forest,Forest Town,Artifact,forest,1-common,3,0,7,,town_aura_green,"All green cards have +2 HP.",,True,100,standard|elite
-trap_spike,Spike Trap,Secret,forest,2-uncommon,3,0,0,,trap_paralyse3,"<b>Trap:</b> Paralyse the next attacker.",,True,100,standard|elite
-tree_angry,Angry Tree,Character,forest,1-common,3,3,5,,regen_all,"Regeneration",,True,100,standard|elite
+Each turn, gain +1 attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/furious_wolf.png,Assets/TcgEngine/Sprites/CardsBoard/furious_wolf_board.png
+armored_beast,Armored Beast,Character,forest,1-common,4,3,6,,taunt,"Taunt",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/armored_beast.png,Assets/TcgEngine/Sprites/CardsBoard/armored_beast_board.png
+bear,Bear,Character,forest,2-uncommon,5,4,5,,play_choice_taunt_fury,"<b>Play:</b> Gain Taunt or Fury",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/bear.png,Assets/TcgEngine/Sprites/CardsBoard/bear_board.png
+dragon_green,Green Dragon,Character,forest,4-mythic,7,7,9,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/dragon_green.png,Assets/TcgEngine/Sprites/CardsBoard/dragon_green_board.png
+equip_shield,Wooden Shield,Equipment,forest,2-uncommon,2,0,2,,equip_armor2|equip_taunt|equip_defend_use,"Bearer gains 2 armor and taunt.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/shield.png,Assets/TcgEngine/Sprites/CardsBoard/shield_board.png
+gorilla,Gorilla,Character,forest,2-uncommon,4,0,6,,play_roll_attack,"<b>Play:</b> Roll a D6 to know your attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/gorilla.png,Assets/TcgEngine/Sprites/CardsBoard/gorilla_board.png
+mammoth,Mammoth,Character,forest,3-rare,6,7,6,,trample,"Trample",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/mammoth.png,Assets/TcgEngine/Sprites/CardsBoard/mammoth_board.png
+owl,Owl,Character,forest,2-uncommon,3,2,3,,play_silence,"Silence target card.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/owl.png,Assets/TcgEngine/Sprites/CardsBoard/owl_board.png
+potion_green,Green Potion,Spell,forest,1-common,2,0,0,,spell_hp2|spell_taunt,"Target gains 2 HP and Taunt.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/potion_green.png,
+raccoon,Raccoon,Character,forest,1-common,2,2,3,,play_select_discard,"<b>Play:</b> Return a character to your hand.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/raccoon.png,Assets/TcgEngine/Sprites/CardsBoard/raccoon_board.png
+sasquatch,Sasquatch,Character,forest,3-rare,5,6,4,,turn_stealth,"<b>End Turn:</b> Go in stealth if you have other characters.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/sasquatch.png,Assets/TcgEngine/Sprites/CardsBoard/sasquatch_board.png
+snake_venom,Viper,Character,forest,1-common,2,1,3,,attack_poison|defend_poison,"<b>Attack:</b> Poison.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/snake.png,Assets/TcgEngine/Sprites/CardsBoard/snake_board.png
+spell_extinct,Extinct,Spell,forest,3-rare,2,0,0,,spell_add_play_extinct,"Target card gains When an allied character enters play, destroy this.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/extinct.png,
+spell_growth,Growth,Spell,forest,3-rare,5,0,0,,spell_ally_attack_2|spell_ally_hp_2,"All allied characters gain +2/2",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/plant_growth.png,
+spell_hibernate,Hibernate,Spell,forest,4-mythic,3,0,0,,spell_hibernate,"Target gains +4/4 and goes to sleep for the next 2 turns.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/hibernate.png,
+spell_roots,Roots,Spell,forest,1-common,3,0,0,,spell_paralyse,"Paralyse target for 3 turns.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/spell_forest.png,
+spell_stomp,Stomp,Spell,forest,2-uncommon,2,0,0,,spell_kill_lowest_hp,"Destroy the character with the lowest HP.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/stomp.png,
+town_forest,Forest Town,Artifact,forest,1-common,3,0,7,,town_aura_green,"All green cards have +2 HP.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/town_forest.png,Assets/TcgEngine/Sprites/CardsBoard/town_forest_board.png
+trap_spike,Spike Trap,Secret,forest,2-uncommon,3,0,0,,trap_paralyse3,"<b>Trap:</b> Paralyse the next attacker.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/trap_spike.png,
+tree_angry,Angry Tree,Character,forest,1-common,3,3,5,,regen_all,"Regeneration",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/tree.png,Assets/TcgEngine/Sprites/CardsBoard/tree_board.png
 unicorn,Unicorn,Character,forest,4-mythic,6,5,6,,play_boost2|activate_send_hand,"<b>Play:</b> Give +2/2.
-<b>Action:</b> Charge.",,True,100,standard|elite
+<b>Action:</b> Charge.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/unicorn.png,Assets/TcgEngine/Sprites/CardsBoard/unicorn_board.png
 wolf_alpha,Alpha Wolf,Character,forest,2-uncommon,3,3,2,wolf,play_summon_wolf|aura_wolf,"<b>Play</b>: Summon a baby wolf.
-All Wolves +1 attack.",,True,100,standard|elite
-wolf_stalker,Wolf Stalker,Character,forest,1-common,3,4,2,wolf,stealth,"Stealth",,True,100,standard|elite
-woodland,Woodland,Artifact,forest,3-rare,2,0,5,,turn_green_heal,"<b>Start of turn: </b>All green cards heal by 3.",,True,100,standard|elite
-hero_fire,Fire Spirit,Hero,fire,4-mythic,0,0,0,,activate_fire,"",,False,100,
-hero_forest,Forest Spirit,Hero,forest,4-mythic,0,0,0,,activate_forest,"",,False,100,
-hero_water,Water Spirit,Hero,water,4-mythic,0,0,0,,activate_water,"",,False,100,
-coin,Coin,Spell,neutral,1-common,0,0,0,,spell_coin,"Gain 1 mana.",,False,100,
-dragon_egg,Dragon Egg,Spell,neutral,4-mythic,2,0,0,,spell_dragon_create,"Discover a Dragon.",,True,100,
+All Wolves +1 attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/wolf.png,Assets/TcgEngine/Sprites/CardsBoard/wolf_board.png
+wolf_stalker,Wolf Stalker,Character,forest,1-common,3,4,2,wolf,stealth,"Stealth",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/wolf_stalker.png,Assets/TcgEngine/Sprites/CardsBoard/wolf_stalker_board.png
+woodland,Woodland,Artifact,forest,3-rare,2,0,5,,turn_green_heal,"<b>Start of turn: </b>All green cards heal by 3.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/woodland.png,Assets/TcgEngine/Sprites/CardsBoard/woodland_board.png
+hero_fire,Fire Spirit,Hero,fire,4-mythic,0,0,0,,activate_fire,"",,False,100,,Assets/TcgEngine/Sprites/Cards/spirit_fire.png,Assets/TcgEngine/Sprites/Icons/type_fire.png
+hero_forest,Forest Spirit,Hero,forest,4-mythic,0,0,0,,activate_forest,"",,False,100,,Assets/TcgEngine/Sprites/Cards/spirit_forest.png,Assets/TcgEngine/Sprites/Icons/type_forest.png
+hero_water,Water Spirit,Hero,water,4-mythic,0,0,0,,activate_water,"",,False,100,,Assets/TcgEngine/Sprites/Cards/spirit_water.png,Assets/TcgEngine/Sprites/Icons/type_water.png
+coin,Coin,Spell,neutral,1-common,0,0,0,,spell_coin,"Gain 1 mana.",,False,100,,Assets/TcgEngine/Sprites/Cards/coin.png,
+dragon_egg,Dragon Egg,Spell,neutral,4-mythic,2,0,0,,spell_dragon_create,"Discover a Dragon.",,True,100,,Assets/TcgEngine/Sprites/Cards/dragon_egg.png,
 flame_eagle,Flame Eagle,Character,fire,1-common,1,1,1,,flying|play_haste,"Flying
-Haste",,False,100,
-phoenix_egg,Phoenix Egg,Artifact,fire,1-common,0,0,3,,egg_growth,"After 3 turns, transforms into a Phoenix.",,False,100,
-wolf_baby,Baby Wolf,Character,forest,1-common,1,1,1,wolf,,"",,False,100,
-bay,Bay,Artifact,water,3-rare,2,0,5,,death_blue_draw,"When a blue creature you own dies, draw a card.",,True,100,standard|elite
-crab_mana,Mana Crab,Character,water,1-common,2,3,1,,attack_player_mana2,"When attacking a player, gain 2 mana.",,True,100,standard|elite
-dragon_blue,Blue Dragon,Character,water,4-mythic,7,8,8,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite
-eel,Electric Eel,Character,water,2-uncommon,4,5,2,,play_set_attack1,"<b>Play:</b> Target character's attack is reduced to 1.",,True,100,standard|elite
-equip_ring,Mana Ring,Equipment,water,2-uncommon,1,0,3,,equip_gain_mana,"Gain 2 extra mana per turn for 3 turns.",,True,100,standard|elite
-fish,Fish,Character,water,1-common,1,1,1,,death_blue_draw,"<b>Death:</b> Draw a card.",,True,100,standard|elite
-killer_whale,Killer Whale,Character,water,3-rare,5,5,4,,play_destroy_less4,"<b>Play:</b> Destroy a character with 4 or less attack.",,True,100,standard|elite
-kraken,Kraken,Character,water,3-rare,6,5,5,,play_haste,"Haste",,True,100,standard|elite
-octopus,Octopus,Character,water,2-uncommon,4,2,5,,attack_roll_attack_bonus,"When attacking, roll a D6. On 4+ gain +6 attack.",,True,100,standard|elite
-poison_frog,Poison Frog,Character,water,2-uncommon,3,2,2,,deathtouch,"Deathtouch",,True,100,standard|elite
-potion_blue,Blue Potion,Spell,water,1-common,2,0,0,,spell_shell|spell_heal_full,"Target gains shell and fully heals.",,True,100,standard|elite
-pufferfish,Pufferfish,Character,water,1-common,3,2,5,,defense_attack3,"Has +3 attack during the opponent's turn.",,True,100,standard|elite
+Haste",,False,100,,Assets/TcgEngine/Sprites/Cards/eagle.png,Assets/TcgEngine/Sprites/CardsBoard/eagle_board.png
+phoenix_egg,Phoenix Egg,Artifact,fire,1-common,0,0,3,,egg_growth,"After 3 turns, transforms into a Phoenix.",,False,100,,Assets/TcgEngine/Sprites/Cards/pheonix_egg.png,Assets/TcgEngine/Sprites/CardsBoard/pheonix_egg_board.png
+wolf_baby,Baby Wolf,Character,forest,1-common,1,1,1,wolf,,"",,False,100,,Assets/TcgEngine/Sprites/Cards/wolf_baby.png,Assets/TcgEngine/Sprites/CardsBoard/wolf_baby_board.png
+bay,Bay,Artifact,water,3-rare,2,0,5,,death_blue_draw,"When a blue creature you own dies, draw a card.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/bay.png,Assets/TcgEngine/Sprites/CardsBoard/bay_board.png
+crab_mana,Mana Crab,Character,water,1-common,2,3,1,,attack_player_mana2,"When attacking a player, gain 2 mana.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/crab.png,Assets/TcgEngine/Sprites/CardsBoard/crab_board.png
+dragon_blue,Blue Dragon,Character,water,4-mythic,7,8,8,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/dragon_blue.png,Assets/TcgEngine/Sprites/CardsBoard/dragon_blue_board.png
+eel,Electric Eel,Character,water,2-uncommon,4,5,2,,play_set_attack1,"<b>Play:</b> Target character's attack is reduced to 1.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/eel.png,Assets/TcgEngine/Sprites/CardsBoard/eel_board.png
+equip_ring,Mana Ring,Equipment,water,2-uncommon,1,0,3,,equip_gain_mana,"Gain 2 extra mana per turn for 3 turns.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/ring.png,Assets/TcgEngine/Sprites/CardsBoard/ring_board.png
+fish,Fish,Character,water,1-common,1,1,1,,death_blue_draw,"<b>Death:</b> Draw a card.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/fish.png,Assets/TcgEngine/Sprites/CardsBoard/fish_board.png
+killer_whale,Killer Whale,Character,water,3-rare,5,5,4,,play_destroy_less4,"<b>Play:</b> Destroy a character with 4 or less attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/killer_whale.png,Assets/TcgEngine/Sprites/CardsBoard/killer_whale_board.png
+kraken,Kraken,Character,water,3-rare,6,5,5,,play_haste,"Haste",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/kraken.png,Assets/TcgEngine/Sprites/CardsBoard/kraken_board.png
+octopus,Octopus,Character,water,2-uncommon,4,2,5,,attack_roll_attack_bonus,"When attacking, roll a D6. On 4+ gain +6 attack.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/octopus.png,Assets/TcgEngine/Sprites/CardsBoard/octopus_board.png
+poison_frog,Poison Frog,Character,water,2-uncommon,3,2,2,,deathtouch,"Deathtouch",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/frog.png,Assets/TcgEngine/Sprites/CardsBoard/frog_board.png
+potion_blue,Blue Potion,Spell,water,1-common,2,0,0,,spell_shell|spell_heal_full,"Target gains shell and fully heals.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/potion_blue.png,
+pufferfish,Pufferfish,Character,water,1-common,3,2,5,,defense_attack3,"Has +3 attack during the opponent's turn.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/pufferfish.png,Assets/TcgEngine/Sprites/CardsBoard/pufferfish_board.png
 sea_monster,Sea Monster,Character,water,4-mythic,6,4,7,,aura_attack_m1|activate_boost1,"Enemy characters have -1 attack.
-<b>Action:</b> +1 attack to allies.",,True,100,standard|elite
-seagull,Seagull,Character,water,1-common,2,2,2,,flying,"Flying",,True,100,standard|elite
-shark,Shark,Character,water,2-uncommon,4,4,4,,death_other_draw,"Whenever another character dies, draw 1 card.",,True,100,standard|elite
-spell_flood,Flood,Spell,water,2-uncommon,3,0,0,,spell_damage_per_hand,"Reduce the hp of all characters to 1.",,True,100,standard|elite
-spell_storm,Sea Storm,Spell,water,3-rare,5,0,0,,spell_return_all,"All cards return to their owner's hand.",,True,100,standard|elite
-spell_submerge,Submerge,Spell,water,3-rare,2,0,0,,spell_add_submerge,"Target card gains When attacked, opponent must discard 1 random card.",,True,100,standard|elite
-spell_treasure,Lost Treasure,Spell,water,4-mythic,3,0,0,,spell_treasure,"Look at the next 7 cards in your deck, and choose two.",,True,100,standard|elite
-spell_wave,Wave,Spell,water,1-common,3,0,0,,spell_send_hand,"Return target to owner's hand.",,True,100,standard|elite
-town_underwater,Underwater Town,Artifact,water,1-common,3,0,7,,town_aura_blue,"All blue cards cost 1 less.",,True,100,standard|elite
-trap_fish,Fish Trap,Secret,water,2-uncommon,3,0,0,,secret_transform_fish,"<b>Trap:</b> Transform into fish.",,True,100,standard|elite
+<b>Action:</b> +1 attack to allies.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/sea_monster.png,Assets/TcgEngine/Sprites/CardsBoard/sea_monster_board.png
+seagull,Seagull,Character,water,1-common,2,2,2,,flying,"Flying",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/seagull.png,Assets/TcgEngine/Sprites/CardsBoard/seagull_board.png
+shark,Shark,Character,water,2-uncommon,4,4,4,,death_other_draw,"Whenever another character dies, draw 1 card.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/shark.png,Assets/TcgEngine/Sprites/CardsBoard/shark_board.png
+spell_flood,Flood,Spell,water,2-uncommon,3,0,0,,spell_damage_per_hand,"Reduce the hp of all characters to 1.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/flood.png,
+spell_storm,Sea Storm,Spell,water,3-rare,5,0,0,,spell_return_all,"All cards return to their owner's hand.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/sea-storm.png,
+spell_submerge,Submerge,Spell,water,3-rare,2,0,0,,spell_add_submerge,"Target card gains When attacked, opponent must discard 1 random card.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/submerge.png,
+spell_treasure,Lost Treasure,Spell,water,4-mythic,3,0,0,,spell_treasure,"Look at the next 7 cards in your deck, and choose two.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/treasure.png,
+spell_wave,Wave,Spell,water,1-common,3,0,0,,spell_send_hand,"Return target to owner's hand.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/spell_water.png,
+town_underwater,Underwater Town,Artifact,water,1-common,3,0,7,,town_aura_blue,"All blue cards cost 1 less.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/town_underwater.png,Assets/TcgEngine/Sprites/CardsBoard/town_underwater_board.png
+trap_fish,Fish Trap,Secret,water,2-uncommon,3,0,0,,secret_transform_fish,"<b>Trap:</b> Transform into fish.",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/trap_fish.png,
 turtle,Turtle,Character,water,1-common,3,2,3,,taunt|shell,"Taunt
-Shell",,True,100,standard|elite
+Shell",,True,100,standard|elite,Assets/TcgEngine/Sprites/Cards/turtle.png,Assets/TcgEngine/Sprites/CardsBoard/turtle_board.png

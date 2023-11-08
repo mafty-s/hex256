@@ -26,7 +26,7 @@ namespace TcgEngine
             {
                 // 写入表头
                 sw.WriteLine(
-                    "ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs");
+                    "ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs,ArtFull,ArtBoard");
 
                 // 写入数据行
                 foreach (CardData cardData in cardList)
@@ -56,7 +56,11 @@ namespace TcgEngine
                     packs = packs.TrimEnd('|');
                     cardData.desc = cardData.desc.Replace("\"", "");
 
-                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},\"{10}\",{11},{12},{13},{14}",                        cardData.id,
+                    string art_full = (cardData.art_full != null) ? AssetDatabase.GetAssetPath(cardData.art_full) : "";
+                    string art_board = (cardData.art_board != null) ? AssetDatabase.GetAssetPath(cardData.art_board) : "";
+
+                    
+                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},\"{10}\",{11},{12},{13},{14},{15},{16}",                        cardData.id,
                         cardData.title,
                         cardData.type.ToString(),
                         cardData.team.name,
@@ -70,7 +74,10 @@ namespace TcgEngine
                         cardData.desc,
                         cardData.deckbuilding.ToString(),
                         cardData.cost,
-                        packs));
+                        packs,
+                        art_full,
+                        art_board
+                        ));
                 }
             }
 
