@@ -1,5 +1,5 @@
-ID,Title,Rank
-common,Common,1
-uncommon,Uncommon,2
-rare,Rare,3
-mythic,Mythic,4
+ID,Title,Rank,Icon
+common,Common,1,Assets/TcgEngine/Sprites/Icons/rarity_common.png
+uncommon,Uncommon,2,Assets/TcgEngine/Sprites/Icons/rarity_uncommon.png
+rare,Rare,3,Assets/TcgEngine/Sprites/Icons/rarity_rare.png
+mythic,Mythic,4,Assets/TcgEngine/Sprites/Icons/rarity_mythic.png

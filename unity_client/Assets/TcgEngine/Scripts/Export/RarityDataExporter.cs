@@ -24,15 +24,19 @@ namespace TcgEngine
             using (StreamWriter sw = new StreamWriter(filePath))
             {
                 // 写入表头
-                sw.WriteLine("ID,Title,Rank");
+                sw.WriteLine("ID,Title,Rank,Icon");
 
                 // 写入数据行
                 foreach (RarityData rarityData in rarityList)
                 {
-                    sw.WriteLine(string.Format("{0},{1},{2}",
+                    string iconPath = (rarityData.icon != null) ? AssetDatabase.GetAssetPath(rarityData.icon) : "";
+
+                    sw.WriteLine(string.Format("{0},{1},{2},{3}",
                         rarityData.id,
                         rarityData.title,
-                        rarityData.rank));
+                        rarityData.rank,
+                        iconPath
+                        ));
                 }
             }
 
