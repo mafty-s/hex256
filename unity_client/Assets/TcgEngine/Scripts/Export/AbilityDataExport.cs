@@ -25,7 +25,7 @@ namespace TcgEngine
             {
                 // Write the header
                 sw.WriteLine(
-                    "ID,Trigger,ConditionsTrigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
+                    "ID,Trigger,ConditionsTrigger,Target,FiltersTarget,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
 
                 // Write the data rows
                 foreach (AbilityData abilityData in abilityList)
@@ -33,17 +33,19 @@ namespace TcgEngine
                     string trigger = abilityData.trigger.ToString();
                     string conditionsTrigger = GetConditionsString(abilityData.conditions_trigger);
 
+                    string filtersTarget = GetFilterDataString(abilityData.filters_target);
                     string target = abilityData.target.ToString();
                     string effects = GetEffectsString(abilityData.effects);
                     string status = GetStatusString(abilityData.status);
                     string chainAbilities = GetChainAbilitiesString(abilityData.chain_abilities);
-                    
 
-                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}",
+                    sw.WriteLine(string.Format(
+                        "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19}",
                         abilityData.id,
                         trigger,
                         conditionsTrigger,
                         target,
+                        filtersTarget,
                         effects,
                         status,
                         abilityData.value,
@@ -58,7 +60,8 @@ namespace TcgEngine
                         GetFXPath(abilityData.target_fx),
                         GetAudioPath(abilityData.cast_audio),
                         GetAudioPath(abilityData.target_audio),
-                        abilityData.charge_target));
+                        abilityData.charge_target
+                    ));
                 }
             }
 
@@ -122,7 +125,7 @@ namespace TcgEngine
 
             return "";
         }
-        
+
         private static string GetConditionsString(ConditionData[] conditions)
         {
             string conditionsString = "";
@@ -133,6 +136,18 @@ namespace TcgEngine
 
             conditionsString = conditionsString.TrimEnd('|');
             return conditionsString;
+        }
+
+        private static string GetFilterDataString(FilterData[] filters)
+        {
+            string filterString = "";
+            foreach (FilterData filter in filters)
+            {
+                filterString += filter.name + "|";
+            }
+
+            filterString = filterString.TrimEnd('|');
+            return filterString;
         }
     }
 }
