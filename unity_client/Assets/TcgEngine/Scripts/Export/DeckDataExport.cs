@@ -24,7 +24,7 @@ namespace TcgEngine
             using (StreamWriter sw = new StreamWriter(filePath))
             {
                 // 写入表头
-                sw.WriteLine("\"ID\",\"Title\",\"Hero\",\"Cards\"");
+                sw.WriteLine("ID,Title,Hero,Cards");
 
                 // 写入数据行
                 foreach (DeckData deckData in deckList)
@@ -39,11 +39,12 @@ namespace TcgEngine
                         cardIds += cardId;
                         if (i < deckData.cards.Length - 1)
                         {
-                            cardIds += ",";
+                            cardIds += "|";
                         }
                     }
+                    cardIds.TrimEnd('|');
 
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\"",
+                    sw.WriteLine(string.Format("{0},{1},{2},{3}",
                         deckData.id,
                         deckData.title,
                         heroId,
