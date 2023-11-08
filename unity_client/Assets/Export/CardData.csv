@@ -1,7 +1,7 @@
 ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs
 ashes_snake,Ashes Snake,Character,fire,2-uncommon,5,6,4,,stealth,"Stealth",,True,100,standard|elite
 bull_heat,Heat Bull,Character,fire,1-common,3,2,5,,add_spell_damage1,"Spell damage +1.",,True,100,standard|elite
-cave,Cave,Artifact,fire,3-rare,2,0,5,,aura_ability_red,"All red creatures gain: Take 1 damage to gain +1 attack.",,True,100,standard|elite
+cave,Cave,Artifact,fire,3-rare,2,0,5,,aura_ability_red,"All red creatures gain: "Take 1 damage to gain +1 attack".",,True,100,standard|elite
 dark_stallion,Dark Stallion,Character,fire,2-uncommon,4,4,5,,activate_roll_send_hand,"<b>Cast (2):</b> Roll a D6, on 4+ return target to hand.",,True,100,standard|elite
 dragon_red,Red Dragon,Character,fire,4-mythic,7,9,7,dragon,spell_immunity,"Spell Immunity",,True,100,standard|elite
 equip_sword,Fire Sword,Equipment,fire,2-uncommon,2,0,2,,equip_attack1|equip_attack_no_damage|equip_attack_use,"Attack +1.
