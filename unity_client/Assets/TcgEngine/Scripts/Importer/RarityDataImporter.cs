@@ -54,7 +54,7 @@ namespace TcgEngine
             // 保存导入的数据
             foreach (RarityData rarityData in rarityList)
             {
-                string assetPath = "Assets/TcgEngine/Resources/RarityData/" + rarityData.id + ".asset";
+                string assetPath = "Assets/TcgEngine/Resources/Rarities/" +rarityData.rank + "-" + rarityData.id + ".asset";
                 AssetDatabase.CreateAsset(rarityData, assetPath);
             }
 
