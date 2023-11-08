@@ -1,113 +1,113 @@
-ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description
-activate_boost1,Activate,AllCardsBoard,,attack,1,1,,0,True,Roar,All allied creatures gain +1 attack until the end of the turn. Uses this creature's action.
-activate_burst,Activate,Self,damage,,1,0,chain_gain_attack,0,False,Burst,Take 1 damage to gain +1 attack.
-activate_damage2,Activate,SelectTarget,damage,,2,0,,3,False,Fire,Deal 2 damage. Cost 3 mana.
-activate_discard,Activate,AllCardsHand,discard,,1,0,,0,True,Discard,Opponent discard a random card from their hand. Uses this creature's action.
-activate_fire,Activate,SelectTarget,damage,,1,0,,2,True,Fire,Deal 1 damage.
-activate_forest,Activate,SelectTarget,heal,,2,0,,2,True,Forest,Heal 2 HP.
-activate_select_discard_spell,Activate,CardSelector,send_hand,,0,0,,2,False,Magic Focus,Return a spell from your graveyard to your hand. Cost 2 mana.
-activate_send_hand,Activate,SelectTarget,send_hand,,0,0,,0,True,Charge,Return a character to its owner's hand. Uses this creature's action.
-activate_water,Activate,PlayerSelf,draw,,1,0,,3,True,Water,Draw a card.
-chain_gain_attack,None,Self,add_attack,,1,0,,0,False,,
-activate_roll_send_hand,Activate,SelectTarget,roll_d6,,0,0,roll_send_hand,2,False,Charge,Select a character and roll a D6; on 4+ return it to its owner's hand. Cost 2 mana.
-attack_roll_attack_bonus,OnBeforeAttack,Self,roll_d6,,0,0,roll_attack_bonus,0,False,Tentacles,Before attacking; roll a D6; on 4+ gain +6 attack until the end of the turn.
-play_roll_attack,OnPlay,Self,roll_d6,,0,0,roll_add_attack,0,False,Random Attack.,Roll a D6; increase this card's attack by the result.
-roll_add_attack,None,Self,add_attack_roll,,0,0,,0,False,,
-roll_attack_bonus,None,Self,,attack,6,1,,0,False,,
-roll_send_hand,None,LastTargeted,send_hand,,0,0,,0,False,,
-chain_equip_use,None,Self,add_hp,,-1,0,,0,False,,
-equip_armor2,Ongoing,EquippedCard,,armor,2,0,,0,False,Armor,Bearer has +2 armor.
-equip_attack1,Ongoing,EquippedCard,add_attack,,1,0,,0,False,Attack,Bearer has +1 attack.
-equip_attack2,Ongoing,EquippedCard,add_attack,,2,0,,0,False,Attack,Bearer has +2 attack.
-equip_attack_no_damage,OnBeforeAttack,EquippedCard,,intimidate,0,1,,0,False,Intimidate,When attacking; target does not counter-attack.
-equip_attack_use,OnAfterAttack,Self,add_hp,,-1,0,,0,False,Sword,Loses 1 durability after each attack.
-equip_defend_use,OnAfterDefend,Self,add_hp,,-1,0,,0,False,Shield,Loses 1 durability when attacked.
-equip_gain_mana,StartOfTurn,PlayerSelf,gain_mana,,2,0,chain_equip_use,0,False,Mana Ring,Gain 2 extra mana per turn for the next 3 turns.
-equip_mana_kill,OnKill,PlayerSelf,gain_mana,,3,0,,0,False,Mana Ring,When the bearer kills a card; gain 3 mana.
-equip_taunt,Ongoing,EquippedCard,,taunt,0,0,,0,False,Taunt,Bearer has taunt.
-add_spell_damage1,Ongoing,PlayerSelf,add_spell_damage,,1,0,,0,False,Spell Damage,All your spells and abilities deal +1 damage.
-aura_ability_red,Ongoing,AllCardsBoard,add_ability_activate_burst,,0,0,,0,False,Red Burst,All allied red creatures gain: Take 1 damage to gain +1 attack.
-aura_attack_m1,Ongoing,AllCardsBoard,add_attack,,-1,0,,0,False,Fear,All enemy characters have -1 attack.
-aura_wolf,Ongoing,AllCardsBoard,add_attack,,1,0,,0,False,Wolf Aura,All other allied wolves gain +1 attack.
-deathtouch,Ongoing,Self,,deathtouch,0,0,,0,False,Deathtouch,Kill any creature it damages.
-defense_attack3,Ongoing,Self,add_attack,,3,0,,0,False,Defense,Has +3 attack during the opponent's turn.
-flying,Ongoing,Self,,flying,0,0,,0,False,Flying,Can ignore Taunt.
-fury,Ongoing,Self,,fury,0,0,,0,False,Fury,Can attack twice per turn.
-lifesteal,Ongoing,Self,,lifesteal,0,0,,0,False,Life Steal,Heal yourself when dealing damage.
-spell_immunity,Ongoing,Self,,spell_immunity,0,0,,0,False,Spell Immunity,Cannot be targeted or damaged by spells and traps.
-taunt,Ongoing,Self,,taunt,0,0,,0,False,Taunt,Your other characters cannot be attacked.
-town_aura_blue,Ongoing,AllCardsHand,add_mana,,-1,0,,0,False,Blue Aura,All Blue cards cost 1 less.
-town_aura_green,Ongoing,AllCardsBoard,add_hp,,2,0,,0,False,Green Aura,All Green characters gain +2 hp.
-town_aura_red,Ongoing,AllCardsBoard,add_attack,,2,0,,0,False,Red Aura,All Red creatures gain +2 attack.
-trample,Ongoing,Self,,trample,0,0,,0,False,Trample,Excess damage is dealt to player hp.
-after_spell_attack2,OnPlayOther,Self,add_attack,,2,0,,0,False,Heat,After playing a spell; gain +2 attack.
-attack_player_mana2,OnAfterAttack,PlayerSelf,gain_mana,,2,0,,0,False,Pillage,After attacking the opponent's life; gain 2 mana.
-attack_poison,OnBeforeAttack,AbilityTriggerer,,poisoned,1,0,,0,False,Poison,Attacked characters gain poison. They lose 1 hp each turn.
-attack_suffer_damage,OnBeforeAttack,Self,damage,,3,0,,0,False,Ground Split,Before attacking; suffer 3 damage.
-chain_draw,None,PlayerSelf,draw,,1,0,,0,False,,
-death_blue_draw,OnDeathOther,PlayerSelf,draw,,1,0,,0,False,Draw,When a blue creature you own dies; draw a card.
-death_egg,OnDeath,Self,summon_egg,,2,0,,0,False,Summon Egg,When this creatures dies; summon a phoenix egg.
-death_heal2,OnDeath,PlayerSelf,heal,,2,0,,0,False,Heal,When this creatures dies; you restore 2 HP.
-death_other_draw,OnDeathOther,PlayerSelf,draw,,1,0,,0,False,Eat,Whenever another character dies; draw a card.
-defend_discard,OnBeforeDefend,AllCardsHand,discard,,1,0,,0,False,Submerged,When attacked; opponent must discard 1 random card.
-defend_poison,OnBeforeDefend,AbilityTriggerer,,poisoned,1,0,,0,False,,
-egg_growth,StartOfTurn,Self,add_growth,,1,0,egg_transform,0,False,Egg,After 3 turns; transforms into a Phoenix.
-egg_transform,StartOfTurn,Self,transform_phoenix,,0,0,,0,False,Transform Pheonix,After 3 turns; transforms into a Pheonix.
-kill_draw2,OnKill,PlayerSelf,draw,,2,0,,0,False,Draw,When you kill another character with this creature; draw 2 cards.
-play_other_sacrifice,OnPlayOther,Self,destroy,,0,0,,0,False,Extinction,When an allied creature enter play; destroy this card.
-regen3,StartOfTurn,Self,heal,,3,0,,0,False,Regeneration,At the start of your turn; heal 3 hp.
-regen_all,StartOfTurn,Self,heal,,99,0,,0,False,Regeneration,At the start of your turn; this creature fully heal.
-turn_add_attack1,StartOfTurn,Self,add_attack,,1,0,,0,False,Furious,At the start of each turn; gain +1 attack.
-turn_green_heal,StartOfTurn,AllCardsBoard,heal,,3,0,,0,False,Green Heal,At the start of each turn; all allied green creatures and locations heal by 3.
-turn_kill_lowest,StartOfTurn,AllCardsBoard,destroy,,0,0,,0,False,Reaper,At the start of your turn; kill characters in play with the lowest attack (including yours).
-turn_stealth,EndOfTurn,Self,clear_taunt,stealth,0,0,,0,False,Stealth,At the end of your turn; if you have at least one other character in play; go in stealth.
-choice_fury,None,Self,,fury,0,0,,0,False,Fury,Can attack twice per turn.
-choice_taunt,None,Self,,taunt,0,0,,0,False,Taunt,Your other characters cannot be attacked.
-play_boost2,OnPlay,SelectTarget,,attack|hp,2,2,,0,True,Bless,On play; give +2/2 to another creature until your next turn.
-play_choice_taunt_fury,OnPlay,ChoiceSelector,,,0,0,choice_taunt|choice_fury,0,False,Choice,Gain Taunt or Fury
-play_deal_damage1,OnPlay,SelectTarget,damage,,1,0,,0,False,Fire Damage,On play; deal 1 damage to any target.
-play_damage_all2,OnPlay,AllCardsBoard,damage,,2,0,,0,False,Fire Damage,On play; deal 2 damage to all other cards.
-play_destroy_less4,OnPlay,SelectTarget,destroy,,0,0,chain_draw,0,False,Killer,On play; destroy a character with 4 or less attack. If you do; draw a card.
-play_discard,OnPlay,AllCardsAllPiles,discard,,1,0,,0,False,Discard,Opponent discards a random card from their hand.
-play_haste,OnPlay,Self,unexhaust,,0,0,,0,False,Haste,Can attack immediately.
-play_poison,OnPlay,SelectTarget,,poisoned,1,0,,0,False,Poison,Target character gains poison. They lose 1 hp each turn.
-play_select_discard,OnPlay,CardSelector,send_hand,,0,0,,0,False,Dig,On play; return a character from your graveyard to your hand.
-play_set_attack1,OnPlay,SelectTarget,set_attack,,1,0,,0,False,Electrify,On play; selected target's attack is reduced to 1.
-play_silence,OnPlay,SelectTarget,clear_status_all|reset_stats,silenced,0,0,,0,False,Silence,Target abilities are canceled.
-play_summon_wolf,OnPlay,AllSlots,summon_wolf,,1,0,,0,False,Summon Wolf,On play; summon a 1/1 baby wolf on an adjacent empty slot.
-shell,OnPlay,Self,,shell,0,0,,0,False,Shell,On the first hit; takes no damage.
-stealth,OnPlay,Self,,stealth,0,0,,0,False,Stealth,Cannot be targeted or attacked until it performs an action.
-chain_clear_temp,None,None,clear_temp,,0,0,,0,False,,
-chain_discover,None,CardSelector,send_hand,,0,0,,0,False,,
-chain_hibernate,None,PlayTarget,exhaust,sleep,0,4,,0,False,,
-chain_treasure,None,CardSelector,send_hand,,0,0,,0,False,Treasure,Look at the next 7 cards in your deck; and take 2 into your hand.
-spell_add_attack_suffer,OnPlay,PlayTarget,add_ability_suffer_damage,,0,0,,0,False,Ground Split,Target creature gains Suffer 3 damage before attacking.
-spell_add_play_extinct,OnPlay,PlayTarget,add_ability_play_sacrifice,,0,0,,0,False,Extinct,Target card gains When an allied creature enter play; destroy this card.
-spell_add_submerge,OnPlay,PlayTarget,add_ability_defend_discard,,0,0,,0,False,Submerge,Target card gains When attacked; opponent must discard 1 random card.
-spell_ally_attack_2,OnPlay,AllCardsBoard,add_attack,,2,0,,0,False,Growth,All allied characters gain +2/2
-spell_ally_hp_2,OnPlay,AllCardsBoard,add_hp,,2,0,,0,False,,
-spell_armor2,OnPlay,PlayTarget,,armor,2,0,,0,False,Armor +2,Target gains armor 2. Reducing all damage by 2.
-spell_attack1,OnPlay,PlayTarget,add_attack,,1,0,,0,False,Attack +1,Target gains 1 attack.
-spell_coin,OnPlay,PlayerSelf,gain_mana,,1,0,,0,False,Coin,Gain 1 mana this turn.
-spell_damage1,OnPlay,PlayTarget,damage,,1,0,,0,False,Hot,Deal 1 damage.
-spell_damage3,OnPlay,PlayTarget,damage,,3,0,,0,False,Fire,Deal 3 damage.
-spell_destroy,OnPlay,PlayTarget,destroy,,0,0,,0,False,Destroy,Destroy target character or location.
-spell_destroy_all,OnPlay,AllCardsBoard,destroy,,0,0,,0,False,Armageddon,Destroy all creatures on the board
-spell_dragon_create,OnPlay,AllCardData,create_temp,,0,0,chain_discover|chain_clear_temp,0,False,Discover Dragon,Select a dragon to summon into your hand.
-spell_draw1,OnPlay,PlayerSelf,draw,,1,0,,0,False,Draw,Draw 1 card.
-spell_fury,OnPlay,PlayTarget,,fury,0,0,,0,False,Fury,Target character gains Fury. It can attack twice per turn.
-spell_heal_full,OnPlay,PlayTarget,heal,,99,0,,0,False,Heal,Target card is fully healed.
-spell_hibernate,OnPlay,PlayTarget,add_attack|add_hp,,4,0,chain_hibernate,0,False,Hibernate,Target character gains +4/4 and goes to sleep for the next 2 turns.
-spell_hp2,OnPlay,PlayTarget,add_hp,,2,0,,0,False,Hp +2,Target gains 2 hp.
-spell_kill_lowest_hp,OnPlay,AllCardsBoard,destroy,,0,0,,0,False,Stomp,Kill the character in play with the lowest hp (including yours).
-spell_paralyse,OnPlay,PlayTarget,,paralysed,0,6,,0,False,Paralyse,Paralyse target character for 3 turns.
-spell_return_all,OnPlay,AllCardsBoard,send_hand,,0,0,,0,False,Sea Storm,All cards on the board return to their owner's hand.
-spell_send_hand,OnPlay,PlayTarget,send_hand,,0,0,,0,False,Return Hand,Return target to its owner's hand.
-spell_damage_per_hand,OnPlay,AllCardsBoard,set_hp,,1,0,,0,False,Flood,The hp of all characters on the board is lowered to 1.
-spell_shell,OnPlay,PlayTarget,,shell,0,0,,0,False,Shell,Target gains shell; it ignores damage on the next hit.
-spell_summon_eagle,OnPlay,PlayerSelf,summon_eagle|summon_eagle|summon_eagle,,0,0,,0,False,Aerial Strike,Summon three 1/1 eagles with flying and haste into your hand.
-spell_taunt,OnPlay,PlayTarget,,taunt,0,0,,0,False,Taunt,Target character gains Taunt. Your other characters cannot be attacked.
-spell_treasure,OnPlay,CardSelector,send_hand,,0,0,chain_treasure,0,False,Treasure,Look at the next 7 cards in your deck; and take 2 into your hand.
-trap_damage_all2,OnBeforeAttack,AllCardsBoard,damage,,2,0,,0,False,Fire Damage,When an enemy creature attacks; damage all enemy creatures by 2.
-trap_paralyse3,OnAfterAttack,AbilityTriggerer,,paralysed,0,6,,0,False,Paralysis,After an enemy creature attacks; paralyse it for 3 turns.
-secret_transform_fish,OnPlayOther,AbilityTriggerer,transform_fish,,1,0,,0,False,Transform to Fish,When the next enemy creature is played; transform it into a 1/1 fish.
+ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget
+"activate_boost1","Activate","AllCardsBoard","","attack",1,1,"",0,True,"Roar","All allied creatures gain +1 attack until the end of the turn. Uses this creature's action.","","Assets/TcgEngine/Prefabs/FX/CastFX.prefab","","","",False
+"activate_burst","Activate","Self","damage","",1,0,"chain_gain_attack",0,False,"Burst","Take 1 damage to gain +1 attack.","","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","",False
+"activate_damage2","Activate","SelectTarget","damage","",2,0,"",3,False,"Fire","Deal 2 damage. Cost 3 mana.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"activate_discard","Activate","AllCardsHand","discard","",1,0,"",0,True,"Discard","Opponent discard a random card from their hand. Uses this creature's action.","","Assets/TcgEngine/Prefabs/FX/CastFX.prefab","","","",False
+"activate_fire","Activate","SelectTarget","damage","",1,0,"",2,True,"Fire","Deal 1 damage.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"activate_forest","Activate","SelectTarget","heal","",2,0,"",2,True,"Forest","Heal 2 HP.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"activate_select_discard_spell","Activate","CardSelector","send_hand","",0,0,"",2,False,"Magic Focus","Return a spell from your graveyard to your hand. Cost 2 mana.","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","","",False
+"activate_send_hand","Activate","SelectTarget","send_hand","",0,0,"",0,True,"Charge","Return a character to its owner's hand. Uses this creature's action.","","","","","",True
+"activate_water","Activate","PlayerSelf","draw","",1,0,"",3,True,"Water","Draw a card.","","","","","",False
+"chain_gain_attack","None","Self","add_attack","",1,0,"",0,False,"","","","","","","",False
+"activate_roll_send_hand","Activate","SelectTarget","roll_d6","",0,0,"roll_send_hand",2,False,"Charge","Select a character and roll a D6; on 4+ return it to its owner's hand. Cost 2 mana.","","","","","",False
+"attack_roll_attack_bonus","OnBeforeAttack","Self","roll_d6","",0,0,"roll_attack_bonus",0,False,"Tentacles","Before attacking; roll a D6; on 4+ gain +6 attack until the end of the turn.","","","","","",False
+"play_roll_attack","OnPlay","Self","roll_d6","",0,0,"roll_add_attack",0,False,"Random Attack.","Roll a D6; increase this card's attack by the result.","","","","","",False
+"roll_add_attack","None","Self","add_attack_roll","",0,0,"",0,False,"","","","","","","",False
+"roll_attack_bonus","None","Self","","attack",6,1,"",0,False,"","","","","","","",False
+"roll_send_hand","None","LastTargeted","send_hand","",0,0,"",0,False,"","","","","","","",True
+"chain_equip_use","None","Self","add_hp","",-1,0,"",0,False,"","","","","","","",False
+"equip_armor2","Ongoing","EquippedCard","","armor",2,0,"",0,False,"Armor","Bearer has +2 armor.","","","","","",False
+"equip_attack1","Ongoing","EquippedCard","add_attack","",1,0,"",0,False,"Attack","Bearer has +1 attack.","","","","","",False
+"equip_attack2","Ongoing","EquippedCard","add_attack","",2,0,"",0,False,"Attack","Bearer has +2 attack.","","","","","",False
+"equip_attack_no_damage","OnBeforeAttack","EquippedCard","","intimidate",0,1,"",0,False,"Intimidate","When attacking; target does not counter-attack.","","","","","",False
+"equip_attack_use","OnAfterAttack","Self","add_hp","",-1,0,"",0,False,"Sword","Loses 1 durability after each attack.","","","","","",False
+"equip_defend_use","OnAfterDefend","Self","add_hp","",-1,0,"",0,False,"Shield","Loses 1 durability when attacked.","","","","","",False
+"equip_gain_mana","StartOfTurn","PlayerSelf","gain_mana","",2,0,"chain_equip_use",0,False,"Mana Ring","Gain 2 extra mana per turn for the next 3 turns.","","","","","",False
+"equip_mana_kill","OnKill","PlayerSelf","gain_mana","",3,0,"",0,False,"Mana Ring","When the bearer kills a card; gain 3 mana.","","","","","",False
+"equip_taunt","Ongoing","EquippedCard","","taunt",0,0,"",0,False,"Taunt","Bearer has taunt.","","","","","",False
+"add_spell_damage1","Ongoing","PlayerSelf","add_spell_damage","",1,0,"",0,False,"Spell Damage","All your spells and abilities deal +1 damage.","","","","","",False
+"aura_ability_red","Ongoing","AllCardsBoard","add_ability_activate_burst","",0,0,"",0,False,"Red Burst","All allied red creatures gain: Take 1 damage to gain +1 attack.","","","","","",False
+"aura_attack_m1","Ongoing","AllCardsBoard","add_attack","",-1,0,"",0,False,"Fear","All enemy characters have -1 attack.","","","","","",False
+"aura_wolf","Ongoing","AllCardsBoard","add_attack","",1,0,"",0,False,"Wolf Aura","All other allied wolves gain +1 attack.","","","","","",False
+"deathtouch","Ongoing","Self","","deathtouch",0,0,"",0,False,"Deathtouch","Kill any creature it damages.","","","","","",False
+"defense_attack3","Ongoing","Self","add_attack","",3,0,"",0,False,"Defense","Has +3 attack during the opponent's turn.","","","","","",False
+"flying","Ongoing","Self","","flying",0,0,"",0,False,"Flying","Can ignore Taunt.","","","","","",False
+"fury","Ongoing","Self","","fury",0,0,"",0,False,"Fury","Can attack twice per turn.","","","","","",False
+"lifesteal","Ongoing","Self","","lifesteal",0,0,"",0,False,"Life Steal","Heal yourself when dealing damage.","","","","","",False
+"spell_immunity","Ongoing","Self","","spell_immunity",0,0,"",0,False,"Spell Immunity","Cannot be targeted or damaged by spells and traps.","","","","","",False
+"taunt","Ongoing","Self","","taunt",0,0,"",0,False,"Taunt","Your other characters cannot be attacked.","","","","","",False
+"town_aura_blue","Ongoing","AllCardsHand","add_mana","",-1,0,"",0,False,"Blue Aura","All Blue cards cost 1 less.","","","","","",False
+"town_aura_green","Ongoing","AllCardsBoard","add_hp","",2,0,"",0,False,"Green Aura","All Green characters gain +2 hp.","","","","","",False
+"town_aura_red","Ongoing","AllCardsBoard","add_attack","",2,0,"",0,False,"Red Aura","All Red creatures gain +2 attack.","","","","","",False
+"trample","Ongoing","Self","","trample",0,0,"",0,False,"Trample","Excess damage is dealt to player hp.","","","","","",False
+"after_spell_attack2","OnPlayOther","Self","add_attack","",2,0,"",0,False,"Heat","After playing a spell; gain +2 attack.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"attack_player_mana2","OnAfterAttack","PlayerSelf","gain_mana","",2,0,"",0,False,"Pillage","After attacking the opponent's life; gain 2 mana.","","","","","",False
+"attack_poison","OnBeforeAttack","AbilityTriggerer","","poisoned",1,0,"",0,False,"Poison","Attacked characters gain poison. They lose 1 hp each turn.","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"attack_suffer_damage","OnBeforeAttack","Self","damage","",3,0,"",0,False,"Ground Split","Before attacking; suffer 3 damage.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"chain_draw","None","PlayerSelf","draw","",1,0,"",0,False,"","","","","","","",False
+"death_blue_draw","OnDeathOther","PlayerSelf","draw","",1,0,"",0,False,"Draw","When a blue creature you own dies; draw a card.","","","","","",False
+"death_egg","OnDeath","Self","summon_egg","",2,0,"",0,False,"Summon Egg","When this creatures dies; summon a phoenix egg.","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","","",False
+"death_heal2","OnDeath","PlayerSelf","heal","",2,0,"",0,False,"Heal","When this creatures dies; you restore 2 HP.","","","","","",False
+"death_other_draw","OnDeathOther","PlayerSelf","draw","",1,0,"",0,False,"Eat","Whenever another character dies; draw a card.","","","","","",False
+"defend_discard","OnBeforeDefend","AllCardsHand","discard","",1,0,"",0,False,"Submerged","When attacked; opponent must discard 1 random card.","","","","","",False
+"defend_poison","OnBeforeDefend","AbilityTriggerer","","poisoned",1,0,"",0,False,"","","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"egg_growth","StartOfTurn","Self","add_growth","",1,0,"egg_transform",0,False,"Egg","After 3 turns; transforms into a Phoenix.","","","","","",False
+"egg_transform","StartOfTurn","Self","transform_phoenix","",0,0,"",0,False,"Transform Pheonix","After 3 turns; transforms into a Pheonix.","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","","",False
+"kill_draw2","OnKill","PlayerSelf","draw","",2,0,"",0,False,"Draw","When you kill another character with this creature; draw 2 cards.","","","","","",False
+"play_other_sacrifice","OnPlayOther","Self","destroy","",0,0,"",0,False,"Extinction","When an allied creature enter play; destroy this card.","","","","","",False
+"regen3","StartOfTurn","Self","heal","",3,0,"",0,False,"Regeneration","At the start of your turn; heal 3 hp.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"regen_all","StartOfTurn","Self","heal","",99,0,"",0,False,"Regeneration","At the start of your turn; this creature fully heal.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"turn_add_attack1","StartOfTurn","Self","add_attack","",1,0,"",0,False,"Furious","At the start of each turn; gain +1 attack.","","","","","",False
+"turn_green_heal","StartOfTurn","AllCardsBoard","heal","",3,0,"",0,False,"Green Heal","At the start of each turn; all allied green creatures and locations heal by 3.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"turn_kill_lowest","StartOfTurn","AllCardsBoard","destroy","",0,0,"",0,False,"Reaper","At the start of your turn; kill characters in play with the lowest attack (including yours).","","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","",False
+"turn_stealth","EndOfTurn","Self","clear_taunt","stealth",0,0,"",0,False,"Stealth","At the end of your turn; if you have at least one other character in play; go in stealth.","","","","","",False
+"choice_fury","None","Self","","fury",0,0,"",0,False,"Fury","Can attack twice per turn.","","","","","",False
+"choice_taunt","None","Self","","taunt",0,0,"",0,False,"Taunt","Your other characters cannot be attacked.","","","","","",False
+"play_boost2","OnPlay","SelectTarget","","attack|hp",2,2,"",0,True,"Bless","On play; give +2/2 to another creature until your next turn.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"play_choice_taunt_fury","OnPlay","ChoiceSelector","","",0,0,"choice_taunt|choice_fury",0,False,"Choice","Gain Taunt or Fury","","","","","",False
+"play_deal_damage1","OnPlay","SelectTarget","damage","",1,0,"",0,False,"Fire Damage","On play; deal 1 damage to any target.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"play_damage_all2","OnPlay","AllCardsBoard","damage","",2,0,"",0,False,"Fire Damage","On play; deal 2 damage to all other cards.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"play_destroy_less4","OnPlay","SelectTarget","destroy","",0,0,"chain_draw",0,False,"Killer","On play; destroy a character with 4 or less attack. If you do; draw a card.","","","","","",False
+"play_discard","OnPlay","AllCardsAllPiles","discard","",1,0,"",0,False,"Discard","Opponent discards a random card from their hand.","","Assets/TcgEngine/Prefabs/FX/CastFX.prefab","","","",False
+"play_haste","OnPlay","Self","unexhaust","",0,0,"",0,False,"Haste","Can attack immediately.","","","","","",False
+"play_poison","OnPlay","SelectTarget","","poisoned",1,0,"",0,False,"Poison","Target character gains poison. They lose 1 hp each turn.","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"play_select_discard","OnPlay","CardSelector","send_hand","",0,0,"",0,False,"Dig","On play; return a character from your graveyard to your hand.","","","","","",False
+"play_set_attack1","OnPlay","SelectTarget","set_attack","",1,0,"",0,False,"Electrify","On play; selected target's attack is reduced to 1.","","","Assets/TcgEngine/Prefabs/FX/ElectricFX.prefab","","",False
+"play_silence","OnPlay","SelectTarget","clear_status_all|reset_stats","silenced",0,0,"",0,False,"Silence","Target abilities are canceled.","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"play_summon_wolf","OnPlay","AllSlots","summon_wolf","",1,0,"",0,False,"Summon Wolf","On play; summon a 1/1 baby wolf on an adjacent empty slot.","","","","","",False
+"shell","OnPlay","Self","","shell",0,0,"",0,False,"Shell","On the first hit; takes no damage.","","","","","",False
+"stealth","OnPlay","Self","","stealth",0,0,"",0,False,"Stealth","Cannot be targeted or attacked until it performs an action.","","","","","",False
+"chain_clear_temp","None","None","clear_temp","",0,0,"",0,False,"","","","","","","",False
+"chain_discover","None","CardSelector","send_hand","",0,0,"",0,False,"","","","","","","",False
+"chain_hibernate","None","PlayTarget","exhaust","sleep",0,4,"",0,False,"","","","","","","",False
+"chain_treasure","None","CardSelector","send_hand","",0,0,"",0,False,"Treasure","Look at the next 7 cards in your deck; and take 2 into your hand.","","","","","",False
+"spell_add_attack_suffer","OnPlay","PlayTarget","add_ability_suffer_damage","",0,0,"",0,False,"Ground Split","Target creature gains Suffer 3 damage before attacking.","","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","",False
+"spell_add_play_extinct","OnPlay","PlayTarget","add_ability_play_sacrifice","",0,0,"",0,False,"Extinct","Target card gains When an allied creature enter play; destroy this card.","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"spell_add_submerge","OnPlay","PlayTarget","add_ability_defend_discard","",0,0,"",0,False,"Submerge","Target card gains When attacked; opponent must discard 1 random card.","","","Assets/TcgEngine/Prefabs/FX/WaterFX.prefab","","",False
+"spell_ally_attack_2","OnPlay","AllCardsBoard","add_attack","",2,0,"",0,False,"Growth","All allied characters gain +2/2","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"spell_ally_hp_2","OnPlay","AllCardsBoard","add_hp","",2,0,"",0,False,"","","","","","","",False
+"spell_armor2","OnPlay","PlayTarget","","armor",2,0,"",0,False,"Armor +2","Target gains armor 2. Reducing all damage by 2.","","","","","",False
+"spell_attack1","OnPlay","PlayTarget","add_attack","",1,0,"",0,False,"Attack +1","Target gains 1 attack.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"spell_coin","OnPlay","PlayerSelf","gain_mana","",1,0,"",0,False,"Coin","Gain 1 mana this turn.","","","","","",False
+"spell_damage1","OnPlay","PlayTarget","damage","",1,0,"",0,False,"Hot","Deal 1 damage.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"spell_damage3","OnPlay","PlayTarget","damage","",3,0,"",0,False,"Fire","Deal 3 damage.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"spell_destroy","OnPlay","PlayTarget","destroy","",0,0,"",0,False,"Destroy","Destroy target character or location.","","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","",False
+"spell_destroy_all","OnPlay","AllCardsBoard","destroy","",0,0,"",0,False,"Armageddon","Destroy all creatures on the board","","","Assets/TcgEngine/Prefabs/FX/Phoenix.prefab","","",False
+"spell_dragon_create","OnPlay","AllCardData","create_temp","",0,0,"chain_discover|chain_clear_temp",0,False,"Discover Dragon","Select a dragon to summon into your hand.","","","","","",False
+"spell_draw1","OnPlay","PlayerSelf","draw","",1,0,"",0,False,"Draw","Draw 1 card.","","","","","",False
+"spell_fury","OnPlay","PlayTarget","","fury",0,0,"",0,False,"Fury","Target character gains Fury. It can attack twice per turn.","","","","","",False
+"spell_heal_full","OnPlay","PlayTarget","heal","",99,0,"",0,False,"Heal","Target card is fully healed.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"spell_hibernate","OnPlay","PlayTarget","add_attack|add_hp","",4,0,"chain_hibernate",0,False,"Hibernate","Target character gains +4/4 and goes to sleep for the next 2 turns.","","","Assets/TcgEngine/Prefabs/FX/Leaf.prefab","","",False
+"spell_hp2","OnPlay","PlayTarget","add_hp","",2,0,"",0,False,"Hp +2","Target gains 2 hp.","","","Assets/TcgEngine/Prefabs/FX/PotionFX.prefab","","",False
+"spell_kill_lowest_hp","OnPlay","AllCardsBoard","destroy","",0,0,"",0,False,"Stomp","Kill the character in play with the lowest hp (including yours).","","","","","",False
+"spell_paralyse","OnPlay","PlayTarget","","paralysed",0,6,"",0,False,"Paralyse","Paralyse target character for 3 turns.","","","Assets/TcgEngine/Prefabs/FX/TrapFX.prefab","","",False
+"spell_return_all","OnPlay","AllCardsBoard","send_hand","",0,0,"",0,False,"Sea Storm","All cards on the board return to their owner's hand.","","","Assets/TcgEngine/Prefabs/FX/WaterFX.prefab","","",False
+"spell_send_hand","OnPlay","PlayTarget","send_hand","",0,0,"",0,False,"Return Hand","Return target to its owner's hand.","","","Assets/TcgEngine/Prefabs/FX/WaterFX.prefab","","",False
+"spell_damage_per_hand","OnPlay","AllCardsBoard","set_hp","",1,0,"",0,False,"Flood","The hp of all characters on the board is lowered to 1.","","","Assets/TcgEngine/Prefabs/FX/WaterFX.prefab","","",False
+"spell_shell","OnPlay","PlayTarget","","shell",0,0,"",0,False,"Shell","Target gains shell; it ignores damage on the next hit.","","","","","",False
+"spell_summon_eagle","OnPlay","PlayerSelf","summon_eagle|summon_eagle|summon_eagle","",0,0,"",0,False,"Aerial Strike","Summon three 1/1 eagles with flying and haste into your hand.","","","","","",False
+"spell_taunt","OnPlay","PlayTarget","","taunt",0,0,"",0,False,"Taunt","Target character gains Taunt. Your other characters cannot be attacked.","","","","","",False
+"spell_treasure","OnPlay","CardSelector","send_hand","",0,0,"chain_treasure",0,False,"Treasure","Look at the next 7 cards in your deck; and take 2 into your hand.","","","","","",False
+"trap_damage_all2","OnBeforeAttack","AllCardsBoard","damage","",2,0,"",0,False,"Fire Damage","When an enemy creature attacks; damage all enemy creatures by 2.","","","Assets/TcgEngine/Prefabs/FX/Flame.prefab","","",False
+"trap_paralyse3","OnAfterAttack","AbilityTriggerer","","paralysed",0,6,"",0,False,"Paralysis","After an enemy creature attacks; paralyse it for 3 turns.","","","Assets/TcgEngine/Prefabs/FX/TrapFX.prefab","","",False
+"secret_transform_fish","OnPlayOther","AbilityTriggerer","transform_fish","",1,0,"",0,False,"Transform to Fish","When the next enemy creature is played; transform it into a 1/1 fish.","","","Assets/TcgEngine/Prefabs/FX/WaterFX.prefab","","",False

@@ -11,23 +11,23 @@ namespace TcgEngine
         [MenuItem("TcgEngine/Export AbilityData to CSV")]
         public static void ExportAbilityDataToCSV()
         {
-            string directoryPath = "Assets/Export"; // CSV文件保存目录
-            string filePath = Path.Combine(directoryPath, "AbilityData.csv"); // CSV文件保存路径
+            string directoryPath = "Assets/Export"; // CSV and FX files save directory
+            string filePath = Path.Combine(directoryPath, "AbilityData.csv"); // CSV file path
 
-            AbilityData.Load(); // 加载数据
+            AbilityData.Load(); // Load the data
 
             List<AbilityData> abilityList = AbilityData.ability_list;
 
-            // 创建目录
+            // Create the directory if it doesn't exist
             Directory.CreateDirectory(directoryPath);
 
             using (StreamWriter sw = new StreamWriter(filePath))
             {
-                // 写入表头
+                // Write the header
                 sw.WriteLine(
-                    "ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description");
+                    "ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
 
-                // 写入数据行
+                // Write the data rows
                 foreach (AbilityData abilityData in abilityList)
                 {
                     string trigger = abilityData.trigger.ToString();
@@ -36,8 +36,7 @@ namespace TcgEngine
                     string status = GetStatusString(abilityData.status);
                     string chainAbilities = GetChainAbilitiesString(abilityData.chain_abilities);
 
-                    //sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",{5},{6},\"{7}\",{8},{9},\"{10}\",\"{11}\",\"{12}\",\"{13}\",\"{14}\",\"{15}\",\"{16}\",{17}",
                         abilityData.id,
                         trigger,
                         target,
@@ -49,8 +48,13 @@ namespace TcgEngine
                         abilityData.mana_cost,
                         abilityData.exhaust,
                         abilityData.title,
-                        abilityData.desc.Replace("\"","").Replace(",",";")
-                    ));
+                        abilityData.desc.Replace("\"", "").Replace(",", ";"),
+                        GetFXPath(abilityData.board_fx),
+                        GetFXPath(abilityData.caster_fx),
+                        GetFXPath(abilityData.target_fx),
+                        GetAudioPath(abilityData.cast_audio),
+                        GetAudioPath(abilityData.target_audio),
+                        abilityData.charge_target));
                 }
             }
 
@@ -91,6 +95,28 @@ namespace TcgEngine
 
             chainAbilitiesString = chainAbilitiesString.TrimEnd('|');
             return chainAbilitiesString;
+        }
+
+        private static string GetFXPath(GameObject fx)
+        {
+            if (fx != null)
+            {
+                string fxPath = AssetDatabase.GetAssetPath(fx);
+                return fxPath;
+            }
+
+            return "";
+        }
+
+        private static string GetAudioPath(AudioClip audioClip)
+        {
+            if (audioClip != null)
+            {
+                string audioPath = AssetDatabase.GetAssetPath(audioClip);
+                return audioPath;
+            }
+
+            return "";
         }
     }
 }
