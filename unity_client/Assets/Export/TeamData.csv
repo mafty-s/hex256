@@ -1,0 +1,5 @@
+ID,Title,Icon,Color
+fire,Fire,Assets/TcgEngine/Sprites/Icons/type_fire.png,D93411
+forest,Forest,Assets/TcgEngine/Sprites/Icons/type_forest.png,47AD0F
+neutral,Neutral,,8C8C8C
+water,Water,Assets/TcgEngine/Sprites/Icons/type_water.png,3788EE
