@@ -6,7 +6,7 @@ export default mudConfig({
       valueSchema: {
         createdAt: "uint256",
       },
-    }
+    },
     Tasks: {
       valueSchema: {
         createdAt: "uint256",
