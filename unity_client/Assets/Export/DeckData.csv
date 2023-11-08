@@ -1,0 +1,5 @@
+ID,Title,Hero,Card1,Card2,Card3,Card4,Card5
+fire_deck,Fire Starter,hero_fire,imp,imp,lava_beast,lava_beast,fire_chicken
+forest_deck,Forest Starter,hero_forest,wolf_alpha,wolf_alpha,wolf_stalker,wolf_stalker,tree_angry
+test_deck,Test Deck,hero_fire,wolf_alpha,wolf_alpha,wolf_stalker,wolf_stalker,tree_angry
+water_deck,Water Starter,hero_water,fish,crab_mana,crab_mana,turtle,turtle
