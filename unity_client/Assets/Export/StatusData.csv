@@ -5,13 +5,13 @@ Deathtouch,Deathtouch,,Kill any creature it damages.,,1
 Flying,Flying,,Ignores Taunt.,,1
 Fury,Fury,,Can attack twice per turn,,1
 HPBonus,HP Bonus,,Bonus HP.,,1
-Intimidate,Intimidate,,When attacking, target does not counter-attack.,,1
+Intimidate,Intimidate,,When attacking; target does not counter-attack.,,1
 Invincibility,Invincible,,Cannot be destroyed.,,2
 LifeSteal,Life Steal,,Heal yourself when dealing damage.,,1
 Paralysed,Paralysed,,Cannot perform any actions.,Assets/TcgEngine/Prefabs/FX/RootFX.prefab,-1
-Poisoned,Poisoned,,Each turn, will lose hp.,Assets/TcgEngine/Prefabs/FX/Poisoned.prefab,-1
+Poisoned,Poisoned,,Each turn; will lose hp.,Assets/TcgEngine/Prefabs/FX/Poisoned.prefab,-1
 Protected,Protected,,Cannot be attacked. Protected by Taunt.,Assets/TcgEngine/Prefabs/FX/Shield.prefab,0
-Shell,Shell,,On the first hit, takes no damage.,Assets/TcgEngine/Prefabs/FX/Shell.prefab,1
+Shell,Shell,,On the first hit; takes no damage.,Assets/TcgEngine/Prefabs/FX/Shell.prefab,1
 Silenced,Silenced,,Cannot use abilities.,Assets/TcgEngine/Prefabs/FX/Silenced.prefab,-1
 Sleep,Sleep,,Does not unexhaust.
 Removed if attacked.,Assets/TcgEngine/Prefabs/FX/Zzz.prefab,-1
