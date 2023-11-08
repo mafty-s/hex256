@@ -155,13 +155,15 @@ namespace TcgEngine
             return packDataArray;
         }
         
-        private static Sprite GetSprite(string spriteName)
+        private static Sprite GetSprite(string spritePath)
         {
-            string spritePath = "Sprites/" + spriteName; // Path to the sprite asset
-
-            // Load the sprite from the Resources folder
-            Sprite sprite = Resources.Load<Sprite>(spritePath);
-
+            if (string.IsNullOrEmpty(spritePath))
+            {
+                return null;
+            }
+            
+            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+            
             return sprite;
         }
     }

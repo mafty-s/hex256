@@ -12,7 +12,7 @@ namespace TcgEngine
         [MenuItem("TcgEngine/Export TraitData to CSV")]
         public static void ExportToCSV()
         {
-            string filePath = "Assets/Export/TraitrData.csv";
+            string filePath = "Assets/Export/TraitData.csv";
 
             TraitData.Load(); // 加载数据
 
@@ -25,11 +25,11 @@ namespace TcgEngine
                 foreach (TraitData trait in trait_list)
                 {
                     string iconPath = (trait.icon != null) ? AssetDatabase.GetAssetPath(trait.icon) : "";
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\"", trait.id, trait.title, iconPath));
+                    sw.WriteLine(string.Format("{0},{1},{2}", trait.id, trait.title, iconPath));
                 }
             }
 
-            Debug.Log("TraitrData exported to TraitrData.csv");
+            Debug.Log("TraitData exported to TraitData.csv");
         }
     }
 }
