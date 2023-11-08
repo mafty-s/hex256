@@ -33,7 +33,7 @@ namespace TcgEngine
                         statusData.effect.ToString(),
                         statusData.title,
                         iconPath,
-                        statusData.desc.Replace(",",";"),
+                        statusData.desc.Replace(",",";").Replace("\n",";"),
                         fxPath,
                         statusData.hvalue));
                 }

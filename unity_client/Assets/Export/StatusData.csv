@@ -13,8 +13,7 @@ Poisoned,Poisoned,,Each turn; will lose hp.,Assets/TcgEngine/Prefabs/FX/Poisoned
 Protected,Protected,,Cannot be attacked. Protected by Taunt.,Assets/TcgEngine/Prefabs/FX/Shield.prefab,0
 Shell,Shell,,On the first hit; takes no damage.,Assets/TcgEngine/Prefabs/FX/Shell.prefab,1
 Silenced,Silenced,,Cannot use abilities.,Assets/TcgEngine/Prefabs/FX/Silenced.prefab,-1
-Sleep,Sleep,,Does not unexhaust.
-Removed if attacked.,Assets/TcgEngine/Prefabs/FX/Zzz.prefab,-1
+Sleep,Sleep,,Does not unexhaust.;Removed if attacked.,Assets/TcgEngine/Prefabs/FX/Zzz.prefab,-1
 SpellImmunity,Spell Immunity,,Cannot be targeted or damaged by spells and traps.,Assets/TcgEngine/Prefabs/FX/Immune.prefab,1
 Stealth,Stealth,,Cannot be targeted.,Assets/TcgEngine/Prefabs/FX/Hidden.prefab,1
 Protection,Taunt,,Protects other cards.,,1
