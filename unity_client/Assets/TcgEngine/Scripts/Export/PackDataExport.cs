@@ -37,7 +37,7 @@ namespace TcgEngine
                     string cardback_img = (packData.cardback_img != null) ? AssetDatabase.GetAssetPath(packData.cardback_img) : "";
 
 
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\"",
+                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
                         packData.id,
                         packData.type,
                         packData.cards,
@@ -63,9 +63,9 @@ namespace TcgEngine
             string raritiesString = "";
             foreach (PackRarity packRarity in rarities)
             {
-                raritiesString += packRarity.rarity + ":" + packRarity.probability + ",";
+                raritiesString += packRarity.rarity.id + ":" + packRarity.probability + "|";
             }
-            raritiesString = raritiesString.TrimEnd(',');
+            raritiesString = raritiesString.TrimEnd('|');
             return raritiesString;
         }
 
@@ -74,9 +74,9 @@ namespace TcgEngine
             string variantsString = "";
             foreach (PackVariant packVariant in variants)
             {
-                variantsString += packVariant.variant + ":" + packVariant.probability + ",";
+                variantsString += packVariant.variant.id + ":" + packVariant.probability + "|";
             }
-            variantsString = variantsString.TrimEnd(',');
+            variantsString = variantsString.TrimEnd('|');
             return variantsString;
         }
     }

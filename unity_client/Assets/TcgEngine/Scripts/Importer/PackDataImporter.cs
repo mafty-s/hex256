@@ -12,6 +12,11 @@ namespace TcgEngine
         [MenuItem("TcgEngine/Import PackData from CSV")]
         public static void ImportFromCSV()
         {
+            RarityData.Load();
+            VariantData.Load();
+            
+            
+            
             string filePath = "Assets/Export/PackData.csv"; // CSV文件路径
 
             string[] lines = File.ReadAllLines(filePath);
@@ -43,10 +48,11 @@ namespace TcgEngine
             {
                 string dataLine = lines[i];
                 string[] data = dataLine.Split(',');
-
+                
                 // 解析数据
                 string id = data[idIndex];
-                PackType type = (PackType)Enum.Parse(typeof(PackType), data[typeIndex]);
+                string typestr = data[typeIndex];
+                PackType type = (PackType)Enum.Parse(typeof(PackType), typestr);
                 int cards = int.Parse(data[cardsIndex]);
 
                 PackRarity[] rarities1st = ParsePackRarities(data[rarities1stIndex]);
@@ -89,7 +95,7 @@ namespace TcgEngine
             // 保存导入的数据
             foreach (PackData packData in packList)
             {
-                string assetPath = "Assets/PackData/" + packData.id + ".asset";
+                string assetPath = "Assets/TcgEngine/Resources/Packs/" + packData.id + ".asset";
                 AssetDatabase.CreateAsset(packData, assetPath);
             }
 
@@ -101,7 +107,7 @@ namespace TcgEngine
 
         private static PackRarity[] ParsePackRarities(string raritiesString)
         {
-            string[] rarityData = raritiesString.Split(',');
+            string[] rarityData = raritiesString.Split('|');
             PackRarity[] rarities = new PackRarity[rarityData.Length];
 
             for (int i = 0; i < rarityData.Length; i++)
@@ -111,9 +117,11 @@ namespace TcgEngine
                 int probability = int.Parse(rarityInfo[1]);
 
                 PackRarity packRarity = new PackRarity();
-                 
-                packRarity.rarity = ScriptableObject.CreateInstance<RarityData>();
+
+                RarityData rarityDataObj = RarityData.Get(rarity);
+                packRarity.rarity = rarityDataObj;
                 packRarity.probability = probability;
+                
 
                 rarities[i] = packRarity;
             }
@@ -123,18 +131,18 @@ namespace TcgEngine
         
         private static PackVariant[] ParsePackVariants(string variantsString)
         {
-            string[] variantData = variantsString.Split(',');
+            string[] variantData = variantsString.Split('|');
             PackVariant[] variants = new PackVariant[variantData.Length];
 
             for (int i = 0; i < variantData.Length; i++)
             {
                 string[] variantInfo = variantData[i].Split(':');
                 string variant = variantInfo[0];
-                float probability = float.Parse(variantInfo[1]);
+                int probability = int.Parse(variantInfo[1]);
 
                 PackVariant packVariant = new PackVariant();
-                //packVariant.variant = variant;
-                //packVariant.probability = probability;
+                packVariant.variant = VariantData.Get(variant);
+                packVariant.probability = probability;
 
                 variants[i] = packVariant;
             }
