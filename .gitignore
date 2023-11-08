@@ -73,3 +73,7 @@ crashlytics-build.properties
 /webplayer_with_mud/pnpm-lock.yaml
 /webplayer_with_mud/node_modules/
 /webplayer_with_mud/packages/client/node_modules/
+
+.idea
+.idea/
+**/.idea/
