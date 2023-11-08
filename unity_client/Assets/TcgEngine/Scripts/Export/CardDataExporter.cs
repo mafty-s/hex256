@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using Unity.VisualScripting;
 
 namespace TcgEngine
 {
@@ -53,8 +54,9 @@ namespace TcgEngine
                     }
 
                     packs = packs.TrimEnd('|');
+                    cardData.desc = cardData.desc.Replace("\"", "");
 
-                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},\"{11}\",{12},{13},{14}",                        cardData.id,
+                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},\"{10}\",{11},{12},{13},{14}",                        cardData.id,
                         cardData.title,
                         cardData.type.ToString(),
                         cardData.team.name,
@@ -64,7 +66,7 @@ namespace TcgEngine
                         cardData.hp,
                         traits,
                         abilities,
-                        cardData.text,
+                        cardData.text.Replace("\"", ""),
                         cardData.desc,
                         cardData.deckbuilding.ToString(),
                         cardData.cost,
