@@ -1,7 +1,7 @@
 ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs
 ashes_snake,Ashes Snake,Character,fire,2-uncommon,5,6,4,,stealth,Stealth,,True,100,standard|elite
 bull_heat,Heat Bull,Character,fire,1-common,3,2,5,,add_spell_damage1,Spell damage +1.,,True,100,standard|elite
-cave,Cave,Artifact,fire,3-rare,2,0,5,,aura_ability_red,All red creatures gain: "Take 1 damage to gain +1 attack".,,True,100,standard|elite
+cave,Cave,Artifact,fire,3-rare,2,0,5,,aura_ability_red,All red creatures gain: Take 1 damage to gain +1 attack.,,True,100,standard|elite
 dark_stallion,Dark Stallion,Character,fire,2-uncommon,4,4,5,,activate_roll_send_hand,<b>Cast (2):</b> Roll a D6, on 4+ return target to hand.,,True,100,standard|elite
 dragon_red,Red Dragon,Character,fire,4-mythic,7,9,7,dragon,spell_immunity,Spell Immunity,,True,100,standard|elite
 equip_sword,Fire Sword,Equipment,fire,2-uncommon,2,0,2,,equip_attack1|equip_attack_no_damage|equip_attack_use,Attack +1.
@@ -19,7 +19,7 @@ reaper,Hell Reaper,Character,fire,3-rare,6,6,6,,turn_kill_lowest,<b>Each turn:</
 spell_aerial_strike,Aerial Strike,Spell,fire,4-mythic,3,0,0,,spell_summon_eagle,Summon 3 eagles into your hand.,,True,100,standard|elite
 spell_armageddon,Armageddon,Spell,fire,3-rare,5,0,0,,spell_destroy_all,Destroy all creatures on the board,,True,100,standard|elite
 spell_burn,Burn,Spell,fire,1-common,4,0,0,,spell_destroy,Destroy target.,,True,100,standard|elite
-spell_split,Ground Split,Spell,fire,3-rare,2,0,0,,spell_add_attack_suffer,Target creature gains "Suffer 3 damage before attacking".,,True,100,standard|elite
+spell_split,Ground Split,Spell,fire,3-rare,2,0,0,,spell_add_attack_suffer,Target creature gains Suffer 3 damage before attacking.,,True,100,standard|elite
 spell_stones,Hot Stones,Spell,fire,2-uncommon,2,0,0,,spell_damage1|spell_draw1,Deal 1 damage.
 Draw a card.,,True,100,standard|elite
 town_volcano,Volcano Town,Artifact,fire,1-common,3,0,7,,town_aura_red,All red creatures have +2 attack.,,True,100,standard|elite
@@ -37,7 +37,7 @@ potion_green,Green Potion,Spell,forest,1-common,2,0,0,,spell_hp2|spell_taunt,Tar
 raccoon,Raccoon,Character,forest,1-common,2,2,3,,play_select_discard,<b>Play:</b> Return a character to your hand.,,True,100,standard|elite
 sasquatch,Sasquatch,Character,forest,3-rare,5,6,4,,turn_stealth,<b>End Turn:</b> Go in stealth if you have other characters.,,True,100,standard|elite
 snake_venom,Viper,Character,forest,1-common,2,1,3,,attack_poison|defend_poison,<b>Attack:</b> Poison.,,True,100,standard|elite
-spell_extinct,Extinct,Spell,forest,3-rare,2,0,0,,spell_add_play_extinct,Target card gains "When an allied character enters play, destroy this".,,True,100,standard|elite
+spell_extinct,Extinct,Spell,forest,3-rare,2,0,0,,spell_add_play_extinct,Target card gains When an allied character enters play, destroy this.,,True,100,standard|elite
 spell_growth,Growth,Spell,forest,3-rare,5,0,0,,spell_ally_attack_2|spell_ally_hp_2,All allied characters gain +2/2,,True,100,standard|elite
 spell_hibernate,Hibernate,Spell,forest,4-mythic,3,0,0,,spell_hibernate,Target gains +4/4 and goes to sleep for the next 2 turns.,,True,100,standard|elite
 spell_roots,Roots,Spell,forest,1-common,3,0,0,,spell_paralyse,Paralyse target for 3 turns.,,True,100,standard|elite
@@ -78,7 +78,7 @@ seagull,Seagull,Character,water,1-common,2,2,2,,flying,Flying,,True,100,standard
 shark,Shark,Character,water,2-uncommon,4,4,4,,death_other_draw,Whenever another character dies, draw 1 card.,,True,100,standard|elite
 spell_flood,Flood,Spell,water,2-uncommon,3,0,0,,spell_damage_per_hand,Reduce the hp of all characters to 1.,,True,100,standard|elite
 spell_storm,Sea Storm,Spell,water,3-rare,5,0,0,,spell_return_all,All cards return to their owner's hand.,,True,100,standard|elite
-spell_submerge,Submerge,Spell,water,3-rare,2,0,0,,spell_add_submerge,Target card gains "When attacked, opponent must discard 1 random card".,,True,100,standard|elite
+spell_submerge,Submerge,Spell,water,3-rare,2,0,0,,spell_add_submerge,Target card gains When attacked, opponent must discard 1 random card.,,True,100,standard|elite
 spell_treasure,Lost Treasure,Spell,water,4-mythic,3,0,0,,spell_treasure,Look at the next 7 cards in your deck, and choose two.,,True,100,standard|elite
 spell_wave,Wave,Spell,water,1-common,3,0,0,,spell_send_hand,Return target to owner's hand.,,True,100,standard|elite
 town_underwater,Underwater Town,Artifact,water,1-common,3,0,7,,town_aura_blue,All blue cards cost 1 less.,,True,100,standard|elite
