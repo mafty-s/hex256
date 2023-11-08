@@ -24,7 +24,8 @@ namespace TcgEngine
             using (StreamWriter sw = new StreamWriter(filePath))
             {
                 // 写入表头
-                sw.WriteLine("ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description");
+                sw.WriteLine(
+                    "ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description");
 
                 // 写入数据行
                 foreach (AbilityData abilityData in abilityList)
@@ -36,7 +37,7 @@ namespace TcgEngine
                     string chainAbilities = GetChainAbilitiesString(abilityData.chain_abilities);
 
                     //sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\"",
+                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
                         abilityData.id,
                         trigger,
                         target,
@@ -48,7 +49,8 @@ namespace TcgEngine
                         abilityData.mana_cost,
                         abilityData.exhaust,
                         abilityData.title,
-                        abilityData.desc));
+                        abilityData.desc.Replace("\"","").Replace(",",";")
+                    ));
                 }
             }
 
@@ -60,9 +62,10 @@ namespace TcgEngine
             string effectsString = "";
             foreach (EffectData effect in effects)
             {
-                effectsString += effect.name + ",";
+                effectsString += effect.name + "|";
             }
-            effectsString = effectsString.TrimEnd(',');
+
+            effectsString = effectsString.TrimEnd('|');
             return effectsString;
         }
 
@@ -71,9 +74,10 @@ namespace TcgEngine
             string statusString = "";
             foreach (StatusData statusData in status)
             {
-                statusString += statusData.name + ",";
+                statusString += statusData.name + "|";
             }
-            statusString = statusString.TrimEnd(',');
+
+            statusString = statusString.TrimEnd('|');
             return statusString;
         }
 
@@ -82,9 +86,10 @@ namespace TcgEngine
             string chainAbilitiesString = "";
             foreach (AbilityData abilityData in chainAbilities)
             {
-                chainAbilitiesString += abilityData.id + ",";
+                chainAbilitiesString += abilityData.id + "|";
             }
-            chainAbilitiesString = chainAbilitiesString.TrimEnd(',');
+
+            chainAbilitiesString = chainAbilitiesString.TrimEnd('|');
             return chainAbilitiesString;
         }
     }
