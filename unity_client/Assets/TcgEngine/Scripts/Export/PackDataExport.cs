@@ -24,7 +24,7 @@ namespace TcgEngine
             using (StreamWriter sw = new StreamWriter(filePath))
             {
                 // 写入表头
-                sw.WriteLine("ID,Type,Cards,Rarities_1st,Rarities,Variants,Title,Description,SortOrder,Available,Cost");
+                sw.WriteLine("ID,Type,Cards,Rarities_1st,Rarities,Variants,Title,Description,SortOrder,Available,Cost,PackImg,CardBackImg");
 
                 // 写入数据行
                 foreach (PackData packData in packList)
@@ -32,8 +32,12 @@ namespace TcgEngine
                     string rarities1st = GetPackRaritiesString(packData.rarities_1st);
                     string rarities = GetPackRaritiesString(packData.rarities);
                     string variants = GetPackVariantsString(packData.variants);
+                    
+                    string pack_img = (packData.pack_img != null) ? AssetDatabase.GetAssetPath(packData.pack_img) : "";
+                    string cardback_img = (packData.cardback_img != null) ? AssetDatabase.GetAssetPath(packData.cardback_img) : "";
 
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
+
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\"",
                         packData.id,
                         packData.type,
                         packData.cards,
@@ -44,7 +48,10 @@ namespace TcgEngine
                         packData.desc,
                         packData.sort_order,
                         packData.available,
-                        packData.cost));
+                        packData.cost,
+                        pack_img,
+                        cardback_img
+                        ));
                     }
             }
 

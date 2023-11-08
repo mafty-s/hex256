@@ -29,7 +29,8 @@ namespace TcgEngine
                 // 写入数据行
                 foreach (AvatarData avatarData in avatarList)
                 {
-                    sw.WriteLine(string.Format("{0},{1},{2}", avatarData.id, avatarData.avatar.name, avatarData.sort_order));
+                    string iconPath = (avatarData.avatar != null) ? AssetDatabase.GetAssetPath(avatarData.avatar) : "";
+                    sw.WriteLine(string.Format("{0},{1},{2}", avatarData.id, iconPath, avatarData.sort_order));
                 }
             }
             
