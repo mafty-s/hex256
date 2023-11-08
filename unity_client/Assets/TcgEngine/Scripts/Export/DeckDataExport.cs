@@ -24,27 +24,30 @@ namespace TcgEngine
             using (StreamWriter sw = new StreamWriter(filePath))
             {
                 // 写入表头
-                sw.WriteLine("\"ID\",\"Title\",\"Hero\",\"Card1\",\"Card2\",\"Card3\",\"Card4\",\"Card5\"");
+                sw.WriteLine("\"ID\",\"Title\",\"Hero\",\"Cards\"");
 
                 // 写入数据行
                 foreach (DeckData deckData in deckList)
                 {
                     string heroId = deckData.hero != null ? deckData.hero.id : "";
-                    string[] cardIds = new string[5];
-                    for (int i = 0; i < 5; i++)
+
+                    // 将卡牌ID列表转换为逗号分隔的字符串
+                    string cardIds = "";
+                    for (int i = 0; i < deckData.cards.Length; i++)
                     {
-                        cardIds[i] = deckData.cards.Length > i && deckData.cards[i] != null ? deckData.cards[i].id : "";
+                        string cardId = deckData.cards[i] != null ? deckData.cards[i].id : "";
+                        cardIds += cardId;
+                        if (i < deckData.cards.Length - 1)
+                        {
+                            cardIds += ",";
+                        }
                     }
 
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\"",
                         deckData.id,
                         deckData.title,
                         heroId,
-                        cardIds[0],
-                        cardIds[1],
-                        cardIds[2],
-                        cardIds[3],
-                        cardIds[4]));
+                        cardIds));
                 }
             }
 
