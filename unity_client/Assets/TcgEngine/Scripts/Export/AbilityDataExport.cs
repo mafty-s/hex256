@@ -25,20 +25,24 @@ namespace TcgEngine
             {
                 // Write the header
                 sw.WriteLine(
-                    "ID,Trigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
+                    "ID,Trigger,ConditionsTrigger,Target,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
 
                 // Write the data rows
                 foreach (AbilityData abilityData in abilityList)
                 {
                     string trigger = abilityData.trigger.ToString();
+                    string conditionsTrigger = GetConditionsString(abilityData.conditions_trigger);
+
                     string target = abilityData.target.ToString();
                     string effects = GetEffectsString(abilityData.effects);
                     string status = GetStatusString(abilityData.status);
                     string chainAbilities = GetChainAbilitiesString(abilityData.chain_abilities);
+                    
 
                     sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",{5},{6},\"{7}\",{8},{9},\"{10}\",\"{11}\",\"{12}\",\"{13}\",\"{14}\",\"{15}\",\"{16}\",{17}",
                         abilityData.id,
                         trigger,
+                        conditionsTrigger,
                         target,
                         effects,
                         status,
@@ -117,6 +121,18 @@ namespace TcgEngine
             }
 
             return "";
+        }
+        
+        private static string GetConditionsString(ConditionData[] conditions)
+        {
+            string conditionsString = "";
+            foreach (ConditionData condition in conditions)
+            {
+                conditionsString += condition.name + "|";
+            }
+
+            conditionsString = conditionsString.TrimEnd('|');
+            return conditionsString;
         }
     }
 }
