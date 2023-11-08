@@ -35,7 +35,8 @@ namespace TcgEngine
                     string status = GetStatusString(abilityData.status);
                     string chainAbilities = GetChainAbilitiesString(abilityData.chain_abilities);
 
-                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
+                    //sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\"",
                         abilityData.id,
                         trigger,
                         target,
