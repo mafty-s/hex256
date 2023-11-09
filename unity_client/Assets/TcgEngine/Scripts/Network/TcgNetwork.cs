@@ -6,6 +6,8 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using WebSocketServer;
+
 // using WebSocketServer;
 
 namespace TcgEngine
@@ -14,18 +16,16 @@ namespace TcgEngine
     /// Main script handling network connection betweeen server and client
     /// It's one of the few scripts in this asset that needs to be on a DontDestroyOnLoad object
     /// </summary>
-
     [DefaultExecutionOrder(-10)]
     [RequireComponent(typeof(NetworkManager))]
     [RequireComponent(typeof(TcgTransport))]
-    public class TcgNetwork:MonoBehaviour
-        // :  WebSocketServer.WebSocketServer
+    public class TcgNetwork : WebSocketServer.WebSocketServer
     {
         public NetworkData data;
 
         //Server & Client events
         public UnityAction onTick; //Every network tick
-        public UnityAction onConnect;  //Event when self connect, happens before onReady, before sending any data
+        public UnityAction onConnect; //Event when self connect, happens before onReady, before sending any data
         public UnityAction onDisconnect; //Event when self disconnect
 
         //Server only events
@@ -34,6 +34,7 @@ namespace TcgEngine
         public UnityAction<ulong> onClientReady; //Server event when any client become ready
 
         public delegate bool ApprovalEvent(ulong client_id, ConnectionData connect_data);
+
         public ApprovalEvent checkApproval; //Additional approval validations for when a client connects
 
         //---------
@@ -44,8 +45,7 @@ namespace TcgEngine
         private Authenticator auth;
         private ConnectionData connection;
 
-        [System.NonSerialized]
-        private static bool inited = false;
+        [System.NonSerialized] private static bool inited = false;
         private static TcgNetwork instance;
 
         private const int msg_size = 1024 * 1024;
@@ -56,7 +56,7 @@ namespace TcgEngine
         {
             return transport;
         }
-        
+
         void Awake()
         {
             if (instance != null && instance != this)
@@ -82,7 +82,6 @@ namespace TcgEngine
                 transport.Init();
 
 
-                
                 // network.ConnectionApprovalCallback += ApprovalCheck;
                 // network.OnClientConnectedCallback += OnClientConnect;
                 // network.OnClientDisconnectCallback += OnClientDisconnect;
@@ -90,39 +89,43 @@ namespace TcgEngine
                 InitAuth();
             }
         }
-        // override public void OnOpen(WebSocketConnection connection)
-        // {
-        //     // Here, (string)connection.id gives you a unique ID to identify the client.
-        //     Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
-        //     OnClientConnect(connection.id);
-        // }
-        
-        // public void onMessageReceived(WebSocketMessage message)
-        // {
-        //     Debug.Log("Received new message: " + message.data);
-        //     //todo 根据下文decode
-        //     // int length = Encoding.UTF8.GetByteCount(type) + writer.Length;
-        //     // int payloadLength = 4 + length;
-        //     // byte[] payload = new byte[payloadLength];
-        //     // Buffer.BlockCopy(BitConverter.GetBytes(length), 0, payload, 0, 4);
-        //     // Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
-        //     // Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
-        //
-        //     byte[] payload = message.data; // 假设 message.data 是字节数组类型
-        //
-        //     int length = BitConverter.ToInt32(payload, 0); // 获取长度
-        //     string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-        //     string content = Encoding.UTF8.GetString(payload, 4+length, payload.Length); // 假设内容从第9个字节开始
-        //
-        //     Debug.Log("Length: " + length);
-        //     Debug.Log("Type: " + type);
-        //     Debug.Log("Content: " + content);
-        // }
+
+        override public void OnOpen(WebSocketConnection connection)
+        {
+            // Here, (string)connection.id gives you a unique ID to identify the client.
+            Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
+            OnClientConnect(connection.id);
+        }
+
+        override public void OnMessage(WebSocketMessage message)
+        {
+            Debug.Log("Received new message: " + message.data);
+            //todo 根据下文decode
+            // int length = Encoding.UTF8.GetByteCount(type) + writer.Length;
+            // int payloadLength = 4 + length;
+            // byte[] payload = new byte[payloadLength];
+            // Buffer.BlockCopy(BitConverter.GetBytes(length), 0, payload, 0, 4);
+            // Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
+            // Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
+
+            byte[] payload = message.data; // 假设 message.data 是字节数组类型
+
+            int length = BitConverter.ToInt32(payload, 0); // 获取长度
+            string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+            string content = Encoding.UTF8.GetString(payload, 4 + length, payload.Length - 4 - length); // 假设内容从第9个字节开始
+
+            Debug.Log("Length: " + length);
+            Debug.Log("Type: " + type);
+            Debug.Log("Content: " + content);
+
+
+            // this.messaging.
+        }
 
 
         void Update()
         {
-            // base.Update();
+            base.Update();
         }
 
         //Start a host (client + server)
@@ -143,7 +146,7 @@ namespace TcgEngine
         public void StartServer(ushort port)
         {
             Debug.Log("Start Server Port " + port);
-            // StartListen();
+            StartListen();
             // transport.SetServer(port);
             connection.user_id = "";
             connection.username = "";
@@ -151,7 +154,6 @@ namespace TcgEngine
             offline_mode = false;
             network.StartServer();
             AfterConnected();
-           
         }
 
         //If is_host is set to true, it means this player created the game on a dedicated server
@@ -260,7 +262,8 @@ namespace TcgEngine
             onTick?.Invoke();
         }
 
-        private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest req, NetworkManager.ConnectionApprovalResponse res)
+        private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest req,
+            NetworkManager.ConnectionApprovalResponse res)
         {
             ConnectionData connect = NetworkTool.NetDeserialize<ConnectionData>(req.Payload);
             bool approved = ApproveClient(req.ClientNetworkId, connect);
@@ -326,24 +329,76 @@ namespace TcgEngine
             get { return transport.GetPort(); }
         }
 
-        public ulong ClientID { get { return offline_mode ? ServerID : network.LocalClientId; } } //ID of this client (if host, will be same than ServerID), changes for every reconnection, assigned by Netcode
-        public ulong ServerID { get { return NetworkManager.ServerClientId; } } //ID of the server
+        public ulong ClientID
+        {
+            get { return offline_mode ? ServerID : network.LocalClientId; }
+        } //ID of this client (if host, will be same than ServerID), changes for every reconnection, assigned by Netcode
 
-        public bool IsServer { get { return offline_mode || network.IsServer; } }
-        public bool IsClient { get { return offline_mode || network.IsClient; } }
-        public bool IsHost { get { return IsClient && IsServer; } }     //Host is both a client and server
-        public bool IsOnline { get { return !offline_mode && IsActive(); } }
+        public ulong ServerID
+        {
+            get { return NetworkManager.ServerClientId; }
+        } //ID of the server
 
-        public NetworkTime LocalTime { get { return network.LocalTime; } }
-        public NetworkTime ServerTime { get { return network.ServerTime; } }
-        public float DeltaTick { get { return 1f / network.NetworkTickSystem.TickRate; } }
+        public bool IsServer
+        {
+            get { return offline_mode || network.IsServer; }
+        }
 
-        public NetworkManager NetworkManager { get { return network; } }
-        public TcgTransport Transport { get { return transport; } }
-        public NetworkMessaging Messaging { get { return messaging; } }
-        public Authenticator Auth { get { return auth; } }
+        public bool IsClient
+        {
+            get { return offline_mode || network.IsClient; }
+        }
 
-        public static int MsgSizeMax { get { return msg_size; } }
+        public bool IsHost
+        {
+            get { return IsClient && IsServer; }
+        } //Host is both a client and server
+
+        public bool IsOnline
+        {
+            get { return !offline_mode && IsActive(); }
+        }
+
+        public NetworkTime LocalTime
+        {
+            get { return network.LocalTime; }
+        }
+
+        public NetworkTime ServerTime
+        {
+            get { return network.ServerTime; }
+        }
+
+        public float DeltaTick
+        {
+            get { return 1f / network.NetworkTickSystem.TickRate; }
+        }
+
+        public NetworkManager NetworkManager
+        {
+            get { return network; }
+        }
+
+        public TcgTransport Transport
+        {
+            get { return transport; }
+        }
+
+        public NetworkMessaging Messaging
+        {
+            get { return messaging; }
+        }
+
+        public Authenticator Auth
+        {
+            get { return auth; }
+        }
+
+        public static int MsgSizeMax
+        {
+            get { return msg_size; }
+        }
+
         public static int MsgSize => MsgSizeMax; //Old name
 
         public static TcgNetwork Get()
@@ -353,6 +408,7 @@ namespace TcgEngine
                 TcgNetwork net = FindObjectOfType<TcgNetwork>();
                 net?.Init();
             }
+
             return instance;
         }
     }
@@ -392,8 +448,16 @@ namespace TcgEngine
         private INetworkSerializable data;
         private byte[] bytes;
 
-        public SerializedData(FastBufferReader r) { reader = r; data = null; }
-        public SerializedData(INetworkSerializable d) { data = d; }
+        public SerializedData(FastBufferReader r)
+        {
+            reader = r;
+            data = null;
+        }
+
+        public SerializedData(INetworkSerializable d)
+        {
+            data = d;
+        }
 
         public string GetString()
         {
