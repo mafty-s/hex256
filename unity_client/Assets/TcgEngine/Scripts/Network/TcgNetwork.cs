@@ -180,6 +180,8 @@ namespace TcgEngine
         {
             Debug.Log("Join Server: " + server_url + " " + port);
             string ip = NetworkTool.HostToIP(server_url);
+            transport.OnOpen(onConnect.Invoke);
+            transport.OnClose(onDisconnect.Invoke);
             transport.OnMessage(ClientOnMessage);
             transport.SetClient(ip, port);
             connection.user_id = auth.UserID;

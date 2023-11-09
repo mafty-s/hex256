@@ -133,6 +133,24 @@ namespace TcgEngine
             };
         }
 
+        public void OnOpen(Action callback)
+        {
+            webSocket.OnOpen += (sender, e) =>
+            {
+                callback();
+            };
+        }
+        
+        public void OnClose(Action callback)
+        {
+            webSocket.OnClose += (sender, e) =>
+            {
+                Debug.LogError(string.Format("网络已断开: StatusCode: {0}, Reason: {1}", e.StatusCode, e.Reason));
+                callback();
+            };
+        }
+
+
         public virtual void SetClient(string address, ushort port)
         {
             string url = "ws://" + "localhost" + ":" + port;
@@ -140,9 +158,9 @@ namespace TcgEngine
             try
             {
                 webSocket = new WebSocket(url);
-                webSocket.OnOpen += WebSocketOpen;
+                // webSocket.OnOpen += WebSocketOpen;
                 webSocket.OnError += WebSocketError;
-                webSocket.OnClose += WebSocketClose;
+                // webSocket.OnClose += WebSocketClose;
                 // webSocket.OnMessage += WebSocketReceive;
 
                 webSocket.ConnectAsync();
@@ -182,13 +200,13 @@ namespace TcgEngine
         //     }
         // }
 
-        private void WebSocketOpen(object sender, OpenEventArgs e)
-        {
-            Debug.Log("Websocket Connected");
-            this.isConnected = true;
-            // string uid = Guid.NewGuid().ToString();
-            // GameClient.Get().ConnectToGame2(uid);
-        }
+        // private void WebSocketOpen(object sender, OpenEventArgs e)
+        // {
+        //     Debug.Log("Websocket Connected");
+        //     this.isConnected = true;
+        //     // string uid = Guid.NewGuid().ToString();
+        //     // GameClient.Get().ConnectToGame2(uid);
+        // }
 
         private void WebSocketError(object sender, ErrorEventArgs e)
         {
@@ -196,11 +214,11 @@ namespace TcgEngine
             isConnected = false;
         }
 
-        private void WebSocketClose(object sender, CloseEventArgs e)
-        {
-            isConnected = false;
-            Debug.LogError(string.Format("网络已断开: StatusCode: {0}, Reason: {1}", e.StatusCode, e.Reason));
-        }
+        // private void WebSocketClose(object sender, CloseEventArgs e)
+        // {
+        //     isConnected = false;
+        //     Debug.LogError(string.Format("网络已断开: StatusCode: {0}, Reason: {1}", e.StatusCode, e.Reason));
+        // }
 
         public virtual void Close()
         {
