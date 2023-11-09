@@ -26,7 +26,7 @@ module.exports = {
   },
 
   //Mongo Connection
-  mongo_user: "apibara,
+  mongo_user: "apibara",
   mongo_pass: "apibara",
   mongo_host: "127.0.0.1",
   mongo_port: "27017",
