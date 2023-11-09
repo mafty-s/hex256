@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using TcgEngine.Server;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -36,6 +37,7 @@ namespace TcgEngine
         public delegate bool ApprovalEvent(ulong client_id, ConnectionData connect_data);
 
         public ApprovalEvent checkApproval; //Additional approval validations for when a client connects
+
 
         //---------
 
@@ -90,37 +92,33 @@ namespace TcgEngine
             }
         }
 
-        override public void OnOpen(WebSocketConnection connection)
-        {
-            // Here, (string)connection.id gives you a unique ID to identify the client.
-            Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
-            OnClientConnect(connection.id);
-        }
+        // override public void OnOpen(WebSocketConnection connection)
+        // {
+        //     // Here, (string)connection.id gives you a unique ID to identify the client.
+        //     Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
+        //     OnClientConnect(connection.id);
+        // }
 
-        override public void OnMessage(WebSocketMessage message)
-        {
-            Debug.Log("Received new message: " + message.data);
-            //todo 根据下文decode
-            // int length = Encoding.UTF8.GetByteCount(type) + writer.Length;
-            // int payloadLength = 4 + length;
-            // byte[] payload = new byte[payloadLength];
-            // Buffer.BlockCopy(BitConverter.GetBytes(length), 0, payload, 0, 4);
-            // Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
-            // Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
-
-            byte[] payload = message.data; // 假设 message.data 是字节数组类型
-
-            int length = BitConverter.ToInt32(payload, 0); // 获取长度
-            string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-            string content = Encoding.UTF8.GetString(payload, 4 + length, payload.Length - 4 - length); // 假设内容从第9个字节开始
-
-            Debug.Log("Length: " + length);
-            Debug.Log("Type: " + type);
-            Debug.Log("Content: " + content);
-
-
-            // this.messaging.
-        }
+        // override public void OnMessage(WebSocketMessage message)
+        // {
+        //     Debug.Log("Received new message: " + message.data);
+        //  
+        //     byte[] payload = message.data; // 假设 message.data 是字节数组类型
+        //
+        //     int length = BitConverter.ToInt32(payload, 0); // 获取长度
+        //     string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+        //     int contentLength = payload.Length - 4 - length; // 计算内容的长度
+        //     byte[] content = new byte[contentLength];
+        //     Array.Copy(payload, 4 + length, content, 0, contentLength); 
+        //     
+        //     Debug.Log("Length: " + length);
+        //     Debug.Log("Type: " + type);
+        //     Debug.Log("Content: " + content);
+        //
+        //     FastBufferReader reader = new FastBufferReader(content,Allocator.Temp);
+        //     server.ReceiveAction(message.connection.id, reader);
+        //     
+        // }
 
 
         void Update()
