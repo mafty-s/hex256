@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
+#if UNITY_EDITOR
 namespace TcgEngine
 {
     public static class AvatarDataImporter
@@ -63,3 +64,4 @@ namespace TcgEngine
         }
     }
 }
+#endif

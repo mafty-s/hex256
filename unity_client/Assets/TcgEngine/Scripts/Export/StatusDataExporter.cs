@@ -3,6 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 namespace TcgEngine
 {
     public class StatusDataExporter
@@ -43,3 +44,4 @@ namespace TcgEngine
         }
     }
 }
+#endif

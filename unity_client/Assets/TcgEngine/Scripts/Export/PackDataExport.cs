@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
+#if UNITY_EDITOR
 namespace TcgEngine
 {
     public class PackDataExporter
@@ -81,3 +82,4 @@ namespace TcgEngine
         }
     }
 }
+#endif
