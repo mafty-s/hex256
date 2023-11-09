@@ -70,7 +70,7 @@ namespace TcgEngine
                 transport = GetComponent<TcgTransport>();
                 messaging = new NetworkMessaging(this);
                 connection = new ConnectionData();
-                transport.Init();
+                transport.Initialize();
 
                 network.ConnectionApprovalCallback += ApprovalCheck;
                 network.OnClientConnectedCallback += OnClientConnect;

@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70dc9fcaed7d5274a8381edb4e206a92, type: 3}
-  m_Name: NetworkData
+  m_Script: {fileID: 11500000, guid: c92c9d3c273cc8940be4b9e940d8933e, type: 3}
+  m_Name: qwe
   m_EditorClassIdentifier: 
-  url: 127.0.0.1
-  port: 8777
-  api_url: 3.28.16.185:8085
-  api_https: 0
-  solo_type: 0
-  auth_type: 10
+  id: qwe
+  avatar: {fileID: 21300000, guid: d639ca0df0069c947b29a31ed7f2896e, type: 3}
+  sort_order: 0
