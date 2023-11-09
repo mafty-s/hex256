@@ -166,6 +166,7 @@ namespace TcgEngine
             network.NetworkConfig.ConnectionData = NetworkTool.NetSerialize(connection);
             offline_mode = false;
             network.StartClient();
+            this.OnClientConnect(0);
         }
 
         //Start simulated host with all networking turned off (but msg are still sent locally)

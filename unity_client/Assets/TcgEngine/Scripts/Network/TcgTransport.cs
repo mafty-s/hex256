@@ -40,6 +40,7 @@ using System.Collections.Generic;
 // using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using TcgEngine.Client;
 using Unity.Netcode;
 using UnityEngine;
 using UnityWebSocket;
@@ -136,6 +137,8 @@ namespace TcgEngine
         {
             Debug.Log("Websocket Connected");
             this.isConnected = true;
+            string uid = Guid.NewGuid().ToString();
+            GameClient.Get().ConnectToGame2(uid);
         }
         
         private void WebSocketError(object sender, ErrorEventArgs e)

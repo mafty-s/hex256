@@ -1,7 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using Unity.Collections;
 using UnityEngine;
 using Unity.Netcode;
+using WebSocketServer;
+using Random = UnityEngine.Random;
 
 namespace TcgEngine.Server
 {
@@ -56,6 +61,12 @@ namespace TcgEngine.Server
             }
         }
 
+        public virtual void OnClientConnected(WebSocketConnection connection)
+        {
+            ClientData iclient = new ClientData(connection.id);
+            client_list[connection.id] = iclient;
+        }
+        
         protected virtual void OnClientConnected(ulong client_id)
         {
             ClientData iclient = new ClientData(client_id);
@@ -73,6 +84,30 @@ namespace TcgEngine.Server
             }
         }
 
+        public void OnMessage(WebSocketMessage message)
+        {
+            Debug.Log("Received new message: " + message.data);
+         
+            byte[] payload = message.data; // 假设 message.data 是字节数组类型
+
+            int length = BitConverter.ToInt32(payload, 0); // 获取长度
+            string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+            int contentLength = payload.Length - 4 - length; // 计算内容的长度
+            byte[] content = new byte[contentLength];
+            Array.Copy(payload, 4 + length, content, 0, contentLength); 
+            
+            Debug.Log("Length: " + length);
+            Debug.Log("Type: " + type);
+            Debug.Log("Content: " + content);
+
+            if (type == "matchmaking")
+            {
+                FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
+                this.ReceiveMatchmaking(message.connection.id, reader);
+            }
+
+        }
+        
         protected virtual void ReceiveMatchmaking(ulong client_id, FastBufferReader reader)
         {
             ClientData iclient = GetClient(client_id);
@@ -114,6 +149,7 @@ namespace TcgEngine.Server
             if (!matchmaking_players.ContainsKey(user_id))
                 matchmaking_players.Add(user_id, pdata);
 
+            Debug.Log("matchmaking_players:"+matchmaking_players.Count);
             //Start searching for other valid players
             float wait_max = 20f;
             int variance_max = 2000;

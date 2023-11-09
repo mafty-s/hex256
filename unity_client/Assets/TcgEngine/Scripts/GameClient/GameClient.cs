@@ -228,6 +228,24 @@ namespace TcgEngine.Client
 
             Messaging.SendObject("connect", ServerID, nplayer, NetworkDelivery.Reliable);
         }
+        
+        public virtual  void ConnectToGame2(string uid)
+        {
+
+            if (!TcgNetwork.Get().IsActive())
+                return; //Not connected to server
+
+            Debug.Log("Connect to Game: " + uid);
+
+            MsgPlayerConnect nplayer = new MsgPlayerConnect();
+            nplayer.user_id = Authenticator.Get().UserID;
+            nplayer.username = Authenticator.Get().Username;
+            nplayer.game_uid = uid;
+            nplayer.nb_players = game_settings.nb_players;
+            nplayer.observer = game_settings.game_type == GameType.Observer;
+
+            Messaging.SendObject("connect", ServerID, nplayer, NetworkDelivery.Reliable);
+        }
 
         public virtual void SendGameSettings()
         {
