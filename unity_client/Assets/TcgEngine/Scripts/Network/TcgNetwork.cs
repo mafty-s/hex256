@@ -99,7 +99,14 @@ namespace TcgEngine
             // Here, (string)connection.id gives you a unique ID to identify the client.
             Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
             OnClientConnect(connection.id);
-            this.onClientJoin.Invoke(connection.id);
+            onClientJoin.Invoke(connection.id);
+        }
+
+        //服务端收到了客户端的断开请求
+        override public void OnClose(WebSocketConnection connection)
+        {
+            Debug.Log("TcgWebSocketServer OnClose:" + connection.id);
+            onClientQuit.Invoke(connection.id);
         }
 
         //服务端收到了来自客户端的消息

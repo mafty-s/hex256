@@ -37,7 +37,7 @@ namespace TcgEngine.Server
         protected virtual void Start()
         {
             TcgNetwork network = TcgNetwork.Get();
-            // network.onClientJoin += OnClientConnected;
+            network.onClientJoin += OnClientConnected;
             network.onClientQuit += OnClientDisconnected;
             Messaging.ListenMsg("connect", ReceiveConnectPlayer);
             Messaging.ListenMsg("action", ReceiveGameAction);
@@ -147,6 +147,12 @@ namespace TcgEngine.Server
             {
                 gserver.RemoveClient(iclient);
             }
+        }
+        
+        protected virtual void OnClientConnected(ulong client_id)
+        {
+            ClientData iclient = new ClientData(client_id);
+            client_list[client_id] = iclient;
         }
         
         public virtual void OnClientDisconnected(ulong client_id)
