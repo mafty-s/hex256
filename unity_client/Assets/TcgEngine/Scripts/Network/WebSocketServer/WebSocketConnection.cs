@@ -170,10 +170,14 @@ namespace WebSocketServer {
             return dataframe;
         }
         
-        public void Send(string message)
+      
+
+        public void SendBuff(byte[] encodedMessage)
         {
-            byte[] encodedMessage = WebSocketProtocol.EncodeText(message);
-            stream.Write(encodedMessage, 0, encodedMessage.Length);
+            
+            WebSocketDataFrame frame = WebSocketProtocol.CreateDataFrame(encodedMessage, WebSocketOpCode.Binary, true);
+            byte[] data = WebSocketProtocol.ConvertWebSocketDataFrameToBytes(frame);
+            stream.Write(data, 0, data.Length);
         }
 
     }

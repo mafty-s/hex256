@@ -98,6 +98,7 @@ namespace TcgEngine
         {
             // Here, (string)connection.id gives you a unique ID to identify the client.
             Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
+            clients[connection.id] = connection;
             OnClientConnect(connection.id);
             onClientJoin.Invoke(connection.id);
         }
@@ -179,6 +180,12 @@ namespace TcgEngine
             offline_mode = false;
             network.StartServer();
             AfterConnected();
+        }
+
+        //发还给客户端
+        public void SendMessage(ulong target,byte[] payload)
+        {
+            SendBuff(target, payload);
         }
 
         //If is_host is set to true, it means this player created the game on a dedicated server

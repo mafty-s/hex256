@@ -47,6 +47,8 @@ namespace WebSocketServer
 
         private bool started;
 
+        public Dictionary<ulong, WebSocketConnection> clients = new Dictionary<ulong, WebSocketConnection>();
+
         void Awake()
         {
             if (onMessage == null) onMessage = new WebSocketMessageEvent();
@@ -160,6 +162,15 @@ namespace WebSocketServer
         {
         }
 
+
+        public void SendBuff(ulong id, byte[] buff)
+        {
+            if (clients.ContainsKey(id))
+            {
+                WebSocketConnection conn = clients[id];
+                conn.SendBuff(buff);
+            }
+        }
 
         // private void SendMessage() {
         //     if (connectedTcpClient == null) {

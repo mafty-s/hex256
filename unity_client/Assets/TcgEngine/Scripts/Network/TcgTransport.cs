@@ -64,12 +64,14 @@ namespace TcgEngine
             webSocket = new WebSocket(url); 
             webSocket.OnError += WebSocketError;
             webSocket.OnOpen += WebSocketOpen;
+            webSocket.OnMessage += WebSocketReceive;
             isConnected = false;
             // webSocket = new ClientWebSocket();
             // cancellationTokenSource = new CancellationTokenSource();
         }
 
 
+        //发送消息给服务端
         public void SendMessageByte(byte[] writer)
         {
             if (webSocket == null) return;
@@ -99,6 +101,7 @@ namespace TcgEngine
         {
             webSocket.OnMessage += (sender, e) =>
             {
+                Debug.Log("Client Recv Msg From Server OnMessage");
                 if (e.IsText)
                 {
                     // callback(e.Data.to);
@@ -118,6 +121,20 @@ namespace TcgEngine
                 Debug.Log("TcgTransport OnOpen");
                 callback();
             };
+        }
+        
+        private void WebSocketReceive(object sender, MessageEventArgs e)
+        {
+
+            if (e.IsText)
+            {
+                Debug.Log(e.Data);
+            
+            }
+            else if (e.IsBinary)
+            {
+                Debug.Log(string.Format("Bytes ({1}): {0}", e.Data, e.RawData.Length));
+            }
         }
         
         public void OnClose(Action callback)

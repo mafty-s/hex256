@@ -321,6 +321,18 @@ namespace TcgEngine
                 network.GetTransport().SendMessageByte(payload);
                 
             }
+            else
+            {
+                //发还给客户端
+                int type_length = Encoding.UTF8.GetByteCount(type) ;
+                int payloadLength = 4 + type_length + writer.Length;
+                byte[] payload = new byte[payloadLength];
+                Buffer.BlockCopy(BitConverter.GetBytes(type_length), 0, payload, 0, 4);
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
+                Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
+                
+                TcgNetwork.Get().SendMessage(target,payload);
+            }
         }
 
         private void SendOnline(string type, IReadOnlyList<ulong> targets, FastBufferWriter writer, NetworkDelivery delivery)

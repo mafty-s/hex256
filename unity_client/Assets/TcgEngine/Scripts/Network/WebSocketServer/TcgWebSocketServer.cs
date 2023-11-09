@@ -23,7 +23,7 @@ namespace TcgEngine
             Debug.Log(message.id);
             Debug.Log(message.data);
 
-            message.connection.Send("Yes!" + message.data);
+            // message.connection.Send("Yes!" + message.data);
         }
 
         override public void OnClose(WebSocketConnection connection)
@@ -40,7 +40,7 @@ namespace TcgEngine
         public void onMessageReceived(WebSocketMessage message)
         {
             Debug.Log("Received new message: " + message.data);
-            message.connection.Send("Yes!" + message.data);
+            // message.connection.Send("Yes!" + message.data);
         }
 
         public void onConnectionClosed(WebSocketConnection connection)

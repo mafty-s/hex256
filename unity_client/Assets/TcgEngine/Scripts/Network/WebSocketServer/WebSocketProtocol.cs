@@ -123,6 +123,20 @@ namespace WebSocketServer {
                  return new WebSocketDataFrame(false, false, 0, 0, 0, null);
              }
      
+             public static WebSocketDataFrame CreateDataFrame(byte[] data, WebSocketOpCode opcode, bool mask)
+             {
+                 WebSocketDataFrame frame = new WebSocketDataFrame();
+
+                 frame.fin = true;
+                 frame.mask = mask;
+                 frame.opcode = (int)opcode;
+                 frame.length = data.Length;
+                 frame.offset = 0;
+                 frame.data = data;
+
+                 return frame;
+             }
+             
              public static void ParseDataFrameHead(byte[] bytes, ref WebSocketDataFrame dataframe) {
                  bool fin = (bytes[0] & 0b10000000) != 0,
                      mask = (bytes[1] & 0b10000000) != 0; // must be true, "All messages from the client to the server have this bit set"
@@ -172,6 +186,47 @@ namespace WebSocketServer {
                      return text;
                  }
                  return "";
+             }
+             
+             public static byte[] ConvertWebSocketDataFrameToBytes(WebSocketDataFrame frame)
+             {
+                 List<byte> bytes = new List<byte>();
+
+                 // 添加第一个字节
+                 byte firstByte = (byte)(frame.fin ? 0b10000000 : 0b00000000);
+                 firstByte |= (byte)frame.opcode;
+                 bytes.Add(firstByte);
+
+                 // 添加第二个字节
+                 byte secondByte = (byte)(frame.mask ? 0b10000000 : 0b00000000);
+                 if (frame.length <= 125)
+                 {
+                     secondByte |= (byte)frame.length;
+                     bytes.Add(secondByte);
+                 }
+                 else if (frame.length <= ushort.MaxValue)
+                 {
+                     secondByte |= 126;
+                     bytes.Add(secondByte);
+                     bytes.AddRange(BitConverter.GetBytes((ushort)frame.length));
+                 }
+                 else
+                 {
+                     secondByte |= 127;
+                     bytes.Add(secondByte);
+                     bytes.AddRange(BitConverter.GetBytes((ulong)frame.length));
+                 }
+
+                 // 添加掩码（如果需要）
+                 if (frame.mask)
+                 {
+                     // bytes.AddRange(frame.maskingKey);
+                 }
+
+                 // 添加数据
+                 bytes.AddRange(frame.data);
+
+                 return bytes.ToArray();
              }
              
              public static byte[] EncodeText(string text)
@@ -225,4 +280,6 @@ namespace WebSocketServer {
         Pong = 0xA
     }
 
+    
+   
 }
