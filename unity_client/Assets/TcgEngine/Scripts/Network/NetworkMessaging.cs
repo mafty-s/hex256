@@ -51,6 +51,7 @@ namespace TcgEngine
         {
             if (IsOnline)
             {
+                Debug.Log("RegisterNetMsg");
                 network.NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(type, (ulong client_id, FastBufferReader reader) =>
                 {
                     ReceiveNetMessage(type, client_id, reader);

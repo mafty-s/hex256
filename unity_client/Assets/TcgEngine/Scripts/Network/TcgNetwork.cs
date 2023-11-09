@@ -85,9 +85,9 @@ namespace TcgEngine
                 transport.Init();
 
 
-                // network.ConnectionApprovalCallback += ApprovalCheck;
-                // network.OnClientConnectedCallback += OnClientConnect;
-                // network.OnClientDisconnectCallback += OnClientDisconnect;
+                network.ConnectionApprovalCallback += ApprovalCheck;
+                network.OnClientConnectedCallback += OnClientConnect;
+                network.OnClientDisconnectCallback += OnClientDisconnect;
 
                 InitAuth();
             }
@@ -132,7 +132,7 @@ namespace TcgEngine
         }
 
         //客户端收到了来自服务端的消息
-        public void ClientOnMessage(byte[] payload)
+        public void OnClientOnMessage(byte[] payload)
         {
             int length = BitConverter.ToInt32(payload, 0); // 获取长度
             string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
@@ -183,7 +183,7 @@ namespace TcgEngine
         }
 
         //发还给客户端
-        public void SendMessage(ulong target,byte[] payload)
+        public void SendMessage(ulong target, byte[] payload)
         {
             SendBuff(target, payload);
         }
@@ -194,9 +194,9 @@ namespace TcgEngine
         {
             Debug.Log("Join Server: " + server_url + " " + port);
             string ip = NetworkTool.HostToIP(server_url);
-            transport.OnOpen(onConnect.Invoke);
-            transport.OnClose(onDisconnect.Invoke);
-            transport.OnMessage(ClientOnMessage);
+            transport.OnOpen(OnClientConnect); //客户端链上了服务器
+            transport.OnClose(OnClientDisconnect); //客户端断开了服务器
+            transport.OnMessage(OnClientOnMessage); //客户端收到了数据
             transport.SetClient(ip, port);
             connection.user_id = auth.UserID;
             connection.username = auth.Username;
@@ -270,6 +270,7 @@ namespace TcgEngine
 
         private void OnClientConnect(ulong client_id)
         {
+            connected = true;
             if (IsServer && client_id != ServerID)
             {
                 Debug.Log("Client Connected: " + client_id);
@@ -280,8 +281,11 @@ namespace TcgEngine
                 AfterConnected(); //AfterConnected wasn't called yet for client
         }
 
+
         private void OnClientDisconnect(ulong client_id)
         {
+            connected = false;
+
             if (IsServer && client_id != ServerID)
             {
                 Debug.Log("Client Disconnected: " + client_id);
@@ -346,7 +350,7 @@ namespace TcgEngine
 
         public bool IsConnected()
         {
-            return offline_mode || network.IsServer || network.IsConnectedClient || transport.IsConnected();
+            return offline_mode || network.IsServer || network.IsConnectedClient || connected;
         }
 
         public bool IsActive()

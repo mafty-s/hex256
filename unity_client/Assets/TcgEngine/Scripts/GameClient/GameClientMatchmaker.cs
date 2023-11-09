@@ -63,7 +63,7 @@ namespace TcgEngine.Client
                 match_timer += Time.deltaTime;
 
                 //Send periodic request
-                if (IsConnected() && timer > 2f)
+                if (IsConnected() && timer > 3f)
                 {
                     timer = 0f;
                     SendMatchRequest(true, matchmaking_group, matchmaking_players);
@@ -174,6 +174,7 @@ namespace TcgEngine.Client
 
         private void SendMatchRequest(bool refresh, string group, int nb_players)
         {
+            Debug.Log("SendMatchRequest");
             MsgMatchmaking msg_match = new MsgMatchmaking();
             UserData udata = Authenticator.Get().GetUserData();
             msg_match.user_id = Authenticator.Get().GetUserId();
@@ -204,7 +205,8 @@ namespace TcgEngine.Client
         {
             reader.ReadNetworkSerializable(out MatchmakingResult msg);
 
-            if (IsConnected() && matchmaking && matchmaking_group == msg.group)
+            bool isC = IsConnected();
+            if (isC && matchmaking && matchmaking_group == msg.group)
             {
                 matchmaking = !msg.success; //Stop matchmaking if success
                 onMatchmaking?.Invoke(msg);

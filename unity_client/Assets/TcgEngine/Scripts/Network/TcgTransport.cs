@@ -104,22 +104,26 @@ namespace TcgEngine
                 Debug.Log("Client Recv Msg From Server OnMessage");
                 if (e.IsText)
                 {
-                    // callback(e.Data.to);
+                    Debug.LogError("is Text");
                 }
                 else if (e.IsBinary)
                 {
                     // 处理二进制数据的逻辑
                     callback(e.RawData);
                 }
+                else
+                {
+                    Debug.LogError("Unknown");
+                }
             };
         }
 
-        public void OnOpen(Action callback)
+        public void OnOpen(Action<ulong> callback)
         {
             webSocket.OnOpen += (sender, e) =>
             {
                 Debug.Log("TcgTransport OnOpen");
-                callback();
+                callback(0);
             };
         }
         
@@ -137,12 +141,12 @@ namespace TcgEngine
             }
         }
         
-        public void OnClose(Action callback)
+        public void OnClose(Action<ulong> callback)
         {
             webSocket.OnClose += (sender, e) =>
             {
                 Debug.LogError(string.Format("网络已断开: StatusCode: {0}, Reason: {1}", e.StatusCode, e.Reason));
-                callback();
+                callback(0);
             };
         }
         
