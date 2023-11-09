@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace TcgEngine
 {
@@ -302,7 +305,22 @@ namespace TcgEngine
 
         private void SendOnline(string type, ulong target, FastBufferWriter writer, NetworkDelivery delivery)
         {
-            network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, target, writer, delivery);
+            // network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, target, writer, delivery);
+
+            Debug.Log("NetworkMessaging SendOnline"+type+target);
+            if (!IsServer)
+            {
+                //发还给服务端
+                int length = Encoding.UTF8.GetByteCount(type) + writer.Length;
+                int payloadLength = 4 + length;
+                byte[] payload = new byte[payloadLength];
+                Buffer.BlockCopy(BitConverter.GetBytes(length), 0, payload, 0, 4);
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
+                Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
+                
+                network.GetTransport().SendMessageByte(payload);
+                
+            }
         }
 
         private void SendOnline(string type, IReadOnlyList<ulong> targets, FastBufferWriter writer, NetworkDelivery delivery)

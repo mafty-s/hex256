@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+// using WebSocketServer;
 
 namespace TcgEngine
 {
@@ -15,7 +18,8 @@ namespace TcgEngine
     [DefaultExecutionOrder(-10)]
     [RequireComponent(typeof(NetworkManager))]
     [RequireComponent(typeof(TcgTransport))]
-    public class TcgNetwork : MonoBehaviour
+    public class TcgNetwork:MonoBehaviour
+        // :  WebSocketServer.WebSocketServer
     {
         public NetworkData data;
 
@@ -48,6 +52,11 @@ namespace TcgEngine
         private bool offline_mode = false;
         private bool connected = false;
 
+        public TcgTransport GetTransport()
+        {
+            return transport;
+        }
+        
         void Awake()
         {
             if (instance != null && instance != this)
@@ -71,44 +80,78 @@ namespace TcgEngine
                 messaging = new NetworkMessaging(this);
                 connection = new ConnectionData();
                 transport.Init();
+
+
                 
-                network.ConnectionApprovalCallback += ApprovalCheck;
-                network.OnClientConnectedCallback += OnClientConnect;
-                network.OnClientDisconnectCallback += OnClientDisconnect;
+                // network.ConnectionApprovalCallback += ApprovalCheck;
+                // network.OnClientConnectedCallback += OnClientConnect;
+                // network.OnClientDisconnectCallback += OnClientDisconnect;
 
                 InitAuth();
             }
         }
+        // override public void OnOpen(WebSocketConnection connection)
+        // {
+        //     // Here, (string)connection.id gives you a unique ID to identify the client.
+        //     Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
+        //     OnClientConnect(connection.id);
+        // }
+        
+        // public void onMessageReceived(WebSocketMessage message)
+        // {
+        //     Debug.Log("Received new message: " + message.data);
+        //     //todo 根据下文decode
+        //     // int length = Encoding.UTF8.GetByteCount(type) + writer.Length;
+        //     // int payloadLength = 4 + length;
+        //     // byte[] payload = new byte[payloadLength];
+        //     // Buffer.BlockCopy(BitConverter.GetBytes(length), 0, payload, 0, 4);
+        //     // Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
+        //     // Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
+        //
+        //     byte[] payload = message.data; // 假设 message.data 是字节数组类型
+        //
+        //     int length = BitConverter.ToInt32(payload, 0); // 获取长度
+        //     string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+        //     string content = Encoding.UTF8.GetString(payload, 4+length, payload.Length); // 假设内容从第9个字节开始
+        //
+        //     Debug.Log("Length: " + length);
+        //     Debug.Log("Type: " + type);
+        //     Debug.Log("Content: " + content);
+        // }
+
 
         void Update()
         {
-
+            // base.Update();
         }
 
         //Start a host (client + server)
         public void StartHost(ushort port)
         {
-            Debug.Log("Host Server Port " + port);
-            transport.SetServer(port);
-            connection.user_id = auth.UserID;
-            connection.username = auth.Username;
-            network.NetworkConfig.ConnectionData = NetworkTool.NetSerialize(connection);
-            offline_mode = false;
-            network.StartHost();
-            AfterConnected();
+            // Debug.Log("Host Server Port " + port);
+            // transport.SetServer(port);
+            // connection.user_id = auth.UserID;
+            // connection.username = auth.Username;
+            // network.NetworkConfig.ConnectionData = NetworkTool.NetSerialize(connection);
+            // offline_mode = false;
+            // network.StartHost();
+            // AfterConnected();
+            //todo
         }
 
         //Start a dedicated server
         public void StartServer(ushort port)
         {
             Debug.Log("Start Server Port " + port);
-            transport.SetServer(port);
+            // StartListen();
+            // transport.SetServer(port);
             connection.user_id = "";
             connection.username = "";
             network.NetworkConfig.ConnectionData = NetworkTool.NetSerialize(connection);
             offline_mode = false;
             network.StartServer();
             AfterConnected();
+           
         }
 
         //If is_host is set to true, it means this player created the game on a dedicated server
@@ -265,7 +308,7 @@ namespace TcgEngine
 
         public bool IsConnected()
         {
-            return offline_mode || network.IsServer || network.IsConnectedClient;
+            return offline_mode || network.IsServer || network.IsConnectedClient || transport.IsConnected();
         }
 
         public bool IsActive()
