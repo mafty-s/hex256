@@ -1,29 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
-using Netcode.Transports.WebSocket;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 namespace TcgEngine
 {
     //Just a wrapper of UnityTransport to make it easier to replace with WebSocketTransport if planning to build for WebGL
 
-    public class TcgTransport : WebSocketTransport
+    public class TcgTransport : MonoBehaviour
     {
+        private UnityTransport transport;
+
         private const string listen_all = "0.0.0.0";
 
-        public void SetServer(ushort port)
+        public virtual void Init()
         {
-            this.ConnectAddress = listen_all;
-            this.Port = port;
+            transport = GetComponent<UnityTransport>();
         }
 
-        public void SetClient(string address, ushort port)
+        public virtual void SetServer(ushort port)
         {
-            this.ConnectAddress = address;
-            this.Port = port;
+            transport.ConnectionData.ServerListenAddress = listen_all;
+            transport.SetConnectionData(listen_all, port);
         }
 
-        public string GetAddress() { return ConnectAddress; }
-        public ushort GetPort() {  return Port; }
+        public virtual void SetClient(string address, ushort port)
+        {
+            transport.SetConnectionData(address, port);
+        }
+
+        public virtual string GetAddress() { return transport.ConnectionData.Address; }
+        public virtual ushort GetPort() { return transport.ConnectionData.Port; }
     }
 }
