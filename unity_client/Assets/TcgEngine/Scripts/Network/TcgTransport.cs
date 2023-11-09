@@ -137,6 +137,7 @@ namespace TcgEngine
         {
             webSocket.OnOpen += (sender, e) =>
             {
+                this.isConnected = true;
                 callback();
             };
         }
