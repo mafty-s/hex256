@@ -116,6 +116,23 @@ namespace TcgEngine
 
         WebSocket webSocket;
 
+        //todo callback类型
+        public void OnMessage(Action<byte[]> callback)
+        {
+            webSocket.OnMessage += (sender, e) =>
+            {
+                if (e.IsText)
+                {
+                    // callback(e.Data.to);
+                }
+                else if (e.IsBinary)
+                {
+                    // 处理二进制数据的逻辑
+                    callback(e.RawData);
+                }
+            };
+        }
+
         public virtual void SetClient(string address, ushort port)
         {
             string url = "ws://" + "localhost" + ":" + port;
@@ -126,7 +143,7 @@ namespace TcgEngine
                 webSocket.OnOpen += WebSocketOpen;
                 webSocket.OnError += WebSocketError;
                 webSocket.OnClose += WebSocketClose;
-                webSocket.OnMessage += WebSocketReceive;
+                // webSocket.OnMessage += WebSocketReceive;
 
                 webSocket.ConnectAsync();
             }
@@ -135,35 +152,35 @@ namespace TcgEngine
                 Debug.LogError("WebSocket connection error: " + e.Message);
             }
         }
-        
-        private void WebSocketReceive(object sender, MessageEventArgs e)
-        {
 
-            if (e.IsText)
-            {
-                Debug.Log(e.Data);
-            
-            }
-            else if (e.IsBinary)
-            {
-                Debug.LogError(string.Format("Bytes ({1}): {0}", e.Data, e.RawData.Length));
-                
-                byte[] payload = e.RawData; // 假设 message.data 是字节数组类型
-
-                int length = BitConverter.ToInt32(payload, 0); // 获取长度
-                string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-                int contentLength = payload.Length - 4 - length; // 计算内容的长度
-                byte[] content = new byte[contentLength];
-                Array.Copy(payload, 4 + length, content, 0, contentLength); 
-            
-                Debug.Log("Length: " + length);
-                Debug.Log("Type: " + type);
-                Debug.Log("Content: " + content);
-                
-                //todo
-                
-            }
-        }
+        // private void WebSocketReceive(object sender, MessageEventArgs e)
+        // {
+        //
+        //     if (e.IsText)
+        //     {
+        //         Debug.Log(e.Data);
+        //     
+        //     }
+        //     else if (e.IsBinary)
+        //     {
+        //         Debug.LogError(string.Format("Bytes ({1}): {0}", e.Data, e.RawData.Length));
+        //         
+        //         byte[] payload = e.RawData; // 假设 message.data 是字节数组类型
+        //
+        //         int length = BitConverter.ToInt32(payload, 0); // 获取长度
+        //         string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+        //         int contentLength = payload.Length - 4 - length; // 计算内容的长度
+        //         byte[] content = new byte[contentLength];
+        //         Array.Copy(payload, 4 + length, content, 0, contentLength); 
+        //     
+        //         Debug.Log("Length: " + length);
+        //         Debug.Log("Type: " + type);
+        //         Debug.Log("Content: " + content);
+        //         
+        //         //todo
+        //         
+        //     }
+        // }
 
         private void WebSocketOpen(object sender, OpenEventArgs e)
         {
@@ -172,19 +189,19 @@ namespace TcgEngine
             // string uid = Guid.NewGuid().ToString();
             // GameClient.Get().ConnectToGame2(uid);
         }
-        
+
         private void WebSocketError(object sender, ErrorEventArgs e)
         {
             Debug.LogError(string.Format("Websocket WebSocketError: Reason: {0}", e.Message));
             isConnected = false;
         }
-        
+
         private void WebSocketClose(object sender, CloseEventArgs e)
         {
             isConnected = false;
             Debug.LogError(string.Format("网络已断开: StatusCode: {0}, Reason: {1}", e.StatusCode, e.Reason));
         }
-        
+
         public virtual void Close()
         {
             // cancellationTokenSource.Cancel();

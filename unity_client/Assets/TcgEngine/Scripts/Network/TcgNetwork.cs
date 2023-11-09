@@ -124,31 +124,20 @@ namespace TcgEngine
         }
 
         //客户端收到了来自服务端的消息
-        public void ClientOnMessage(object sender, MessageEventArgs e)
+        public void ClientOnMessage(byte[] payload)
         {
-            if (e.IsText)
-            {
-                Debug.Log(e.Data);
-            }
-            else if (e.IsBinary)
-            {
-                Debug.LogError(string.Format("Bytes ({1}): {0}", e.Data, e.RawData.Length));
+            int length = BitConverter.ToInt32(payload, 0); // 获取长度
+            string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+            int contentLength = payload.Length - 4 - length; // 计算内容的长度
+            byte[] content = new byte[contentLength];
+            Array.Copy(payload, 4 + length, content, 0, contentLength);
 
-                byte[] payload = e.RawData; // 假设 message.data 是字节数组类型
+            Debug.Log("Length: " + length);
+            Debug.Log("Type: " + type);
+            Debug.Log("Content: " + content);
 
-                int length = BitConverter.ToInt32(payload, 0); // 获取长度
-                string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-                int contentLength = payload.Length - 4 - length; // 计算内容的长度
-                byte[] content = new byte[contentLength];
-                Array.Copy(payload, 4 + length, content, 0, contentLength);
-
-                Debug.Log("Length: " + length);
-                Debug.Log("Type: " + type);
-                Debug.Log("Content: " + content);
-
-                FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
-                this.messaging.ReceiveNetMessage(type, 0, reader);
-            }
+            FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
+            this.messaging.ReceiveNetMessage(type, 0, reader);
         }
 
 
@@ -191,6 +180,7 @@ namespace TcgEngine
         {
             Debug.Log("Join Server: " + server_url + " " + port);
             string ip = NetworkTool.HostToIP(server_url);
+            transport.OnMessage(ClientOnMessage);
             transport.SetClient(ip, port);
             connection.user_id = auth.UserID;
             connection.username = auth.Username;
