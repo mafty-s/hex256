@@ -175,7 +175,7 @@ namespace WebSocketServer {
         public void SendBuff(byte[] encodedMessage)
         {
             
-            WebSocketDataFrame frame = WebSocketProtocol.CreateDataFrame(encodedMessage, WebSocketOpCode.Binary, true);
+            WebSocketDataFrame frame = WebSocketProtocol.CreateDataFrame(encodedMessage, WebSocketOpCode.Binary, false);
             byte[] data = WebSocketProtocol.ConvertWebSocketDataFrameToBytes(frame);
             stream.Write(data, 0, data.Length);
         }

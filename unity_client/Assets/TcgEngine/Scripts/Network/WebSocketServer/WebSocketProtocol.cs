@@ -135,6 +135,7 @@ namespace WebSocketServer {
                  frame.data = data;
 
                  return frame;
+                 
              }
              
              public static void ParseDataFrameHead(byte[] bytes, ref WebSocketDataFrame dataframe) {
