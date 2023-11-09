@@ -7,6 +7,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityWebSocket;
 using WebSocketServer;
 
 // using WebSocketServer;
@@ -92,33 +93,63 @@ namespace TcgEngine
             }
         }
 
-        // override public void OnOpen(WebSocketConnection connection)
-        // {
-        //     // Here, (string)connection.id gives you a unique ID to identify the client.
-        //     Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
-        //     OnClientConnect(connection.id);
-        // }
+        //服务端收到了客户端的链接请求
+        override public void OnOpen(WebSocketConnection connection)
+        {
+            // Here, (string)connection.id gives you a unique ID to identify the client.
+            Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
+            OnClientConnect(connection.id);
+            this.onClientJoin.Invoke(connection.id);
+        }
 
-        // override public void OnMessage(WebSocketMessage message)
-        // {
-        //     Debug.Log("Received new message: " + message.data);
-        //  
-        //     byte[] payload = message.data; // 假设 message.data 是字节数组类型
-        //
-        //     int length = BitConverter.ToInt32(payload, 0); // 获取长度
-        //     string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-        //     int contentLength = payload.Length - 4 - length; // 计算内容的长度
-        //     byte[] content = new byte[contentLength];
-        //     Array.Copy(payload, 4 + length, content, 0, contentLength); 
-        //     
-        //     Debug.Log("Length: " + length);
-        //     Debug.Log("Type: " + type);
-        //     Debug.Log("Content: " + content);
-        //
-        //     FastBufferReader reader = new FastBufferReader(content,Allocator.Temp);
-        //     server.ReceiveAction(message.connection.id, reader);
-        //     
-        // }
+        //服务端收到了来自客户端的消息
+        override public void OnMessage(WebSocketMessage message)
+        {
+            Debug.Log("Received new message: " + message.data);
+
+            byte[] payload = message.data; // 假设 message.data 是字节数组类型
+
+            int length = BitConverter.ToInt32(payload, 0); // 获取长度
+            string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+            int contentLength = payload.Length - 4 - length; // 计算内容的长度
+            byte[] content = new byte[contentLength];
+            Array.Copy(payload, 4 + length, content, 0, contentLength);
+
+            Debug.Log("Length: " + length);
+            Debug.Log("Type: " + type);
+            Debug.Log("Content: " + content);
+
+            FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
+            this.messaging.ReceiveNetMessage(type, message.connection.id, reader);
+        }
+
+        //客户端收到了来自服务端的消息
+        public void ClientOnMessage(object sender, MessageEventArgs e)
+        {
+            if (e.IsText)
+            {
+                Debug.Log(e.Data);
+            }
+            else if (e.IsBinary)
+            {
+                Debug.LogError(string.Format("Bytes ({1}): {0}", e.Data, e.RawData.Length));
+
+                byte[] payload = e.RawData; // 假设 message.data 是字节数组类型
+
+                int length = BitConverter.ToInt32(payload, 0); // 获取长度
+                string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+                int contentLength = payload.Length - 4 - length; // 计算内容的长度
+                byte[] content = new byte[contentLength];
+                Array.Copy(payload, 4 + length, content, 0, contentLength);
+
+                Debug.Log("Length: " + length);
+                Debug.Log("Type: " + type);
+                Debug.Log("Content: " + content);
+
+                FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
+                this.messaging.ReceiveNetMessage(type, 0, reader);
+            }
+        }
 
 
         void Update()

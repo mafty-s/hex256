@@ -37,6 +37,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 // using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -125,6 +126,8 @@ namespace TcgEngine
                 webSocket.OnOpen += WebSocketOpen;
                 webSocket.OnError += WebSocketError;
                 webSocket.OnClose += WebSocketClose;
+                webSocket.OnMessage += WebSocketReceive;
+
                 webSocket.ConnectAsync();
             }
             catch (Exception e)
@@ -132,13 +135,42 @@ namespace TcgEngine
                 Debug.LogError("WebSocket connection error: " + e.Message);
             }
         }
+        
+        private void WebSocketReceive(object sender, MessageEventArgs e)
+        {
+
+            if (e.IsText)
+            {
+                Debug.Log(e.Data);
+            
+            }
+            else if (e.IsBinary)
+            {
+                Debug.LogError(string.Format("Bytes ({1}): {0}", e.Data, e.RawData.Length));
+                
+                byte[] payload = e.RawData; // 假设 message.data 是字节数组类型
+
+                int length = BitConverter.ToInt32(payload, 0); // 获取长度
+                string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
+                int contentLength = payload.Length - 4 - length; // 计算内容的长度
+                byte[] content = new byte[contentLength];
+                Array.Copy(payload, 4 + length, content, 0, contentLength); 
+            
+                Debug.Log("Length: " + length);
+                Debug.Log("Type: " + type);
+                Debug.Log("Content: " + content);
+                
+                //todo
+                
+            }
+        }
 
         private void WebSocketOpen(object sender, OpenEventArgs e)
         {
             Debug.Log("Websocket Connected");
             this.isConnected = true;
-            string uid = Guid.NewGuid().ToString();
-            GameClient.Get().ConnectToGame2(uid);
+            // string uid = Guid.NewGuid().ToString();
+            // GameClient.Get().ConnectToGame2(uid);
         }
         
         private void WebSocketError(object sender, ErrorEventArgs e)

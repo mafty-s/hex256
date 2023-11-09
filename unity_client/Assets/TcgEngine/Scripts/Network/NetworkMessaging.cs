@@ -58,7 +58,7 @@ namespace TcgEngine
             }
         }
 
-        private void ReceiveNetMessage(string type, ulong client_id, FastBufferReader reader)
+        public void ReceiveNetMessage(string type, ulong client_id, FastBufferReader reader)
         {
             bool valid = msg_dict.TryGetValue(type, out System.Action<ulong, FastBufferReader> callback);
             if (valid && IsOnline)
