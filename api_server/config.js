@@ -1,7 +1,7 @@
 module.exports = {
   version: "1.09", 
 
-  port: 8085
+  port: 8085,
   port_https: 8445,
   api_title: "TCG Engine API",  //Display name
   api_url: "",                  //If you set the URL, will block all direct IP access, or wrong url access, leave blank to allow all url access
