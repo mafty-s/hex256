@@ -17,6 +17,16 @@ namespace UnityWebSocket
 
         internal int instanceId = 0;
 
+        public WebSocket()
+        {
+        }
+
+        public void SetAddress(string address)
+        {
+            this.Address = address;
+            AllocateInstance();
+        }
+
         public WebSocket(string address)
         {
             this.Address = address;

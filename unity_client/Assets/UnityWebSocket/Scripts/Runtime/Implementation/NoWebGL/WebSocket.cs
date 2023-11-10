@@ -48,6 +48,16 @@ namespace UnityWebSocket
         private bool isOpening => socket != null && socket.State == System.Net.WebSockets.WebSocketState.Open;
 
         #region APIs 
+        
+        public WebSocket()
+        {
+        }
+
+        public void SetAddress(string address)
+        {
+            this.Address = address;
+        }
+        
         public WebSocket(string address)
         {
             this.Address = address;
@@ -92,13 +102,6 @@ namespace UnityWebSocket
         {
             if (!isOpening) return;
             SendBufferAsync(new SendBuffer(null, WebSocketMessageType.Close));
-        }
-        
-        public void Close()
-        {
-            if (!isOpening) return;
-            var closeTask = socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Normal Closure", CancellationToken.None);
-            closeTask.Wait(); // 阻塞等待关闭操作完成
         }
 
         public void SendAsync(byte[] data)

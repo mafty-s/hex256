@@ -77,6 +77,7 @@ namespace TcgEngine.Client
 
         protected virtual void Start()
         {
+            Debug.Log("GameClient Start");
             RegisterRefresh(GameAction.Connected, OnConnectedToGame);
             RegisterRefresh(GameAction.PlayerReady, OnPlayerReady);
             RegisterRefresh(GameAction.GameStart, OnGameStart);
@@ -191,6 +192,7 @@ namespace TcgEngine.Client
 
         public virtual async void ConnectToServer()
         {
+            Debug.Log("GameClient ConnectToServer....");
             await Task.Yield(); //Wait for initialization to finish
 
             if (TcgNetwork.Get().IsActive())
@@ -253,6 +255,8 @@ namespace TcgEngine.Client
 
         private void RegisterRefresh(ushort tag, UnityAction<SerializedData> callback)
         {
+            Debug.Log("RegisterRefresh:"+tag);
+
             RefreshEvent cmdevt = new RefreshEvent();
             cmdevt.tag = tag;
             cmdevt.callback = callback;
@@ -426,6 +430,7 @@ namespace TcgEngine.Client
 
         protected virtual void OnConnectedServer()
         {
+            Debug.Log("GameClient OnConnectedServer");
             ConnectToGame(game_settings.game_uid);
             onConnectServer?.Invoke();
         }

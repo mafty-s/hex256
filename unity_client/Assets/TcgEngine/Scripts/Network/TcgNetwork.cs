@@ -68,6 +68,7 @@ namespace TcgEngine
                 return; //Manager already exists, destroy this one
             }
 
+            
             Init();
             DontDestroyOnLoad(gameObject);
         }

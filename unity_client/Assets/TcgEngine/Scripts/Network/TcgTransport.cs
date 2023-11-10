@@ -46,8 +46,8 @@ namespace TcgEngine
         // private ClientWebSocket webSocket;
         private CancellationTokenSource cancellationTokenSource;
 
-        private const string defaultServerAddress = "ws://localhost";
-        private const ushort defaultServerPort = 8777;
+        private  string defaultServerAddress = "ws://localhost";
+        private  ushort defaultServerPort = 8777;
 
         private bool isConnected;
 
@@ -58,16 +58,12 @@ namespace TcgEngine
 
         public virtual void Init()
         {
-
             Debug.Log("Websocket Init");
-            string url = "ws://" + "localhost" + ":" + "8777";
-            webSocket = new WebSocket(url); 
+            webSocket = new WebSocket(); 
             webSocket.OnError += WebSocketError;
             webSocket.OnOpen += WebSocketOpen;
             webSocket.OnMessage += WebSocketReceive;
             isConnected = false;
-            // webSocket = new ClientWebSocket();
-            // cancellationTokenSource = new CancellationTokenSource();
         }
 
 
@@ -152,7 +148,12 @@ namespace TcgEngine
         
         public virtual void SetClient(string address, ushort port)
         {
-            Debug.Log("Websocket Client Starting..." );
+            string url = "ws://" + address + ":" + port;
+
+            Debug.Log("Websocket Client Starting..."+url );
+
+            webSocket.SetAddress(url);
+            
             try
             {
                 webSocket.ConnectAsync();
@@ -178,7 +179,7 @@ namespace TcgEngine
 
         public virtual void Close()
         {
-            webSocket.Close();
+             webSocket.CloseAsync();
         }
 
         public virtual string GetAddress()
