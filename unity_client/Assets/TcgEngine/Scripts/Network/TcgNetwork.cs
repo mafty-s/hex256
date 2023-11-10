@@ -121,25 +121,16 @@ namespace TcgEngine
             int offset = 0;
             while (offset < payload.Length)
             {
-                if (payload.Length - offset < 4)
+                if (payload.Length - offset < 8)
                 {
                     // 不足4个字节，无法读取长度信息，跳出循环
                     break;
                 }
 
                 int payloadLength = BitConverter.ToInt32(payload, offset); // 获取长度
-                if (payload.Length - offset - 4 < payloadLength)
-                {
-                    // 剩余的字节不足以读取完整的消息内容，跳出循环
-                    break;
-                }
-
                 offset += 4; // 跳过包体长度信息
-
                 int typeLength = BitConverter.ToInt32(payload, offset);
-               
                 offset += 4; // 跳过类型长度信息
-
                 string type = Encoding.UTF8.GetString(payload, offset, typeLength); // 假设类型占用length个字节
                 offset += typeLength; // 跳过类型信息
 
@@ -166,25 +157,16 @@ namespace TcgEngine
             while (offset < payload.Length)
             {
                
-                if (payload.Length - offset < 4)
+                if (payload.Length - offset < 8)
                 {
                     // 不足4个字节，无法读取长度信息，跳出循环
                     break;
                 }
 
                 int payloadLength = BitConverter.ToInt32(payload, offset); // 获取长度
-                if (payload.Length - offset - 4 < payloadLength)
-                {
-                    // 剩余的字节不足以读取完整的消息内容，跳出循环
-                    break;
-                }
-
                 offset += 4; // 跳过包体长度信息
-
                 int typeLength = BitConverter.ToInt32(payload, offset);
-               
                 offset += 4; // 跳过类型长度信息
-
                 string type = Encoding.UTF8.GetString(payload, offset, typeLength); // 假设类型占用length个字节
                 offset += typeLength; // 跳过类型信息
 
@@ -193,6 +175,9 @@ namespace TcgEngine
                 Array.Copy(payload, offset, content, 0, contentLength);
                 offset += contentLength; // 跳过内容
 
+                Debug.Log("Length: " + payloadLength);
+                Debug.Log("Type: " + type);
+                Debug.Log("Content: " + content);
 
                 FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
                 this.messaging.ReceiveNetMessage(type, 0, reader);
