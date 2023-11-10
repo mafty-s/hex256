@@ -266,7 +266,7 @@ namespace TcgEngine
         public void StartServer(ushort port)
         {
             Debug.Log("Start Server Port " + port);
-            StartListen();
+            StartListen(port);
             onClose.AddListener(OnClose);
             onOpen.AddListener(OnOpen);
             onMessage.AddListener(OnMessage);
