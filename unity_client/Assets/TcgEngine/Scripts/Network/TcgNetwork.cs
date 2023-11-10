@@ -127,103 +127,77 @@ namespace TcgEngine
                     break;
                 }
 
-                int length = BitConverter.ToInt32(payload, offset); // 获取长度
-                if (payload.Length - offset - 4 < length)
+                int payloadLength = BitConverter.ToInt32(payload, offset); // 获取长度
+                if (payload.Length - offset - 4 < payloadLength)
                 {
                     // 剩余的字节不足以读取完整的消息内容，跳出循环
                     break;
                 }
 
-                offset += 4; // 跳过长度信息
+                offset += 4; // 跳过包体长度信息
 
-                string type = Encoding.UTF8.GetString(payload, offset, length); // 假设类型占用length个字节
-                offset += length; // 跳过类型信息
+                int typeLength = BitConverter.ToInt32(payload, offset);
+               
+                offset += 4; // 跳过类型长度信息
 
-                int contentLength = length - 4; // 计算内容的长度
+                string type = Encoding.UTF8.GetString(payload, offset, typeLength); // 假设类型占用length个字节
+                offset += typeLength; // 跳过类型信息
+
+                int contentLength = payloadLength - 4 - 4 - typeLength; // 计算内容的长度
                 byte[] content = new byte[contentLength];
                 Array.Copy(payload, offset, content, 0, contentLength);
                 offset += contentLength; // 跳过内容
-
-                Debug.Log("Length: " + length);
+                
+                Debug.Log("Length: " + payloadLength);
                 Debug.Log("Type: " + type);
                 Debug.Log("Content: " + content);
-
+                
                 FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
                 this.messaging.ReceiveNetMessage(type, message.connection.id, reader);
+
+                offset += 4;
             }
         }
         
-        // override public void OnMessage(WebSocketMessage message)
-        // {
-        //     Debug.Log("Received new message: " + message.data);
-        //
-        //     byte[] payload = message.data; // 假设 message.data 是字节数组类型
-        //
-        //     int length = BitConverter.ToInt32(payload, 0); // 获取长度
-        //     string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-        //     int contentLength = payload.Length - 4 - length; // 计算内容的长度
-        //     byte[] content = new byte[contentLength];
-        //     Array.Copy(payload, 4 + length, content, 0, contentLength);
-        //
-        //     Debug.Log("Length: " + length);
-        //     Debug.Log("Type: " + type);
-        //     Debug.Log("Content: " + content);
-        //
-        //     FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
-        //     this.messaging.ReceiveNetMessage(type, message.connection.id, reader);
-        // }
-
         //客户端收到了来自服务端的消息
-        // public void OnClientOnMessage(byte[] payload)
-        // {
-        //     int length = BitConverter.ToInt32(payload, 0); // 获取长度
-        //     string type = Encoding.UTF8.GetString(payload, 4, length); // 假设类型占用4个字节，从第5个字节开始
-        //     int contentLength = payload.Length - 4 - length; // 计算内容的长度
-        //     byte[] content = new byte[contentLength];
-        //     Array.Copy(payload, 4 + length, content, 0, contentLength);
-        //
-        //     Debug.Log("Length: " + length);
-        //     Debug.Log("Type: " + type);
-        //     Debug.Log("Content: " + content);
-        //
-        //     FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
-        //     this.messaging.ReceiveNetMessage(type, 0, reader);
-        // }
-        
         public void OnClientOnMessage(byte[] payload)
         {
             int offset = 0;
             while (offset < payload.Length)
             {
+               
                 if (payload.Length - offset < 4)
                 {
                     // 不足4个字节，无法读取长度信息，跳出循环
                     break;
                 }
 
-                int length = BitConverter.ToInt32(payload, offset); // 获取长度
-                if (payload.Length - offset - 4 < length)
+                int payloadLength = BitConverter.ToInt32(payload, offset); // 获取长度
+                if (payload.Length - offset - 4 < payloadLength)
                 {
                     // 剩余的字节不足以读取完整的消息内容，跳出循环
                     break;
                 }
 
-                offset += 4; // 跳过长度信息
+                offset += 4; // 跳过包体长度信息
 
-                string type = Encoding.UTF8.GetString(payload, offset, length); // 假设类型占用length个字节
-                offset += length; // 跳过类型信息
+                int typeLength = BitConverter.ToInt32(payload, offset);
+               
+                offset += 4; // 跳过类型长度信息
 
-                int contentLength = length - 4; // 计算内容的长度
+                string type = Encoding.UTF8.GetString(payload, offset, typeLength); // 假设类型占用length个字节
+                offset += typeLength; // 跳过类型信息
+
+                int contentLength = payloadLength - 4 - 4 - typeLength; // 计算内容的长度
                 byte[] content = new byte[contentLength];
                 Array.Copy(payload, offset, content, 0, contentLength);
                 offset += contentLength; // 跳过内容
 
-                Debug.Log("Length: " + length);
-                Debug.Log("Type: " + type);
-                Debug.Log("Content: " + content);
 
                 FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
                 this.messaging.ReceiveNetMessage(type, 0, reader);
+                
+                offset += 4;
             }
         }
 
