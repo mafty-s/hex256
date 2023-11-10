@@ -307,31 +307,27 @@ namespace TcgEngine
         private void SendOnline(string type, ulong target, FastBufferWriter writer, NetworkDelivery delivery)
         {
             // network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, target, writer, delivery);
-
             Debug.Log("NetworkMessaging SendOnline"+type+target);
+           
+            // network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, target, writer, delivery);
+            Debug.Log("NetworkMessaging SendOnline" + type + target);
+            int type_length = Encoding.UTF8.GetByteCount(type);
+            int payloadLength = 4 + type_length + writer.Length;
+            byte[] payload = new byte[payloadLength];
+
+            Buffer.BlockCopy( BitConverter.GetBytes(payloadLength), 0, payload, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(type_length), 0, payload, 4, 4);
+            Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 8, type_length);
+            Buffer.BlockCopy(writer.ToArray(), 0, payload, 8 + type_length, writer.Length);
+            
             if (!IsServer)
             {
                 //发还给服务端
-                int type_length = Encoding.UTF8.GetByteCount(type) ;
-                int payloadLength = 4 + type_length + writer.Length;
-                byte[] payload = new byte[payloadLength];
-                Buffer.BlockCopy(BitConverter.GetBytes(type_length), 0, payload, 0, 4);
-                Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
-                Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
-                
                 network.GetTransport().SendMessageByte(payload);
-                
             }
             else
             {
                 //发还给客户端
-                int type_length = Encoding.UTF8.GetByteCount(type) ;
-                int payloadLength = 4 + type_length + writer.Length;
-                byte[] payload = new byte[payloadLength];
-                Buffer.BlockCopy(BitConverter.GetBytes(type_length), 0, payload, 0, 4);
-                Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 4, Encoding.UTF8.GetByteCount(type));
-                Buffer.BlockCopy(writer.ToArray(), 0, payload, 4 + Encoding.UTF8.GetByteCount(type), writer.Length);
-                
                 TcgNetwork.Get().SendMessage(target,payload);
             }
         }
