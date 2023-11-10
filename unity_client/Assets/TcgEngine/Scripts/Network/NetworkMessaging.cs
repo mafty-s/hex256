@@ -12,12 +12,12 @@ namespace TcgEngine
     /// <summary>
     /// Base class for sending and receiving network messages
     /// </summary>
-
     public class NetworkMessaging
     {
         private TcgNetwork network;
 
-        private Dictionary<string, System.Action<ulong, FastBufferReader>> msg_dict = new Dictionary<string, System.Action<ulong, FastBufferReader>>();
+        private Dictionary<string, System.Action<ulong, FastBufferReader>> msg_dict =
+            new Dictionary<string, System.Action<ulong, FastBufferReader>>();
 
         public NetworkMessaging(TcgNetwork network)
         {
@@ -51,11 +51,9 @@ namespace TcgEngine
         {
             if (IsOnline)
             {
-                Debug.Log("RegisterNetMsg:"+type);
-                network.NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(type, (ulong client_id, FastBufferReader reader) =>
-                {
-                    ReceiveNetMessage(type, client_id, reader);
-                });
+                Debug.Log("RegisterNetMsg:" + type);
+                network.NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(type,
+                    (ulong client_id, FastBufferReader reader) => { ReceiveNetMessage(type, client_id, reader); });
             }
         }
 
@@ -116,8 +114,9 @@ namespace TcgEngine
             Send(type, target, writer, delivery);
             writer.Dispose();
         }
-        
-        public void SendObject<T>(string type, ulong target, T data, NetworkDelivery delivery) where T : INetworkSerializable
+
+        public void SendObject<T>(string type, ulong target, T data, NetworkDelivery delivery)
+            where T : INetworkSerializable
         {
             FastBufferWriter writer = new FastBufferWriter(256, Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteNetworkSerializable(data);
@@ -191,8 +190,9 @@ namespace TcgEngine
                 writer.Dispose();
             }
         }
-        
-        public void SendObject<T>(string type, IReadOnlyList<ulong> targets, T data, NetworkDelivery delivery) where T : INetworkSerializable
+
+        public void SendObject<T>(string type, IReadOnlyList<ulong> targets, T data, NetworkDelivery delivery)
+            where T : INetworkSerializable
         {
             if (IsServer)
             {
@@ -287,7 +287,7 @@ namespace TcgEngine
         {
             if (IsOnline)
                 SendOnline(type, target, writer, delivery);
-            else if(target == ClientID)
+            else if (target == ClientID)
                 SendOffline(type, writer);
         }
 
@@ -307,19 +307,16 @@ namespace TcgEngine
         private void SendOnline(string type, ulong target, FastBufferWriter writer, NetworkDelivery delivery)
         {
             // network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, target, writer, delivery);
-            Debug.Log("NetworkMessaging SendOnline"+type+target);
-           
-            // network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, target, writer, delivery);
             Debug.Log("NetworkMessaging SendOnline" + type + target);
             int type_length = Encoding.UTF8.GetByteCount(type);
-            int payloadLength = 4 + type_length + writer.Length;
+            int payloadLength = 4 + 4 + type_length + writer.Length;
             byte[] payload = new byte[payloadLength];
 
-            Buffer.BlockCopy( BitConverter.GetBytes(payloadLength), 0, payload, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(payloadLength), 0, payload, 0, 4);
             Buffer.BlockCopy(BitConverter.GetBytes(type_length), 0, payload, 4, 4);
             Buffer.BlockCopy(Encoding.UTF8.GetBytes(type), 0, payload, 8, type_length);
             Buffer.BlockCopy(writer.ToArray(), 0, payload, 8 + type_length, writer.Length);
-            
+
             if (!IsServer)
             {
                 //发还给服务端
@@ -328,11 +325,12 @@ namespace TcgEngine
             else
             {
                 //发还给客户端
-                TcgNetwork.Get().SendMessage(target,payload);
+                TcgNetwork.Get().SendMessage(target, payload);
             }
         }
 
-        private void SendOnline(string type, IReadOnlyList<ulong> targets, FastBufferWriter writer, NetworkDelivery delivery)
+        private void SendOnline(string type, IReadOnlyList<ulong> targets, FastBufferWriter writer,
+            NetworkDelivery delivery)
         {
             network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, targets, writer, delivery);
         }
@@ -350,8 +348,8 @@ namespace TcgEngine
         }
 
         //--------- Forward msgs ----------
-		
-		//Forward a client message to one client
+
+        //Forward a client message to one client
         //Make sure you finished reading the reader before forwarding
         public void Forward(string type, ulong target, FastBufferReader reader, NetworkDelivery delivery)
         {
@@ -370,7 +368,8 @@ namespace TcgEngine
 
         //Forward a client message to all target clients
         //Make sure you finished reading the reader before forwarding
-        public void Forward(string type, IReadOnlyList<ulong> targets, FastBufferReader reader, NetworkDelivery delivery)
+        public void Forward(string type, IReadOnlyList<ulong> targets, FastBufferReader reader,
+            NetworkDelivery delivery)
         {
             if (IsServer && IsOnline)
             {
@@ -400,9 +399,10 @@ namespace TcgEngine
 
                 foreach (ulong client in ClientList)
                 {
-                    if(client != source_client && client != ClientID)
+                    if (client != source_client && client != ClientID)
                         network.NetworkManager.CustomMessagingManager.SendNamedMessage(type, client, writer, delivery);
                 }
+
                 writer.Dispose();
             }
         }
@@ -414,14 +414,34 @@ namespace TcgEngine
                 if (cid == client_id)
                     return true;
             }
+
             return false;
         }
 
-        public IReadOnlyList<ulong> ClientList { get { return network.GetClientsIds(); } }
-        public bool IsOnline { get { return network.IsOnline; } }
-        public bool IsServer { get { return network.IsServer; } }
-        public ulong ServerID { get { return network.ServerID; } }
-        public ulong ClientID { get { return network.ClientID; } }
+        public IReadOnlyList<ulong> ClientList
+        {
+            get { return network.GetClientsIds(); }
+        }
+
+        public bool IsOnline
+        {
+            get { return network.IsOnline; }
+        }
+
+        public bool IsServer
+        {
+            get { return network.IsServer; }
+        }
+
+        public ulong ServerID
+        {
+            get { return network.ServerID; }
+        }
+
+        public ulong ClientID
+        {
+            get { return network.ClientID; }
+        }
 
 
         public static NetworkMessaging Get()
