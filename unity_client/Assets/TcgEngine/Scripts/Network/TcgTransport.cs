@@ -178,7 +178,7 @@ namespace TcgEngine
 
         public virtual void Close()
         {
-            webSocket.CloseAsync();
+            webSocket.Close();
         }
 
         public virtual string GetAddress()

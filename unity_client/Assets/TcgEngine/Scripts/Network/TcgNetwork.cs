@@ -221,6 +221,7 @@ namespace TcgEngine
 
             Debug.Log("Disconnect");
             network.Shutdown();
+            transport.Close();
             AfterDisconnected();
         }
 

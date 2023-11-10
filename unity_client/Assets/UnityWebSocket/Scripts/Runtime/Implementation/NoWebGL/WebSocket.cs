@@ -93,6 +93,13 @@ namespace UnityWebSocket
             if (!isOpening) return;
             SendBufferAsync(new SendBuffer(null, WebSocketMessageType.Close));
         }
+        
+        public void Close()
+        {
+            if (!isOpening) return;
+            var closeTask = socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Normal Closure", CancellationToken.None);
+            closeTask.Wait(); // 阻塞等待关闭操作完成
+        }
 
         public void SendAsync(byte[] data)
         {
