@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TcgEngine.Server;
+using MyWebSocket;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityWebSocket;
-using WebSocketServer;
 
-// using WebSocketServer;
 
 namespace TcgEngine
 {
@@ -21,7 +17,7 @@ namespace TcgEngine
     [DefaultExecutionOrder(-10)]
     [RequireComponent(typeof(NetworkManager))]
     [RequireComponent(typeof(TcgTransport))]
-    public class TcgNetwork : WebSocketServer.WebSocketServer
+    public class TcgNetwork : MyWebSocket.MyWebSocketServer
     {
         public NetworkData data;
 
@@ -68,7 +64,7 @@ namespace TcgEngine
                 return; //Manager already exists, destroy this one
             }
 
-            
+
             Init();
             DontDestroyOnLoad(gameObject);
         }
@@ -95,28 +91,32 @@ namespace TcgEngine
         }
 
         //服务端收到了客户端的链接请求
-        override public void OnOpen(WebSocketConnection connection)
+        public void OnOpen(ulong connection_id,WebSocketPeer peer)
         {
-            // Here, (string)connection.id gives you a unique ID to identify the client.
-            Debug.Log("TcgWebSocketServer OnOpen:" + connection.id);
-            clients[connection.id] = connection;
-            OnClientConnect(connection.id);
-            onClientJoin.Invoke(connection.id);
+            // Here, (string)connection_id gives you a unique ID to identify the client.
+            Debug.Log("TcgWebSocketServer OnOpen:" + connection_id);
+            peers.Add(connection_id,peer);
+            OnClientConnect(connection_id);
+            onClientJoin.Invoke(connection_id);
         }
 
         //服务端收到了客户端的断开请求
-        override public void OnClose(WebSocketConnection connection)
+        public void OnClose(ulong connection_id)
         {
-            Debug.Log("TcgWebSocketServer OnClose:" + connection.id);
-            onClientQuit.Invoke(connection.id);
+            Debug.Log("TcgWebSocketServer OnClose:" + connection_id);
+            peers.Remove(connection_id);
+            onClientQuit.Invoke(connection_id);
         }
 
-        //服务端收到了来自客户端的消息
-        override public void OnMessage(WebSocketMessage message)
-        {
-            Debug.Log("Received new message: " + message.data);
+        
+        private Queue<MyWebsocketMessage> sequence = new Queue<MyWebsocketMessage>();
 
-            byte[] payload = message.data; // 假设 message.data 是字节数组类型
+        
+        //服务端收到了来自客户端的消息
+        public void OnMessage(ulong connection_id, byte[] payload)
+        {
+            Debug.Log("Received new message: ");
+
 
             int offset = 0;
             while (offset < payload.Length)
@@ -138,58 +138,114 @@ namespace TcgEngine
                 byte[] content = new byte[contentLength];
                 Array.Copy(payload, offset, content, 0, contentLength);
                 offset += contentLength; // 跳过内容
-                
+
                 Debug.Log("Length: " + payloadLength);
                 Debug.Log("Type: " + type);
                 Debug.Log("Content: " + content);
-                
-                FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
-                this.messaging.ReceiveNetMessage(type, message.connection.id, reader);
+
+
+                // FastBufferReader reader = new FastBufferReader(content, Allocator.Persistent);
+                // this.messaging.ReceiveNetMessage(type, connection_id, reader);
+                // use bytePtr here
+
+                sequence.Enqueue(new MyWebsocketMessage(content,type,connection_id));
 
                 offset += 4;
             }
         }
-        
+
+
+        private byte[] cachedPayload;
+
+        private byte[] Combine(byte[] cached, byte[] newData)
+        {
+            int length = cached.Length + newData.Length;
+            byte[] combined = new byte[length];
+            Array.Copy(cached, 0, combined, 0, cached.Length);
+            Array.Copy(newData, 0, combined, cached.Length, newData.Length);
+            return combined;
+        }
+
         //客户端收到了来自服务端的消息
         public void OnClientOnMessage(byte[] payload)
         {
+            if (cachedPayload != null)
+            {
+                payload = Combine(cachedPayload, payload);
+                cachedPayload = null;
+            }
+
             int offset = 0;
             while (offset < payload.Length)
             {
-               
                 if (payload.Length - offset < 8)
                 {
-                    // 不足4个字节，无法读取长度信息，跳出循环
-                    break;
+                    // 数据不完整,缓存剩余数据
+                    cachedPayload = new byte[payload.Length - offset];
+                    Array.Copy(payload, offset, cachedPayload, 0, payload.Length - offset);
+                    return;
                 }
 
                 int payloadLength = BitConverter.ToInt32(payload, offset); // 获取长度
-                offset += 4; // 跳过包体长度信息
-                int typeLength = BitConverter.ToInt32(payload, offset);
-                offset += 4; // 跳过类型长度信息
-                string type = Encoding.UTF8.GetString(payload, offset, typeLength); // 假设类型占用length个字节
-                offset += typeLength; // 跳过类型信息
+                int typeLength = BitConverter.ToInt32(payload, offset + 4);
+                string type = "";
+                try
+                {
+                    type = Encoding.UTF8.GetString(payload, offset + 8, typeLength); // 假设类型占用length个字节
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message);
+                    return;
+                }
 
                 int contentLength = payloadLength - 4 - 4 - typeLength; // 计算内容的长度
                 byte[] content = new byte[contentLength];
-                Array.Copy(payload, offset, content, 0, contentLength);
-                offset += contentLength; // 跳过内容
+
+                if (contentLength > payload.Length - offset)
+                {
+                    // 数据不完整,缓存剩余数据
+                    cachedPayload = new byte[payload.Length - offset];
+                    Array.Copy(payload, offset, cachedPayload, 0, payload.Length - offset);
+                    return;
+                }
+
+                try
+                {
+                    Array.Copy(payload, offset + 8 + typeLength, content, 0, contentLength);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message);
+                    return;
+                }
 
                 Debug.Log("Length: " + payloadLength);
                 Debug.Log("Type: " + type);
                 Debug.Log("Content: " + content);
 
-                FastBufferReader reader = new FastBufferReader(content, Allocator.Temp);
+                if (type == "refresh")
+                {
+                    Debug.Log("refresh");
+                }
+
+                FastBufferReader reader = new FastBufferReader(content, Allocator.Persistent);
                 this.messaging.ReceiveNetMessage(type, 0, reader);
-                
-                offset += 4;
+
+                offset += payloadLength;
             }
         }
 
 
         void Update()
         {
-            base.Update();
+            while (sequence.Count > 0)
+            {
+                var msg = sequence.Dequeue();
+                this.messaging.ReceiveNetMessage(msg.Type, msg.ConnectionID,new FastBufferReader( msg.Ctx,Allocator.Temp));
+            }
+
+            //base.Update();
         }
 
         //Start a host (client + server)
@@ -211,6 +267,10 @@ namespace TcgEngine
         {
             Debug.Log("Start Server Port " + port);
             StartListen();
+            onClose.AddListener(OnClose);
+            onOpen.AddListener(OnOpen);
+            onMessage.AddListener(OnMessage);
+
             // transport.SetServer(port);
             connection.user_id = "";
             connection.username = "";
@@ -223,7 +283,7 @@ namespace TcgEngine
         //发还给客户端
         public void SendMessage(ulong target, byte[] payload)
         {
-            SendBuff(target, payload);
+            SendAsync(target, payload);
         }
 
         //If is_host is set to true, it means this player created the game on a dedicated server
@@ -287,7 +347,7 @@ namespace TcgEngine
         private void AfterConnected()
         {
             // if (connected)
-                // return;
+            // return;
 
             if (network.NetworkTickSystem != null)
                 network.NetworkTickSystem.Tick += OnTick;
