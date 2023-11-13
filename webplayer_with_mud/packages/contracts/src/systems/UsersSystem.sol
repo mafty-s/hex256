@@ -7,15 +7,20 @@ import {Users, UsersData} from "../codegen/index.sol";
 contract UsersSystem is System {
     function addUser(string memory username) public returns (bytes32 key) {
         key = keccak256(abi.encode(block.prevrandao, _msgSender(), username));
-//        Users.set(key, UsersData({
-//            id : username,
-//            createdAt : block.timestamp,
-//            coin : 10000,
-//            xp : 0,
-//            avatar : "",
-//            cardback : ""
-//        })
-//        );
+
+        UsersData memory userData = UsersData(
+            msg.sender,
+            1000, //initialCoinAmount,
+            0, //initialXp,
+            block.timestamp,
+            new uint256[](0),
+            new uint256[](0),
+            "user_id",
+            "user_avatar",
+            "user_cardback"
+        );
+
+        Users.set(key, userData);
     }
 
 
