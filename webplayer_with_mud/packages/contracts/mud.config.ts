@@ -14,6 +14,14 @@ export default mudConfig({
     },
     Cards:{
       valueSchema: {
+        tid: "string",
+        type: "string",
+        team: "string",
+        rarity: "string",
+        mana: "uint256",
+        attack: "uint256",
+        hp: "uint256",
+        cost: "uint256",
         createdAt: "uint256",
       },
     },
