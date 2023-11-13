@@ -16,21 +16,21 @@ export const App = () => {
     });
 
     function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-            warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-            if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-            setTimeout(function() {
-                warningBanner.removeChild(div);
-                updateBannerVisibility();
-            }, 5000);
-        }
-        updateBannerVisibility();
+        // function updateBannerVisibility() {
+        //     warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        // }
+        // // var div = document.createElement('div');
+        // // div.innerHTML = msg;
+        // // warningBanner.appendChild(div);
+        // // if (type == 'error') div.style = 'background: red; padding: 10px;';
+        // else {
+        //     // if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+        //     setTimeout(function() {
+        //         warningBanner.removeChild(div);
+        //         updateBannerVisibility();
+        //     }, 5000);
+        // }
+        // updateBannerVisibility();
     }
 
     useEffect(() => {
@@ -45,11 +45,11 @@ export const App = () => {
 
 
         var buildUrl = "Build";
-        var loaderUrl = buildUrl + "/dojocardbuild.loader.js";
+        var loaderUrl = buildUrl + "/hex256_build.loader.js";
         var config = {
-            dataUrl: buildUrl + "/dojocardbuild.data",
-            frameworkUrl: buildUrl + "/dojocardbuild.framework.js",
-            codeUrl: buildUrl + "/dojocardbuild.wasm",
+            dataUrl: buildUrl + "/hex256_build.data",
+            frameworkUrl: buildUrl + "/hex256_build.framework.js",
+            codeUrl: buildUrl + "/hex256_build.wasm",
             streamingAssetsUrl: "StreamingAssets",
             companyName: "DefaultCompany",
             productName: "My project",
@@ -72,7 +72,7 @@ export const App = () => {
             // performance, uncomment the following line:
             // config.devicePixelRatio = 1;
 
-            unityShowBanner('WebGL builds are not supported on mobile devices.');
+            // unityShowBanner('WebGL builds are not supported on mobile devices.');
         } else {
             // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
