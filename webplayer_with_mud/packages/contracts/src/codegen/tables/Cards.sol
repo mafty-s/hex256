@@ -26,7 +26,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant CardsTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x00a0050020202020200000000000000000000000000000000000000000000000
+  0x00a0050420202020200000000000000000000000000000000000000000000000
 );
 
 struct CardsData {
@@ -35,6 +35,10 @@ struct CardsData {
   uint256 hp;
   uint256 cost;
   uint256 createdAt;
+  string tid;
+  string cardType;
+  string team;
+  string rarity;
 }
 
 library Cards {
@@ -62,12 +66,16 @@ library Cards {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](5);
+    SchemaType[] memory _valueSchema = new SchemaType[](9);
     _valueSchema[0] = SchemaType.UINT256;
     _valueSchema[1] = SchemaType.UINT256;
     _valueSchema[2] = SchemaType.UINT256;
     _valueSchema[3] = SchemaType.UINT256;
     _valueSchema[4] = SchemaType.UINT256;
+    _valueSchema[5] = SchemaType.STRING;
+    _valueSchema[6] = SchemaType.STRING;
+    _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[8] = SchemaType.STRING;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -86,12 +94,16 @@ library Cards {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](5);
+    fieldNames = new string[](9);
     fieldNames[0] = "mana";
     fieldNames[1] = "attack";
     fieldNames[2] = "hp";
     fieldNames[3] = "cost";
     fieldNames[4] = "createdAt";
+    fieldNames[5] = "tid";
+    fieldNames[6] = "cardType";
+    fieldNames[7] = "team";
+    fieldNames[8] = "rarity";
   }
 
   /**
@@ -319,6 +331,654 @@ library Cards {
   }
 
   /**
+   * @notice Get tid.
+   */
+  function getTid(bytes32 key) internal view returns (string memory tid) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get tid.
+   */
+  function _getTid(bytes32 key) internal view returns (string memory tid) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set tid.
+   */
+  function setTid(bytes32 key, string memory tid) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((tid)));
+  }
+
+  /**
+   * @notice Set tid.
+   */
+  function _setTid(bytes32 key, string memory tid) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((tid)));
+  }
+
+  /**
+   * @notice Get the length of tid.
+   */
+  function lengthTid(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of tid.
+   */
+  function _lengthTid(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of tid.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemTid(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of tid.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemTid(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to tid.
+   */
+  function pushTid(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to tid.
+   */
+  function _pushTid(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from tid.
+   */
+  function popTid(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Pop a slice from tid.
+   */
+  function _popTid(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Update a slice of tid at `_index`.
+   */
+  function updateTid(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of tid at `_index`.
+   */
+  function _updateTid(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Get cardType.
+   */
+  function getCardType(bytes32 key) internal view returns (string memory cardType) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get cardType.
+   */
+  function _getCardType(bytes32 key) internal view returns (string memory cardType) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set cardType.
+   */
+  function setCardType(bytes32 key, string memory cardType) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((cardType)));
+  }
+
+  /**
+   * @notice Set cardType.
+   */
+  function _setCardType(bytes32 key, string memory cardType) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((cardType)));
+  }
+
+  /**
+   * @notice Get the length of cardType.
+   */
+  function lengthCardType(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of cardType.
+   */
+  function _lengthCardType(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of cardType.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemCardType(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of cardType.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemCardType(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to cardType.
+   */
+  function pushCardType(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to cardType.
+   */
+  function _pushCardType(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from cardType.
+   */
+  function popCardType(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+  }
+
+  /**
+   * @notice Pop a slice from cardType.
+   */
+  function _popCardType(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+  }
+
+  /**
+   * @notice Update a slice of cardType at `_index`.
+   */
+  function updateCardType(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of cardType at `_index`.
+   */
+  function _updateCardType(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Get team.
+   */
+  function getTeam(bytes32 key) internal view returns (string memory team) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get team.
+   */
+  function _getTeam(bytes32 key) internal view returns (string memory team) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set team.
+   */
+  function setTeam(bytes32 key, string memory team) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, bytes((team)));
+  }
+
+  /**
+   * @notice Set team.
+   */
+  function _setTeam(bytes32 key, string memory team) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, bytes((team)));
+  }
+
+  /**
+   * @notice Get the length of team.
+   */
+  function lengthTeam(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of team.
+   */
+  function _lengthTeam(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of team.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemTeam(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of team.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemTeam(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to team.
+   */
+  function pushTeam(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 2, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to team.
+   */
+  function _pushTeam(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 2, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from team.
+   */
+  function popTeam(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /**
+   * @notice Pop a slice from team.
+   */
+  function _popTeam(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /**
+   * @notice Update a slice of team at `_index`.
+   */
+  function updateTeam(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of team at `_index`.
+   */
+  function _updateTeam(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Get rarity.
+   */
+  function getRarity(bytes32 key) internal view returns (string memory rarity) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 3);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get rarity.
+   */
+  function _getRarity(bytes32 key) internal view returns (string memory rarity) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 3);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set rarity.
+   */
+  function setRarity(bytes32 key, string memory rarity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 3, bytes((rarity)));
+  }
+
+  /**
+   * @notice Set rarity.
+   */
+  function _setRarity(bytes32 key, string memory rarity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 3, bytes((rarity)));
+  }
+
+  /**
+   * @notice Get the length of rarity.
+   */
+  function lengthRarity(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 3);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of rarity.
+   */
+  function _lengthRarity(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 3);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of rarity.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemRarity(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of rarity.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemRarity(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to rarity.
+   */
+  function pushRarity(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 3, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to rarity.
+   */
+  function _pushRarity(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 3, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from rarity.
+   */
+  function popRarity(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 3, 1);
+  }
+
+  /**
+   * @notice Pop a slice from rarity.
+   */
+  function _popRarity(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 3, 1);
+  }
+
+  /**
+   * @notice Update a slice of rarity at `_index`.
+   */
+  function updateRarity(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of rarity at `_index`.
+   */
+  function _updateRarity(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (CardsData memory _table) {
@@ -351,11 +1011,22 @@ library Cards {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, uint256 mana, uint256 attack, uint256 hp, uint256 cost, uint256 createdAt) internal {
+  function set(
+    bytes32 key,
+    uint256 mana,
+    uint256 attack,
+    uint256 hp,
+    uint256 cost,
+    uint256 createdAt,
+    string memory tid,
+    string memory cardType,
+    string memory team,
+    string memory rarity
+  ) internal {
     bytes memory _staticData = encodeStatic(mana, attack, hp, cost, createdAt);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(tid, cardType, team, rarity);
+    bytes memory _dynamicData = encodeDynamic(tid, cardType, team, rarity);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -366,11 +1037,22 @@ library Cards {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, uint256 mana, uint256 attack, uint256 hp, uint256 cost, uint256 createdAt) internal {
+  function _set(
+    bytes32 key,
+    uint256 mana,
+    uint256 attack,
+    uint256 hp,
+    uint256 cost,
+    uint256 createdAt,
+    string memory tid,
+    string memory cardType,
+    string memory team,
+    string memory rarity
+  ) internal {
     bytes memory _staticData = encodeStatic(mana, attack, hp, cost, createdAt);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(tid, cardType, team, rarity);
+    bytes memory _dynamicData = encodeDynamic(tid, cardType, team, rarity);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -384,8 +1066,8 @@ library Cards {
   function set(bytes32 key, CardsData memory _table) internal {
     bytes memory _staticData = encodeStatic(_table.mana, _table.attack, _table.hp, _table.cost, _table.createdAt);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.cardType, _table.team, _table.rarity);
+    bytes memory _dynamicData = encodeDynamic(_table.tid, _table.cardType, _table.team, _table.rarity);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -399,8 +1081,8 @@ library Cards {
   function _set(bytes32 key, CardsData memory _table) internal {
     bytes memory _staticData = encodeStatic(_table.mana, _table.attack, _table.hp, _table.cost, _table.createdAt);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.cardType, _table.team, _table.rarity);
+    bytes memory _dynamicData = encodeDynamic(_table.tid, _table.cardType, _table.team, _table.rarity);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -426,17 +1108,52 @@ library Cards {
   }
 
   /**
+   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
+   */
+  function decodeDynamic(
+    PackedCounter _encodedLengths,
+    bytes memory _blob
+  ) internal pure returns (string memory tid, string memory cardType, string memory team, string memory rarity) {
+    uint256 _start;
+    uint256 _end;
+    unchecked {
+      _end = _encodedLengths.atIndex(0);
+    }
+    tid = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(1);
+    }
+    cardType = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(2);
+    }
+    team = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(3);
+    }
+    rarity = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+  }
+
+  /**
    * @notice Decode the tightly packed blobs using this table's field layout.
    * @param _staticData Tightly packed static fields.
-   *
-   *
+   * @param _encodedLengths Encoded lengths of dynamic fields.
+   * @param _dynamicData Tightly packed dynamic fields.
    */
   function decode(
     bytes memory _staticData,
-    PackedCounter,
-    bytes memory
+    PackedCounter _encodedLengths,
+    bytes memory _dynamicData
   ) internal pure returns (CardsData memory _table) {
     (_table.mana, _table.attack, _table.hp, _table.cost, _table.createdAt) = decodeStatic(_staticData);
+
+    (_table.tid, _table.cardType, _table.team, _table.rarity) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -474,6 +1191,40 @@ library Cards {
   }
 
   /**
+   * @notice Tightly pack dynamic data lengths using this table's schema.
+   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
+   */
+  function encodeLengths(
+    string memory tid,
+    string memory cardType,
+    string memory team,
+    string memory rarity
+  ) internal pure returns (PackedCounter _encodedLengths) {
+    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
+    unchecked {
+      _encodedLengths = PackedCounterLib.pack(
+        bytes(tid).length,
+        bytes(cardType).length,
+        bytes(team).length,
+        bytes(rarity).length
+      );
+    }
+  }
+
+  /**
+   * @notice Tightly pack dynamic (variable length) data using this table's schema.
+   * @return The dynamic data, encoded into a sequence of bytes.
+   */
+  function encodeDynamic(
+    string memory tid,
+    string memory cardType,
+    string memory team,
+    string memory rarity
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(bytes((tid)), bytes((cardType)), bytes((team)), bytes((rarity)));
+  }
+
+  /**
    * @notice Encode all of a record's fields.
    * @return The static (fixed length) data, encoded into a sequence of bytes.
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
@@ -484,12 +1235,16 @@ library Cards {
     uint256 attack,
     uint256 hp,
     uint256 cost,
-    uint256 createdAt
+    uint256 createdAt,
+    string memory tid,
+    string memory cardType,
+    string memory team,
+    string memory rarity
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(mana, attack, hp, cost, createdAt);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(tid, cardType, team, rarity);
+    bytes memory _dynamicData = encodeDynamic(tid, cardType, team, rarity);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

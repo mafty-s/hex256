@@ -7,14 +7,14 @@ export default mudConfig({
   tables: {
     Users:{
       valueSchema: {
-        id: "uint256",
         coin: "uint256",
         xp: "uint256",
         createdAt: "uint256",
         cards: "uint256[]",
         packs: "uint256[]",
-        // avatar: "string",
-        // cardback: "string",
+        id: "string",
+        avatar: "string",
+        cardback: "string",
       }
     },
     Cards:{
@@ -24,10 +24,10 @@ export default mudConfig({
         hp: "uint256",
         cost: "uint256",
         createdAt: "uint256",
-        // tid: "string",
-        // type: "string",
-        // team: "string",
-        // rarity: "string",
+        tid: "string",
+        cardType: "string",
+        team: "string",
+        rarity: "string",
       },
     },
     Tasks: {
