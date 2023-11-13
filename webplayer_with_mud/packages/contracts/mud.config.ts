@@ -1,6 +1,9 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
+  enums: {
+    AnimalType: ["NONE", "DOG", "CAT", "SQUIREL"],
+  },
   tables: {
     Users:{
       valueSchema: {
