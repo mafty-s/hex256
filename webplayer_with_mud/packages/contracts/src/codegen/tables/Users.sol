@@ -26,10 +26,11 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant UsersTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0060030520202000000000000000000000000000000000000000000000000000
+  0x0074040514202020000000000000000000000000000000000000000000000000
 );
 
 struct UsersData {
+  address owner;
   uint256 coin;
   uint256 xp;
   uint256 createdAt;
@@ -65,15 +66,16 @@ library Users {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](8);
-    _valueSchema[0] = SchemaType.UINT256;
+    SchemaType[] memory _valueSchema = new SchemaType[](9);
+    _valueSchema[0] = SchemaType.ADDRESS;
     _valueSchema[1] = SchemaType.UINT256;
     _valueSchema[2] = SchemaType.UINT256;
-    _valueSchema[3] = SchemaType.UINT256_ARRAY;
+    _valueSchema[3] = SchemaType.UINT256;
     _valueSchema[4] = SchemaType.UINT256_ARRAY;
-    _valueSchema[5] = SchemaType.STRING;
+    _valueSchema[5] = SchemaType.UINT256_ARRAY;
     _valueSchema[6] = SchemaType.STRING;
     _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[8] = SchemaType.STRING;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -92,15 +94,16 @@ library Users {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](8);
-    fieldNames[0] = "coin";
-    fieldNames[1] = "xp";
-    fieldNames[2] = "createdAt";
-    fieldNames[3] = "cards";
-    fieldNames[4] = "packs";
-    fieldNames[5] = "id";
-    fieldNames[6] = "avatar";
-    fieldNames[7] = "cardback";
+    fieldNames = new string[](9);
+    fieldNames[0] = "owner";
+    fieldNames[1] = "coin";
+    fieldNames[2] = "xp";
+    fieldNames[3] = "createdAt";
+    fieldNames[4] = "cards";
+    fieldNames[5] = "packs";
+    fieldNames[6] = "id";
+    fieldNames[7] = "avatar";
+    fieldNames[8] = "cardback";
   }
 
   /**
@@ -118,13 +121,55 @@ library Users {
   }
 
   /**
+   * @notice Get owner.
+   */
+  function getOwner(bytes32 key) internal view returns (address owner) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Get owner.
+   */
+  function _getOwner(bytes32 key) internal view returns (address owner) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Set owner.
+   */
+  function setOwner(bytes32 key, address owner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((owner)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set owner.
+   */
+  function _setOwner(bytes32 key, address owner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((owner)), _fieldLayout);
+  }
+
+  /**
    * @notice Get coin.
    */
   function getCoin(bytes32 key) internal view returns (uint256 coin) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
@@ -135,7 +180,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
@@ -146,7 +191,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((coin)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((coin)), _fieldLayout);
   }
 
   /**
@@ -156,7 +201,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((coin)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((coin)), _fieldLayout);
   }
 
   /**
@@ -166,7 +211,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
@@ -177,7 +222,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
@@ -188,7 +233,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((xp)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((xp)), _fieldLayout);
   }
 
   /**
@@ -198,7 +243,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((xp)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((xp)), _fieldLayout);
   }
 
   /**
@@ -208,7 +253,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
@@ -219,7 +264,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
@@ -230,7 +275,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((createdAt)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((createdAt)), _fieldLayout);
   }
 
   /**
@@ -240,7 +285,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((createdAt)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((createdAt)), _fieldLayout);
   }
 
   /**
@@ -1088,6 +1133,7 @@ library Users {
    */
   function set(
     bytes32 key,
+    address owner,
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
@@ -1097,7 +1143,7 @@ library Users {
     string memory avatar,
     string memory cardback
   ) internal {
-    bytes memory _staticData = encodeStatic(coin, xp, createdAt);
+    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt);
 
     PackedCounter _encodedLengths = encodeLengths(cards, packs, id, avatar, cardback);
     bytes memory _dynamicData = encodeDynamic(cards, packs, id, avatar, cardback);
@@ -1113,6 +1159,7 @@ library Users {
    */
   function _set(
     bytes32 key,
+    address owner,
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
@@ -1122,7 +1169,7 @@ library Users {
     string memory avatar,
     string memory cardback
   ) internal {
-    bytes memory _staticData = encodeStatic(coin, xp, createdAt);
+    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt);
 
     PackedCounter _encodedLengths = encodeLengths(cards, packs, id, avatar, cardback);
     bytes memory _dynamicData = encodeDynamic(cards, packs, id, avatar, cardback);
@@ -1137,7 +1184,7 @@ library Users {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, UsersData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.coin, _table.xp, _table.createdAt);
+    bytes memory _staticData = encodeStatic(_table.owner, _table.coin, _table.xp, _table.createdAt);
 
     PackedCounter _encodedLengths = encodeLengths(
       _table.cards,
@@ -1158,7 +1205,7 @@ library Users {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, UsersData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.coin, _table.xp, _table.createdAt);
+    bytes memory _staticData = encodeStatic(_table.owner, _table.coin, _table.xp, _table.createdAt);
 
     PackedCounter _encodedLengths = encodeLengths(
       _table.cards,
@@ -1178,12 +1225,16 @@ library Users {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint256 coin, uint256 xp, uint256 createdAt) {
-    coin = (uint256(Bytes.slice32(_blob, 0)));
+  function decodeStatic(
+    bytes memory _blob
+  ) internal pure returns (address owner, uint256 coin, uint256 xp, uint256 createdAt) {
+    owner = (address(Bytes.slice20(_blob, 0)));
 
-    xp = (uint256(Bytes.slice32(_blob, 32)));
+    coin = (uint256(Bytes.slice32(_blob, 20)));
 
-    createdAt = (uint256(Bytes.slice32(_blob, 64)));
+    xp = (uint256(Bytes.slice32(_blob, 52)));
+
+    createdAt = (uint256(Bytes.slice32(_blob, 84)));
   }
 
   /**
@@ -1246,7 +1297,7 @@ library Users {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (UsersData memory _table) {
-    (_table.coin, _table.xp, _table.createdAt) = decodeStatic(_staticData);
+    (_table.owner, _table.coin, _table.xp, _table.createdAt) = decodeStatic(_staticData);
 
     (_table.cards, _table.packs, _table.id, _table.avatar, _table.cardback) = decodeDynamic(
       _encodedLengths,
@@ -1278,8 +1329,13 @@ library Users {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint256 coin, uint256 xp, uint256 createdAt) internal pure returns (bytes memory) {
-    return abi.encodePacked(coin, xp, createdAt);
+  function encodeStatic(
+    address owner,
+    uint256 coin,
+    uint256 xp,
+    uint256 createdAt
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(owner, coin, xp, createdAt);
   }
 
   /**
@@ -1333,6 +1389,7 @@ library Users {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
+    address owner,
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
@@ -1342,7 +1399,7 @@ library Users {
     string memory avatar,
     string memory cardback
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(coin, xp, createdAt);
+    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt);
 
     PackedCounter _encodedLengths = encodeLengths(cards, packs, id, avatar, cardback);
     bytes memory _dynamicData = encodeDynamic(cards, packs, id, avatar, cardback);

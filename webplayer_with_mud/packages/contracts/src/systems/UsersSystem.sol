@@ -8,12 +8,12 @@ contract UsersSystem is System {
     function addUser(string memory username) public returns (bytes32 key) {
         key = keccak256(abi.encode(block.prevrandao, _msgSender(), username));
 //        Users.set(key, UsersData({
-//        id : username,
-//        createdAt : block.timestamp,
-//        coin : 10000,
-//        xp : 10000,
-//        avatar : "",
-//        cardback : ""
+//            id : username,
+//            createdAt : block.timestamp,
+//            coin : 10000,
+//            xp : 0,
+//            avatar : "",
+//            cardback : ""
 //        })
 //        );
     }
