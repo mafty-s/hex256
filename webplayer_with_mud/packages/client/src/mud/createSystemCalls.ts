@@ -5,7 +5,6 @@
 
 import {Hex} from "viem";
 import {SetupNetworkResult} from "./setupNetwork";
-import * as console from "console";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -52,9 +51,16 @@ export function createSystemCalls(
         await waitForTransaction(tx);
     };
 
-    const getCard = async () => {
-        const result = await worldContract.read.getCard([]);
+    const getCard = async (card_id:string) => {
+        console.log("asd")
+        const result = await worldContract.read.getCard([card_id]);
         return result;
+    };
+
+
+    const getCard2 = async (card_id:string) => {
+        const tx = await worldContract.write.getCard([card_id]);
+        await waitForTransaction(tx);
     };
 
 
@@ -63,6 +69,7 @@ export function createSystemCalls(
         toggleTask,
         deleteTask,
         addUser,
-        getCard
+        getCard,
+        getCard2
     };
 }

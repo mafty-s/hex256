@@ -1,12 +1,12 @@
 import {useMUD} from "./MUDContext";
 
 const styleUnset = {all: "unset"} as const;
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 
 export const App = () => {
     const {
         network: {tables, useStore},
-        systemCalls: {addTask, toggleTask, deleteTask,addUser,getCard},
+        systemCalls: {addTask, toggleTask, deleteTask, addUser, getCard, getCard2},
     } = useMUD();
 
     const tasks = useStore((state) => {
@@ -14,6 +14,13 @@ export const App = () => {
         records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
         return records;
     });
+
+    const cards = useStore((state) => {
+        const records = Object.values(state.getRecords(tables.Cards));
+        records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
+        return records;
+    });
+
 
     function unityShowBanner(msg, type) {
         // function updateBannerVisibility() {
@@ -33,12 +40,7 @@ export const App = () => {
         // updateBannerVisibility();
     }
 
-    useEffect(() => {
-
-        window.addTask = addTask;
-        window.addUser = addUser;
-        window.getCard = getCard;
-
+    let initUnity = () => {
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
         var loadingBar = document.querySelector("#unity-loading-bar");
@@ -99,14 +101,21 @@ export const App = () => {
             });
         };
         document.body.appendChild(script);
+    }
+
+    useEffect(() => {
+        window.addTask = addTask;
+        window.addUser = addUser;
+        window.getCard = getCard;
+        window.getCard2 = getCard2;
+        window.cards = cards;
+        window.tasks = tasks;
+
+        initUnity();
 
         return () => {
-            // 在组件卸载时执行的清理操作
-            // 类似于 componentWillUnmount
-
-            // 在这里可以进行需要在组件卸载时执行的清理逻辑
         };
-    }, []); // 空数组作为第二个参数表示只在组件挂载和卸载时执行一次
+    }, []);
 
 
     return (
@@ -129,6 +138,14 @@ export const App = () => {
             </div>
 
             <div class="mud_devtool">
+                <div id="card">
+                    {cards.map((card) => (
+                        <div key={card.tid}>
+                            {card.value.tid}
+                        </div>
+                    ))}
+                </div>
+
                 <table>
                     <tbody>
                     {tasks.map((task) => (

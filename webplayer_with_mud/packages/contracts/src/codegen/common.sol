@@ -8,3 +8,8 @@ enum AnimalType {
   CAT,
   SQUIREL
 }
+
+enum PackType {
+  Fixed,
+  Random
+}

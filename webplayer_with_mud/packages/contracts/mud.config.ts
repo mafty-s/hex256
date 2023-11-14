@@ -3,11 +3,18 @@ import {mudConfig} from "@latticexyz/world/register";
 export default mudConfig({
     enums: {
         AnimalType: ["NONE", "DOG", "CAT", "SQUIREL"],
+        PackType: ["Fixed", "Random"]
     },
     tables: {
         CounterSingleton: {
             keySchema: {},
             valueSchema: "uint256",
+        },
+        Packs: {
+            valueSchema: {
+                id: "string",
+                cards: "uint256[]",
+            }
         },
         Users: {
             valueSchema: {
