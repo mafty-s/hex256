@@ -6,7 +6,7 @@ import React, {useEffect} from 'react';
 export const App = () => {
     const {
         network: {tables, useStore},
-        systemCalls: {addTask, toggleTask, deleteTask, addUser},
+        systemCalls: {addTask, toggleTask, deleteTask, addUser, initCard},
     } = useMUD();
 
     const tasks = useStore((state) => {
@@ -24,30 +24,31 @@ export const App = () => {
     const users = useStore((state) => {
         const records = Object.values(state.getRecords(tables.Users));
         records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-        console.log("users", records);
+        // console.log("users", records);
         return records;
     });
 
 
     function unityShowBanner(msg, type) {
-        // function updateBannerVisibility() {
-        //     warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        // }
-        // // var div = document.createElement('div');
-        // // div.innerHTML = msg;
-        // // warningBanner.appendChild(div);
-        // // if (type == 'error') div.style = 'background: red; padding: 10px;';
-        // else {
-        //     // if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-        //     setTimeout(function() {
-        //         warningBanner.removeChild(div);
-        //         updateBannerVisibility();
-        //     }, 5000);
-        // }
-        // updateBannerVisibility();
+        function updateBannerVisibility() {
+            warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+            if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+            setTimeout(function() {
+                warningBanner.removeChild(div);
+                updateBannerVisibility();
+            }, 5000);
+        }
+        updateBannerVisibility();
     }
 
     let initUnity = () => {
+        console.log("initUnity");
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
         var loadingBar = document.querySelector("#unity-loading-bar");
@@ -88,9 +89,13 @@ export const App = () => {
         } else {
             // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-            canvas.style.width = "80vw";
-            canvas.style.height = "80vh";
+            // canvas.style.width = "100vw";
+            // canvas.style.height = "100vh";
+
+            canvas.style.width = "960px";
+            canvas.style.height = "600px";
         }
+
 
 
         var script = document.createElement("script");
@@ -99,11 +104,10 @@ export const App = () => {
             createUnityInstance(canvas, config, (progress) => {
                 progressBarFull.style.width = 100 * progress + "%";
             }).then((unityInstance) => {
-                window.MyGameInstance = unityInstance;
                 loadingBar.style.display = "none";
-                // fullscreenButton.onclick = () => {
-                //     unityInstance.SetFullscreen(1);
-                // };
+                fullscreenButton.onclick = () => {
+                    unityInstance.SetFullscreen(1);
+                };
             }).catch((message) => {
                 alert(message);
             });
@@ -114,6 +118,7 @@ export const App = () => {
     useEffect(() => {
         window.addTask = addTask;
         window.addUser = addUser;
+        window.initCard = initCard;
 
         initUnity();
 
@@ -124,7 +129,7 @@ export const App = () => {
 
     return (
         <>
-            <div id="unity-container" class="unity-desktop">
+            <div id="unity-container" className="unity-desktop">
                 <canvas id="unity-canvas">
                 </canvas>
                 <div id="unity-loading-bar">
@@ -133,22 +138,22 @@ export const App = () => {
                         <div id="unity-progress-bar-full"></div>
                     </div>
                 </div>
-                {/*<div id="unity-warning"></div>*/}
-                {/*<div id="unity-footer">*/}
-                {/*    <div id="unity-webgl-logo"></div>*/}
-                {/*    <div id="unity-fullscreen-button"></div>*/}
-                {/*    <div id="unity-build-title">My project</div>*/}
-                {/*</div>*/}
+                <div id="unity-warning"></div>
+                <div id="unity-footer">
+                    <div id="unity-webgl-logo"></div>
+                    <div id="unity-fullscreen-button"></div>
+                    <div id="unity-build-title">My project</div>
+                </div>
             </div>
 
             <div className="mud_devtool">
-                <div id="card">
-                    {cards.map((card) => (
-                        <div key={card.id}>
-                            {card.value.tid}
-                        </div>
-                    ))}
-                </div>
+                {/*<div id="card">*/}
+                {/*    {cards.map((card) => (*/}
+                {/*        <div key={card.id}>*/}
+                {/*            {card.value.tid}*/}
+                {/*        </div>*/}
+                {/*    ))}*/}
+                {/*</div>*/}
 
                 <table>
                     <tbody>
