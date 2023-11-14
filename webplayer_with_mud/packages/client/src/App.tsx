@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 export const App = () => {
     const {
         network: {tables, useStore},
-        systemCalls: {addTask, toggleTask, deleteTask,addUser},
+        systemCalls: {addTask, toggleTask, deleteTask,addUser,getCard},
     } = useMUD();
 
     const tasks = useStore((state) => {
@@ -37,6 +37,7 @@ export const App = () => {
 
         window.addTask = addTask;
         window.addUser = addUser;
+        window.getCard = getCard;
 
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");

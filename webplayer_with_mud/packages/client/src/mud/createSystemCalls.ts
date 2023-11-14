@@ -5,6 +5,7 @@
 
 import {Hex} from "viem";
 import {SetupNetworkResult} from "./setupNetwork";
+import * as console from "console";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -51,11 +52,17 @@ export function createSystemCalls(
         await waitForTransaction(tx);
     };
 
+    const getCard = async () => {
+        const result = await worldContract.read.getCard([]);
+        return result;
+    };
+
 
     return {
         addTask,
         toggleTask,
         deleteTask,
-        addUser
+        addUser,
+        getCard
     };
 }

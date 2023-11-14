@@ -25,7 +25,7 @@ contract UsersSystem is System {
     }
 
     function getUser(string memory username) public view returns (UsersData memory _table) {
-        key = keccak256(abi.encode(block.prevrandao, _msgSender(), username));
+        bytes32 key = keccak256(abi.encode(block.prevrandao, _msgSender(), username));
         return Users.get(key);
     }
 

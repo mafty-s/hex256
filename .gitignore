@@ -77,4 +77,8 @@ crashlytics-build.properties
 .idea
 .idea/
 **/.idea/
+
 /webplayer_with_mud/packages/contracts/out/
+/webplayer_with_mud/packages/contracts/cache/
+/webplayer_with_mud/packages/contracts/broadcast/
+/webplayer_with_mud/packages/contracts/node_modules/
