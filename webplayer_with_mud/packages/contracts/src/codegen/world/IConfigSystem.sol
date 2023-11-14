@@ -10,6 +10,8 @@ import { CardsData } from "./../index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IConfigSystem {
+  function initCard() external;
+
   function getCard(string memory id) external view returns (CardsData memory _table);
 
   function setCard(string memory id, CardsData calldata data) external;

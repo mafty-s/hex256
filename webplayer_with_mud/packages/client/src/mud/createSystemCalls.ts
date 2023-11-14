@@ -55,10 +55,18 @@ export function createSystemCalls(
         return tx;
     };
 
+    const initCard = async () => {
+        const tx = await worldContract.write.initCard([]);
+        await waitForTransaction(tx);
+        return tx;
+    };
+
+
     return {
         addTask,
         toggleTask,
         deleteTask,
         addUser,
+        initCard,
     };
 }
