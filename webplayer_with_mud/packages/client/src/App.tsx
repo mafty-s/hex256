@@ -6,7 +6,7 @@ import React, {useEffect} from 'react';
 export const App = () => {
     const {
         network: {tables, useStore},
-        systemCalls: {addTask, toggleTask, deleteTask, addUser, getCard, getCard2},
+        systemCalls: {addTask, toggleTask, deleteTask, addUser},
     } = useMUD();
 
     const tasks = useStore((state) => {
@@ -18,6 +18,13 @@ export const App = () => {
     const cards = useStore((state) => {
         const records = Object.values(state.getRecords(tables.Cards));
         records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
+        return records;
+    });
+
+    const users = useStore((state) => {
+        const records = Object.values(state.getRecords(tables.Users));
+        records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
+        console.log("users", records);
         return records;
     });
 
@@ -81,8 +88,8 @@ export const App = () => {
         } else {
             // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-            canvas.style.width = "100vw";
-            canvas.style.height = "100vh";
+            canvas.style.width = "80vw";
+            canvas.style.height = "80vh";
         }
 
 
@@ -92,6 +99,7 @@ export const App = () => {
             createUnityInstance(canvas, config, (progress) => {
                 progressBarFull.style.width = 100 * progress + "%";
             }).then((unityInstance) => {
+                window.MyGameInstance = unityInstance;
                 loadingBar.style.display = "none";
                 // fullscreenButton.onclick = () => {
                 //     unityInstance.SetFullscreen(1);
@@ -106,10 +114,6 @@ export const App = () => {
     useEffect(() => {
         window.addTask = addTask;
         window.addUser = addUser;
-        window.getCard = getCard;
-        window.getCard2 = getCard2;
-        window.cards = cards;
-        window.tasks = tasks;
 
         initUnity();
 
@@ -137,10 +141,10 @@ export const App = () => {
                 {/*</div>*/}
             </div>
 
-            <div class="mud_devtool">
+            <div className="mud_devtool">
                 <div id="card">
                     {cards.map((card) => (
-                        <div key={card.tid}>
+                        <div key={card.id}>
                             {card.value.tid}
                         </div>
                     ))}

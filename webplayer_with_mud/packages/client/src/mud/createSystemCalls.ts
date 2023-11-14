@@ -33,43 +33,32 @@ export function createSystemCalls(
     const addTask = async (label: string) => {
         const tx = await worldContract.write.addTask([label]);
         await waitForTransaction(tx);
+        return tx;
     };
 
     const toggleTask = async (key: Hex) => {
         const isComplete = (useStore.getState().getValue(tables.Tasks, {key})?.completedAt ?? 0n) > 0n;
         const tx = isComplete ? await worldContract.write.resetTask([key]) : await worldContract.write.completeTask([key]);
         await waitForTransaction(tx);
+        return tx;
     };
 
     const deleteTask = async (key: Hex) => {
         const tx = await worldContract.write.deleteTask([key]);
         await waitForTransaction(tx);
+        return tx;
     };
 
     const addUser = async (label: string) => {
         const tx = await worldContract.write.addUser([label]);
         await waitForTransaction(tx);
+        return tx;
     };
-
-    const getCard = async (card_id:string) => {
-        console.log("asd")
-        const result = await worldContract.read.getCard([card_id]);
-        return result;
-    };
-
-
-    const getCard2 = async (card_id:string) => {
-        const tx = await worldContract.write.getCard([card_id]);
-        await waitForTransaction(tx);
-    };
-
 
     return {
         addTask,
         toggleTask,
         deleteTask,
         addUser,
-        getCard,
-        getCard2
     };
 }
