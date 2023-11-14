@@ -13,10 +13,10 @@ contract UsersSystem is System {
             1000, //initialCoinAmount,
             0, //initialXp,
             block.timestamp,
+            new uint8[](0),
             new uint256[](0),
-            new uint256[](0),
-            "user_id",
-            "user_avatar",
+            username,
+            "bear",
             "user_cardback"
         );
 

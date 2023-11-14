@@ -22,7 +22,7 @@ export default mudConfig({
         coin: "uint256",
         xp: "uint256",
         createdAt: "uint256",
-        cards: "uint256[]",
+        cards: "uint8[]",
         packs: "uint256[]",
         id: "string",
         avatar: "string",

@@ -34,7 +34,7 @@ struct UsersData {
   uint256 coin;
   uint256 xp;
   uint256 createdAt;
-  uint256[] cards;
+  uint8[] cards;
   uint256[] packs;
   string id;
   string avatar;
@@ -71,7 +71,7 @@ library Users {
     _valueSchema[1] = SchemaType.UINT256;
     _valueSchema[2] = SchemaType.UINT256;
     _valueSchema[3] = SchemaType.UINT256;
-    _valueSchema[4] = SchemaType.UINT256_ARRAY;
+    _valueSchema[4] = SchemaType.UINT8_ARRAY;
     _valueSchema[5] = SchemaType.UINT256_ARRAY;
     _valueSchema[6] = SchemaType.STRING;
     _valueSchema[7] = SchemaType.STRING;
@@ -291,29 +291,29 @@ library Users {
   /**
    * @notice Get cards.
    */
-  function getCards(bytes32 key) internal view returns (uint256[] memory cards) {
+  function getCards(bytes32 key) internal view returns (uint8[] memory cards) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint256());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
   }
 
   /**
    * @notice Get cards.
    */
-  function _getCards(bytes32 key) internal view returns (uint256[] memory cards) {
+  function _getCards(bytes32 key) internal view returns (uint8[] memory cards) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint256());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
   }
 
   /**
    * @notice Set cards.
    */
-  function setCards(bytes32 key, uint256[] memory cards) internal {
+  function setCards(bytes32 key, uint8[] memory cards) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -323,7 +323,7 @@ library Users {
   /**
    * @notice Set cards.
    */
-  function _setCards(bytes32 key, uint256[] memory cards) internal {
+  function _setCards(bytes32 key, uint8[] memory cards) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -339,7 +339,7 @@ library Users {
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
-      return _byteLength / 32;
+      return _byteLength / 1;
     }
   }
 
@@ -352,7 +352,7 @@ library Users {
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
-      return _byteLength / 32;
+      return _byteLength / 1;
     }
   }
 
@@ -360,13 +360,13 @@ library Users {
    * @notice Get an item of cards.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCards(bytes32 key, uint256 _index) internal view returns (uint256) {
+  function getItemCards(bytes32 key, uint256 _index) internal view returns (uint8) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
-      return (uint256(bytes32(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (uint8(bytes1(_blob)));
     }
   }
 
@@ -374,20 +374,20 @@ library Users {
    * @notice Get an item of cards.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCards(bytes32 key, uint256 _index) internal view returns (uint256) {
+  function _getItemCards(bytes32 key, uint256 _index) internal view returns (uint8) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
-      return (uint256(bytes32(_blob)));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (uint8(bytes1(_blob)));
     }
   }
 
   /**
    * @notice Push an element to cards.
    */
-  function pushCards(bytes32 key, uint256 _element) internal {
+  function pushCards(bytes32 key, uint8 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -397,7 +397,7 @@ library Users {
   /**
    * @notice Push an element to cards.
    */
-  function _pushCards(bytes32 key, uint256 _element) internal {
+  function _pushCards(bytes32 key, uint8 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -411,7 +411,7 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 32);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
   }
 
   /**
@@ -421,32 +421,32 @@ library Users {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 32);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
   }
 
   /**
    * @notice Update an element of cards at `_index`.
    */
-  function updateCards(bytes32 key, uint256 _index, uint256 _element) internal {
+  function updateCards(bytes32 key, uint256 _index, uint8 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of cards at `_index`.
    */
-  function _updateCards(bytes32 key, uint256 _index, uint256 _element) internal {
+  function _updateCards(bytes32 key, uint256 _index, uint8 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -1137,7 +1137,7 @@ library Users {
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
-    uint256[] memory cards,
+    uint8[] memory cards,
     uint256[] memory packs,
     string memory id,
     string memory avatar,
@@ -1163,7 +1163,7 @@ library Users {
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
-    uint256[] memory cards,
+    uint8[] memory cards,
     uint256[] memory packs,
     string memory id,
     string memory avatar,
@@ -1247,7 +1247,7 @@ library Users {
     internal
     pure
     returns (
-      uint256[] memory cards,
+      uint8[] memory cards,
       uint256[] memory packs,
       string memory id,
       string memory avatar,
@@ -1259,7 +1259,7 @@ library Users {
     unchecked {
       _end = _encodedLengths.atIndex(0);
     }
-    cards = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint256());
+    cards = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint8());
 
     _start = _end;
     unchecked {
@@ -1343,7 +1343,7 @@ library Users {
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
   function encodeLengths(
-    uint256[] memory cards,
+    uint8[] memory cards,
     uint256[] memory packs,
     string memory id,
     string memory avatar,
@@ -1352,7 +1352,7 @@ library Users {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
       _encodedLengths = PackedCounterLib.pack(
-        cards.length * 32,
+        cards.length * 1,
         packs.length * 32,
         bytes(id).length,
         bytes(avatar).length,
@@ -1366,7 +1366,7 @@ library Users {
    * @return The dynamic data, encoded into a sequence of bytes.
    */
   function encodeDynamic(
-    uint256[] memory cards,
+    uint8[] memory cards,
     uint256[] memory packs,
     string memory id,
     string memory avatar,
@@ -1393,7 +1393,7 @@ library Users {
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
-    uint256[] memory cards,
+    uint8[] memory cards,
     uint256[] memory packs,
     string memory id,
     string memory avatar,
