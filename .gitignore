@@ -70,14 +70,15 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-/webplayer_with_mud/pnpm-lock.yaml
-/webplayer_with_mud/node_modules/
-/webplayer_with_mud/packages/client/node_modules/
+
 
 .idea
 .idea/
 **/.idea/
 
+/webplayer_with_mud/pnpm-lock.yaml
+/webplayer_with_mud/node_modules/
+/webplayer_with_mud/packages/client/node_modules/
 /webplayer_with_mud/packages/contracts/out/
 /webplayer_with_mud/packages/contracts/cache/
 /webplayer_with_mud/packages/contracts/broadcast/
