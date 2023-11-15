@@ -72,6 +72,10 @@ export function createSystemCalls(
         return card;
     }
 
+    const getRandomCardByRarity = async () => {
+        const card = await worldContract.read.getRandomCardByRarity([]);
+        return card;
+    }
 
     const incr = async () => {
         const tx = await worldContract.write.incr([]);
@@ -88,5 +92,6 @@ export function createSystemCalls(
         buyCard,
         getCard,
         incr,
+        getRandomCardByRarity
     };
 }

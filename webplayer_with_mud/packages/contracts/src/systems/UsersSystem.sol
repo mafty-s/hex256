@@ -14,7 +14,7 @@ contract UsersSystem is System {
             0, //initialXp,
             block.timestamp,
             new bytes32[](0),
-            new uint256[](0),
+            new bytes32[](0),
             username,
             "bear",
             "user_cardback"

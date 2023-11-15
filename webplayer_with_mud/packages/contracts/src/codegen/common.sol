@@ -10,6 +10,13 @@ enum RarityType {
 }
 
 enum PackType {
-  Fixed,
-  Random
+  FIXED,
+  RANDOM
+}
+
+enum TeamType {
+  FIRE,
+  FOREST,
+  WATER,
+  NEUTRAL
 }
