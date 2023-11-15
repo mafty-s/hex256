@@ -10,6 +10,8 @@ export const App = () => {
             toggleTask,
             deleteTask,
             addUser,
+            // getUser,
+            getUserByOwner,
             initCard,
             initPack,
             buyCard,
@@ -207,6 +209,7 @@ export const App = () => {
             createUnityInstance(canvas, config, (progress) => {
                 progressBarFull.style.width = 100 * progress + "%";
             }).then((unityInstance) => {
+                window.MyUnityInstance = unityInstance;
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
                     unityInstance.SetFullscreen(1);
@@ -218,19 +221,54 @@ export const App = () => {
         document.body.appendChild(script);
     }
 
+    function convertBigIntToInt(obj) {
+        if (typeof obj !== 'object' || obj === null) {
+            // 基本类型或 null，直接返回
+            return obj;
+        }
+
+        if (Array.isArray(obj)) {
+            // 数组类型
+            return obj.map(item => convertBigIntToInt(item));
+        }
+
+        // 对象类型
+        const convertedObj = {};
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const value = obj[key];
+                if (typeof value === 'bigint') {
+                    convertedObj[key] = Number(value);
+                } else {
+                    convertedObj[key] = convertBigIntToInt(value);
+                }
+            }
+        }
+
+        return convertedObj;
+    }
+
+    let getUser = async () => {
+        let user = await getUserByOwner(walletClient.account.address)
+        user = convertBigIntToInt(user);
+        console.log("getUser from App.tsx",user)
+        return user;
+    }
+
     useEffect(() => {
-        window.addTask = addTask;
-        window.addUser = addUser;
-        window.initCard = initCard;
-        window.initPack = initPack;
+        // window.addTask = addTask;
+        // window.addUser = addUser;
+        window.getUser = getUser;
+        // window.initCard = initCard;
+        // window.initPack = initPack;
         window.initCards = initCards;
         window.initPacks = initPacks;
-        window.buyCard = buyCard;
-        window.getCard = getCard;
+        // window.buyCard = buyCard;
+        // window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;
-        window.incr = incr;
-        window.getRandomCardByRarity = getRandomCardByRarity;
-        window.openPack = openPack;
+        // window.incr = incr;
+        // window.getRandomCardByRarity = getRandomCardByRarity;
+        // window.openPack = openPack;
 
         initUnity();
 

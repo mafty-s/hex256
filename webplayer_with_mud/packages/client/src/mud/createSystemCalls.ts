@@ -55,6 +55,21 @@ export function createSystemCalls(
         return tx;
     };
 
+    const getUser = async () => {
+        const user = await worldContract.read.getUser();
+        return user;
+    };
+
+    const getUserByKey = async (key:string) => {
+        const user = await worldContract.read.getUserByKey([key]);
+        return user;
+    };
+
+    const getUserByOwner = async (owner:string) => {
+        const user = await worldContract.read.getUserByOwner([owner]);
+        return user;
+    };
+
     const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number) => {
         const tx = await worldContract.write.initCard([name, mana, attack, hp, cost]);
         await waitForTransaction(tx);
@@ -96,11 +111,14 @@ export function createSystemCalls(
         return tx;
     };
 
-    return {
+    const out  = {
         addTask,
         toggleTask,
         deleteTask,
         addUser,
+        getUser,
+        getUserByKey,
+        getUserByOwner,
         initCard,
         initPack,
         buyCard,
@@ -109,4 +127,8 @@ export function createSystemCalls(
         getRandomCardByRarity,
         openPack
     };
+
+    window.mud = out;
+
+    return out;
 }
