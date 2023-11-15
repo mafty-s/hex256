@@ -12,6 +12,7 @@ export default mudConfig({
     },
     Packs: {
       valueSchema: {
+        packType:"PackType",
         id: "string",
         cards: "uint256[]",
       }

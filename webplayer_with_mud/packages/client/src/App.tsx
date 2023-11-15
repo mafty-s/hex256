@@ -5,7 +5,7 @@ import React, {useEffect} from 'react';
 
 export const App = () => {
     const {
-        network: {tables, useStore},
+        network: {tables, useStore, walletClient},
         systemCalls: {addTask, toggleTask, deleteTask, addUser, initCard},
     } = useMUD();
 
@@ -33,13 +33,14 @@ export const App = () => {
         function updateBannerVisibility() {
             warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
         }
+
         var div = document.createElement('div');
         div.innerHTML = msg;
         warningBanner.appendChild(div);
         if (type == 'error') div.style = 'background: red; padding: 10px;';
         else {
             if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-            setTimeout(function() {
+            setTimeout(function () {
                 warningBanner.removeChild(div);
                 updateBannerVisibility();
             }, 5000);
@@ -47,7 +48,88 @@ export const App = () => {
         updateBannerVisibility();
     }
 
+    let initCards = () => {
+        initCard('ashes_snake', 5, 6, 4, 100);
+        initCard('bull_heat', 3, 2, 5, 100);
+        initCard('cave', 2, 0, 5, 100);
+        initCard('dark_stallion', 4, 4, 5, 100);
+        initCard('dragon_red', 7, 9, 7, 100);
+        initCard('equip_sword', 2, 0, 2, 100);
+        initCard('fire_chicken', 2, 1, 1, 100);
+        initCard('fire_element', 5, 7, 3, 100);
+        initCard('firefox', 4, 4, 4, 100);
+        initCard('hell_hound', 4, 4, 2, 100);
+        initCard('imp', 2, 2, 1, 100);
+        initCard('lava_beast', 3, 2, 3, 100);
+        initCard('phoenix', 6, 6, 6, 100);
+        initCard('potion_red', 2, 0, 0, 100);
+        initCard('reaper', 6, 6, 6, 100);
+        initCard('spell_aerial_strike', 3, 0, 0, 100);
+        initCard('spell_armageddon', 5, 0, 0, 100);
+        initCard('spell_burn', 4, 0, 0, 100);
+        initCard('spell_split', 2, 0, 0, 100);
+        initCard('spell_stones', 2, 0, 0, 100);
+        initCard('town_volcano', 3, 0, 7, 100);
+        initCard('trap_explosive', 3, 0, 0, 100);
+        initCard('wolf_furious', 5, 3, 4, 100);
+        initCard('armored_beast', 4, 3, 6, 100);
+        initCard('bear', 5, 4, 5, 100);
+        initCard('dragon_green', 7, 7, 9, 100);
+        initCard('equip_shield', 2, 0, 2, 100);
+        initCard('gorilla', 4, 0, 6, 100);
+        initCard('mammoth', 6, 7, 6, 100);
+        initCard('owl', 3, 2, 3, 100);
+        initCard('potion_green', 2, 0, 0, 100);
+        initCard('raccoon', 2, 2, 3, 100);
+        initCard('sasquatch', 5, 6, 4, 100);
+        initCard('snake_venom', 2, 1, 3, 100);
+        initCard('spell_extinct', 2, 0, 0, 100);
+        initCard('spell_growth', 5, 0, 0, 100);
+        initCard('spell_hibernate', 3, 0, 0, 100);
+        initCard('spell_roots', 3, 0, 0, 100);
+        initCard('spell_stomp', 2, 0, 0, 100);
+        initCard('town_forest', 3, 0, 7, 100);
+        initCard('trap_spike', 3, 0, 0, 100);
+        initCard('tree_angry', 3, 3, 5, 100);
+        initCard('unicorn', 6, 5, 6, 100);
+        initCard('wolf_alpha', 3, 3, 2, 100);
+        initCard('wolf_stalker', 3, 4, 2, 100);
+        initCard('woodland', 2, 0, 5, 100);
+        initCard('hero_fire', 0, 0, 0, 100);
+        initCard('hero_forest', 0, 0, 0, 100);
+        initCard('hero_water', 0, 0, 0, 100);
+        initCard('coin', 0, 0, 0, 100);
+        initCard('dragon_egg', 2, 0, 0, 100);
+        initCard('flame_eagle', 1, 1, 1, 100);
+        initCard('phoenix_egg', 0, 0, 3, 100);
+        initCard('wolf_baby', 1, 1, 1, 100);
+        initCard('bay', 2, 0, 5, 100);
+        initCard('crab_mana', 2, 3, 1, 100);
+        initCard('dragon_blue', 7, 8, 8, 100);
+        initCard('eel', 4, 5, 2, 100);
+        initCard('equip_ring', 1, 0, 3, 100);
+        initCard('fish', 1, 1, 1, 100);
+        initCard('killer_whale', 5, 5, 4, 100);
+        initCard('kraken', 6, 5, 5, 100);
+        initCard('octopus', 4, 2, 5, 100);
+        initCard('poison_frog', 3, 2, 2, 100);
+        initCard('potion_blue', 2, 0, 0, 100);
+        initCard('pufferfish', 3, 2, 5, 100);
+        initCard('sea_monster', 6, 4, 7, 100);
+        initCard('seagull', 2, 2, 2, 100);
+        initCard('shark', 4, 4, 4, 100);
+        initCard('spell_flood', 3, 0, 0, 100);
+        initCard('spell_storm', 5, 0, 0, 100);
+        initCard('spell_submerge', 2, 0, 0, 100);
+        initCard('spell_treasure', 3, 0, 0, 100);
+        initCard('spell_wave', 3, 0, 0, 100);
+        initCard('town_underwater', 3, 0, 7, 100);
+        initCard('trap_fish', 3, 0, 0, 100);
+        initCard('turtle', 3, 2, 3, 100);
+    };
+
     let initUnity = () => {
+        console.log("walletClient", walletClient.account.address)
         console.log("initUnity");
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
@@ -97,7 +179,6 @@ export const App = () => {
         }
 
 
-
         var script = document.createElement("script");
         script.src = loaderUrl;
         script.onload = () => {
@@ -119,6 +200,7 @@ export const App = () => {
         window.addTask = addTask;
         window.addUser = addUser;
         window.initCard = initCard;
+        window.initCards = initCards;
 
         initUnity();
 
@@ -143,104 +225,105 @@ export const App = () => {
                     <div id="unity-webgl-logo"></div>
                     <div id="unity-fullscreen-button"></div>
                     <div id="unity-build-title">My project</div>
+
                 </div>
             </div>
 
-            <div className="mud_devtool">
-                {/*<div id="card">*/}
-                {/*    {cards.map((card) => (*/}
-                {/*        <div key={card.id}>*/}
-                {/*            {card.value.tid}*/}
-                {/*        </div>*/}
-                {/*    ))}*/}
-                {/*</div>*/}
+            {/*<div className="mud_devtool">*/}
+            {/*    /!*<div id="card">*!/*/}
+            {/*    /!*    {cards.map((card) => (*!/*/}
+            {/*    /!*        <div key={card.id}>*!/*/}
+            {/*    /!*            {card.value.tid}*!/*/}
+            {/*    /!*        </div>*!/*/}
+            {/*    /!*    ))}*!/*/}
+            {/*    /!*</div>*!/*/}
 
-                <table>
-                    <tbody>
-                    {tasks.map((task) => (
-                        <tr key={task.id}>
-                            <td align="right">
-                                <input
-                                    type="checkbox"
-                                    checked={task.value.completedAt > 0n}
-                                    title={task.value.completedAt === 0n ? "Mark task as completed" : "Mark task as incomplete"}
-                                    onChange={async (event) => {
-                                        event.preventDefault();
-                                        const checkbox = event.currentTarget;
+            {/*    <table>*/}
+            {/*        <tbody>*/}
+            {/*        {tasks.map((task) => (*/}
+            {/*            <tr key={task.id}>*/}
+            {/*                <td align="right">*/}
+            {/*                    <input*/}
+            {/*                        type="checkbox"*/}
+            {/*                        checked={task.value.completedAt > 0n}*/}
+            {/*                        title={task.value.completedAt === 0n ? "Mark task as completed" : "Mark task as incomplete"}*/}
+            {/*                        onChange={async (event) => {*/}
+            {/*                            event.preventDefault();*/}
+            {/*                            const checkbox = event.currentTarget;*/}
 
-                                        checkbox.disabled = true;
-                                        try {
-                                            await toggleTask(task.key.key);
-                                        } finally {
-                                            checkbox.disabled = false;
-                                        }
-                                    }}
-                                />
-                            </td>
-                            <td>{task.value.completedAt > 0n ?
-                                <s>{task.value.description}</s> : <>{task.value.description}</>}</td>
-                            <td align="right">
-                                <button
-                                    type="button"
-                                    title="Delete task"
-                                    style={styleUnset}
-                                    onClick={async (event) => {
-                                        event.preventDefault();
-                                        if (!window.confirm("Are you sure you want to delete this task?")) return;
+            {/*                            checkbox.disabled = true;*/}
+            {/*                            try {*/}
+            {/*                                await toggleTask(task.key.key);*/}
+            {/*                            } finally {*/}
+            {/*                                checkbox.disabled = false;*/}
+            {/*                            }*/}
+            {/*                        }}*/}
+            {/*                    />*/}
+            {/*                </td>*/}
+            {/*                <td>{task.value.completedAt > 0n ?*/}
+            {/*                    <s>{task.value.description}</s> : <>{task.value.description}</>}</td>*/}
+            {/*                <td align="right">*/}
+            {/*                    <button*/}
+            {/*                        type="button"*/}
+            {/*                        title="Delete task"*/}
+            {/*                        style={styleUnset}*/}
+            {/*                        onClick={async (event) => {*/}
+            {/*                            event.preventDefault();*/}
+            {/*                            if (!window.confirm("Are you sure you want to delete this task?")) return;*/}
 
-                                        const button = event.currentTarget;
-                                        button.disabled = true;
-                                        try {
-                                            await deleteTask(task.key.key);
-                                        } finally {
-                                            button.disabled = false;
-                                        }
-                                    }}
-                                >
-                                    &times;
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>
-                            <input type="checkbox" disabled/>
-                        </td>
-                        <td colSpan={2}>
-                            <form
-                                onSubmit={async (event) => {
-                                    event.preventDefault();
-                                    const form = event.currentTarget;
-                                    const fieldset = form.querySelector("fieldset");
-                                    if (!(fieldset instanceof HTMLFieldSetElement)) return;
+            {/*                            const button = event.currentTarget;*/}
+            {/*                            button.disabled = true;*/}
+            {/*                            try {*/}
+            {/*                                await deleteTask(task.key.key);*/}
+            {/*                            } finally {*/}
+            {/*                                button.disabled = false;*/}
+            {/*                            }*/}
+            {/*                        }}*/}
+            {/*                    >*/}
+            {/*                        &times;*/}
+            {/*                    </button>*/}
+            {/*                </td>*/}
+            {/*            </tr>*/}
+            {/*        ))}*/}
+            {/*        </tbody>*/}
+            {/*        <tfoot>*/}
+            {/*        <tr>*/}
+            {/*            <td>*/}
+            {/*                <input type="checkbox" disabled/>*/}
+            {/*            </td>*/}
+            {/*            <td colSpan={2}>*/}
+            {/*                <form*/}
+            {/*                    onSubmit={async (event) => {*/}
+            {/*                        event.preventDefault();*/}
+            {/*                        const form = event.currentTarget;*/}
+            {/*                        const fieldset = form.querySelector("fieldset");*/}
+            {/*                        if (!(fieldset instanceof HTMLFieldSetElement)) return;*/}
 
-                                    const formData = new FormData(form);
-                                    const desc = formData.get("description");
-                                    if (typeof desc !== "string") return;
+            {/*                        const formData = new FormData(form);*/}
+            {/*                        const desc = formData.get("description");*/}
+            {/*                        if (typeof desc !== "string") return;*/}
 
-                                    fieldset.disabled = true;
-                                    try {
-                                        await addTask(desc);
-                                        form.reset();
-                                    } finally {
-                                        fieldset.disabled = false;
-                                    }
-                                }}
-                            >
-                                <fieldset style={styleUnset}>
-                                    <input type="text" name="description"/>{" "}
-                                    <button type="submit" title="Add task">
-                                        Add
-                                    </button>
-                                </fieldset>
-                            </form>
-                        </td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
+            {/*                        fieldset.disabled = true;*/}
+            {/*                        try {*/}
+            {/*                            await addTask(desc);*/}
+            {/*                            form.reset();*/}
+            {/*                        } finally {*/}
+            {/*                            fieldset.disabled = false;*/}
+            {/*                        }*/}
+            {/*                    }}*/}
+            {/*                >*/}
+            {/*                    <fieldset style={styleUnset}>*/}
+            {/*                        <input type="text" name="description"/>{" "}*/}
+            {/*                        <button type="submit" title="Add task">*/}
+            {/*                            Add*/}
+            {/*                        </button>*/}
+            {/*                    </fieldset>*/}
+            {/*                </form>*/}
+            {/*            </td>*/}
+            {/*        </tr>*/}
+            {/*        </tfoot>*/}
+            {/*    </table>*/}
+            {/*</div>*/}
 
 
         </>

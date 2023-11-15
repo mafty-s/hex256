@@ -15,7 +15,6 @@ contract MarketSystem is System {
         bytes32 user_key = keccak256(abi.encode(msg.sender));
 
 
-
         uint256 coin = Users.getCoin(user_key);
         Users.setCoin(user_key, coin - 100);
         Users.pushCards(user_key, 1);

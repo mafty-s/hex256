@@ -10,8 +10,9 @@ contract ConfigSystem is System {
 
     }
 
-    function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost) public {
-        Cards.set(keccak256(abi.encode(name)), CardsData({mana : mana, attack : attack, hp : hp, cost : cost, createdAt : 1, tid : name, cardType : "1", team : "1", rarity : "1"}));
+    function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost) public returns (bytes32 key)  {
+        key = keccak256(abi.encode(name));
+        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, createdAt : 1, tid : name, cardType : "1", team : "1", rarity : "1"}));
     }
 
     function getCard(string memory id) public view returns (CardsData memory _table) {

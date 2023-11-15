@@ -402,6 +402,8 @@ namespace TcgEngine.Client
 
         public void SendAction<T>(ushort type, T data, NetworkDelivery delivery = NetworkDelivery.Reliable) where T : INetworkSerializable
         {
+            Debug.Log("SendAction 1:" + MudManager.GetCommandString(type));
+            MudManager.SendTask(type);
             FastBufferWriter writer = new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteValueSafe(type);
             writer.WriteNetworkSerializable(data);
@@ -411,6 +413,9 @@ namespace TcgEngine.Client
 
         public void SendAction(ushort type, int data)
         {
+            Debug.Log("SendAction 2:" + MudManager.GetCommandString(type));
+            MudManager.SendTask(type);
+
             FastBufferWriter writer = new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteValueSafe(type);
             writer.WriteValueSafe(data);
@@ -420,6 +425,9 @@ namespace TcgEngine.Client
 
         public void SendAction(ushort type)
         {
+            Debug.Log("SendAction 3:" + MudManager.GetCommandString(type));
+            MudManager.SendTask(type);
+
             FastBufferWriter writer = new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteValueSafe(type);
             Messaging.Send("action", ServerID, writer, NetworkDelivery.Reliable);

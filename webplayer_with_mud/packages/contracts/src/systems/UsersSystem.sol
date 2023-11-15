@@ -6,10 +6,10 @@ import {Users, UsersData} from "../codegen/index.sol";
 
 contract UsersSystem is System {
     function addUser(string memory username) public returns (bytes32 key) {
-        key = keccak256(abi.encode(block.prevrandao, _msgSender(), username));
+        key = keccak256(abi.encode(_msgSender()));
 
         UsersData memory userData = UsersData(
-            msg.sender,
+            _msgSender(),
             1000, //initialCoinAmount,
             0, //initialXp,
             block.timestamp,
@@ -21,11 +21,10 @@ contract UsersSystem is System {
         );
 
         Users.set(key, userData);
-        Users.setOwner(key, msg.sender);
     }
 
     function getUser(string memory username) public view returns (UsersData memory _table) {
-        bytes32 key = keccak256(abi.encode(block.prevrandao, _msgSender(), username));
+        bytes32 key = keccak256(abi.encode(_msgSender()));
         return Users.get(key);
     }
 

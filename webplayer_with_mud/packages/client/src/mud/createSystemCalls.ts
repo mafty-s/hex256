@@ -55,8 +55,8 @@ export function createSystemCalls(
         return tx;
     };
 
-    const initCard = async () => {
-        const tx = await worldContract.write.initCard([]);
+    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number) => {
+        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost]);
         await waitForTransaction(tx);
         return tx;
     };
