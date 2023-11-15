@@ -9,20 +9,17 @@ namespace TcgEngine.UI
     /// <summary>
     /// Main script for the main menu scene
     /// </summary>
-
     public class MainMenu : MonoBehaviour
     {
         public AudioClip music;
         public AudioClip ambience;
 
-        [Header("Player UI")]
-        public Text username_txt;
+        [Header("Player UI")] public Text username_txt;
         public Text credits_txt;
         public AvatarUI avatar;
         public GameObject loader;
 
-        [Header("UI")]
-        public Text version_text;
+        [Header("UI")] public Text version_text;
         public DeckSelector deck_selector;
         public DeckDisplay deck_preview;
 
@@ -106,7 +103,7 @@ namespace TcgEngine.UI
             {
                 username_txt.text = user.username;
                 credits_txt.text = GameUI.FormatNumber(user.coins);
-                
+
                 AvatarData avatar = AvatarData.Get(user.avatar);
                 this.avatar.SetAvatar(avatar);
 
@@ -129,7 +126,7 @@ namespace TcgEngine.UI
             DeckData ddeck = DeckData.Get(tid);
             if (udeck != null)
                 deck_preview.SetDeck(udeck);
-            else if(ddeck != null)
+            else if (ddeck != null)
                 deck_preview.SetDeck(ddeck);
             else
                 deck_preview.Clear();
@@ -178,7 +175,7 @@ namespace TcgEngine.UI
             string uid = GameTool.GenerateRandomID();
             GameClient.game_settings.game_type = type;
             GameClient.game_settings.game_mode = mode;
-            StartGame(uid); 
+            StartGame(uid);
         }
 
         public void StartGame(GameType type, string game_uid, string server_url = "")
@@ -192,7 +189,8 @@ namespace TcgEngine.UI
             if (!starting)
             {
                 starting = true;
-                GameClient.game_settings.server_url = server_url; //Empty server_url will use the default one in NetworkData
+                GameClient.game_settings.server_url =
+                    server_url; //Empty server_url will use the default one in NetworkData
                 GameClient.game_settings.game_uid = game_uid;
                 GameClientMatchmaker.Get().Disconnect();
                 FadeToScene(GameClient.game_settings.GetScene());
@@ -270,7 +268,7 @@ namespace TcgEngine.UI
         {
             JoinCodePanel.Get().Show();
         }
-        
+
         public void OnClickCancelMatch()
         {
             GameClientMatchmaker.Get().StopMatchmaking();

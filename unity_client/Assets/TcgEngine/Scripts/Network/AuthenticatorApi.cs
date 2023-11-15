@@ -9,7 +9,6 @@ namespace TcgEngine
     /// This authenticator require external UserLogin API asset
     /// It works with an actual web API and database containing all user info
     /// </summary>
-
     public class AuthenticatorApi : Authenticator
     {
         private int permission = 0;
@@ -29,6 +28,7 @@ namespace TcgEngine
                 this.username = res.username;
                 permission = res.permission_level;
             }
+
             return res.success;
         }
 
@@ -41,6 +41,7 @@ namespace TcgEngine
                 this.user_id = res.id;
                 this.username = res.username;
             }
+
             return res.success;
         }
 
@@ -57,6 +58,11 @@ namespace TcgEngine
         public override async Task<UserData> LoadUserData()
         {
             UserData res = await Client.LoadUserData();
+#if !UNITY_EDITOR && UNITY_WEBGL
+            Debug.Log("LoadUserData:" + MudManager.Get().msg);
+            res.username = MudManager.Get().GetUserData().id;
+            res.coins = MudManager.Get().GetUserData().coin;
+#endif
             return res;
         }
 
@@ -99,7 +105,9 @@ namespace TcgEngine
             return Client.GetLastError();
         }
 
-        public ApiClient Client { get { return ApiClient.Get(); } }
-
+        public ApiClient Client
+        {
+            get { return ApiClient.Get(); }
+        }
     }
 }
