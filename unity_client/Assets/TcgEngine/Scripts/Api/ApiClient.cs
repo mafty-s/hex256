@@ -11,7 +11,6 @@ namespace TcgEngine
     /// API client communicates with the NodeJS web api
     /// Can send requests and receive responses
     /// </summary>
-
     public class ApiClient : MonoBehaviour
     {
         public bool is_server;
@@ -46,7 +45,7 @@ namespace TcgEngine
         {
             //API client should be on OnDestroyOnLoad
             //dont assign here if already assigned cause new one will be destroyed in TheNetwork Awake
-            if(instance == null)
+            if (instance == null)
                 instance = this;
 
             LoadTokens();
@@ -406,18 +405,47 @@ namespace TcgEngine
         //Call it inside the login and loginrefresh functions after the api_version is set and return error if invalid
         public bool IsVersionValid()
         {
-            return ClientVersion == ServerVersion; 
+            return ClientVersion == ServerVersion;
         }
 
-        public UserData UserData { get { return udata; } }
+        public UserData UserData
+        {
+            get { return udata; }
+        }
 
-        public string UserID { get { return user_id; } set { user_id = value; } }
-        public string Username { get { return username; } set { username = value; } }
-        public string AccessToken { get { return access_token; } set { access_token = value; } }
-        public string RefreshToken { get { return refresh_token; } set { refresh_token = value; } }
+        public string UserID
+        {
+            get { return user_id; }
+            set { user_id = value; }
+        }
 
-        public string ServerVersion { get { return api_version; } }
-        public string ClientVersion { get { return Application.version; } }
+        public string Username
+        {
+            get { return username; }
+            set { username = value; }
+        }
+
+        public string AccessToken
+        {
+            get { return access_token; }
+            set { access_token = value; }
+        }
+
+        public string RefreshToken
+        {
+            get { return refresh_token; }
+            set { refresh_token = value; }
+        }
+
+        public string ServerVersion
+        {
+            get { return api_version; }
+        }
+
+        public string ClientVersion
+        {
+            get { return Application.version; }
+        }
 
         public static string ServerURL
         {

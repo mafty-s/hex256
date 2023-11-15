@@ -116,16 +116,25 @@ namespace TcgEngine.UI
             string jdata = ApiTool.ToJson(req);
             trade_error.text = "";
 
-            WebResponse res = await ApiClient.Get().SendPostRequest(url, jdata);
-            if (res.success)
-            {
-                CollectionPanel.Get().ReloadUser();
-                Hide();
-            }
-            else
-            {
-                trade_error.text = res.error;
-            }
+            MudManager.Get().BuyCard(card.id,GetBuyQuantity());
+            
+            // WebResponse res = await ApiClient.Get().SendPostRequest(url, jdata);
+            // if (res.success)
+            // {
+            //     CollectionPanel.Get().ReloadUser();
+            //     Hide();
+            // }
+            // else
+            // {
+            //     trade_error.text = res.error;
+            // }
+        }
+
+        public void OnSuccess()
+        {
+            Debug.Log("CardZoomPanel OnSuccess");
+            CollectionPanel.Get().ReloadUser();
+            Hide();
         }
 
 

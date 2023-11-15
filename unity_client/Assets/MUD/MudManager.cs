@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEditor;
 using System.Threading.Tasks;
+using TcgEngine;
 
 
 [System.Serializable]
@@ -22,12 +24,13 @@ public class MudManager : MonoBehaviour
 {
     private static MudManager instance;
     public string msg = "";
-    
+    private Dictionary<string, string> names = new Dictionary<string, string>();
+
     public static MudManager Get()
     {
         return instance;
     }
-    
+
     void Awake()
     {
         instance = this;
@@ -133,6 +136,17 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern void getUser();
+
+    [DllImport("__Internal")]
+    private static extern void doApiTask(string url,string json_data);
+    
+    [DllImport("__Internal")]
+    private static extern void buyCard(string card_id,int q);
+    
+    [DllImport("__Internal")]
+    private static extern string calculateKeccak256Hash(string name);
+
+    
 #endif
 
     public static void SendTask(ushort code)
@@ -147,11 +161,17 @@ public class MudManager : MonoBehaviour
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
        getUser();
+
+        CardData.Load(); // 加载数据
+
+        List<CardData> cardList = new List<CardData>(CardData.card_dict.Values);
+        foreach (CardData cardData in cardList)
+        {
+            names.Add(calculateKeccak256Hash(cardData.id), cardData.id);
+        }
 #endif
-        
-      
     }
-    
+
     public void OnUser(string msg)
     {
         this.msg = msg;
@@ -165,9 +185,8 @@ public class MudManager : MonoBehaviour
 
     public MudUserData GetUserData()
     {
-
         MudUserData playerData = JsonUtility.FromJson<MudUserData>(this.msg);
-        
+
         // Access the decoded data
         Debug.Log("Owner: " + playerData.owner);
         Debug.Log("Coins: " + playerData.coin);
@@ -178,5 +197,31 @@ public class MudManager : MonoBehaviour
         Debug.Log("Cardback: " + playerData.cardback);
 
         return playerData;
+    }
+
+    public void BuyCard(string card_id, int q)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        buyCard(card_id,q);
+#endif
+    }
+
+    public void DoApiTask(string url, string json_data)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        doApiTask(url,json_data);
+#endif
+    }
+
+    public string GetCardIdByHex(string hex)
+    {
+        if (names.ContainsKey(hex))
+        {
+            return names[hex];
+        }
+        else
+        {
+            return "Unknown";
+        }
     }
 }

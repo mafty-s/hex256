@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -52,6 +53,10 @@ namespace TcgEngine
             if (res.success)
                 await Login(username, password);
 
+#if !UNITY_EDITOR && UNITY_WEBGL
+            //todo
+#endif
+
             return res.success;
         }
 
@@ -62,6 +67,14 @@ namespace TcgEngine
             Debug.Log("LoadUserData:" + MudManager.Get().msg);
             res.username = MudManager.Get().GetUserData().id;
             res.coins = MudManager.Get().GetUserData().coin;
+            List<UserCardData> cardList = new List<UserCardData>();
+            for (int i = 0; i<MudManager.Get().GetUserData().cards.Length; i++)
+            {
+                string hex = MudManager.Get().GetUserData().cards[i];
+                string card_id = MudManager.Get().GetCardIdByHex(hex);
+                cardList.Add(new UserCardData(card_id, "normal"));
+                res.cards = cardList.ToArray();
+            }
 #endif
             return res;
         }
