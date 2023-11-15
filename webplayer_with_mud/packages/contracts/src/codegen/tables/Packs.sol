@@ -29,12 +29,13 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant PacksTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0002020201010000000000000000000000000000000000000000000000000000
+  0x0006030201010400000000000000000000000000000000000000000000000000
 );
 
 struct PacksData {
   PackType packType;
   uint8 cards;
+  uint32 cost;
   string id;
   uint8[] rarities;
 }
@@ -64,11 +65,12 @@ library Packs {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](4);
+    SchemaType[] memory _valueSchema = new SchemaType[](5);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.UINT8;
-    _valueSchema[2] = SchemaType.STRING;
-    _valueSchema[3] = SchemaType.UINT8_ARRAY;
+    _valueSchema[2] = SchemaType.UINT32;
+    _valueSchema[3] = SchemaType.STRING;
+    _valueSchema[4] = SchemaType.UINT8_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -87,11 +89,12 @@ library Packs {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](4);
+    fieldNames = new string[](5);
     fieldNames[0] = "packType";
     fieldNames[1] = "cards";
-    fieldNames[2] = "id";
-    fieldNames[3] = "rarities";
+    fieldNames[2] = "cost";
+    fieldNames[3] = "id";
+    fieldNames[4] = "rarities";
   }
 
   /**
@@ -190,6 +193,48 @@ library Packs {
     _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((cards)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get cost.
+   */
+  function getCost(bytes32 key) internal view returns (uint32 cost) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Get cost.
+   */
+  function _getCost(bytes32 key) internal view returns (uint32 cost) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Set cost.
+   */
+  function setCost(bytes32 key, uint32 cost) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((cost)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set cost.
+   */
+  function _setCost(bytes32 key, uint32 cost) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((cost)), _fieldLayout);
   }
 
   /**
@@ -549,8 +594,15 @@ library Packs {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, PackType packType, uint8 cards, string memory id, uint8[] memory rarities) internal {
-    bytes memory _staticData = encodeStatic(packType, cards);
+  function set(
+    bytes32 key,
+    PackType packType,
+    uint8 cards,
+    uint32 cost,
+    string memory id,
+    uint8[] memory rarities
+  ) internal {
+    bytes memory _staticData = encodeStatic(packType, cards, cost);
 
     PackedCounter _encodedLengths = encodeLengths(id, rarities);
     bytes memory _dynamicData = encodeDynamic(id, rarities);
@@ -564,8 +616,15 @@ library Packs {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, PackType packType, uint8 cards, string memory id, uint8[] memory rarities) internal {
-    bytes memory _staticData = encodeStatic(packType, cards);
+  function _set(
+    bytes32 key,
+    PackType packType,
+    uint8 cards,
+    uint32 cost,
+    string memory id,
+    uint8[] memory rarities
+  ) internal {
+    bytes memory _staticData = encodeStatic(packType, cards, cost);
 
     PackedCounter _encodedLengths = encodeLengths(id, rarities);
     bytes memory _dynamicData = encodeDynamic(id, rarities);
@@ -580,7 +639,7 @@ library Packs {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, PacksData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.packType, _table.cards);
+    bytes memory _staticData = encodeStatic(_table.packType, _table.cards, _table.cost);
 
     PackedCounter _encodedLengths = encodeLengths(_table.id, _table.rarities);
     bytes memory _dynamicData = encodeDynamic(_table.id, _table.rarities);
@@ -595,7 +654,7 @@ library Packs {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, PacksData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.packType, _table.cards);
+    bytes memory _staticData = encodeStatic(_table.packType, _table.cards, _table.cost);
 
     PackedCounter _encodedLengths = encodeLengths(_table.id, _table.rarities);
     bytes memory _dynamicData = encodeDynamic(_table.id, _table.rarities);
@@ -609,10 +668,12 @@ library Packs {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (PackType packType, uint8 cards) {
+  function decodeStatic(bytes memory _blob) internal pure returns (PackType packType, uint8 cards, uint32 cost) {
     packType = PackType(uint8(Bytes.slice1(_blob, 0)));
 
     cards = (uint8(Bytes.slice1(_blob, 1)));
+
+    cost = (uint32(Bytes.slice4(_blob, 2)));
   }
 
   /**
@@ -647,7 +708,7 @@ library Packs {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (PacksData memory _table) {
-    (_table.packType, _table.cards) = decodeStatic(_staticData);
+    (_table.packType, _table.cards, _table.cost) = decodeStatic(_staticData);
 
     (_table.id, _table.rarities) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -676,8 +737,8 @@ library Packs {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(PackType packType, uint8 cards) internal pure returns (bytes memory) {
-    return abi.encodePacked(packType, cards);
+  function encodeStatic(PackType packType, uint8 cards, uint32 cost) internal pure returns (bytes memory) {
+    return abi.encodePacked(packType, cards, cost);
   }
 
   /**
@@ -711,10 +772,11 @@ library Packs {
   function encode(
     PackType packType,
     uint8 cards,
+    uint32 cost,
     string memory id,
     uint8[] memory rarities
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(packType, cards);
+    bytes memory _staticData = encodeStatic(packType, cards, cost);
 
     PackedCounter _encodedLengths = encodeLengths(id, rarities);
     bytes memory _dynamicData = encodeDynamic(id, rarities);

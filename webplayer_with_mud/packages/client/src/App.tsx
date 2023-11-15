@@ -15,7 +15,8 @@ export const App = () => {
             buyCard,
             getCard,
             incr,
-            getRandomCardByRarity
+            getRandomCardByRarity,
+            openPack
         },
     } = useMUD();
 
@@ -138,6 +139,11 @@ export const App = () => {
         initCard('turtle', 3, 2, 3, 100);
     };
 
+    let initPacks = () => {
+        initPack("standard", 1, 5, [80, 12, 6, 2], 100);
+        initPack("elite", 1, 5, [0, 0, 80, 20], 250);
+    }
+
     let calculateKeccak256Hash = (name) => {
         const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['string'], [name]);
         const keccakHash = ethers.keccak256(encodedName);
@@ -218,11 +224,13 @@ export const App = () => {
         window.initCard = initCard;
         window.initPack = initPack;
         window.initCards = initCards;
+        window.initPacks = initPacks;
         window.buyCard = buyCard;
         window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;
         window.incr = incr;
         window.getRandomCardByRarity = getRandomCardByRarity;
+        window.openPack = openPack;
 
         initUnity();
 

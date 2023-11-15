@@ -19,6 +19,7 @@ export default mudConfig({
             valueSchema: {
                 packType: "PackType",
                 cards:"uint8",
+                cost:"uint32",
                 id: "string",
                 rarities: "uint8[]",
             }

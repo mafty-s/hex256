@@ -29,8 +29,8 @@ contract ConfigSystem is System {
         Cards.set(key, data);
     }
 
-    function initPack(string memory name, PackType _packType, uint8 _cards, uint8[] memory _rarities) public returns (bytes32 key) {
+    function initPack(string memory name, PackType _packType, uint8 _cards, uint8[] memory _rarities, uint32 _cost) public returns (bytes32 key) {
         key = keccak256(abi.encode(name));
-        Packs.set(key, PacksData({packType : _packType, cards : _cards, id : name, rarities : _rarities}));
+        Packs.set(key, PacksData({packType : _packType, cards : _cards, id : name, rarities : _rarities, cost : _cost}));
     }
 }

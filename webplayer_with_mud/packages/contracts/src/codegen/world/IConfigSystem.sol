@@ -21,6 +21,7 @@ interface IConfigSystem {
     string memory name,
     PackType _packType,
     uint8 _cards,
-    uint8[] memory _rarities
+    uint8[] memory _rarities,
+    uint32 _cost
   ) external returns (bytes32 key);
 }

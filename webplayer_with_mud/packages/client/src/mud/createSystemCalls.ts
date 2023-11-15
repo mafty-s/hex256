@@ -61,8 +61,8 @@ export function createSystemCalls(
         return tx;
     };
 
-    const initPack = async (name: string, packType: number, cards: number, rarities: number[]) => {
-        const tx = await worldContract.write.initPack([name, packType, cards, rarities]);
+    const initPack = async (name: string, packType: number, cards: number, rarities: number[], cost: number) => {
+        const tx = await worldContract.write.initPack([name, packType, cards, rarities, cost]);
         await waitForTransaction(tx);
         return tx;
     };
@@ -90,6 +90,12 @@ export function createSystemCalls(
         return tx;
     }
 
+    const openPack = async (name: string) => {
+        const tx = await worldContract.write.OpenPack([name]);
+        await waitForTransaction(tx);
+        return tx;
+    };
+
     return {
         addTask,
         toggleTask,
@@ -100,6 +106,7 @@ export function createSystemCalls(
         buyCard,
         getCard,
         incr,
-        getRandomCardByRarity
+        getRandomCardByRarity,
+        openPack
     };
 }
