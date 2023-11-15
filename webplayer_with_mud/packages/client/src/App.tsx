@@ -11,6 +11,7 @@ export const App = () => {
             deleteTask,
             addUser,
             initCard,
+            initPack,
             buyCard,
             getCard,
             incr,
@@ -215,6 +216,7 @@ export const App = () => {
         window.addTask = addTask;
         window.addUser = addUser;
         window.initCard = initCard;
+        window.initPack = initPack;
         window.initCards = initCards;
         window.buyCard = buyCard;
         window.getCard = getCard;

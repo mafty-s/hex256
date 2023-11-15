@@ -61,6 +61,13 @@ export function createSystemCalls(
         return tx;
     };
 
+    const initPack = async (name: string, packType: number, cards: number, rarities: number[]) => {
+        const tx = await worldContract.write.initPack([name, packType, cards, rarities]);
+        await waitForTransaction(tx);
+        return tx;
+    };
+
+
     const buyCard = async (card_id: string, quantity: number) => {
         const tx = await worldContract.write.buyCard([card_id, quantity]);
         await waitForTransaction(tx);
@@ -89,6 +96,7 @@ export function createSystemCalls(
         deleteTask,
         addUser,
         initCard,
+        initPack,
         buyCard,
         getCard,
         incr,
