@@ -13,4 +13,8 @@ interface IUsersSystem {
   function addUser(string memory username) external returns (bytes32 key);
 
   function getUser() external view returns (UsersData memory _table);
+
+  function getUserByKey(bytes32 key) external view returns (UsersData memory _table);
+
+  function getUserByOwner(address owner) external view returns (UsersData memory _table);
 }

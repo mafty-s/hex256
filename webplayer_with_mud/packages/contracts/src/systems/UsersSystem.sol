@@ -28,5 +28,12 @@ contract UsersSystem is System {
         return Users.get(key);
     }
 
+    function getUserByKey(bytes32 key) public view returns (UsersData memory _table) {
+        return Users.get(key);
+    }
 
+    function getUserByOwner(address owner) public view returns (UsersData memory _table) {
+        bytes32 key = keccak256(abi.encode(owner));
+        return Users.get(key);
+    }
 }
