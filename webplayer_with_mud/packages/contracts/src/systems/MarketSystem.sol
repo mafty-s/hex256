@@ -8,8 +8,9 @@ import {Users, UsersData} from "../codegen/index.sol";
 contract MarketSystem is System {
 
 
-    function buyCard(bytes32 card_key, uint8 quantity) public {
+    function buyCard(string memory card_id, uint8 quantity) public {
         bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        bytes32 card_key = keccak256(abi.encode(card_id));
 
         uint32 cost = Cards.getCost(card_key);
         uint256 coin = Users.getCoin(user_key);

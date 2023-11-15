@@ -2,7 +2,7 @@ import {mudConfig} from "@latticexyz/world/register";
 
 export default mudConfig({
   enums: {
-    AnimalType: ["NONE", "DOG", "CAT", "SQUIREL"],
+    RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
     PackType: ["Fixed", "Random"]
   },
   tables: {
@@ -32,15 +32,14 @@ export default mudConfig({
     },
     Cards: {
       valueSchema: {
+        rarity: "RarityType",
         mana: "uint8",
         attack: "uint8",
         hp: "uint8",
         cost: "uint32",
-        createdAt: "uint256",
         tid: "string",
         cardType: "string",
         team: "string",
-        rarity: "string",
       },
     },
     Tasks: {

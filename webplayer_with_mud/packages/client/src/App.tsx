@@ -5,7 +5,7 @@ import {ethers} from 'ethers';
 export const App = () => {
     const {
         network: {tables, useStore, walletClient},
-        systemCalls: {addTask, toggleTask, deleteTask, addUser, initCard},
+        systemCalls: {addTask, toggleTask, deleteTask, addUser, initCard, buyCard, getCard},
     } = useMUD();
 
     const tasks = useStore((state) => {
@@ -127,7 +127,7 @@ export const App = () => {
         initCard('turtle', 3, 2, 3, 100);
     };
 
-    let calculateKeccak256Hash=(name)=> {
+    let calculateKeccak256Hash = (name) => {
         const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['string'], [name]);
         const keccakHash = ethers.keccak256(encodedName);
         return keccakHash;
@@ -206,6 +206,8 @@ export const App = () => {
         window.addUser = addUser;
         window.initCard = initCard;
         window.initCards = initCards;
+        window.buyCard = buyCard;
+        window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;
 
         initUnity();

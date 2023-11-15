@@ -49,8 +49,8 @@ export function createSystemCalls(
         return tx;
     };
 
-    const addUser = async (label: string) => {
-        const tx = await worldContract.write.addUser([label]);
+    const addUser = async (name: string) => {
+        const tx = await worldContract.write.addUser([name]);
         await waitForTransaction(tx);
         return tx;
     };
@@ -61,6 +61,18 @@ export function createSystemCalls(
         return tx;
     };
 
+    const buyCard = async (card_id: string, quantity: number) => {
+        const tx = await worldContract.write.buyCard([card_id, quantity]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
+
+    const getCard = async (card_id: string) => {
+        const card = await worldContract.read.getCard([card_id]);
+        return card;
+    }
+
 
     return {
         addTask,
@@ -68,5 +80,7 @@ export function createSystemCalls(
         deleteTask,
         addUser,
         initCard,
+        buyCard,
+        getCard,
     };
 }
