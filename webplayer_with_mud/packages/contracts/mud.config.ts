@@ -10,6 +10,10 @@ export default mudConfig({
       keySchema: {},
       valueSchema: "uint256",
     },
+    CardCommonSingleton: {
+      keySchema: {},
+      valueSchema: "bytes32[]",
+    },
     Packs: {
       valueSchema: {
         packType:"PackType",

@@ -6,6 +6,7 @@ pragma solidity >=0.8.21;
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
 import { IConfigSystem } from "./IConfigSystem.sol";
+import { ICounterSystem } from "./ICounterSystem.sol";
 import { IGameLogicSystem } from "./IGameLogicSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
 import { IPacksSystem } from "./IPacksSystem.sol";
@@ -21,6 +22,7 @@ import { IUsersSystem } from "./IUsersSystem.sol";
 interface IWorld is
   IBaseWorld,
   IConfigSystem,
+  ICounterSystem,
   IGameLogicSystem,
   IMarketSystem,
   IPacksSystem,

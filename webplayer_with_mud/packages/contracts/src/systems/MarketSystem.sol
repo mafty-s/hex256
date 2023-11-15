@@ -14,11 +14,14 @@ contract MarketSystem is System {
 
         uint32 cost = Cards.getCost(card_key);
         uint256 coin = Users.getCoin(user_key);
-        Users.setCoin(user_key, coin - cost * quantity);
-        Users.pushCards(user_key, card_key);
 
-        //user.coin = user.coin - card.cost;
-        //todo
+        require(coin >= cost * quantity, "Insufficient coin to buy card");
+
+        Users.setCoin(user_key, coin - cost * quantity);
+
+        for(uint i=0;i<quantity;i++){
+            Users.pushCards(user_key, card_key);
+        }
     }
 
     function buyPack(string memory pack_id) public {

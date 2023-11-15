@@ -5,7 +5,7 @@ import {ethers} from 'ethers';
 export const App = () => {
     const {
         network: {tables, useStore, walletClient},
-        systemCalls: {addTask, toggleTask, deleteTask, addUser, initCard, buyCard, getCard},
+        systemCalls: {addTask, toggleTask, deleteTask, addUser, initCard, buyCard, getCard, incr},
     } = useMUD();
 
     const tasks = useStore((state) => {
@@ -209,6 +209,7 @@ export const App = () => {
         window.buyCard = buyCard;
         window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;
+        window.incr = incr
 
         initUnity();
 

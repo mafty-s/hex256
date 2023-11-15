@@ -67,12 +67,17 @@ export function createSystemCalls(
         return tx;
     }
 
-
     const getCard = async (card_id: string) => {
         const card = await worldContract.read.getCard([card_id]);
         return card;
     }
 
+
+    const incr = async () => {
+        const tx = await worldContract.write.incr([]);
+        await waitForTransaction(tx);
+        return tx;
+    }
 
     return {
         addTask,
@@ -82,5 +87,6 @@ export function createSystemCalls(
         initCard,
         buyCard,
         getCard,
+        incr,
     };
 }
