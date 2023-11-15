@@ -8,7 +8,7 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IMarketSystem {
-  function buyCard(string memory card_id) external;
+  function buyCard(bytes32 card_key, uint8 quantity) external;
 
   function buyPack(string memory pack_id) external;
 }

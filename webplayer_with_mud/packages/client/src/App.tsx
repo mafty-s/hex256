@@ -1,7 +1,6 @@
 import {useMUD} from "./MUDContext";
-
-const styleUnset = {all: "unset"} as const;
 import React, {useEffect} from 'react';
+import {ethers} from 'ethers';
 
 export const App = () => {
     const {
@@ -128,6 +127,12 @@ export const App = () => {
         initCard('turtle', 3, 2, 3, 100);
     };
 
+    let calculateKeccak256Hash=(name)=> {
+        const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['string'], [name]);
+        const keccakHash = ethers.keccak256(encodedName);
+        return keccakHash;
+    }
+
     let initUnity = () => {
         console.log("walletClient", walletClient.account.address)
         console.log("initUnity");
@@ -201,6 +206,7 @@ export const App = () => {
         window.addUser = addUser;
         window.initCard = initCard;
         window.initCards = initCards;
+        window.calculateKeccak256Hash = calculateKeccak256Hash;
 
         initUnity();
 

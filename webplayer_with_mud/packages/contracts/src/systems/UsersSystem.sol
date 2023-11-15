@@ -13,7 +13,7 @@ contract UsersSystem is System {
             1000, //initialCoinAmount,
             0, //initialXp,
             block.timestamp,
-            new uint8[](0),
+            new bytes32[](0),
             new uint256[](0),
             username,
             "bear",
