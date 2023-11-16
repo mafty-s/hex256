@@ -152,6 +152,8 @@ export const App = () => {
         return keccakHash;
     }
 
+
+
     let initUnity = () => {
         console.log("walletClient", walletClient.account.address)
         console.log("initUnity");
@@ -269,6 +271,9 @@ export const App = () => {
         // window.incr = incr;
         // window.getRandomCardByRarity = getRandomCardByRarity;
         // window.openPack = openPack;
+        window.runApiTask = async(url,json_data)=>{
+            console.log("111",url,JSON.parse(json_data))
+        }
 
         initUnity();
 

@@ -142,6 +142,9 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern void buyCard(string card_id,int q);
+
+    [DllImport("__Internal")]
+    private static extern void buyPack(string pack_id,int q);
     
     [DllImport("__Internal")]
     private static extern string calculateKeccak256Hash(string name);
@@ -169,7 +172,17 @@ public class MudManager : MonoBehaviour
         {
             names.Add(calculateKeccak256Hash(cardData.id), cardData.id);
         }
+        
+        PackData.Load(); // 加载数据
+
+        List<PackData> packList = new List<PackData>(PackData.pack_list);
+        foreach (PackData packData in packList)
+        {
+            names.Add(calculateKeccak256Hash(packData.id), packData.id);
+        }
 #endif
+        
+       
     }
 
     public void OnUser(string msg)
@@ -203,6 +216,13 @@ public class MudManager : MonoBehaviour
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         buyCard(card_id,q);
+#endif
+    }
+    
+    public void BuyPack(string pack_id, int q)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        buyPack(pack_id,q);
 #endif
     }
 

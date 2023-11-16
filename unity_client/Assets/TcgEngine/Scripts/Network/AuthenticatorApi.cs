@@ -75,6 +75,14 @@ namespace TcgEngine
                 cardList.Add(new UserCardData(card_id, "normal"));
                 res.cards = cardList.ToArray();
             }
+            List<UserCardData> packList = new List<UserCardData>();
+            for (int i = 0; i<MudManager.Get().GetUserData().packs.Length; i++)
+            {
+                string hex = MudManager.Get().GetUserData().packs[i];
+                string card_id = MudManager.Get().GetCardIdByHex(hex);
+                packList.Add(new UserCardData(card_id, "normal"));
+                res.packs = packList.ToArray();
+            }
 #endif
             return res;
         }

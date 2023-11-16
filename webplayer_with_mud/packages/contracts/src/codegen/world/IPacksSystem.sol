@@ -10,9 +10,9 @@ import { RarityType } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IPacksSystem {
-  function OpenPack(bytes32 key) external;
+  function OpenPack(bytes32 key) external returns (bytes32[] memory);
 
-  function getRandomCardByRarity(RarityType rarity) external view returns (bytes32);
+  function getRandomCardByRarity(RarityType rarity, uint index) external view returns (bytes32);
 
   function getRandomRarity(uint8[] memory rarities) external view returns (RarityType);
 }

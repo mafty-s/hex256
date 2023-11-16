@@ -5,6 +5,10 @@
 
 import {Hex} from "viem";
 import {SetupNetworkResult} from "./setupNetwork";
+import {decodeFunctionData} from "viem";
+import worlds from "contracts/worlds.json";
+
+// import { getTransactionResult } from "";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -28,7 +32,7 @@ export function createSystemCalls(
      *   syncToRecs
      *   (https://github.com/latticexyz/mud/blob/main/templates/react/packages/client/src/mud/setupNetwork.ts#L77-L83).
      */
-    {tables, useStore, worldContract, waitForTransaction}: SetupNetworkResult
+    {tables, useStore, worldContract, waitForTransaction, publicClient}: SetupNetworkResult
 ) {
     const addTask = async (label: string) => {
         const tx = await worldContract.write.addTask([label]);
@@ -60,12 +64,12 @@ export function createSystemCalls(
         return user;
     };
 
-    const getUserByKey = async (key:string) => {
+    const getUserByKey = async (key: string) => {
         const user = await worldContract.read.getUserByKey([key]);
         return user;
     };
 
-    const getUserByOwner = async (owner:string) => {
+    const getUserByOwner = async (owner: string) => {
         const user = await worldContract.read.getUserByOwner([owner]);
         return user;
     };
@@ -89,6 +93,13 @@ export function createSystemCalls(
         return tx;
     }
 
+
+    const buyPack = async (pack_id: string, quantity: number) => {
+        const tx = await worldContract.write.buyPack([pack_id, quantity]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
     const getCard = async (card_id: string) => {
         const card = await worldContract.read.getCard([card_id]);
         return card;
@@ -106,12 +117,36 @@ export function createSystemCalls(
     }
 
     const openPack = async (name: string) => {
-        const tx = await worldContract.write.OpenPack([name]);
-        await waitForTransaction(tx);
-        return tx;
+        console.log("worldContract", worldContract);
+        const hash = await worldContract.write.OpenPack([name]);
+        await waitForTransaction(hash);
+
+        const transaction = await publicClient.getTransaction({hash})
+        const transactionReceipt = await publicClient.waitForTransactionReceipt({hash});
+        const {functionName, args} = decodeFunctionData({abi: worldContract.abi, data: transaction.input});
+
+        const result = await publicClient.simulateContract({
+            account: transaction.from,
+            address: transaction.to!,
+            abi: worldContract.abi,
+            functionName,
+            args,
+            // simulation happens at the end of the block, so we need to use the previous block number
+            blockNumber: transactionReceipt.blockNumber - 1n,
+            // TODO: do we need to include value, nonce, gas price, etc. to properly simulate?
+        });
+
+        return {hash, transaction, transactionReceipt, functionName, args, result};
     };
 
-    const out  = {
+    let a = async () => {
+        // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
+        // const transaction = usePromise(transactionPromise);
+        // const transactionReceipt = usePromise(transactionReceiptPromise);
+        // const transactionResult = usePromise(transactionResultPromise);
+    }
+
+    const out = {
         addTask,
         toggleTask,
         deleteTask,
@@ -123,6 +158,7 @@ export function createSystemCalls(
         initPack,
         buyCard,
         getCard,
+        buyPack,
         incr,
         getRandomCardByRarity,
         openPack

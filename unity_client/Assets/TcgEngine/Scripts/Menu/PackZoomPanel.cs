@@ -94,17 +94,29 @@ namespace TcgEngine.UI
             string jdata = ApiTool.ToJson(req);
             buy_error.text = "";
 
-            WebResponse res = await ApiClient.Get().SendPostRequest(url, jdata);
-            if (res.success)
-            {
-                PackPanel.Get().ReloadUserPack();
-                Hide();
-            }
-            else
-            {
-                buy_error.text = res.error;
-            }
+            // WebResponse res = await ApiClient.Get().SendPostRequest(url, jdata);
+            // if (res.success)
+            // {
+            //     PackPanel.Get().ReloadUserPack();
+            //     Hide();
+            // }
+            // else
+            // {
+            //     buy_error.text = res.error;
+            // }
+            
+            MudManager.Get().BuyPack(pack.id,GetBuyQuantity());
+
         }
+        
+        public void OnSuccess()
+        {
+            Debug.Log("PackPanel OnSuccess");
+            PackPanel.Get().ReloadUserPack();
+            Hide();
+        }
+
+
 
         public void OnClickBuy()
         {

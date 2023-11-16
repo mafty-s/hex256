@@ -29,6 +29,22 @@ mergeInto(LibraryManager.library, {
         MyUnityInstance.SendMessage("CardZoomPanel","OnSuccess");
     },
 
+    sellCard:async function(card_id,quantity){
+        await mud.sellCard(UTF8ToString(card_id),quantity);
+        let user = await getUser();
+        let returnStr = JSON.stringify(user);
+        MyUnityInstance.SendMessage("MudManager","OnUser",returnStr);
+        MyUnityInstance.SendMessage("CardZoomPanel","OnSuccess");
+    },
+
+    buyPack:async function(pack_id,quantity){
+        await mud.buyPack(UTF8ToString(pack_id),quantity);
+        let user = await getUser();
+        let returnStr = JSON.stringify(user);
+        MyUnityInstance.SendMessage("MudManager","OnUser",returnStr);
+        MyUnityInstance.SendMessage("PackZoomPanel","OnSuccess");
+    },
+
     AddNumbers: async function (x, y, onSuccess) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         dynCall_vi(onSuccess, x + y);
