@@ -8,7 +8,9 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IGameLogicSystem {
-  function PlayerSetting() external;
+  function GameSetting(string memory game_uid) external returns (bytes32 key);
+
+  function PlayerSetting(string memory username, string memory game_uid, bytes32 desk_key) external;
 
   function PlayCard(bytes32 card_key, uint8 slot) external;
 

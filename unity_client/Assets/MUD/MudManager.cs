@@ -155,7 +155,10 @@ public class MudManager : MonoBehaviour
     [DllImport("__Internal")]
     private static extern string calculateKeccak256Hash(string name);
 
-    
+    [DllImport("__Internal")]
+    private static extern string gameSetting(string game_uid);
+
+
 #endif
 
     public static void SendTask(ushort code)
@@ -187,8 +190,6 @@ public class MudManager : MonoBehaviour
             names.Add(calculateKeccak256Hash(packData.id), packData.id);
         }
 #endif
-        
-       
     }
 
     public void OnUser(string msg)
@@ -224,21 +225,21 @@ public class MudManager : MonoBehaviour
         buyCard(card_id,q);
 #endif
     }
-    
+
     public void SellCard(string card_id, int q)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         sellCard(card_id,q);
 #endif
     }
-    
+
     public void BuyPack(string pack_id, int q)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         buyPack(pack_id,q);
 #endif
     }
-    
+
     public void OpenPack(string pack_id)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
@@ -250,6 +251,13 @@ public class MudManager : MonoBehaviour
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         doApiTask(url,json_data);
+#endif
+    }
+
+    public void GameSetting(string game_uid)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        gameSetting(game_uid);
 #endif
     }
 

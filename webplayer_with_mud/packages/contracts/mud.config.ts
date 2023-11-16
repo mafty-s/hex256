@@ -5,6 +5,9 @@ export default mudConfig({
         RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
+        GameType: ["SOLO", "PVP"],
+        GameState: ["INIT", "PLAYING", "END"],
+        GamePhase: ["NONE", "START_TURN", "MAIN", "END_TURN"],
     },
     tables: {
         CounterSingleton: {
@@ -18,8 +21,8 @@ export default mudConfig({
         Packs: {
             valueSchema: {
                 packType: "PackType",
-                cards:"uint8",
-                cost:"uint32",
+                cards: "uint8",
+                cost: "uint32",
                 id: "string",
                 rarities: "uint8[]",
             }
@@ -48,6 +51,52 @@ export default mudConfig({
                 cardType: "string",
                 team: "string",
             },
+        },
+        Decks: {
+            valueSchema: {
+                tid: "string",
+                cards: "bytes32[]",
+            }
+        },
+        Matches: {
+            valueSchema: {
+                gameType: "GameType",
+                gameState:"GameState",
+                firstPlayer: "bytes32",
+                currentPlayer: "bytes32",
+                turn_count: "uint8",
+                uid: "string",
+                players: "bytes32[]",
+            }
+        },
+        Players: {
+            valueSchema: {
+                owner: "address",
+                hp: "uint8",
+                mana: "uint8",
+                hpMax: "uint8",
+                manaMax: "uint8",
+                name: "string",
+                deck: "string",
+                // cards_deck: "bytes32[]",
+                // cards_hand: "bytes32[]",
+                // cards_board: "bytes32[]",
+                // cards_equip: "bytes32[]",
+                // cards_discard: "bytes32[]",
+                // cards_secret: "bytes32[]",
+                // cards_temp: "bytes32[]",
+            }
+        },
+        PlayersCard: {
+            valueSchema: {
+                cards_deck: "bytes32[]",
+                cards_hand: "bytes32[]",
+                cards_board: "bytes32[]",
+                cards_equip: "bytes32[]",
+                cards_discard: "bytes32[]",
+                // cards_secret: "bytes32[]",
+                // cards_temp: "bytes32[]",
+            }
         },
         Tasks: {
             valueSchema: {

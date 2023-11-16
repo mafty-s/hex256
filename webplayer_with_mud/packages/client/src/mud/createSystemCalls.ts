@@ -180,6 +180,19 @@ export function createSystemCalls(
         return convertBigIntToInt({hash, transaction, transactionReceipt, functionName, args, tx_result});
     };
 
+    const gameSetting = async (game_uid) => {
+        const tx = await worldContract.write.GameSetting([game_uid]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
+    const playerSetting = async (username, game_uid, desk_id) => {
+        const tx = await worldContract.write.PlayerSetting([username, game_uid, desk_id]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
+
     // let a = async () => {
     //     // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
     //     // const transaction = usePromise(transactionPromise);
@@ -205,7 +218,9 @@ export function createSystemCalls(
         buyPack,
         incr,
         getRandomCardByRarity,
-        openPack
+        openPack,
+        gameSetting,
+        playerSetting,
     };
 
     window.mud = out;

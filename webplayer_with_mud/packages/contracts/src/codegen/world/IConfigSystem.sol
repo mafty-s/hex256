@@ -24,4 +24,6 @@ interface IConfigSystem {
     uint8[] memory _rarities,
     uint32 _cost
   ) external returns (bytes32 key);
+
+  function initDeck(string memory name, bytes32[] memory _cards) external returns (bytes32 key);
 }

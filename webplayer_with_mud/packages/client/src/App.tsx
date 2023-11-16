@@ -63,7 +63,7 @@ export const App = () => {
         updateBannerVisibility();
     }
 
-    let initCards = () => {
+    let init = () => {
         initCard('ashes_snake', 5, 6, 4, 100);
         initCard('bull_heat', 3, 2, 5, 100);
         initCard('cave', 2, 0, 5, 100);
@@ -141,12 +141,11 @@ export const App = () => {
         initCard('town_underwater', 3, 0, 7, 100);
         initCard('trap_fish', 3, 0, 0, 100);
         initCard('turtle', 3, 2, 3, 100);
-    };
 
-    let initPacks = () => {
         initPack("standard", 1, 5, [80, 12, 6, 2], 100);
         initPack("elite", 1, 5, [0, 0, 80, 20], 250);
-    }
+    };
+
 
 
 
@@ -235,8 +234,7 @@ export const App = () => {
         window.getUser = getUser;
         // window.initCard = initCard;
         // window.initPack = initPack;
-        window.initCards = initCards;
-        window.initPacks = initPacks;
+        window.init = init;
         // window.buyCard = buyCard;
         // window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;

@@ -12,7 +12,6 @@ namespace TcgEngine.Client
     /// Will connect to server, then connect to the game on that server (with uid) and then will send game settings
     /// During the game, will send all actions performed by the player and receive game refreshes
     /// </summary>
-
     public class GameClient : MonoBehaviour
     {
         //--- These settings are set in the menu scene and when the game start will be sent to server
@@ -29,8 +28,8 @@ namespace TcgEngine.Client
         public UnityAction<int> onPlayerReady;
 
         public UnityAction onGameStart;
-        public UnityAction<int> onGameEnd;              //winner player_id
-        public UnityAction<int> onNewTurn;              //current player_id
+        public UnityAction<int> onGameEnd; //winner player_id
+        public UnityAction<int> onNewTurn; //current player_id
 
         public UnityAction<Card, Slot> onCardPlayed;
         public UnityAction<Card, Slot> onCardMoved;
@@ -41,20 +40,20 @@ namespace TcgEngine.Client
         public UnityAction<int> onValueRolled;
 
         public UnityAction<AbilityData, Card> onAbilityStart;
-        public UnityAction<AbilityData, Card, Card> onAbilityTargetCard;      //Ability, Caster, Target
+        public UnityAction<AbilityData, Card, Card> onAbilityTargetCard; //Ability, Caster, Target
         public UnityAction<AbilityData, Card, Player> onAbilityTargetPlayer;
         public UnityAction<AbilityData, Card, Slot> onAbilityTargetSlot;
         public UnityAction<AbilityData, Card> onAbilityEnd;
-        public UnityAction<Card, Card> onSecretTrigger;    //Secret, Triggerer
-        public UnityAction<Card, Card> onSecretResolve;    //Secret, Triggerer
+        public UnityAction<Card, Card> onSecretTrigger; //Secret, Triggerer
+        public UnityAction<Card, Card> onSecretResolve; //Secret, Triggerer
 
-        public UnityAction<Card, Card> onAttackStart;   //Attacker, Defender
-        public UnityAction<Card, Card> onAttackEnd;     //Attacker, Defender
+        public UnityAction<Card, Card> onAttackStart; //Attacker, Defender
+        public UnityAction<Card, Card> onAttackEnd; //Attacker, Defender
         public UnityAction<Card, Player> onAttackPlayerStart;
         public UnityAction<Card, Player> onAttackPlayerEnd;
 
-        public UnityAction<int, string> onChatMsg;  //player_id, msg
-        public UnityAction< string> onServerMsg;  //msg
+        public UnityAction<int, string> onChatMsg; //player_id, msg
+        public UnityAction<string> onServerMsg; //msg
         public UnityAction onRefreshAll;
 
         private int player_id = 0; //Player playing on this device;
@@ -200,15 +199,18 @@ namespace TcgEngine.Client
 
             if (game_settings.IsHost() && NetworkData.Get().solo_type == SoloType.Offline)
             {
-                TcgNetwork.Get().StartHostOffline();    //WebGL dont support hosting a game, must join a dedicated server, in solo it starts a offline mode that doesn't use netcode at all
+                TcgNetwork.Get()
+                    .StartHostOffline(); //WebGL dont support hosting a game, must join a dedicated server, in solo it starts a offline mode that doesn't use netcode at all
             }
             else if (game_settings.IsHost())
             {
-                TcgNetwork.Get().StartHost(NetworkData.Get().port);       //Host a game, either solo or for P2P, still using netcode in solo to have consistant behavior when testing solo vs multi
+                TcgNetwork.Get()
+                    .StartHost(NetworkData.Get()
+                        .port); //Host a game, either solo or for P2P, still using netcode in solo to have consistant behavior when testing solo vs multi
             }
             else
             {
-                TcgNetwork.Get().StartClient(game_settings.GetUrl(), NetworkData.Get().port);       //Join server
+                TcgNetwork.Get().StartClient(game_settings.GetUrl(), NetworkData.Get().port); //Join server
             }
         }
 
@@ -255,7 +257,7 @@ namespace TcgEngine.Client
 
         private void RegisterRefresh(ushort tag, UnityAction<SerializedData> callback)
         {
-            Debug.Log("RegisterRefresh:"+tag);
+            Debug.Log("RegisterRefresh:" + tag);
 
             RefreshEvent cmdevt = new RefreshEvent();
             cmdevt.tag = tag;
@@ -277,6 +279,10 @@ namespace TcgEngine.Client
 
         public void SendPlayerSettings(PlayerSettings psettings)
         {
+            Debug.Log("GameClient SendPlayerSettings");
+            //+
+            //    string.Format("{0},{1}", psettings.username, psettings.deck.cards[0]));
+
             SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
@@ -287,6 +293,7 @@ namespace TcgEngine.Client
 
         public void SendGameplaySettings(GameSettings settings)
         {
+            MudManager.Get().GameSetting(settings.game_uid);
             SendAction(GameAction.GameSettings, settings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
@@ -295,6 +302,9 @@ namespace TcgEngine.Client
             MsgPlayCard mdata = new MsgPlayCard();
             mdata.card_uid = card.uid;
             mdata.slot = slot;
+
+            Debug.Log("GameClient PlayCard:" + card.uid + "," + slot.y + "," + slot.x + "," + slot.y);
+
             SendAction(GameAction.PlayCard, mdata);
         }
 
@@ -400,11 +410,13 @@ namespace TcgEngine.Client
             }
         }
 
-        public void SendAction<T>(ushort type, T data, NetworkDelivery delivery = NetworkDelivery.Reliable) where T : INetworkSerializable
+        public void SendAction<T>(ushort type, T data, NetworkDelivery delivery = NetworkDelivery.Reliable)
+            where T : INetworkSerializable
         {
             Debug.Log("SendAction 1:" + MudManager.GetCommandString(type));
             MudManager.SendTask(type);
-            FastBufferWriter writer = new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            FastBufferWriter writer =
+                new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteValueSafe(type);
             writer.WriteNetworkSerializable(data);
             Messaging.Send("action", ServerID, writer, delivery);
@@ -416,7 +428,8 @@ namespace TcgEngine.Client
             Debug.Log("SendAction 2:" + MudManager.GetCommandString(type));
             MudManager.SendTask(type);
 
-            FastBufferWriter writer = new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            FastBufferWriter writer =
+                new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteValueSafe(type);
             writer.WriteValueSafe(data);
             Messaging.Send("action", ServerID, writer, NetworkDelivery.Reliable);
@@ -428,7 +441,8 @@ namespace TcgEngine.Client
             Debug.Log("SendAction 3:" + MudManager.GetCommandString(type));
             MudManager.SendTask(type);
 
-            FastBufferWriter writer = new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            FastBufferWriter writer =
+                new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             writer.WriteValueSafe(type);
             Messaging.Send("action", ServerID, writer, NetworkDelivery.Reliable);
             writer.Dispose();
@@ -698,15 +712,25 @@ namespace TcgEngine.Client
             Resign(); //Auto Resign before closing the app. NOTE: doesn't seem to work since the msg dont have time to be sent before it closes
         }
 
-        public bool IsHost { get { return TcgNetwork.Get().IsHost; } }
-        public ulong ServerID { get { return TcgNetwork.Get().ServerID; } }
-        public NetworkMessaging Messaging { get { return TcgNetwork.Get().Messaging; } }
+        public bool IsHost
+        {
+            get { return TcgNetwork.Get().IsHost; }
+        }
+
+        public ulong ServerID
+        {
+            get { return TcgNetwork.Get().ServerID; }
+        }
+
+        public NetworkMessaging Messaging
+        {
+            get { return TcgNetwork.Get().Messaging; }
+        }
 
         public static GameClient Get()
         {
             return _instance;
         }
-
     }
 
     public class RefreshEvent

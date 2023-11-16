@@ -53,6 +53,10 @@ mergeInto(LibraryManager.library, {
         MyUnityInstance.SendMessage("OpenPackMenu","OnSuccess",JSON.stringify(result.tx_result.result));
     },
 
+    gameSetting:async function(game_uid){
+        let result = await mud.gameSetting(UTF8ToString(game_uid));
+    },
+
     AddNumbers: async function (x, y, onSuccess) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         dynCall_vi(onSuccess, x + y);

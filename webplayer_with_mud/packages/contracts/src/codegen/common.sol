@@ -20,3 +20,21 @@ enum TeamType {
   WATER,
   NEUTRAL
 }
+
+enum GameType {
+  SOLO,
+  PVP
+}
+
+enum GameState {
+  INIT,
+  PLAYING,
+  END
+}
+
+enum GamePhase {
+  NONE,
+  START_TURN,
+  MAIN,
+  END_TURN
+}

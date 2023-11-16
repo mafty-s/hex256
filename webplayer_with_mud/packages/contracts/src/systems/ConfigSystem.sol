@@ -3,9 +3,10 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
-import {CardCommonSingleton} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
+import {Decks, DecksData} from "../codegen/index.sol";
 import {RarityType, PackType} from "../codegen/common.sol";
+import {CardCommonSingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
 
@@ -32,5 +33,11 @@ contract ConfigSystem is System {
     function initPack(string memory name, PackType _packType, uint8 _cards, uint8[] memory _rarities, uint32 _cost) public returns (bytes32 key) {
         key = keccak256(abi.encode(name));
         Packs.set(key, PacksData({packType : _packType, cards : _cards, id : name, rarities : _rarities, cost : _cost}));
+    }
+
+    function initDeck(string memory name, bytes32[] memory _cards) public returns (bytes32 key) {
+        key = keccak256(abi.encode(name));
+        Decks.set(key, DecksData({tid : name, cards : _cards}));
+
     }
 }
