@@ -25,6 +25,26 @@ contract MarketSystem is System {
         }
     }
 
+    function sellCard(string memory card_id, uint8 quantity) public {
+        bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        bytes32 card_key = keccak256(abi.encode(card_id));
+
+        bytes32[] memory cards = Users.getCards(user_key);
+        uint256 cards_length = Users.lengthCards(user_key);
+
+        uint256 reward = 0;
+        for (uint i = 0; i < quantity; i++) {
+            for (uint j = 0; j < cards_length; j++) {
+                if (cards[j] == card_key) {
+                    reward = reward + 80;
+                    Users.updateCards(user_key, j, 0);
+                }
+            }
+        }
+
+        Users.setCoin(user_key, Users.getCoin(user_key) + reward);
+    }
+
     function buyPack(string memory pack_id, uint8 quantity) public {
         bytes32 user_key = keccak256(abi.encode(_msgSender()));
         bytes32 pack_key = keccak256(abi.encode(pack_id));

@@ -144,6 +144,9 @@ public class MudManager : MonoBehaviour
     private static extern void buyCard(string card_id,int q);
 
     [DllImport("__Internal")]
+    private static extern void sellCard(string card_id,int q);
+
+    [DllImport("__Internal")]
     private static extern void buyPack(string pack_id,int q);
     
     [DllImport("__Internal")]
@@ -216,6 +219,13 @@ public class MudManager : MonoBehaviour
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         buyCard(card_id,q);
+#endif
+    }
+    
+    public void SellCard(string card_id, int q)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        sellCard(card_id,q);
 #endif
     }
     

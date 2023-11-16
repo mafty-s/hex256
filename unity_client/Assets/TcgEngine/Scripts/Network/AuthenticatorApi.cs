@@ -68,20 +68,27 @@ namespace TcgEngine
             res.username = MudManager.Get().GetUserData().id;
             res.coins = MudManager.Get().GetUserData().coin;
             List<UserCardData> cardList = new List<UserCardData>();
-            for (int i = 0; i<MudManager.Get().GetUserData().cards.Length; i++)
+            for (int i = 0; i < MudManager.Get().GetUserData().cards.Length; i++)
             {
                 string hex = MudManager.Get().GetUserData().cards[i];
                 string card_id = MudManager.Get().GetCardIdByHex(hex);
-                cardList.Add(new UserCardData(card_id, "normal"));
-                res.cards = cardList.ToArray();
+                if (card_id != "Unknown")
+                {
+                    cardList.Add(new UserCardData(card_id, "normal"));
+                    res.cards = cardList.ToArray();
+                }
             }
+
             List<UserCardData> packList = new List<UserCardData>();
-            for (int i = 0; i<MudManager.Get().GetUserData().packs.Length; i++)
+            for (int i = 0; i < MudManager.Get().GetUserData().packs.Length; i++)
             {
                 string hex = MudManager.Get().GetUserData().packs[i];
-                string card_id = MudManager.Get().GetCardIdByHex(hex);
-                packList.Add(new UserCardData(card_id, "normal"));
-                res.packs = packList.ToArray();
+                string pack_id = MudManager.Get().GetCardIdByHex(hex);
+                if (pack_id != "Unknown")
+                {
+                    packList.Add(new UserCardData(pack_id, "normal"));
+                    res.packs = packList.ToArray();
+                }
             }
 #endif
             return res;

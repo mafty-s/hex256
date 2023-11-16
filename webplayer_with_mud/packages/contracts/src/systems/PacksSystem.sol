@@ -20,8 +20,8 @@ contract PacksSystem is System {
         uint8 cards = Packs.getCards(key);
         uint8[] memory rarities = Packs.getRarities(key);
         for (uint i = 0; i < cards; i++) {
-            RarityType rarity = getRandomRarity(rarities, i);
-            bytes32 card_key = getRandomCardByRarity(rarity);
+            RarityType rarity = getRandomRarity(rarities);
+            bytes32 card_key = getRandomCardByRarity(rarity,i);
             res[i] = card_key;
             Users.pushCards(user_key, card_key);
         }

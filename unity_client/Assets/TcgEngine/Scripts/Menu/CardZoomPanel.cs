@@ -167,20 +167,22 @@ namespace TcgEngine.UI
             if (req.quantity <= 0)
                 return;
 
-            string url = ApiClient.ServerURL + "/users/cards/sell/";
-            string jdata = ApiTool.ToJson(req);
-            trade_error.text = "";
+            MudManager.Get().SellCard(card.id,GetBuyQuantity());
 
-            WebResponse res = await ApiClient.Get().SendPostRequest(url, jdata);
-            if (res.success)
-            {
-                CollectionPanel.Get().ReloadUser();
-                Hide();
-            }
-            else
-            {
-                trade_error.text = res.error;
-            }
+            // string url = ApiClient.ServerURL + "/users/cards/sell/";
+            // string jdata = ApiTool.ToJson(req);
+            // trade_error.text = "";
+            //
+            // WebResponse res = await ApiClient.Get().SendPostRequest(url, jdata);
+            // if (res.success)
+            // {
+            //     CollectionPanel.Get().ReloadUser();
+            //     Hide();
+            // }
+            // else
+            // {
+            //     trade_error.text = res.error;
+            // }
         }
 
         public void OnClickBuy()

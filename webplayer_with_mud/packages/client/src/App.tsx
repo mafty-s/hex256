@@ -22,24 +22,24 @@ export const App = () => {
         },
     } = useMUD();
 
-    const tasks = useStore((state) => {
-        const records = Object.values(state.getRecords(tables.Tasks));
-        records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-        return records;
-    });
-
-    const cards = useStore((state) => {
-        const records = Object.values(state.getRecords(tables.Cards));
-        records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-        return records;
-    });
-
-    const users = useStore((state) => {
-        const records = Object.values(state.getRecords(tables.Users));
-        records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-        // console.log("users", records);
-        return records;
-    });
+    // const tasks = useStore((state) => {
+    //     const records = Object.values(state.getRecords(tables.Tasks));
+    //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
+    //     return records;
+    // });
+    //
+    // const cards = useStore((state) => {
+    //     const records = Object.values(state.getRecords(tables.Cards));
+    //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
+    //     return records;
+    // });
+    //
+    // const users = useStore((state) => {
+    //     const records = Object.values(state.getRecords(tables.Users));
+    //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
+    //     // console.log("users", records);
+    //     return records;
+    // });
 
 
     function unityShowBanner(msg, type) {
@@ -217,7 +217,7 @@ export const App = () => {
                     unityInstance.SetFullscreen(1);
                 };
             }).catch((message) => {
-                alert(message);
+                console.error(message);
             });
         };
         document.body.appendChild(script);

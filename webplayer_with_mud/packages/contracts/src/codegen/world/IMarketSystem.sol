@@ -10,5 +10,7 @@ pragma solidity >=0.8.21;
 interface IMarketSystem {
   function buyCard(string memory card_id, uint8 quantity) external;
 
+  function sellCard(string memory card_id, uint8 quantity) external;
+
   function buyPack(string memory pack_id, uint8 quantity) external;
 }
