@@ -121,6 +121,12 @@ export function createSystemCalls(
         return tx;
     };
 
+    const initDeck = async (name: string, cards: string[]) => {
+        const tx = await worldContract.write.initDeck([name, cards]);
+        await waitForTransaction(tx);
+        return tx;
+    };
+
 
     const buyCard = async (card_id: string, quantity: number) => {
         const tx = await worldContract.write.buyCard([card_id, quantity]);
@@ -212,6 +218,7 @@ export function createSystemCalls(
         getUserByOwner,
         initCard,
         initPack,
+        initDeck,
         buyCard,
         sellCard,
         getCard,

@@ -157,7 +157,9 @@ public class MudManager : MonoBehaviour
 
     [DllImport("__Internal")]
     private static extern string gameSetting(string game_uid);
-
+    
+    [DllImport("__Internal")]
+    private static extern string playerSetting(string username, string game_uid, string deck_id);
 
 #endif
 
@@ -258,6 +260,13 @@ public class MudManager : MonoBehaviour
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         gameSetting(game_uid);
+#endif
+    }
+
+    public void PlayerSetting(string username, string game_uid, string deck_id)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        playerSetting(username,game_uid,deck_id);
 #endif
     }
 

@@ -10,7 +10,7 @@ pragma solidity >=0.8.21;
 interface IGameLogicSystem {
   function GameSetting(string memory game_uid) external returns (bytes32 key);
 
-  function PlayerSetting(string memory username, string memory game_uid, bytes32 desk_key) external;
+  function PlayerSetting(string memory username, string memory game_uid, string memory desk_id) external;
 
   function PlayCard(bytes32 card_key, uint8 slot) external;
 
@@ -21,4 +21,10 @@ interface IGameLogicSystem {
   function Move(bytes32 card_key, uint8 slot) external;
 
   function EndTurn(bytes32 card_key, uint8 slot) external;
+
+  function ShuffleDeck(bytes32[] memory cards) external view returns (bytes32[] memory);
+
+  function StartTurn() external;
+
+  function EndGame() external;
 }

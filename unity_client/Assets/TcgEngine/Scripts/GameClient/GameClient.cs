@@ -283,6 +283,7 @@ namespace TcgEngine.Client
             //+
             //    string.Format("{0},{1}", psettings.username, psettings.deck.cards[0]));
 
+            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid);
             SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
