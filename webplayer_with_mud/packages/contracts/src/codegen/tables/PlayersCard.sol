@@ -30,11 +30,11 @@ FieldLayout constant _fieldLayout = FieldLayout.wrap(
 );
 
 struct PlayersCardData {
-  bytes32[] cards_deck;
-  bytes32[] cards_hand;
-  bytes32[] cards_board;
-  bytes32[] cards_equip;
-  bytes32[] cards_discard;
+  bytes32[] cardsDeck;
+  bytes32[] cardsHand;
+  bytes32[] cardsBoard;
+  bytes32[] cardsEquip;
+  bytes32[] cardsDiscard;
 }
 
 library PlayersCard {
@@ -87,11 +87,11 @@ library PlayersCard {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](5);
-    fieldNames[0] = "cards_deck";
-    fieldNames[1] = "cards_hand";
-    fieldNames[2] = "cards_board";
-    fieldNames[3] = "cards_equip";
-    fieldNames[4] = "cards_discard";
+    fieldNames[0] = "cardsDeck";
+    fieldNames[1] = "cardsHand";
+    fieldNames[2] = "cardsBoard";
+    fieldNames[3] = "cardsEquip";
+    fieldNames[4] = "cardsDiscard";
   }
 
   /**
@@ -109,9 +109,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_deck.
+   * @notice Get cardsDeck.
    */
-  function getCards_deck(bytes32 key) internal view returns (bytes32[] memory cards_deck) {
+  function getCardsDeck(bytes32 key) internal view returns (bytes32[] memory cardsDeck) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -120,9 +120,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_deck.
+   * @notice Get cardsDeck.
    */
-  function _getCards_deck(bytes32 key) internal view returns (bytes32[] memory cards_deck) {
+  function _getCardsDeck(bytes32 key) internal view returns (bytes32[] memory cardsDeck) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -131,29 +131,29 @@ library PlayersCard {
   }
 
   /**
-   * @notice Set cards_deck.
+   * @notice Set cardsDeck.
    */
-  function setCards_deck(bytes32 key, bytes32[] memory cards_deck) internal {
+  function setCardsDeck(bytes32 key, bytes32[] memory cardsDeck) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((cards_deck)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((cardsDeck)));
   }
 
   /**
-   * @notice Set cards_deck.
+   * @notice Set cardsDeck.
    */
-  function _setCards_deck(bytes32 key, bytes32[] memory cards_deck) internal {
+  function _setCardsDeck(bytes32 key, bytes32[] memory cardsDeck) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((cards_deck)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((cardsDeck)));
   }
 
   /**
-   * @notice Get the length of cards_deck.
+   * @notice Get the length of cardsDeck.
    */
-  function lengthCards_deck(bytes32 key) internal view returns (uint256) {
+  function lengthCardsDeck(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -164,9 +164,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get the length of cards_deck.
+   * @notice Get the length of cardsDeck.
    */
-  function _lengthCards_deck(bytes32 key) internal view returns (uint256) {
+  function _lengthCardsDeck(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -177,10 +177,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_deck.
+   * @notice Get an item of cardsDeck.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCards_deck(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemCardsDeck(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -191,10 +191,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_deck.
+   * @notice Get an item of cardsDeck.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCards_deck(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemCardsDeck(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -205,9 +205,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_deck.
+   * @notice Push an element to cardsDeck.
    */
-  function pushCards_deck(bytes32 key, bytes32 _element) internal {
+  function pushCardsDeck(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -215,9 +215,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_deck.
+   * @notice Push an element to cardsDeck.
    */
-  function _pushCards_deck(bytes32 key, bytes32 _element) internal {
+  function _pushCardsDeck(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -225,9 +225,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_deck.
+   * @notice Pop an element from cardsDeck.
    */
-  function popCards_deck(bytes32 key) internal {
+  function popCardsDeck(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -235,9 +235,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_deck.
+   * @notice Pop an element from cardsDeck.
    */
-  function _popCards_deck(bytes32 key) internal {
+  function _popCardsDeck(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -245,9 +245,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_deck at `_index`.
+   * @notice Update an element of cardsDeck at `_index`.
    */
-  function updateCards_deck(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateCardsDeck(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -258,9 +258,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_deck at `_index`.
+   * @notice Update an element of cardsDeck at `_index`.
    */
-  function _updateCards_deck(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateCardsDeck(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -271,9 +271,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_hand.
+   * @notice Get cardsHand.
    */
-  function getCards_hand(bytes32 key) internal view returns (bytes32[] memory cards_hand) {
+  function getCardsHand(bytes32 key) internal view returns (bytes32[] memory cardsHand) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -282,9 +282,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_hand.
+   * @notice Get cardsHand.
    */
-  function _getCards_hand(bytes32 key) internal view returns (bytes32[] memory cards_hand) {
+  function _getCardsHand(bytes32 key) internal view returns (bytes32[] memory cardsHand) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -293,29 +293,29 @@ library PlayersCard {
   }
 
   /**
-   * @notice Set cards_hand.
+   * @notice Set cardsHand.
    */
-  function setCards_hand(bytes32 key, bytes32[] memory cards_hand) internal {
+  function setCardsHand(bytes32 key, bytes32[] memory cardsHand) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((cards_hand)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((cardsHand)));
   }
 
   /**
-   * @notice Set cards_hand.
+   * @notice Set cardsHand.
    */
-  function _setCards_hand(bytes32 key, bytes32[] memory cards_hand) internal {
+  function _setCardsHand(bytes32 key, bytes32[] memory cardsHand) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((cards_hand)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((cardsHand)));
   }
 
   /**
-   * @notice Get the length of cards_hand.
+   * @notice Get the length of cardsHand.
    */
-  function lengthCards_hand(bytes32 key) internal view returns (uint256) {
+  function lengthCardsHand(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -326,9 +326,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get the length of cards_hand.
+   * @notice Get the length of cardsHand.
    */
-  function _lengthCards_hand(bytes32 key) internal view returns (uint256) {
+  function _lengthCardsHand(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -339,10 +339,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_hand.
+   * @notice Get an item of cardsHand.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCards_hand(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemCardsHand(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -353,10 +353,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_hand.
+   * @notice Get an item of cardsHand.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCards_hand(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemCardsHand(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -367,9 +367,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_hand.
+   * @notice Push an element to cardsHand.
    */
-  function pushCards_hand(bytes32 key, bytes32 _element) internal {
+  function pushCardsHand(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -377,9 +377,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_hand.
+   * @notice Push an element to cardsHand.
    */
-  function _pushCards_hand(bytes32 key, bytes32 _element) internal {
+  function _pushCardsHand(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -387,9 +387,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_hand.
+   * @notice Pop an element from cardsHand.
    */
-  function popCards_hand(bytes32 key) internal {
+  function popCardsHand(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -397,9 +397,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_hand.
+   * @notice Pop an element from cardsHand.
    */
-  function _popCards_hand(bytes32 key) internal {
+  function _popCardsHand(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -407,9 +407,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_hand at `_index`.
+   * @notice Update an element of cardsHand at `_index`.
    */
-  function updateCards_hand(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateCardsHand(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -420,9 +420,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_hand at `_index`.
+   * @notice Update an element of cardsHand at `_index`.
    */
-  function _updateCards_hand(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateCardsHand(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -433,9 +433,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_board.
+   * @notice Get cardsBoard.
    */
-  function getCards_board(bytes32 key) internal view returns (bytes32[] memory cards_board) {
+  function getCardsBoard(bytes32 key) internal view returns (bytes32[] memory cardsBoard) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -444,9 +444,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_board.
+   * @notice Get cardsBoard.
    */
-  function _getCards_board(bytes32 key) internal view returns (bytes32[] memory cards_board) {
+  function _getCardsBoard(bytes32 key) internal view returns (bytes32[] memory cardsBoard) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -455,29 +455,29 @@ library PlayersCard {
   }
 
   /**
-   * @notice Set cards_board.
+   * @notice Set cardsBoard.
    */
-  function setCards_board(bytes32 key, bytes32[] memory cards_board) internal {
+  function setCardsBoard(bytes32 key, bytes32[] memory cardsBoard) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((cards_board)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((cardsBoard)));
   }
 
   /**
-   * @notice Set cards_board.
+   * @notice Set cardsBoard.
    */
-  function _setCards_board(bytes32 key, bytes32[] memory cards_board) internal {
+  function _setCardsBoard(bytes32 key, bytes32[] memory cardsBoard) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((cards_board)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((cardsBoard)));
   }
 
   /**
-   * @notice Get the length of cards_board.
+   * @notice Get the length of cardsBoard.
    */
-  function lengthCards_board(bytes32 key) internal view returns (uint256) {
+  function lengthCardsBoard(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -488,9 +488,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get the length of cards_board.
+   * @notice Get the length of cardsBoard.
    */
-  function _lengthCards_board(bytes32 key) internal view returns (uint256) {
+  function _lengthCardsBoard(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -501,10 +501,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_board.
+   * @notice Get an item of cardsBoard.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCards_board(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemCardsBoard(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -515,10 +515,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_board.
+   * @notice Get an item of cardsBoard.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCards_board(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemCardsBoard(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -529,9 +529,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_board.
+   * @notice Push an element to cardsBoard.
    */
-  function pushCards_board(bytes32 key, bytes32 _element) internal {
+  function pushCardsBoard(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -539,9 +539,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_board.
+   * @notice Push an element to cardsBoard.
    */
-  function _pushCards_board(bytes32 key, bytes32 _element) internal {
+  function _pushCardsBoard(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -549,9 +549,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_board.
+   * @notice Pop an element from cardsBoard.
    */
-  function popCards_board(bytes32 key) internal {
+  function popCardsBoard(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -559,9 +559,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_board.
+   * @notice Pop an element from cardsBoard.
    */
-  function _popCards_board(bytes32 key) internal {
+  function _popCardsBoard(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -569,9 +569,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_board at `_index`.
+   * @notice Update an element of cardsBoard at `_index`.
    */
-  function updateCards_board(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateCardsBoard(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -582,9 +582,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_board at `_index`.
+   * @notice Update an element of cardsBoard at `_index`.
    */
-  function _updateCards_board(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateCardsBoard(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -595,9 +595,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_equip.
+   * @notice Get cardsEquip.
    */
-  function getCards_equip(bytes32 key) internal view returns (bytes32[] memory cards_equip) {
+  function getCardsEquip(bytes32 key) internal view returns (bytes32[] memory cardsEquip) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -606,9 +606,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_equip.
+   * @notice Get cardsEquip.
    */
-  function _getCards_equip(bytes32 key) internal view returns (bytes32[] memory cards_equip) {
+  function _getCardsEquip(bytes32 key) internal view returns (bytes32[] memory cardsEquip) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -617,29 +617,29 @@ library PlayersCard {
   }
 
   /**
-   * @notice Set cards_equip.
+   * @notice Set cardsEquip.
    */
-  function setCards_equip(bytes32 key, bytes32[] memory cards_equip) internal {
+  function setCardsEquip(bytes32 key, bytes32[] memory cardsEquip) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((cards_equip)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((cardsEquip)));
   }
 
   /**
-   * @notice Set cards_equip.
+   * @notice Set cardsEquip.
    */
-  function _setCards_equip(bytes32 key, bytes32[] memory cards_equip) internal {
+  function _setCardsEquip(bytes32 key, bytes32[] memory cardsEquip) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((cards_equip)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((cardsEquip)));
   }
 
   /**
-   * @notice Get the length of cards_equip.
+   * @notice Get the length of cardsEquip.
    */
-  function lengthCards_equip(bytes32 key) internal view returns (uint256) {
+  function lengthCardsEquip(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -650,9 +650,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get the length of cards_equip.
+   * @notice Get the length of cardsEquip.
    */
-  function _lengthCards_equip(bytes32 key) internal view returns (uint256) {
+  function _lengthCardsEquip(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -663,10 +663,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_equip.
+   * @notice Get an item of cardsEquip.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCards_equip(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemCardsEquip(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -677,10 +677,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_equip.
+   * @notice Get an item of cardsEquip.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCards_equip(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemCardsEquip(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -691,9 +691,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_equip.
+   * @notice Push an element to cardsEquip.
    */
-  function pushCards_equip(bytes32 key, bytes32 _element) internal {
+  function pushCardsEquip(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -701,9 +701,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_equip.
+   * @notice Push an element to cardsEquip.
    */
-  function _pushCards_equip(bytes32 key, bytes32 _element) internal {
+  function _pushCardsEquip(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -711,9 +711,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_equip.
+   * @notice Pop an element from cardsEquip.
    */
-  function popCards_equip(bytes32 key) internal {
+  function popCardsEquip(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -721,9 +721,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_equip.
+   * @notice Pop an element from cardsEquip.
    */
-  function _popCards_equip(bytes32 key) internal {
+  function _popCardsEquip(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -731,9 +731,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_equip at `_index`.
+   * @notice Update an element of cardsEquip at `_index`.
    */
-  function updateCards_equip(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateCardsEquip(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -744,9 +744,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_equip at `_index`.
+   * @notice Update an element of cardsEquip at `_index`.
    */
-  function _updateCards_equip(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateCardsEquip(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -757,9 +757,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_discard.
+   * @notice Get cardsDiscard.
    */
-  function getCards_discard(bytes32 key) internal view returns (bytes32[] memory cards_discard) {
+  function getCardsDiscard(bytes32 key) internal view returns (bytes32[] memory cardsDiscard) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -768,9 +768,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get cards_discard.
+   * @notice Get cardsDiscard.
    */
-  function _getCards_discard(bytes32 key) internal view returns (bytes32[] memory cards_discard) {
+  function _getCardsDiscard(bytes32 key) internal view returns (bytes32[] memory cardsDiscard) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -779,29 +779,29 @@ library PlayersCard {
   }
 
   /**
-   * @notice Set cards_discard.
+   * @notice Set cardsDiscard.
    */
-  function setCards_discard(bytes32 key, bytes32[] memory cards_discard) internal {
+  function setCardsDiscard(bytes32 key, bytes32[] memory cardsDiscard) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 4, EncodeArray.encode((cards_discard)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 4, EncodeArray.encode((cardsDiscard)));
   }
 
   /**
-   * @notice Set cards_discard.
+   * @notice Set cardsDiscard.
    */
-  function _setCards_discard(bytes32 key, bytes32[] memory cards_discard) internal {
+  function _setCardsDiscard(bytes32 key, bytes32[] memory cardsDiscard) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 4, EncodeArray.encode((cards_discard)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 4, EncodeArray.encode((cardsDiscard)));
   }
 
   /**
-   * @notice Get the length of cards_discard.
+   * @notice Get the length of cardsDiscard.
    */
-  function lengthCards_discard(bytes32 key) internal view returns (uint256) {
+  function lengthCardsDiscard(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -812,9 +812,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get the length of cards_discard.
+   * @notice Get the length of cardsDiscard.
    */
-  function _lengthCards_discard(bytes32 key) internal view returns (uint256) {
+  function _lengthCardsDiscard(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -825,10 +825,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_discard.
+   * @notice Get an item of cardsDiscard.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCards_discard(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemCardsDiscard(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -839,10 +839,10 @@ library PlayersCard {
   }
 
   /**
-   * @notice Get an item of cards_discard.
+   * @notice Get an item of cardsDiscard.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCards_discard(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemCardsDiscard(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -853,9 +853,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_discard.
+   * @notice Push an element to cardsDiscard.
    */
-  function pushCards_discard(bytes32 key, bytes32 _element) internal {
+  function pushCardsDiscard(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -863,9 +863,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Push an element to cards_discard.
+   * @notice Push an element to cardsDiscard.
    */
-  function _pushCards_discard(bytes32 key, bytes32 _element) internal {
+  function _pushCardsDiscard(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -873,9 +873,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_discard.
+   * @notice Pop an element from cardsDiscard.
    */
-  function popCards_discard(bytes32 key) internal {
+  function popCardsDiscard(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -883,9 +883,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Pop an element from cards_discard.
+   * @notice Pop an element from cardsDiscard.
    */
-  function _popCards_discard(bytes32 key) internal {
+  function _popCardsDiscard(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -893,9 +893,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_discard at `_index`.
+   * @notice Update an element of cardsDiscard at `_index`.
    */
-  function updateCards_discard(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateCardsDiscard(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -906,9 +906,9 @@ library PlayersCard {
   }
 
   /**
-   * @notice Update an element of cards_discard at `_index`.
+   * @notice Update an element of cardsDiscard at `_index`.
    */
-  function _updateCards_discard(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateCardsDiscard(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -953,15 +953,15 @@ library PlayersCard {
    */
   function set(
     bytes32 key,
-    bytes32[] memory cards_deck,
-    bytes32[] memory cards_hand,
-    bytes32[] memory cards_board,
-    bytes32[] memory cards_equip,
-    bytes32[] memory cards_discard
+    bytes32[] memory cardsDeck,
+    bytes32[] memory cardsHand,
+    bytes32[] memory cardsBoard,
+    bytes32[] memory cardsEquip,
+    bytes32[] memory cardsDiscard
   ) internal {
     bytes memory _staticData;
-    PackedCounter _encodedLengths = encodeLengths(cards_deck, cards_hand, cards_board, cards_equip, cards_discard);
-    bytes memory _dynamicData = encodeDynamic(cards_deck, cards_hand, cards_board, cards_equip, cards_discard);
+    PackedCounter _encodedLengths = encodeLengths(cardsDeck, cardsHand, cardsBoard, cardsEquip, cardsDiscard);
+    bytes memory _dynamicData = encodeDynamic(cardsDeck, cardsHand, cardsBoard, cardsEquip, cardsDiscard);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -974,15 +974,15 @@ library PlayersCard {
    */
   function _set(
     bytes32 key,
-    bytes32[] memory cards_deck,
-    bytes32[] memory cards_hand,
-    bytes32[] memory cards_board,
-    bytes32[] memory cards_equip,
-    bytes32[] memory cards_discard
+    bytes32[] memory cardsDeck,
+    bytes32[] memory cardsHand,
+    bytes32[] memory cardsBoard,
+    bytes32[] memory cardsEquip,
+    bytes32[] memory cardsDiscard
   ) internal {
     bytes memory _staticData;
-    PackedCounter _encodedLengths = encodeLengths(cards_deck, cards_hand, cards_board, cards_equip, cards_discard);
-    bytes memory _dynamicData = encodeDynamic(cards_deck, cards_hand, cards_board, cards_equip, cards_discard);
+    PackedCounter _encodedLengths = encodeLengths(cardsDeck, cardsHand, cardsBoard, cardsEquip, cardsDiscard);
+    bytes memory _dynamicData = encodeDynamic(cardsDeck, cardsHand, cardsBoard, cardsEquip, cardsDiscard);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -996,18 +996,18 @@ library PlayersCard {
   function set(bytes32 key, PlayersCardData memory _table) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(
-      _table.cards_deck,
-      _table.cards_hand,
-      _table.cards_board,
-      _table.cards_equip,
-      _table.cards_discard
+      _table.cardsDeck,
+      _table.cardsHand,
+      _table.cardsBoard,
+      _table.cardsEquip,
+      _table.cardsDiscard
     );
     bytes memory _dynamicData = encodeDynamic(
-      _table.cards_deck,
-      _table.cards_hand,
-      _table.cards_board,
-      _table.cards_equip,
-      _table.cards_discard
+      _table.cardsDeck,
+      _table.cardsHand,
+      _table.cardsBoard,
+      _table.cardsEquip,
+      _table.cardsDiscard
     );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -1022,18 +1022,18 @@ library PlayersCard {
   function _set(bytes32 key, PlayersCardData memory _table) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(
-      _table.cards_deck,
-      _table.cards_hand,
-      _table.cards_board,
-      _table.cards_equip,
-      _table.cards_discard
+      _table.cardsDeck,
+      _table.cardsHand,
+      _table.cardsBoard,
+      _table.cardsEquip,
+      _table.cardsDiscard
     );
     bytes memory _dynamicData = encodeDynamic(
-      _table.cards_deck,
-      _table.cards_hand,
-      _table.cards_board,
-      _table.cards_equip,
-      _table.cards_discard
+      _table.cardsDeck,
+      _table.cardsHand,
+      _table.cardsBoard,
+      _table.cardsEquip,
+      _table.cardsDiscard
     );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -1052,11 +1052,11 @@ library PlayersCard {
     internal
     pure
     returns (
-      bytes32[] memory cards_deck,
-      bytes32[] memory cards_hand,
-      bytes32[] memory cards_board,
-      bytes32[] memory cards_equip,
-      bytes32[] memory cards_discard
+      bytes32[] memory cardsDeck,
+      bytes32[] memory cardsHand,
+      bytes32[] memory cardsBoard,
+      bytes32[] memory cardsEquip,
+      bytes32[] memory cardsDiscard
     )
   {
     uint256 _start;
@@ -1064,31 +1064,31 @@ library PlayersCard {
     unchecked {
       _end = _encodedLengths.atIndex(0);
     }
-    cards_deck = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    cardsDeck = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(1);
     }
-    cards_hand = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    cardsHand = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(2);
     }
-    cards_board = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    cardsBoard = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(3);
     }
-    cards_equip = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    cardsEquip = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(4);
     }
-    cards_discard = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    cardsDiscard = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
   }
 
   /**
@@ -1102,13 +1102,10 @@ library PlayersCard {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (PlayersCardData memory _table) {
-    (
-      _table.cards_deck,
-      _table.cards_hand,
-      _table.cards_board,
-      _table.cards_equip,
-      _table.cards_discard
-    ) = decodeDynamic(_encodedLengths, _dynamicData);
+    (_table.cardsDeck, _table.cardsHand, _table.cardsBoard, _table.cardsEquip, _table.cardsDiscard) = decodeDynamic(
+      _encodedLengths,
+      _dynamicData
+    );
   }
 
   /**
@@ -1136,20 +1133,20 @@ library PlayersCard {
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
   function encodeLengths(
-    bytes32[] memory cards_deck,
-    bytes32[] memory cards_hand,
-    bytes32[] memory cards_board,
-    bytes32[] memory cards_equip,
-    bytes32[] memory cards_discard
+    bytes32[] memory cardsDeck,
+    bytes32[] memory cardsHand,
+    bytes32[] memory cardsBoard,
+    bytes32[] memory cardsEquip,
+    bytes32[] memory cardsDiscard
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
       _encodedLengths = PackedCounterLib.pack(
-        cards_deck.length * 32,
-        cards_hand.length * 32,
-        cards_board.length * 32,
-        cards_equip.length * 32,
-        cards_discard.length * 32
+        cardsDeck.length * 32,
+        cardsHand.length * 32,
+        cardsBoard.length * 32,
+        cardsEquip.length * 32,
+        cardsDiscard.length * 32
       );
     }
   }
@@ -1159,19 +1156,19 @@ library PlayersCard {
    * @return The dynamic data, encoded into a sequence of bytes.
    */
   function encodeDynamic(
-    bytes32[] memory cards_deck,
-    bytes32[] memory cards_hand,
-    bytes32[] memory cards_board,
-    bytes32[] memory cards_equip,
-    bytes32[] memory cards_discard
+    bytes32[] memory cardsDeck,
+    bytes32[] memory cardsHand,
+    bytes32[] memory cardsBoard,
+    bytes32[] memory cardsEquip,
+    bytes32[] memory cardsDiscard
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
-        EncodeArray.encode((cards_deck)),
-        EncodeArray.encode((cards_hand)),
-        EncodeArray.encode((cards_board)),
-        EncodeArray.encode((cards_equip)),
-        EncodeArray.encode((cards_discard))
+        EncodeArray.encode((cardsDeck)),
+        EncodeArray.encode((cardsHand)),
+        EncodeArray.encode((cardsBoard)),
+        EncodeArray.encode((cardsEquip)),
+        EncodeArray.encode((cardsDiscard))
       );
   }
 
@@ -1182,15 +1179,15 @@ library PlayersCard {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    bytes32[] memory cards_deck,
-    bytes32[] memory cards_hand,
-    bytes32[] memory cards_board,
-    bytes32[] memory cards_equip,
-    bytes32[] memory cards_discard
+    bytes32[] memory cardsDeck,
+    bytes32[] memory cardsHand,
+    bytes32[] memory cardsBoard,
+    bytes32[] memory cardsEquip,
+    bytes32[] memory cardsDiscard
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData;
-    PackedCounter _encodedLengths = encodeLengths(cards_deck, cards_hand, cards_board, cards_equip, cards_discard);
-    bytes memory _dynamicData = encodeDynamic(cards_deck, cards_hand, cards_board, cards_equip, cards_discard);
+    PackedCounter _encodedLengths = encodeLengths(cardsDeck, cardsHand, cardsBoard, cardsEquip, cardsDiscard);
+    bytes memory _dynamicData = encodeDynamic(cardsDeck, cardsHand, cardsBoard, cardsEquip, cardsDiscard);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

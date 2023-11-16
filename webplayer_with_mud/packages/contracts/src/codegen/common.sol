@@ -28,8 +28,8 @@ enum GameType {
 
 enum GameState {
   INIT,
-  PLAYING,
-  END
+  PLAY,
+  GAME_ENDED
 }
 
 enum GamePhase {

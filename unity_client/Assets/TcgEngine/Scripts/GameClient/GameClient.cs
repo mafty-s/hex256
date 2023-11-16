@@ -283,12 +283,13 @@ namespace TcgEngine.Client
             //+
             //    string.Format("{0},{1}", psettings.username, psettings.deck.cards[0]));
 
-            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid);
+            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false);
             SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
         public void SendPlayerSettingsAI(PlayerSettings psettings)
         {
+            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true);
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 

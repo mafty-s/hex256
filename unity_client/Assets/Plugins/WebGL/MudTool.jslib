@@ -57,8 +57,9 @@ mergeInto(LibraryManager.library, {
         let result = await mud.gameSetting(UTF8ToString(game_uid));
     },
 
-    playerSetting:async function(username,game_uid,deck_id){
-        let result = await mud.playerSetting(UTF8ToString(username),UTF8ToString(game_uid),UTF8ToString(deck_id));
+    playerSetting:async function(username,game_uid,deck_id,is_ai){
+        console.log(username,"is_ai",is_ai);
+        let result = await mud.playerSetting(UTF8ToString(username),UTF8ToString(game_uid),UTF8ToString(deck_id),is_ai);
     },
 
     AddNumbers: async function (x, y, onSuccess) {

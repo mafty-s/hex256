@@ -159,7 +159,7 @@ public class MudManager : MonoBehaviour
     private static extern string gameSetting(string game_uid);
     
     [DllImport("__Internal")]
-    private static extern string playerSetting(string username, string game_uid, string deck_id);
+    private static extern string playerSetting(string username, string game_uid, string deck_id,bool is_ai);
 
 #endif
 
@@ -263,10 +263,10 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void PlayerSetting(string username, string game_uid, string deck_id)
+    public void PlayerSetting(string username, string game_uid, string deck_id,bool is_ai)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
-        playerSetting(username,game_uid,deck_id);
+        playerSetting(username,game_uid,deck_id,is_ai);
 #endif
     }
 

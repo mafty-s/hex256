@@ -70,9 +70,9 @@ export function createSystemCalls(
     }
 
     const addTask = async (label: string) => {
-        const tx = await worldContract.write.addTask([label]);
-        await waitForTransaction(tx);
-        return tx;
+        // const tx = await worldContract.write.addTask([label]);
+        // await waitForTransaction(tx);
+        // return tx;
     };
 
     const toggleTask = async (key: Hex) => {
@@ -192,8 +192,8 @@ export function createSystemCalls(
         return tx;
     }
 
-    const playerSetting = async (username, game_uid, desk_id) => {
-        const tx = await worldContract.write.PlayerSetting([username, game_uid, desk_id]);
+    const playerSetting = async (username, game_uid, desk_id, is_ai) => {
+        const tx = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai]);
         await waitForTransaction(tx);
         return tx;
     }

@@ -6,7 +6,7 @@ export default mudConfig({
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
         GameType: ["SOLO", "PVP"],
-        GameState: ["INIT", "PLAYING", "END"],
+        GameState: ["INIT", "PLAY", "GAME_ENDED"],
         GamePhase: ["NONE", "START_TURN", "MAIN", "END_TURN"],
     },
     tables: {
@@ -52,6 +52,34 @@ export default mudConfig({
                 team: "string",
             },
         },
+        Ability: {
+            valueSchema: {
+                name: "string",
+            },
+        },
+        CardOnBoards: {
+            valueSchema: {
+                hp: "uint8",
+                hpOngoing: "uint8",
+                attack: "uint8",
+                attackOngoing: "uint8",
+                mana: "uint8",
+                manaOngoing: "uint8",
+                damage: "uint8",
+                exhausted: "bool",
+                equippedUid: "bytes32",
+                id: "bytes32",
+                playerId: "bytes32",
+                name: "string",
+            }
+        },
+        Slot: {
+            valueSchema: {
+                x: "uint8",
+                y: "uint8",
+                z: "uint8",
+            }
+        },
         Decks: {
             valueSchema: {
                 tid: "string",
@@ -61,10 +89,11 @@ export default mudConfig({
         Matches: {
             valueSchema: {
                 gameType: "GameType",
-                gameState:"GameState",
+                gameState: "GameState",
+                gamePhase: "GamePhase",
                 firstPlayer: "bytes32",
                 currentPlayer: "bytes32",
-                turn_count: "uint8",
+                turnCount: "uint8",
                 uid: "string",
                 players: "bytes32[]",
             }
@@ -76,6 +105,7 @@ export default mudConfig({
                 mana: "uint8",
                 hpMax: "uint8",
                 manaMax: "uint8",
+                isAI: "bool",
                 name: "string",
                 deck: "string",
                 // cards_deck: "bytes32[]",
@@ -89,13 +119,19 @@ export default mudConfig({
         },
         PlayersCard: {
             valueSchema: {
-                cards_deck: "bytes32[]",
-                cards_hand: "bytes32[]",
-                cards_board: "bytes32[]",
-                cards_equip: "bytes32[]",
-                cards_discard: "bytes32[]",
+                cardsDeck: "bytes32[]",
+                cardsHand: "bytes32[]",
+                cardsBoard: "bytes32[]",
+                cardsEquip: "bytes32[]",
+                cardsDiscard: "bytes32[]",
                 // cards_secret: "bytes32[]",
                 // cards_temp: "bytes32[]",
+            }
+        },
+        ActionHistory: {
+            valueSchema: {
+                historyType: "uint8",
+                cardId: "bytes32",
             }
         },
         Tasks: {
