@@ -1,7 +1,7 @@
 mergeInto(LibraryManager.library, {
 
     addTask: async function(msg){
-        await addTask(UTF8ToString(msg));
+        await mud.addTask(UTF8ToString(msg));
     },
 
     addUser: async function(name){
@@ -43,6 +43,14 @@ mergeInto(LibraryManager.library, {
         let returnStr = JSON.stringify(user);
         MyUnityInstance.SendMessage("MudManager","OnUser",returnStr);
         MyUnityInstance.SendMessage("PackZoomPanel","OnSuccess");
+    },
+
+    openPack:async function(pack_id){
+        let result = await mud.openPack(UTF8ToString(pack_id));
+        let user = await getUser();
+        let returnStr = JSON.stringify(user);
+        MyUnityInstance.SendMessage("MudManager","OnUser",returnStr);
+        MyUnityInstance.SendMessage("OpenPackMenu","OnSuccess",JSON.stringify(result.tx_result.result));
     },
 
     AddNumbers: async function (x, y, onSuccess) {

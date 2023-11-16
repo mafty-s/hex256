@@ -7,6 +7,7 @@ import {Hex} from "viem";
 import {SetupNetworkResult} from "./setupNetwork";
 import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
+import {ethers} from "ethers";
 
 // import { getTransactionResult } from "";
 
@@ -34,6 +35,40 @@ export function createSystemCalls(
      */
     {tables, useStore, worldContract, waitForTransaction, publicClient}: SetupNetworkResult
 ) {
+
+    const convertBigIntToInt = (obj) => {
+        if (typeof obj !== 'object' || obj === null) {
+            // 基本类型或 null，直接返回
+            return obj;
+        }
+
+        if (Array.isArray(obj)) {
+            // 数组类型
+            return obj.map(item => convertBigIntToInt(item));
+        }
+
+        // 对象类型
+        const convertedObj = {};
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const value = obj[key];
+                if (typeof value === 'bigint') {
+                    convertedObj[key] = Number(value);
+                } else {
+                    convertedObj[key] = convertBigIntToInt(value);
+                }
+            }
+        }
+
+        return convertedObj;
+    }
+
+    const calculateKeccak256Hash = (name) => {
+        const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['string'], [name]);
+        const keccakHash = ethers.keccak256(encodedName);
+        return keccakHash;
+    }
+
     const addTask = async (label: string) => {
         const tx = await worldContract.write.addTask([label]);
         await waitForTransaction(tx);
@@ -123,14 +158,14 @@ export function createSystemCalls(
 
     const openPack = async (name: string) => {
         console.log("worldContract", worldContract);
-        const hash = await worldContract.write.OpenPack([name]);
+        const hash = await worldContract.write.OpenPack([calculateKeccak256Hash(name)]);
         await waitForTransaction(hash);
 
         const transaction = await publicClient.getTransaction({hash})
         const transactionReceipt = await publicClient.waitForTransactionReceipt({hash});
         const {functionName, args} = decodeFunctionData({abi: worldContract.abi, data: transaction.input});
 
-        const result = await publicClient.simulateContract({
+        const tx_result = await publicClient.simulateContract({
             account: transaction.from,
             address: transaction.to!,
             abi: worldContract.abi,
@@ -141,17 +176,20 @@ export function createSystemCalls(
             // TODO: do we need to include value, nonce, gas price, etc. to properly simulate?
         });
 
-        return {hash, transaction, transactionReceipt, functionName, args, result};
+        console.log("openPack result", tx_result.result);
+        return convertBigIntToInt({hash, transaction, transactionReceipt, functionName, args, tx_result});
     };
 
-    let a = async () => {
-        // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
-        // const transaction = usePromise(transactionPromise);
-        // const transactionReceipt = usePromise(transactionReceiptPromise);
-        // const transactionResult = usePromise(transactionResultPromise);
-    }
+    // let a = async () => {
+    //     // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
+    //     // const transaction = usePromise(transactionPromise);
+    //     // const transactionReceipt = usePromise(transactionReceiptPromise);
+    //     // const transactionResult = usePromise(transactionResultPromise);
+    // }
 
     const out = {
+        convertBigIntToInt,
+        calculateKeccak256Hash,
         addTask,
         toggleTask,
         deleteTask,

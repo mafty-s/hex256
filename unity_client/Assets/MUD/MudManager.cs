@@ -150,6 +150,9 @@ public class MudManager : MonoBehaviour
     private static extern void buyPack(string pack_id,int q);
     
     [DllImport("__Internal")]
+    private static extern void openPack(string pack_id);
+
+    [DllImport("__Internal")]
     private static extern string calculateKeccak256Hash(string name);
 
     
@@ -233,6 +236,13 @@ public class MudManager : MonoBehaviour
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         buyPack(pack_id,q);
+#endif
+    }
+    
+    public void OpenPack(string pack_id)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        openPack(pack_id);
 #endif
     }
 

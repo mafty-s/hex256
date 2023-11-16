@@ -8,7 +8,6 @@ namespace TcgEngine.Client
     /// <summary>
     /// Main script for the open pack scene
     /// </summary>
-
     public class OpenPackMenu : MonoBehaviour
     {
         public GameObject card_prefab;
@@ -53,12 +52,13 @@ namespace TcgEngine.Client
             {
                 OpenPackApi(pack);
             }
+
             if (Authenticator.Get().IsTest())
             {
                 OpenPackTest(pack);
             }
         }
-        
+
         public async void OpenPackTest(PackData pack)
         {
             UserData udata = Authenticator.Get().UserData;
@@ -66,7 +66,7 @@ namespace TcgEngine.Client
                 return;
 
             List<UserCardData> cards = new List<UserCardData>();
-            List <CardData> all_cards = CardData.GetAll(pack);
+            List<CardData> all_cards = CardData.GetAll(pack);
 
             if (pack.type == PackType.Random)
             {
@@ -106,6 +106,9 @@ namespace TcgEngine.Client
             HandPackArea.Get().LoadPacks();
         }
 
+
+        private PackData cache = null;
+
         public async void OpenPackApi(PackData pack)
         {
             UserData udata = Authenticator.Get().UserData;
@@ -114,19 +117,40 @@ namespace TcgEngine.Client
 
             udata.AddPack(pack.id, -1);
 
-            OpenPackRequest req = new OpenPackRequest();
-            req.pack = pack.id;
+            cache = pack;
+            MudManager.Get().OpenPack(pack.id);
 
-            string url = ApiClient.ServerURL + "/users/packs/open";
-            string json = ApiTool.ToJson(req);
+//            OpenPackRequest req = new OpenPackRequest();
+//            req.pack = pack.id;
+//
+//            string url = ApiClient.ServerURL + "/users/packs/open";
+//            string json = ApiTool.ToJson(req);
+//
+//            WebResponse res = await ApiClient.Get().SendPostRequest(url, json);
+//            if (res.success)
+//            {
+//                UserCardData[] cards = ApiTool.JsonToArray<UserCardData>(res.data);
+//                RevealCards(pack, cards);
+//            }
+//
+//            HandPackArea.Get().LoadPacks();
+        }
 
-            WebResponse res = await ApiClient.Get().SendPostRequest(url, json);
-            if (res.success)
+        public void OnSuccess(string message)
+        {
+            Debug.Log("OpenPackMenu OnSuccess:" + message);
+            List<UserCardData> cardList = new List<UserCardData>();
+            string[] cardsKeys = ApiTool.JsonToArray<string>(message);
+            foreach (var cardsKey in cardsKeys)
             {
-                UserCardData[] cards = ApiTool.JsonToArray<UserCardData>(res.data);
-                RevealCards(pack, cards);
+                string cardId = MudManager.Get().GetCardIdByHex(cardsKey);
+                if (cardId != "Unknown")
+                {
+                    cardList.Add(new UserCardData(cardId, "normal"));
+                }
             }
-
+            UserCardData[] cards = cardList.ToArray();
+            RevealCards(cache, cards);
             HandPackArea.Get().LoadPacks();
         }
 
@@ -152,7 +176,7 @@ namespace TcgEngine.Client
             }
         }
 
-        private List<CardData> GetCardArray(List<CardData>  all_cards, RarityData rarity)
+        private List<CardData> GetCardArray(List<CardData> all_cards, RarityData rarity)
         {
             List<CardData> cards = new List<CardData>();
             foreach (CardData acard in all_cards)
@@ -160,6 +184,7 @@ namespace TcgEngine.Client
                 if (acard.rarity == rarity)
                     cards.Add(acard);
             }
+
             return cards;
         }
 
@@ -183,8 +208,10 @@ namespace TcgEngine.Client
                 {
                     return rarity.rarity;
                 }
+
                 rvalue -= rarity.probability;
             }
+
             return RarityData.GetFirst();
         }
 
@@ -208,8 +235,10 @@ namespace TcgEngine.Client
                 {
                     return variant.variant;
                 }
+
                 rvalue -= variant.probability;
             }
+
             return VariantData.GetDefault();
         }
 
@@ -233,5 +262,4 @@ namespace TcgEngine.Client
             return instance;
         }
     }
-
 }

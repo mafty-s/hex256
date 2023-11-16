@@ -14,6 +14,8 @@ export const App = () => {
             getUserByOwner,
             initCard,
             initPack,
+            calculateKeccak256Hash,
+            convertBigIntToInt,
             buyCard,
             getCard,
             incr,
@@ -146,11 +148,6 @@ export const App = () => {
         initPack("elite", 1, 5, [0, 0, 80, 20], 250);
     }
 
-    let calculateKeccak256Hash = (name) => {
-        const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['string'], [name]);
-        const keccakHash = ethers.keccak256(encodedName);
-        return keccakHash;
-    }
 
 
 
@@ -223,32 +220,7 @@ export const App = () => {
         document.body.appendChild(script);
     }
 
-    function convertBigIntToInt(obj) {
-        if (typeof obj !== 'object' || obj === null) {
-            // 基本类型或 null，直接返回
-            return obj;
-        }
 
-        if (Array.isArray(obj)) {
-            // 数组类型
-            return obj.map(item => convertBigIntToInt(item));
-        }
-
-        // 对象类型
-        const convertedObj = {};
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                const value = obj[key];
-                if (typeof value === 'bigint') {
-                    convertedObj[key] = Number(value);
-                } else {
-                    convertedObj[key] = convertBigIntToInt(value);
-                }
-            }
-        }
-
-        return convertedObj;
-    }
 
     let getUser = async () => {
         let user = await getUserByOwner(walletClient.account.address)

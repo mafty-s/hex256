@@ -15,16 +15,26 @@ contract PacksSystem is System {
     }
 
     function OpenPack(bytes32 key) public returns (bytes32[] memory){
-        bytes32[] memory res = new bytes32[](5);
         bytes32 user_key = keccak256(abi.encode(_msgSender()));
-        uint8 cards = Packs.getCards(key);
-        uint8[] memory rarities = Packs.getRarities(key);
-        for (uint i = 0; i < cards; i++) {
-            RarityType rarity = getRandomRarity(rarities);
-            bytes32 card_key = getRandomCardByRarity(rarity,i);
-            res[i] = card_key;
-            Users.pushCards(user_key, card_key);
+        bytes32[] memory res = new bytes32[](5);
+
+        uint256 user_packs_length = Users.lengthPacks(user_key);
+        bytes32[] memory user_packs = Users.getPacks(user_key);
+        for (uint j = 0; j < user_packs_length; j++) {
+            if (user_packs[j]==key){
+                Users.updatePacks(user_key,j,0);
+
+                uint8[] memory rarities = Packs.getRarities(key);
+                for (uint i = 0; i < Packs.getCards(key); i++) {
+                    RarityType rarity = getRandomRarity(rarities);
+                    bytes32 card_key = getRandomCardByRarity(rarity, i);
+                    res[i] = card_key;
+                    Users.pushCards(user_key, card_key);
+                }
+
+            }
         }
+
         return res;
     }
 
