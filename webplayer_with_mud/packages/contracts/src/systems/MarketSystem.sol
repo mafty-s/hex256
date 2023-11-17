@@ -36,6 +36,7 @@ contract MarketSystem is System {
         for (uint i = 0; i < quantity; i++) {
             for (uint j = 0; j < cards_length; j++) {
                 if (cards[j] == card_key) {
+                    //todo
                     reward = reward + 80;
                     Users.updateCards(user_key, j, 0);
                 }

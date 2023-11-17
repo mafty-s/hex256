@@ -5,11 +5,14 @@ pragma solidity >=0.8.21;
 
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
+import { IAttackSystem } from "./IAttackSystem.sol";
 import { IConfigSystem } from "./IConfigSystem.sol";
 import { ICounterSystem } from "./ICounterSystem.sol";
-import { IGameLogicSystem } from "./IGameLogicSystem.sol";
+import { IGameStartSystem } from "./IGameStartSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
+import { IMoveSystem } from "./IMoveSystem.sol";
 import { IPacksSystem } from "./IPacksSystem.sol";
+import { IPlayCardSystem } from "./IPlayCardSystem.sol";
 import { ITasksSystem } from "./ITasksSystem.sol";
 import { IUsersSystem } from "./IUsersSystem.sol";
 
@@ -21,11 +24,14 @@ import { IUsersSystem } from "./IUsersSystem.sol";
  */
 interface IWorld is
   IBaseWorld,
+  IAttackSystem,
   IConfigSystem,
   ICounterSystem,
-  IGameLogicSystem,
+  IGameStartSystem,
   IMarketSystem,
+  IMoveSystem,
   IPacksSystem,
+  IPlayCardSystem,
   ITasksSystem,
   IUsersSystem
 {

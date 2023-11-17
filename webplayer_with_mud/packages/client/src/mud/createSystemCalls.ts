@@ -198,6 +198,14 @@ export function createSystemCalls(
         return tx;
     }
 
+    const playCard = async (card_id, skip_cost) => {
+        const card_key = calculateKeccak256Hash(card_id);
+        let slot = {x: 0, y: 0, z: 0}
+        const tx = await worldContract.write.PlayCard([card_key, slot, skip_cost]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
 
     // let a = async () => {
     //     // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
@@ -228,6 +236,7 @@ export function createSystemCalls(
         openPack,
         gameSetting,
         playerSetting,
+        playCard,
     };
 
     window.mud = out;

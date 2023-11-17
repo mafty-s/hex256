@@ -5,18 +5,14 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {RarityType, PackType} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
 import {CardCommonSingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
 
-    constructor() {
-
-    }
-
     function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
-        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : "1", team : "1", rarity : RarityType.COMMON}));
+        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
         CardCommonSingleton.pushValue(key);
     }
 

@@ -1,13 +1,19 @@
 import {mudConfig} from "@latticexyz/world/register";
 
+
 export default mudConfig({
     enums: {
+        SelectorType: ["NONE", "SELECT_TARGET", "SELECTOR_CARD", "SELECTOR_CHOICE"],
+        Status: ["NONE", "ATTACK_BONUS", "HP_BONUS", "STEALTH", "INVINCIBILITY", "SHELL", "PROTECTION", "PROTECTED", "ARMOR", "SPELL_IMMUNITY", "DEATHTOUCH", "FURY", "INTIMIDATE", "FLYING", "TRAMPLE", "LIFE_STEAL", "SILENCED", "PARALYSED", "POISONED", "SLEEP"],
         RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
         GameType: ["SOLO", "PVP"],
         GameState: ["INIT", "PLAY", "GAME_ENDED"],
         GamePhase: ["NONE", "START_TURN", "MAIN", "END_TURN"],
+        CardType: ["NONE", "HERO", "CHARACTER", "SPELL", "ARTIFACT", "SECRET", "EQUIPMENT"],
+        AbilityTrigger: ["NONE", "ONGOING", "ACTIVATE", "ON_PLAY", "ON_PLAY_OTHER", "START_OF_TURN", "END_OF_TURN", "ON_BEFORE_ATTACK", "ON_AFTER_ATTACK", "ON_BEFORE_DEFEND", "ON_AFTER_DEFEND", "ON_KILL", "ON_DEATH", "ON_DEATH_OTHER"],
+        AbilityTarget: ["NONE", "SELF", "PLAYER_SELF", "PLAYER_OPPONENT", "ALL_PLAYERS", "ALL_CARDS_BOARD", "ALL_CARDS_HAND", "ALL_CARDS_ALL_PILES", "ALL_SLOTS", "ALL_CARD_DATA", "PLAY_TARGET", "ABILITY_TRIGGERER", "EQUIPPED_CARD", "SELECT_TARGET", "CARD_SELECTOR", "CHOICE_SELECTOR", "LAST_PLAYED", "LAST_TARGETED", "LAST_DESTROYED", "LAST_SUMMONED"],
     },
     tables: {
         CounterSingleton: {
@@ -47,8 +53,8 @@ export default mudConfig({
                 attack: "uint8",
                 hp: "uint8",
                 cost: "uint32",
+                cardType: "CardType",
                 tid: "string",
-                cardType: "string",
                 team: "string",
             },
         },
@@ -73,13 +79,6 @@ export default mudConfig({
                 name: "string",
             }
         },
-        Slot: {
-            valueSchema: {
-                x: "uint8",
-                y: "uint8",
-                z: "uint8",
-            }
-        },
         Decks: {
             valueSchema: {
                 tid: "string",
@@ -98,6 +97,15 @@ export default mudConfig({
                 players: "bytes32[]",
             }
         },
+        MatchesExtended: {
+            valueSchema: {
+                selector: "SelectorType",
+                selectorPlayerId: "bytes32",
+                lastPlayed: "bytes32",
+                lastTarget: "bytes32",
+                lastDestroyed: "bytes32",
+            }
+        },
         Players: {
             valueSchema: {
                 owner: "address",
@@ -108,26 +116,15 @@ export default mudConfig({
                 isAI: "bool",
                 name: "string",
                 deck: "string",
-                // cards_deck: "bytes32[]",
-                // cards_hand: "bytes32[]",
-                // cards_board: "bytes32[]",
-                // cards_equip: "bytes32[]",
-                // cards_discard: "bytes32[]",
-                // cards_secret: "bytes32[]",
-                // cards_temp: "bytes32[]",
             }
         },
-        PlayersCard: {
-            valueSchema: {
-                cardsDeck: "bytes32[]",
-                cardsHand: "bytes32[]",
-                cardsBoard: "bytes32[]",
-                cardsEquip: "bytes32[]",
-                cardsDiscard: "bytes32[]",
-                // cards_secret: "bytes32[]",
-                // cards_temp: "bytes32[]",
-            }
-        },
+        PlayerCardsDeck: "bytes32[]",
+        PlayerCardsHand: "bytes32[]",
+        PlayerCardsBoard: "bytes32[]",
+        PlayerCardsEquip: "bytes32[]",
+        PlayerCardsDiscard: "bytes32[]",
+        PlayerCardsSecret: "bytes32[]",
+        PlayerCardsTemp: "bytes32[]",
         ActionHistory: {
             valueSchema: {
                 historyType: "uint8",
