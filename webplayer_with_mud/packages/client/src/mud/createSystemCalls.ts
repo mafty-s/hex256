@@ -8,6 +8,7 @@ import {SetupNetworkResult} from "./setupNetwork";
 import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
 import {ethers} from "ethers";
+import {AbilityTarget} from "./common";
 
 // import { getTransactionResult } from "";
 
@@ -241,6 +242,11 @@ export function createSystemCalls(
     //     // const transactionResult = usePromise(transactionResultPromise);
     // }
 
+    const getAbilityTarget = (str) => {
+        const abilityTarget: AbilityTarget = AbilityTarget[str as keyof typeof AbilityTarget];
+        return abilityTarget;
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -265,6 +271,7 @@ export function createSystemCalls(
         gameSetting,
         playerSetting,
         playCard,
+        getAbilityTarget
     };
 
     window.mud = out;
