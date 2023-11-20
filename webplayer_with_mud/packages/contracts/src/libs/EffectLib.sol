@@ -7,7 +7,7 @@ import {GameLogicLib} from "./GameLogicLib.sol";
 
 library EffectLib {
 
-    function selectorCall(bytes4 selector, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
+    function DoEffect(bytes4 selector, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
         (bool success,) = address(this).call(abi.encodeWithSelector(selector, ability_key, caster, target, is_card));
         return success;
     }
