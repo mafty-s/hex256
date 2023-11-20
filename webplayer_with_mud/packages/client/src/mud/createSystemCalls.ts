@@ -273,6 +273,28 @@ export function createSystemCalls(
         return tx;
     }
 
+    const test = async () => {
+        const a  = calculateKeccak256Hash("a")
+        const tx = await worldContract.write.callEffectToPlayer([a, a, a]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
+
+    const test2 = async () => {
+        const a  = calculateKeccak256Hash("a")
+        const tx = await worldContract.write.callEffectToPlayer2([a, a, a]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
+    const test3 = async () => {
+        const a  = calculateKeccak256Hash("a")
+        const tx = await worldContract.write.callEffectToPlayer3([a, a, a]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
 
     // let a = async () => {
     //     // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
@@ -306,7 +328,10 @@ export function createSystemCalls(
         gameSetting,
         playerSetting,
         playCard,
-        getAbilityTarget
+        getAbilityTarget,
+        test,
+        test2,
+        test3,
     };
 
     window.mud = out;

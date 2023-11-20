@@ -156,7 +156,6 @@ export const App = () => {
         initCard('trap_fish', 3, 0, 0, 100, 'secret_transform_fish', 'Secret', '2-uncommon');
         initCard('turtle', 3, 2, 3, 100, 'taunt|shell', 'Character', '1-common');
 
-        return;
 
 
         initPack("standard", 1, 5, [80, 12, 6, 2], 100);
@@ -166,7 +165,16 @@ export const App = () => {
         createDeck("fire_deck", "hero_fire", "imp|imp|lava_beast|lava_beast|fire_chicken|firefox|firefox|hell_hound|ashes_snake|fire_element|wolf_furious|phoenix|dragon_red|spell_burn|spell_burn|potion_red|potion_red|trap_explosive|spell_armageddon|town_volcano");
         createDeck("forest_deck", "hero_forest", "wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|owl|raccoon|armored_beast|bear|sasquatch|unicorn|dragon_green|spell_roots|spell_roots|potion_green|potion_green|spell_growth|trap_spike|town_forest");
         createDeck("water_deck", "hero_water", "fish|crab_mana|crab_mana|turtle|turtle|poison_frog|eel|eel|pufferfish|killer_whale|kraken|sea_monster|dragon_blue|spell_wave|spell_wave|spell_storm|potion_blue|potion_blue|trap_fish|town_underwater");
+        return;
 
+
+
+
+
+    };
+
+
+    const initAbliities = () => {
         initAbility('activate_boost1', 'Activate', 'AllCardsBoard', 1, 0, 1, true, '');
         initAbility('activate_burst', 'Activate', 'Self', 1, 0, 0, false, 'damage');
         initAbility('activate_damage2', 'Activate', 'SelectTarget', 2, 3, 0, false, 'damage');
@@ -279,10 +287,7 @@ export const App = () => {
         initAbility('trap_damage_all2', 'OnBeforeAttack', 'AllCardsBoard', 2, 0, 0, false, 'damage');
         initAbility('trap_paralyse3', 'OnAfterAttack', 'AbilityTriggerer', 0, 0, 6, false, '');
         initAbility('secret_transform_fish', 'OnPlayOther', 'AbilityTriggerer', 1, 0, 0, false, 'transform_fish');
-
-
-    };
-
+    }
 
     let initUnity = () => {
         // console.log("walletClient", walletClient.account.address)
@@ -368,6 +373,7 @@ export const App = () => {
         // window.initCard = initCard;
         // window.initPack = initPack;
         window.init = init;
+        window.initAbliities = initAbliities;
         // window.buyCard = buyCard;
         // window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;

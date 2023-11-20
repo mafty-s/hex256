@@ -40,7 +40,7 @@ struct AbilityData {
   uint8 duration;
   bool exhaust;
   string id;
-  bytes32[] effects;
+  bytes4[] effects;
 }
 
 library Ability {
@@ -76,7 +76,7 @@ library Ability {
     _valueSchema[4] = SchemaType.UINT8;
     _valueSchema[5] = SchemaType.BOOL;
     _valueSchema[6] = SchemaType.STRING;
-    _valueSchema[7] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[7] = SchemaType.BYTES4_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -537,29 +537,29 @@ library Ability {
   /**
    * @notice Get effects.
    */
-  function getEffects(bytes32 key) internal view returns (bytes32[] memory effects) {
+  function getEffects(bytes32 key) internal view returns (bytes4[] memory effects) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
   }
 
   /**
    * @notice Get effects.
    */
-  function _getEffects(bytes32 key) internal view returns (bytes32[] memory effects) {
+  function _getEffects(bytes32 key) internal view returns (bytes4[] memory effects) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
   }
 
   /**
    * @notice Set effects.
    */
-  function setEffects(bytes32 key, bytes32[] memory effects) internal {
+  function setEffects(bytes32 key, bytes4[] memory effects) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -569,7 +569,7 @@ library Ability {
   /**
    * @notice Set effects.
    */
-  function _setEffects(bytes32 key, bytes32[] memory effects) internal {
+  function _setEffects(bytes32 key, bytes4[] memory effects) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -585,7 +585,7 @@ library Ability {
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
-      return _byteLength / 32;
+      return _byteLength / 4;
     }
   }
 
@@ -598,7 +598,7 @@ library Ability {
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
-      return _byteLength / 32;
+      return _byteLength / 4;
     }
   }
 
@@ -606,13 +606,13 @@ library Ability {
    * @notice Get an item of effects.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemEffects(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemEffects(bytes32 key, uint256 _index) internal view returns (bytes4) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 32, (_index + 1) * 32);
-      return (bytes32(_blob));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 4, (_index + 1) * 4);
+      return (bytes4(_blob));
     }
   }
 
@@ -620,20 +620,20 @@ library Ability {
    * @notice Get an item of effects.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemEffects(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemEffects(bytes32 key, uint256 _index) internal view returns (bytes4) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 32, (_index + 1) * 32);
-      return (bytes32(_blob));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 4, (_index + 1) * 4);
+      return (bytes4(_blob));
     }
   }
 
   /**
    * @notice Push an element to effects.
    */
-  function pushEffects(bytes32 key, bytes32 _element) internal {
+  function pushEffects(bytes32 key, bytes4 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -643,7 +643,7 @@ library Ability {
   /**
    * @notice Push an element to effects.
    */
-  function _pushEffects(bytes32 key, bytes32 _element) internal {
+  function _pushEffects(bytes32 key, bytes4 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -657,7 +657,7 @@ library Ability {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 32);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 4);
   }
 
   /**
@@ -667,32 +667,32 @@ library Ability {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 32);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 4);
   }
 
   /**
    * @notice Update an element of effects at `_index`.
    */
-  function updateEffects(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateEffects(bytes32 key, uint256 _index, bytes4 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of effects at `_index`.
    */
-  function _updateEffects(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateEffects(bytes32 key, uint256 _index, bytes4 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -738,7 +738,7 @@ library Ability {
     uint8 duration,
     bool exhaust,
     string memory id,
-    bytes32[] memory effects
+    bytes4[] memory effects
   ) internal {
     bytes memory _staticData = encodeStatic(trigger, target, value, manaCost, duration, exhaust);
 
@@ -763,7 +763,7 @@ library Ability {
     uint8 duration,
     bool exhaust,
     string memory id,
-    bytes32[] memory effects
+    bytes4[] memory effects
   ) internal {
     bytes memory _staticData = encodeStatic(trigger, target, value, manaCost, duration, exhaust);
 
@@ -849,7 +849,7 @@ library Ability {
   function decodeDynamic(
     PackedCounter _encodedLengths,
     bytes memory _blob
-  ) internal pure returns (string memory id, bytes32[] memory effects) {
+  ) internal pure returns (string memory id, bytes4[] memory effects) {
     uint256 _start;
     uint256 _end;
     unchecked {
@@ -861,7 +861,7 @@ library Ability {
     unchecked {
       _end += _encodedLengths.atIndex(1);
     }
-    effects = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    effects = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes4());
   }
 
   /**
@@ -923,11 +923,11 @@ library Ability {
    */
   function encodeLengths(
     string memory id,
-    bytes32[] memory effects
+    bytes4[] memory effects
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = PackedCounterLib.pack(bytes(id).length, effects.length * 32);
+      _encodedLengths = PackedCounterLib.pack(bytes(id).length, effects.length * 4);
     }
   }
 
@@ -935,7 +935,7 @@ library Ability {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(string memory id, bytes32[] memory effects) internal pure returns (bytes memory) {
+  function encodeDynamic(string memory id, bytes4[] memory effects) internal pure returns (bytes memory) {
     return abi.encodePacked(bytes((id)), EncodeArray.encode((effects)));
   }
 
@@ -953,7 +953,7 @@ library Ability {
     uint8 duration,
     bool exhaust,
     string memory id,
-    bytes32[] memory effects
+    bytes4[] memory effects
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(trigger, target, value, manaCost, duration, exhaust);
 

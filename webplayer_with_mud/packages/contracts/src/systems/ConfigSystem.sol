@@ -63,7 +63,7 @@ contract ConfigSystem is System {
         Decks.setCards(key, _cards);
     }
 
-    function initAbility(string memory id, AbilityTrigger trigger, AbilityTarget target, uint8 value, uint8 manaCost, uint8 duration, bool exhaust, bytes32[] memory effects) public returns (bytes32 key){
+    function initAbility(string memory id, AbilityTrigger trigger, AbilityTarget target, uint8 value, uint8 manaCost, uint8 duration, bool exhaust, bytes4[] memory effects) public returns (bytes32 key){
         key = keccak256(abi.encode(id));
         Ability.setId(key, id);
         Ability.setValue(key, value);

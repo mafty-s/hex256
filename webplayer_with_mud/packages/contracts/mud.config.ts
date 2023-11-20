@@ -74,7 +74,7 @@ export default mudConfig({
                 duration: "uint8",
                 exhaust: "bool",
                 id: "string",
-                effects: "bytes32[]",
+                effects: "bytes4[]",
             },
         },
         CardOnBoards: {
