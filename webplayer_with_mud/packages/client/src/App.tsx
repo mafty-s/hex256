@@ -16,6 +16,7 @@ export const App = () => {
             initCard,
             initPack,
             initDeck,
+            initAbility,
             calculateKeccak256Hash,
             convertBigIntToInt,
             buyCard,
@@ -163,6 +164,120 @@ export const App = () => {
         createDeck("fire_deck", "hero_fire", "imp|imp|lava_beast|lava_beast|fire_chicken|firefox|firefox|hell_hound|ashes_snake|fire_element|wolf_furious|phoenix|dragon_red|spell_burn|spell_burn|potion_red|potion_red|trap_explosive|spell_armageddon|town_volcano");
         createDeck("forest_deck", "hero_forest", "wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|owl|raccoon|armored_beast|bear|sasquatch|unicorn|dragon_green|spell_roots|spell_roots|potion_green|potion_green|spell_growth|trap_spike|town_forest");
         createDeck("water_deck", "hero_water", "fish|crab_mana|crab_mana|turtle|turtle|poison_frog|eel|eel|pufferfish|killer_whale|kraken|sea_monster|dragon_blue|spell_wave|spell_wave|spell_storm|potion_blue|potion_blue|trap_fish|town_underwater");
+
+        initAbility('activate_boost1', 1, 0, 1, true,'');
+        initAbility('activate_burst', 1, 0, 0, false,'damage');
+        initAbility('activate_damage2', 2, 3, 0, false,'damage');
+        initAbility('activate_discard', 1, 0, 0, true,'discard');
+        initAbility('activate_fire', 1, 2, 0, true,'damage');
+        initAbility('activate_forest', 2, 2, 0, true,'heal');
+        initAbility('activate_select_discard_spell', 0, 2, 0, false,'send_hand');
+        initAbility('activate_send_hand', 0, 0, 0, true,'send_hand');
+        initAbility('activate_water', 1, 3, 0, true,'draw');
+        initAbility('chain_gain_attack', 1, 0, 0, false,'add_attack');
+        initAbility('activate_roll_send_hand', 0, 2, 0, false,'roll_d6');
+        initAbility('attack_roll_attack_bonus', 0, 0, 0, false,'roll_d6');
+        initAbility('play_roll_attack', 0, 0, 0, false,'roll_d6');
+        initAbility('roll_add_attack', 0, 0, 0, false,'add_attack_roll');
+        initAbility('roll_attack_bonus', 6, 0, 1, false,'');
+        initAbility('roll_send_hand', 0, 0, 0, false,'send_hand');
+        initAbility('chain_equip_use', -1, 0, 0, false,'add_hp');
+        initAbility('equip_armor2', 2, 0, 0, false,'');
+        initAbility('equip_attack1', 1, 0, 0, false,'add_attack');
+        initAbility('equip_attack2', 2, 0, 0, false,'add_attack');
+        initAbility('equip_attack_no_damage', 0, 0, 1, false,'');
+        initAbility('equip_attack_use', -1, 0, 0, false,'add_hp');
+        initAbility('equip_defend_use', -1, 0, 0, false,'add_hp');
+        initAbility('equip_gain_mana', 2, 0, 0, false,'gain_mana');
+        initAbility('equip_mana_kill', 3, 0, 0, false,'gain_mana');
+        initAbility('equip_taunt', 0, 0, 0, false,'');
+        initAbility('add_spell_damage1', 1, 0, 0, false,'add_spell_damage');
+        initAbility('aura_ability_red', 0, 0, 0, false,'add_ability_activate_burst');
+        initAbility('aura_attack_m1', -1, 0, 0, false,'add_attack');
+        initAbility('aura_wolf', 1, 0, 0, false,'add_attack');
+        initAbility('deathtouch', 0, 0, 0, false,'');
+        initAbility('defense_attack3', 3, 0, 0, false,'add_attack');
+        initAbility('flying', 0, 0, 0, false,'');
+        initAbility('fury', 0, 0, 0, false,'');
+        initAbility('lifesteal', 0, 0, 0, false,'');
+        initAbility('spell_immunity', 0, 0, 0, false,'');
+        initAbility('taunt', 0, 0, 0, false,'');
+        initAbility('town_aura_blue', -1, 0, 0, false,'add_mana');
+        initAbility('town_aura_green', 2, 0, 0, false,'add_hp');
+        initAbility('town_aura_red', 2, 0, 0, false,'add_attack');
+        initAbility('trample', 0, 0, 0, false,'');
+        initAbility('after_spell_attack2', 2, 0, 0, false,'add_attack');
+        initAbility('attack_player_mana2', 2, 0, 0, false,'gain_mana');
+        initAbility('attack_poison', 1, 0, 0, false,'');
+        initAbility('attack_suffer_damage', 3, 0, 0, false,'damage');
+        initAbility('chain_draw', 1, 0, 0, false,'draw');
+        initAbility('death_blue_draw', 1, 0, 0, false,'draw');
+        initAbility('death_egg', 2, 0, 0, false,'summon_egg');
+        initAbility('death_heal2', 2, 0, 0, false,'heal');
+        initAbility('death_other_draw', 1, 0, 0, false,'draw');
+        initAbility('defend_discard', 1, 0, 0, false,'discard');
+        initAbility('defend_poison', 1, 0, 0, false,'');
+        initAbility('egg_growth', 1, 0, 0, false,'add_growth');
+        initAbility('egg_transform', 0, 0, 0, false,'transform_phoenix');
+        initAbility('kill_draw2', 2, 0, 0, false,'draw');
+        initAbility('play_other_sacrifice', 0, 0, 0, false,'destroy');
+        initAbility('regen3', 3, 0, 0, false,'heal');
+        initAbility('regen_all', 99, 0, 0, false,'heal');
+        initAbility('turn_add_attack1', 1, 0, 0, false,'add_attack');
+        initAbility('turn_green_heal', 3, 0, 0, false,'heal');
+        initAbility('turn_kill_lowest', 0, 0, 0, false,'destroy');
+        initAbility('turn_stealth', 0, 0, 0, false,'clear_taunt');
+        initAbility('choice_fury', 0, 0, 0, false,'');
+        initAbility('choice_taunt', 0, 0, 0, false,'');
+        initAbility('play_boost2', 2, 0, 2, true,'');
+        initAbility('play_choice_taunt_fury', 0, 0, 0, false,'');
+        initAbility('play_deal_damage1', 1, 0, 0, false,'damage');
+        initAbility('play_damage_all2', 2, 0, 0, false,'damage');
+        initAbility('play_destroy_less4', 0, 0, 0, false,'destroy');
+        initAbility('play_discard', 1, 0, 0, false,'discard');
+        initAbility('play_haste', 0, 0, 0, false,'unexhaust');
+        initAbility('play_poison', 1, 0, 0, false,'');
+        initAbility('play_select_discard', 0, 0, 0, false,'send_hand');
+        initAbility('play_set_attack1', 1, 0, 0, false,'set_attack');
+        initAbility('play_silence', 0, 0, 0, false,'clear_status_all|reset_stats');
+        initAbility('play_summon_wolf', 1, 0, 0, false,'summon_wolf');
+        initAbility('shell', 0, 0, 0, false,'');
+        initAbility('stealth', 0, 0, 0, false,'');
+        initAbility('chain_clear_temp', 0, 0, 0, false,'clear_temp');
+        initAbility('chain_discover', 0, 0, 0, false,'send_hand');
+        initAbility('chain_hibernate', 0, 0, 4, false,'exhaust');
+        initAbility('chain_treasure', 0, 0, 0, false,'send_hand');
+        initAbility('spell_add_attack_suffer', 0, 0, 0, false,'add_ability_suffer_damage');
+        initAbility('spell_add_play_extinct', 0, 0, 0, false,'add_ability_play_sacrifice');
+        initAbility('spell_add_submerge', 0, 0, 0, false,'add_ability_defend_discard');
+        initAbility('spell_ally_attack_2', 2, 0, 0, false,'add_attack');
+        initAbility('spell_ally_hp_2', 2, 0, 0, false,'add_hp');
+        initAbility('spell_armor2', 2, 0, 0, false,'');
+        initAbility('spell_attack1', 1, 0, 0, false,'add_attack');
+        initAbility('spell_coin', 1, 0, 0, false,'gain_mana');
+        initAbility('spell_damage1', 1, 0, 0, false,'damage');
+        initAbility('spell_damage3', 3, 0, 0, false,'damage');
+        initAbility('spell_destroy', 0, 0, 0, false,'destroy');
+        initAbility('spell_destroy_all', 0, 0, 0, false,'destroy');
+        initAbility('spell_dragon_create', 0, 0, 0, false,'create_temp');
+        initAbility('spell_draw1', 1, 0, 0, false,'draw');
+        initAbility('spell_fury', 0, 0, 0, false,'');
+        initAbility('spell_heal_full', 99, 0, 0, false,'heal');
+        initAbility('spell_hibernate', 4, 0, 0, false,'add_attack|add_hp');
+        initAbility('spell_hp2', 2, 0, 0, false,'add_hp');
+        initAbility('spell_kill_lowest_hp', 0, 0, 0, false,'destroy');
+        initAbility('spell_paralyse', 0, 0, 6, false,'');
+        initAbility('spell_return_all', 0, 0, 0, false,'send_hand');
+        initAbility('spell_send_hand', 0, 0, 0, false,'send_hand');
+        initAbility('spell_damage_per_hand', 1, 0, 0, false,'set_hp');
+        initAbility('spell_shell', 0, 0, 0, false,'');
+        initAbility('spell_summon_eagle', 0, 0, 0, false,'summon_eagle|summon_eagle|summon_eagle');
+        initAbility('spell_taunt', 0, 0, 0, false,'');
+        initAbility('spell_treasure', 0, 0, 0, false,'send_hand');
+        initAbility('trap_damage_all2', 2, 0, 0, false,'damage');
+        initAbility('trap_paralyse3', 0, 0, 6, false,'');
+        initAbility('secret_transform_fish', 1, 0, 0, false,'transform_fish');
+
 
     };
 

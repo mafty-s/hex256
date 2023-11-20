@@ -147,8 +147,8 @@ export function createSystemCalls(
         return tx;
     };
 
-    const initAbility = async(id:string, name:string, description:string, abilityType:number, target:number, effect:number, cost:number) => {
-        const tx = await worldContract.write.initAbility([id, name, description, abilityType, target, effect, cost]);
+    const initAbility = async (id: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str) => {
+        const tx = await worldContract.write.initAbility([id, value, manaCost, duration, exhaust, arrStr2Bytes32(effect_str)]);
         await waitForTransaction(tx);
         return tx;
     }
