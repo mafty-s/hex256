@@ -23,7 +23,7 @@ import {Slot, SlotLib} from "../libs/SlotLib.sol";
 contract PlayCardSystem is System {
 
 
-    function PlayCard(bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
+    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
 
         //        uint8 card_mana = CardOnBoards.getMana(card_key);
         //        PlayersData memory player = Players.get(player_key);
@@ -56,7 +56,7 @@ contract PlayCardSystem is System {
 
         GameLogicLib.UpdateOngoing();
 
-        AbilityLib.TriggerCardAbilityTypeOneCard(AbilityTrigger.ON_PLAY, card_key);
+        AbilityLib.TriggerCardAbilityTypeOneCard(game_key, AbilityTrigger.ON_PLAY, card_key);
         AbilityLib.TriggerOtherCardsAbilityType(AbilityTrigger.ON_PLAY_OTHER, card_key);
 
         //        if (game_data.CanPlayCard(card, slot, skip_cost))

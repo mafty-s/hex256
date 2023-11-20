@@ -10,5 +10,5 @@ import { Slot } from "./../../libs/SlotLib.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IMoveSystem {
-  function Move(bytes32 card_key, Slot memory slot) external;
+  function Move(bytes32 game_key, bytes32 card_key, Slot memory slot) external;
 }

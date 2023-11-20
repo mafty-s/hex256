@@ -10,7 +10,7 @@ import { Slot } from "./../../libs/SlotLib.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IPlayCardSystem {
-  function PlayCard(bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) external;
+  function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) external;
 
   function PayMana(bytes32 player_key, bytes32 card_key) external;
 }

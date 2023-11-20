@@ -56,11 +56,19 @@ export default mudConfig({
                 cardType: "CardType",
                 tid: "string",
                 team: "string",
+                abilities: "bytes32[]",
             },
         },
         Ability: {
             valueSchema: {
-                name: "string",
+                trigger: "AbilityTrigger",
+                target: "AbilityTarget",
+                value: "uint8",
+                manaCost: "uint8",
+                duration:"uint8",
+                exhaust: "bool",
+                id: "string",
+                effects: "bytes32[]",
             },
         },
         CardOnBoards: {

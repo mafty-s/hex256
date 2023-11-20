@@ -8,7 +8,7 @@ import { CardCommonSingleton, CardCommonSingletonTableId } from "./tables/CardCo
 import { Packs, PacksData, PacksTableId } from "./tables/Packs.sol";
 import { Users, UsersData, UsersTableId } from "./tables/Users.sol";
 import { Cards, CardsData, CardsTableId } from "./tables/Cards.sol";
-import { Ability, AbilityTableId } from "./tables/Ability.sol";
+import { Ability, AbilityData, AbilityTableId } from "./tables/Ability.sol";
 import { CardOnBoards, CardOnBoardsData, CardOnBoardsTableId } from "./tables/CardOnBoards.sol";
 import { Decks, DecksData, DecksTableId } from "./tables/Decks.sol";
 import { Matches, MatchesData, MatchesTableId } from "./tables/Matches.sol";

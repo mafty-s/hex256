@@ -12,7 +12,16 @@ contract ConfigSystem is System {
 
     function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
-        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
+        Cards.setMana(key, mana);
+        Cards.setAttack(key, attack);
+        Cards.setHp(key, hp);
+        Cards.setCost(key, cost);
+        Cards.setTid(key, name);
+        Cards.setCardType(key, CardType.NONE);
+        Cards.setTeam(key, "1");
+        Cards.setRarity(key, RarityType.COMMON);
+
+//        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
         CardCommonSingleton.pushValue(key);
     }
 
