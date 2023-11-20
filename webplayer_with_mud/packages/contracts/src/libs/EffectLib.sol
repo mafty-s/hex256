@@ -27,9 +27,120 @@ library EffectLib {
         //todo
     }
 
-    ////
-    function getDoEffectToCardSelector() public pure returns (bytes4) {
-        return bytes4(keccak256("DoEffectToCard(bytes32,bytes32,bytes32)"));
+    function EffectAddStatCount(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
     }
+
+    function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectSendPile(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectCreate(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectAddStatRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectSetStatCustom(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectClearStatus(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectPlay(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectChangeOwner(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectAddAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectRemoveTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectRemoveAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectResetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+    function EffectShuffle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        //todo
+    }
+
+//    function getDoEffectToCardSelector() public pure returns (bytes4) {
+//        return bytes4(keccak256("DoEffectToCard(bytes32,bytes32,bytes32)"));
+//    }
 
 }

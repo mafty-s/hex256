@@ -90,6 +90,13 @@ export function createSystemCalls(
         return arr_bytes32;
     }
 
+    const getEffectSelector = (name) => {
+        const functionName = name + '(bytes32,bytes32,bytes32,bool)';
+        const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
+        return ethers.AbiCoder.defaultAbiCoder().encode(['bytes4'], [functionSelector]);
+    }
+
+
     const getAbilityTarget = (str: string) => {
         const abilityTarget: AbilityTarget = AbilityTarget[str as keyof typeof AbilityTarget];
         return abilityTarget;
@@ -274,7 +281,7 @@ export function createSystemCalls(
     }
 
     const test = async () => {
-        const a  = calculateKeccak256Hash("a")
+        const a = calculateKeccak256Hash("a")
         const tx = await worldContract.write.callEffectToPlayer([a, a, a]);
         await waitForTransaction(tx);
         return tx;
@@ -282,14 +289,14 @@ export function createSystemCalls(
 
 
     const test2 = async () => {
-        const a  = calculateKeccak256Hash("a")
+        const a = calculateKeccak256Hash("a")
         const tx = await worldContract.write.callEffectToPlayer2([a, a, a]);
         await waitForTransaction(tx);
         return tx;
     }
 
     const test3 = async () => {
-        const a  = calculateKeccak256Hash("a")
+        const a = calculateKeccak256Hash("a")
         const tx = await worldContract.write.callEffectToPlayer3([a, a, a]);
         await waitForTransaction(tx);
         return tx;
@@ -329,6 +336,7 @@ export function createSystemCalls(
         playerSetting,
         playCard,
         getAbilityTarget,
+        getEffectSelector,
         test,
         test2,
         test3,
