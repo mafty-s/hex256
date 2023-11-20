@@ -93,9 +93,16 @@ export function createSystemCalls(
     const getEffectSelector = (name) => {
         const functionName = name + '(bytes32,bytes32,bytes32,bool)';
         const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
-        return ethers.AbiCoder.defaultAbiCoder().encode(['bytes4'], [functionSelector]);
+        return functionSelector;
     }
 
+    const getEffectSelectorFromArrStr = (arrstr: string) => {
+        const arr = arrstr.split('|');
+        const arr_bytes4 = arr.map((item) => {
+            return getEffectSelector(item);
+        });
+        return arr_bytes4;
+    }
 
     const getAbilityTarget = (str: string) => {
         const abilityTarget: AbilityTarget = AbilityTarget[str as keyof typeof AbilityTarget];
@@ -195,7 +202,7 @@ export function createSystemCalls(
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget(convertToEnumFormat(target));
 
-        const tx = await worldContract.write.initAbility([id, trigger_code, target_code, value, manaCost, duration, exhaust, arrStr2Bytes32(effect_str)]);
+        const tx = await worldContract.write.initAbility([id, trigger_code, target_code, value, manaCost, duration, exhaust, getEffectSelectorFromArrStr(effect_str)]);
         await waitForTransaction(tx);
         return tx;
     }

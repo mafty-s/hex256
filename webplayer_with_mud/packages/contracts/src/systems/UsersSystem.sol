@@ -10,7 +10,7 @@ contract UsersSystem is System {
 
         UsersData memory userData = UsersData(
             _msgSender(),
-            1000, //initialCoinAmount,
+            1000000, //initialCoinAmount,
             0, //initialXp,
             block.timestamp,
             new bytes32[](0),
