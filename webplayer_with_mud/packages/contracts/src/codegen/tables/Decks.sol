@@ -26,10 +26,11 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant DecksTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0000000200000000000000000000000000000000000000000000000000000000
+  0x0020010220000000000000000000000000000000000000000000000000000000
 );
 
 struct DecksData {
+  bytes32 hero;
   string tid;
   bytes32[] cards;
 }
@@ -59,9 +60,10 @@ library Decks {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](2);
-    _valueSchema[0] = SchemaType.STRING;
-    _valueSchema[1] = SchemaType.BYTES32_ARRAY;
+    SchemaType[] memory _valueSchema = new SchemaType[](3);
+    _valueSchema[0] = SchemaType.BYTES32;
+    _valueSchema[1] = SchemaType.STRING;
+    _valueSchema[2] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -80,9 +82,10 @@ library Decks {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](2);
-    fieldNames[0] = "tid";
-    fieldNames[1] = "cards";
+    fieldNames = new string[](3);
+    fieldNames[0] = "hero";
+    fieldNames[1] = "tid";
+    fieldNames[2] = "cards";
   }
 
   /**
@@ -97,6 +100,48 @@ library Decks {
    */
   function _register() internal {
     StoreCore.registerTable(_tableId, _fieldLayout, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
+  }
+
+  /**
+   * @notice Get hero.
+   */
+  function getHero(bytes32 key) internal view returns (bytes32 hero) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get hero.
+   */
+  function _getHero(bytes32 key) internal view returns (bytes32 hero) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set hero.
+   */
+  function setHero(bytes32 key, bytes32 hero) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((hero)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set hero.
+   */
+  function _setHero(bytes32 key, bytes32 hero) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((hero)), _fieldLayout);
   }
 
   /**
@@ -456,8 +501,9 @@ library Decks {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, string memory tid, bytes32[] memory cards) internal {
-    bytes memory _staticData;
+  function set(bytes32 key, bytes32 hero, string memory tid, bytes32[] memory cards) internal {
+    bytes memory _staticData = encodeStatic(hero);
+
     PackedCounter _encodedLengths = encodeLengths(tid, cards);
     bytes memory _dynamicData = encodeDynamic(tid, cards);
 
@@ -470,8 +516,9 @@ library Decks {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, string memory tid, bytes32[] memory cards) internal {
-    bytes memory _staticData;
+  function _set(bytes32 key, bytes32 hero, string memory tid, bytes32[] memory cards) internal {
+    bytes memory _staticData = encodeStatic(hero);
+
     PackedCounter _encodedLengths = encodeLengths(tid, cards);
     bytes memory _dynamicData = encodeDynamic(tid, cards);
 
@@ -485,7 +532,8 @@ library Decks {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, DecksData memory _table) internal {
-    bytes memory _staticData;
+    bytes memory _staticData = encodeStatic(_table.hero);
+
     PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.cards);
     bytes memory _dynamicData = encodeDynamic(_table.tid, _table.cards);
 
@@ -499,7 +547,8 @@ library Decks {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, DecksData memory _table) internal {
-    bytes memory _staticData;
+    bytes memory _staticData = encodeStatic(_table.hero);
+
     PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.cards);
     bytes memory _dynamicData = encodeDynamic(_table.tid, _table.cards);
 
@@ -507,6 +556,13 @@ library Decks {
     _keyTuple[0] = key;
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
+  }
+
+  /**
+   * @notice Decode the tightly packed blob of static data using this table's field layout.
+   */
+  function decodeStatic(bytes memory _blob) internal pure returns (bytes32 hero) {
+    hero = (Bytes.slice32(_blob, 0));
   }
 
   /**
@@ -532,15 +588,17 @@ library Decks {
 
   /**
    * @notice Decode the tightly packed blobs using this table's field layout.
-   *
+   * @param _staticData Tightly packed static fields.
    * @param _encodedLengths Encoded lengths of dynamic fields.
    * @param _dynamicData Tightly packed dynamic fields.
    */
   function decode(
-    bytes memory,
+    bytes memory _staticData,
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (DecksData memory _table) {
+    (_table.hero) = decodeStatic(_staticData);
+
     (_table.tid, _table.cards) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
@@ -562,6 +620,14 @@ library Decks {
     _keyTuple[0] = key;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
+  }
+
+  /**
+   * @notice Tightly pack static (fixed length) data using this table's schema.
+   * @return The static data, encoded into a sequence of bytes.
+   */
+  function encodeStatic(bytes32 hero) internal pure returns (bytes memory) {
+    return abi.encodePacked(hero);
   }
 
   /**
@@ -593,10 +659,12 @@ library Decks {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
+    bytes32 hero,
     string memory tid,
     bytes32[] memory cards
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData;
+    bytes memory _staticData = encodeStatic(hero);
+
     PackedCounter _encodedLengths = encodeLengths(tid, cards);
     bytes memory _dynamicData = encodeDynamic(tid, cards);
 

@@ -65,7 +65,7 @@ export default mudConfig({
                 target: "AbilityTarget",
                 value: "uint8",
                 manaCost: "uint8",
-                duration:"uint8",
+                duration: "uint8",
                 exhaust: "bool",
                 id: "string",
                 effects: "bytes32[]",
@@ -89,6 +89,7 @@ export default mudConfig({
         },
         Decks: {
             valueSchema: {
+                hero: "bytes32",
                 tid: "string",
                 cards: "bytes32[]",
             }

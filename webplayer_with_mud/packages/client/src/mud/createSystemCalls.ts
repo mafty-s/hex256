@@ -133,8 +133,8 @@ export function createSystemCalls(
         return tx;
     };
 
-    const initDeck = async (name: string, cards: string[]) => {
-        const tx = await worldContract.write.initDeck([name, cards]);
+    const initDeck = async (name: string, hero: string, cards: string[]) => {
+        const tx = await worldContract.write.initDeck([name, hero, cards]);
         await waitForTransaction(tx);
         return tx;
     };

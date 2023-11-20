@@ -21,7 +21,7 @@ contract ConfigSystem is System {
         Cards.setTeam(key, "1");
         Cards.setRarity(key, RarityType.COMMON);
 
-//        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
+        //        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
         CardCommonSingleton.pushValue(key);
     }
 
@@ -40,9 +40,10 @@ contract ConfigSystem is System {
         Packs.set(key, PacksData({packType : _packType, cards : _cards, id : name, rarities : _rarities, cost : _cost}));
     }
 
-    function initDeck(string memory name, bytes32[] memory _cards) public returns (bytes32 key) {
+    function initDeck(string memory name, bytes32 hero, bytes32[] memory _cards) public returns (bytes32 key) {
         key = keccak256(abi.encode(name));
-        Decks.set(key, DecksData({tid : name, cards : _cards}));
-
+        Decks.setTid(key, name);
+        Decks.setHero(key, hero);
+        Decks.setCards(key, _cards);
     }
 }

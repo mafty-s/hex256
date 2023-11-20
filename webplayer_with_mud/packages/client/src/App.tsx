@@ -65,7 +65,7 @@ export const App = () => {
         updateBannerVisibility();
     }
 
-    let createDeck = (name, cards) => {
+    let createDeck = (name, hero, cards) => {
         let cards_arr = cards.split('|');
         let cards_keys = [];
         for (let i = 0; i < cards_arr.length; i++) {
@@ -73,7 +73,7 @@ export const App = () => {
             let card_key = calculateKeccak256Hash(card_id);
             cards_keys.push(card_key);
         }
-        initDeck(name, cards_keys);
+        initDeck(name, calculateKeccak256Hash(hero), cards_keys);
     }
 
     let init = () => {
@@ -159,9 +159,9 @@ export const App = () => {
         initPack("elite", 1, 5, [0, 0, 80, 20], 250);
 
         // fire_deck,Fire Starter,hero_fire,
-        createDeck("fire_deck", "imp|imp|lava_beast|lava_beast|fire_chicken|firefox|firefox|hell_hound|ashes_snake|fire_element|wolf_furious|phoenix|dragon_red|spell_burn|spell_burn|potion_red|potion_red|trap_explosive|spell_armageddon|town_volcano");
-        createDeck("forest_deck", "wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|owl|raccoon|armored_beast|bear|sasquatch|unicorn|dragon_green|spell_roots|spell_roots|potion_green|potion_green|spell_growth|trap_spike|town_forest");
-        createDeck("water_deck", "fish|crab_mana|crab_mana|turtle|turtle|poison_frog|eel|eel|pufferfish|killer_whale|kraken|sea_monster|dragon_blue|spell_wave|spell_wave|spell_storm|potion_blue|potion_blue|trap_fish|town_underwater");
+        createDeck("fire_deck", "hero_fire", "imp|imp|lava_beast|lava_beast|fire_chicken|firefox|firefox|hell_hound|ashes_snake|fire_element|wolf_furious|phoenix|dragon_red|spell_burn|spell_burn|potion_red|potion_red|trap_explosive|spell_armageddon|town_volcano");
+        createDeck("forest_deck", "hero_forest", "wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|owl|raccoon|armored_beast|bear|sasquatch|unicorn|dragon_green|spell_roots|spell_roots|potion_green|potion_green|spell_growth|trap_spike|town_forest");
+        createDeck("water_deck", "hero_water", "fish|crab_mana|crab_mana|turtle|turtle|poison_frog|eel|eel|pufferfish|killer_whale|kraken|sea_monster|dragon_blue|spell_wave|spell_wave|spell_storm|potion_blue|potion_blue|trap_fish|town_underwater");
 
     };
 
