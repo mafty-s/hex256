@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 import {CardCommonSingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
@@ -48,7 +48,7 @@ contract ConfigSystem is System {
         Decks.setCards(key, _cards);
     }
 
-    function initAbility(string memory id, uint8 value, uint8 manaCost, uint8 duration, bool exhaust, bytes32[] memory effects) public returns (bytes32 key){
+    function initAbility(string memory id, AbilityTrigger trigger, AbilityTarget target, uint8 value, uint8 manaCost, uint8 duration, bool exhaust, bytes32[] memory effects) public returns (bytes32 key){
         key = keccak256(abi.encode(id));
         Ability.setId(key, id);
         Ability.setValue(key, value);
@@ -56,6 +56,8 @@ contract ConfigSystem is System {
         Ability.setDuration(key, duration);
         Ability.setExhaust(key, exhaust);
         Ability.setEffects(key, effects);
+        Ability.setTrigger(key, trigger);
+        Ability.setTarget(key, target);
     }
 
 

@@ -8,7 +8,7 @@ import {SetupNetworkResult} from "./setupNetwork";
 import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
 import {ethers} from "ethers";
-import {AbilityTarget} from "./common";
+import {AbilityTarget, AbilityTrigger} from "./common";
 
 // import { getTransactionResult } from "";
 
@@ -90,6 +90,16 @@ export function createSystemCalls(
         return arr_bytes32;
     }
 
+    const getAbilityTarget = (str: string) => {
+        const abilityTarget: AbilityTarget = AbilityTarget[str as keyof typeof AbilityTarget];
+        return abilityTarget;
+    }
+
+    const getAbilityTrigger = (str: string) => {
+        const abilityTrigger: AbilityTrigger = AbilityTrigger[str as keyof typeof AbilityTrigger];
+        return abilityTrigger;
+    }
+
     const addTask = async (label: string) => {
         // const tx = await worldContract.write.addTask([label]);
         // await waitForTransaction(tx);
@@ -148,8 +158,24 @@ export function createSystemCalls(
         return tx;
     };
 
-    const initAbility = async (id: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str) => {
-        const tx = await worldContract.write.initAbility([id, value, manaCost, duration, exhaust, arrStr2Bytes32(effect_str)]);
+    function convertToEnumFormat(str: string): string {
+        // 将字符串中的大写字母前添加下划线，然后全部转为大写
+        const formattedStr = str.replace(/([A-Z])/g, '_$1').toUpperCase();
+
+        // 如果字符串以下划线开头，则去掉开头的下划线
+        if (formattedStr.startsWith('_')) {
+            return formattedStr.slice(1);
+        }
+
+        return formattedStr;
+    }
+
+    const initAbility = async (id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str) => {
+
+        const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
+        const target_code = getAbilityTarget(convertToEnumFormat(target));
+
+        const tx = await worldContract.write.initAbility([id, trigger_code, target_code, value, manaCost, duration, exhaust, arrStr2Bytes32(effect_str)]);
         await waitForTransaction(tx);
         return tx;
     }
@@ -242,10 +268,6 @@ export function createSystemCalls(
     //     // const transactionResult = usePromise(transactionResultPromise);
     // }
 
-    const getAbilityTarget = (str) => {
-        const abilityTarget: AbilityTarget = AbilityTarget[str as keyof typeof AbilityTarget];
-        return abilityTarget;
-    }
 
     const out = {
         convertBigIntToInt,

@@ -10,9 +10,9 @@ fs.createReadStream('../unity_client/Assets/Export/AbilityData.csv')
 
         // const initAbility = async (id: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect: string[]) => {
 
-            for (let i = 0; i < results.length; i++) {
+        for (let i = 0; i < results.length; i++) {
             let ability = results[i];
-            const str = `initAbility('${ability.ID}', ${ability.Value}, ${ability.ManaCost}, ${ability.Duration}, ${ability.Exhaust},'${ability.Effects}');`;
+            const str = `initAbility('${ability.ID}', '${ability.Trigger}','${ability.Target}',${ability.Value}, ${ability.ManaCost}, ${ability.Duration}, ${ability.Exhaust.toLowerCase()},'${ability.Effects}');`;
             console.log(str);
         }
 

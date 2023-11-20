@@ -85,3 +85,4 @@ crashlytics-build.properties
 /webplayer_with_mud/packages/contracts/node_modules/
 /webplayer_with_mud/packages/client/dist/
 /tools/node_modules/
+/tools/pnpm-lock.yaml
