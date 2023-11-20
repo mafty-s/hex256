@@ -62,6 +62,11 @@ mergeInto(LibraryManager.library, {
         let result = await mud.playerSetting(UTF8ToString(username),UTF8ToString(game_uid),UTF8ToString(deck_id),is_ai);
     },
 
+    playCard:async function(game_uid,player_id,card_id,slot_x,slot_y,slot_p,skip){
+        let slot = {x:slot_x,y:slot_x,p:slot_x};
+        let result = await mud.playCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip);
+    },
+
     AddNumbers: async function (x, y, onSuccess) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         dynCall_vi(onSuccess, x + y);
