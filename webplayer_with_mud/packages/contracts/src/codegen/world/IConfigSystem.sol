@@ -11,7 +11,14 @@ import { PackType } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IConfigSystem {
-  function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost) external returns (bytes32 key);
+  function initCard(
+    string memory name,
+    uint8 mana,
+    uint8 attack,
+    uint8 hp,
+    uint32 cost,
+    bytes32[] memory abilities
+  ) external returns (bytes32 key);
 
   function getCard(string memory id) external view returns (CardsData memory _table);
 
@@ -26,4 +33,13 @@ interface IConfigSystem {
   ) external returns (bytes32 key);
 
   function initDeck(string memory name, bytes32 hero, bytes32[] memory _cards) external returns (bytes32 key);
+
+  function initAbility(
+    string memory id,
+    uint8 value,
+    uint8 manaCost,
+    uint8 duration,
+    bool exhaust,
+    bytes32[] memory effects
+  ) external returns (bytes32 key);
 }

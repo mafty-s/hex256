@@ -4,13 +4,13 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
-import {Decks, DecksData} from "../codegen/index.sol";
+import {Decks, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
 import {CardCommonSingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
 
-    function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost) public returns (bytes32 key)  {
+    function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost, bytes32[] memory abilities) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
         Cards.setMana(key, mana);
         Cards.setAttack(key, attack);
@@ -20,6 +20,7 @@ contract ConfigSystem is System {
         Cards.setCardType(key, CardType.NONE);
         Cards.setTeam(key, "1");
         Cards.setRarity(key, RarityType.COMMON);
+        Cards.setAbilities(key, abilities);
 
         //        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
         CardCommonSingleton.pushValue(key);
@@ -46,4 +47,16 @@ contract ConfigSystem is System {
         Decks.setHero(key, hero);
         Decks.setCards(key, _cards);
     }
+
+    function initAbility(string memory id, uint8 value, uint8 manaCost, uint8 duration, bool exhaust, bytes32[] memory effects) public returns (bytes32 key){
+        key = keccak256(abi.encode(id));
+        Ability.setId(key, id);
+        Ability.setValue(key, value);
+        Ability.setManaCost(key, manaCost);
+        Ability.setDuration(key, duration);
+        Ability.setExhaust(key, exhaust);
+        Ability.setEffects(key, effects);
+    }
+
+
 }

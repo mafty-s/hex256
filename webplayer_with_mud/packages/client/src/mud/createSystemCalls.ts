@@ -81,6 +81,14 @@ export function createSystemCalls(
         return keccakHash;
     }
 
+    const arrStr2Bytes32 = (arr_str: string) => {
+        const arr = arr_str.split('|');
+        const arr_bytes32 = arr.map((item) => {
+            return calculateKeccak256Hash(item);
+        });
+        return arr_bytes32;
+    }
+
     const addTask = async (label: string) => {
         // const tx = await worldContract.write.addTask([label]);
         // await waitForTransaction(tx);
@@ -121,8 +129,8 @@ export function createSystemCalls(
         return user;
     };
 
-    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number) => {
-        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost]);
+    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number, abilities_str: string) => {
+        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str)]);
         await waitForTransaction(tx);
         return tx;
     };
@@ -139,6 +147,11 @@ export function createSystemCalls(
         return tx;
     };
 
+    const initAbility = async(id:string, name:string, description:string, abilityType:number, target:number, effect:number, cost:number) => {
+        const tx = await worldContract.write.initAbility([id, name, description, abilityType, target, effect, cost]);
+        await waitForTransaction(tx);
+        return tx;
+    }
 
     const buyCard = async (card_id: string, quantity: number) => {
         const tx = await worldContract.write.buyCard([card_id, quantity]);
@@ -241,6 +254,7 @@ export function createSystemCalls(
         initCard,
         initPack,
         initDeck,
+        initAbility,
         buyCard,
         sellCard,
         getCard,
