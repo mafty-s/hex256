@@ -160,6 +160,12 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern string playerSetting(string username, string game_uid, string deck_id,bool is_ai);
+    
+    [DllImport("__Internal")]
+    private static extern string playCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost);
+
+    [DllImport("__Internal")]
+    private static extern string moveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost);
 
 #endif
 
@@ -263,7 +269,7 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void PlayerSetting(string username, string game_uid, string deck_id,bool is_ai)
+    public void PlayerSetting(string username, string game_uid, string deck_id, bool is_ai)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         playerSetting(username,game_uid,deck_id,is_ai);
@@ -280,5 +286,22 @@ public class MudManager : MonoBehaviour
         {
             return "Unknown";
         }
+    }
+
+    //game_id, player_id, card_id, slot, skip_cost
+    public void PlayCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,
+        bool skip_cost)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        playCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
+#endif
+    }
+    
+    public void MoveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,
+        bool skip_cost)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        moveCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
+#endif
     }
 }

@@ -308,6 +308,10 @@ namespace TcgEngine.Client
             Debug.Log("GameClient PlayCard:" + card.uid + "," + slot.y + "," + slot.x + "," + slot.y);
 
             SendAction(GameAction.PlayCard, mdata);
+
+            MudManager.Get().PlayCard(this.game_data.game_uid, card.player_id.ToString(), card.CardData.id, slot.x,
+                slot.y,
+                slot.p, false);
         }
 
         public void AttackTarget(Card card, Card target)

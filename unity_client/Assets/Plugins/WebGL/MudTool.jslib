@@ -63,8 +63,23 @@ mergeInto(LibraryManager.library, {
     },
 
     playCard:async function(game_uid,player_id,card_id,slot_x,slot_y,slot_p,skip){
-        let slot = {x:slot_x,y:slot_x,p:slot_x};
+        console.log("game_uid",UTF8ToString(game_uid));
+        console.log("player_id",UTF8ToString(player_id));
+        console.log("card_id",UTF8ToString(card_id));
+
+        let slot = {x:slot_x,y:slot_x,p:slot_p};
         let result = await mud.playCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip);
+    },
+
+    moveCard:async function(game_uid,player_id,card_id,slot_x,slot_y,slot_p,skip){
+        console.log("game_uid",UTF8ToString(game_uid));
+        console.log("player_id",UTF8ToString(player_id));
+        console.log("card_id",UTF8ToString(card_id));
+
+        let slot = {x:slot_x,y:slot_x,p:slot_p};
+
+        let result = await mud.moveCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip);
+
     },
 
     AddNumbers: async function (x, y, onSuccess) {
