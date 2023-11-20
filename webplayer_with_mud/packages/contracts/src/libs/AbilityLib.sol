@@ -4,6 +4,10 @@ import "../codegen/common.sol";
 
 library AbilityLib {
 
+    function TriggerOtherCardsAbilityType(AbilityTrigger trigger, bytes32 card_key) internal {
+        //todo
+    }
+
     function TriggerCardAbilityTypeOneCard(AbilityTrigger trigger, bytes32 card_key) internal {
         //todo
     }

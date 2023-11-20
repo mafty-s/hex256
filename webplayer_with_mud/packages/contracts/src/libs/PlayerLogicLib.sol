@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {Cards, Players} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase} from "../codegen/common.sol";
 
-//import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
 
 library PlayerLogicLib {
 
@@ -20,28 +20,28 @@ library PlayerLogicLib {
     }
 
     function AddCardToBoard(bytes32 player_key, bytes32 card_key) internal {
-        //        PlayerCardsDeck.pushValue(player_key, card_key);
+        PlayerCardsDeck.pushValue(player_key, card_key);
     }
 
     function AddCardToHand(bytes32 player_key, bytes32 card_key) internal {
-        //        PlayerCardsHand.pushValue(player_key, card_key);
+        PlayerCardsHand.pushValue(player_key, card_key);
     }
 
 
     function AddCardToSecret(bytes32 player_key, bytes32 card_key) internal {
-        //        PlayerCardsSecret.pushValue(player_key, card_key);
+        PlayerCardsSecret.pushValue(player_key, card_key);
     }
 
     function AddCardToEquipment(bytes32 player_key, bytes32 card_key) internal {
-        //        PlayerCardsEquip.pushValue(player_key, card_key);
+        PlayerCardsEquip.pushValue(player_key, card_key);
     }
 
     function AddCardToDiscard(bytes32 player_key, bytes32 card_key) internal {
-        //        PlayerCardsDiscard.pushValue(player_key, card_key);
+        PlayerCardsDiscard.pushValue(player_key, card_key);
     }
 
     function AddCardToDeck(bytes32 player_key, bytes32 card_key) internal {
-        //        PlayerCardsDeck.pushValue(player_key, card_key);
+        PlayerCardsDeck.pushValue(player_key, card_key);
     }
 
     function RemoveCardFromBoard(bytes32 player_key, bytes32 card_key) internal {

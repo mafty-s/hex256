@@ -8,5 +8,7 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IGameStartSystem {
+  function GameSetting(string memory game_uid) external;
+
   function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) external;
 }

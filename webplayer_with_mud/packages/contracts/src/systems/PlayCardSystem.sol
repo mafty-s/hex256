@@ -9,13 +9,15 @@ import {Players} from "../codegen/index.sol";
 //import {PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
 import {CardOnBoards} from "../codegen/index.sol";
 
-import {GameType, GameState, GamePhase, CardType} from "../codegen/common.sol";
+import {GameType, GameState, GamePhase, CardType, AbilityTrigger} from "../codegen/common.sol";
 
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
 
 import "../libs/PlayerLogicLib.sol";
 import "../libs/CardLogicLib.sol";
-import {Slot} from "../libs/SlotLib.sol";
+import "../libs/GameLogicLib.sol";
+import "../libs/AbilityLib.sol";
+import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 
 contract PlayCardSystem is System {
@@ -33,7 +35,7 @@ contract PlayCardSystem is System {
         //todo
 
 
-    if (!skip_cost) {
+        if (!skip_cost) {
             PayMana(player_key, card_key);
         }
 
@@ -41,7 +43,7 @@ contract PlayCardSystem is System {
 
         if (CardLogicLib.IsBoardCard(card_key)) {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);
-            //            //            CardOnBoards.setSlot(card_key, slot);
+            SlotLib.SetSlot(card_key, slot);
             CardOnBoards.setExhausted(card_key, true);
         } else if (CardLogicLib.IsEquipment(card_key)) {
             //
@@ -49,8 +51,13 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
+            SlotLib.SetSlot(card_key, slot);
         }
 
+        GameLogicLib.UpdateOngoing();
+
+        AbilityLib.TriggerCardAbilityTypeOneCard(AbilityTrigger.ON_PLAY, card_key);
+        AbilityLib.TriggerOtherCardsAbilityType(AbilityTrigger.ON_PLAY_OTHER, card_key);
 
         //        if (game_data.CanPlayCard(card, slot, skip_cost))
         //        {

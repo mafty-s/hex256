@@ -69,6 +69,18 @@ export function createSystemCalls(
         return keccakHash;
     }
 
+    const calculateKeccak256HashTwoString = (str1, str2) => {
+        const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['string', 'string'], [str1, str2]);
+        const keccakHash = ethers.keccak256(encodedName);
+        return keccakHash;
+    }
+
+    const calculateKeccak256HashTwoBytes32 = (str1, str2) => {
+        const encodedName = ethers.AbiCoder.defaultAbiCoder().encode(['bytes32', 'bytes32'], [str1, str2]);
+        const keccakHash = ethers.keccak256(encodedName);
+        return keccakHash;
+    }
+
     const addTask = async (label: string) => {
         // const tx = await worldContract.write.addTask([label]);
         // await waitForTransaction(tx);
@@ -198,10 +210,12 @@ export function createSystemCalls(
         return tx;
     }
 
-    const playCard = async (card_id, skip_cost) => {
-        const card_key = calculateKeccak256Hash(card_id);
-        let slot = {x: 0, y: 0, z: 0}
-        const tx = await worldContract.write.PlayCard([card_key, slot, skip_cost]);
+    const playCard = async (game_id, player_id, card_id, slot, skip_cost) => {
+        const card_config_key = calculateKeccak256Hash(card_id);
+        const player_key = calculateKeccak256HashTwoString(game_id, player_id);
+        const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
+        // let slot = {x: 0, y: 0, z: 0}
+        const tx = await worldContract.write.PlayCard([player_key, card_key, slot, skip_cost]);
         await waitForTransaction(tx);
         return tx;
     }

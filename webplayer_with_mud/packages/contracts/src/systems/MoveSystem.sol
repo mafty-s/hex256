@@ -17,7 +17,7 @@ import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 import "../libs/BaseLogicLib.sol";
 import "../libs/GameLogicLib.sol";
 
-import {Slot} from "../libs/SlotLib.sol";
+import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 contract MoveSystem is System {
 
@@ -29,6 +29,7 @@ contract MoveSystem is System {
 
         if (BaseLogicLib.CanMoveCard(card_key, slot)) {
             //todo
+            SlotLib.SetSlot(card_key, slot);
 
             GameLogicLib.UpdateOngoing();
         }

@@ -7,6 +7,8 @@ pragma solidity >=0.8.21;
         uint8 p;
     }
 
+import {CardOnBoards} from "../codegen/index.sol";
+
 library SlotLib {
     uint8 constant x_min = 1; // Don't change this, should start at 1 (0,0,0 represent invalid slot)
     uint8 constant x_max = 5; // Number of slots in a row/zone
@@ -15,6 +17,33 @@ library SlotLib {
     uint8 constant  y_max = 1; // Set this to the number of rows/locations you want to have
 
     bool  constant ignore_p = false; // Set to true if you don't want to use P value
+
+    function SetSlot(bytes32 card_key, Slot memory slot) internal {
+        CardOnBoards.setSlot(card_key, EncodeSlot(slot));
+    }
+
+    function GetSlotCard(bytes32 game_key, Slot memory slot) internal view returns (bytes32) {
+        //todo
+        //        return CardOnBoards.getSlotCard(game_key, EncodeSlot(slot));
+        return 0;
+    }
+
+    function EncodeSlot(Slot memory slot) internal pure returns (uint16) {
+        return uint16(slot.x) + (uint16(slot.y) * 10) + (uint16(slot.p) * 100);
+    }
+
+    function DecodeSlotX(uint16 slot) internal pure returns (uint8) {
+        return uint8(slot % 10);
+    }
+
+    function DecodeSlotY(uint16 slot) internal pure returns (uint8) {
+        return uint8((slot / 10) % 10);
+    }
+
+    function DecodeSlotP(uint16 slot) internal pure returns (uint8) {
+        return uint8(slot / 100);
+    }
+
 
     function IsInRangeX(Slot memory slot, uint8 range) internal pure returns (bool) {
         return (slot.x >= (x_min + range)) && (slot.x <= (x_max - range));

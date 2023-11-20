@@ -65,6 +65,7 @@ export default mudConfig({
         },
         CardOnBoards: {
             valueSchema: {
+                slot: "uint16",
                 hp: "uint8",
                 hpOngoing: "uint8",
                 attack: "uint8",
@@ -76,7 +77,6 @@ export default mudConfig({
                 equippedUid: "bytes32",
                 id: "bytes32",
                 playerId: "bytes32",
-                name: "string",
             }
         },
         Decks: {

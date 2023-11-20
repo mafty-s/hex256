@@ -18,6 +18,10 @@ import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 contract GameStartSystem is System {
 
 
+    function GameSetting(string memory game_uid) public {
+
+    }
+
     function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) public {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
@@ -34,7 +38,20 @@ contract GameStartSystem is System {
         for (uint i = 0; i < cards.length; i++) {
             bytes32 card_key = keccak256(abi.encode(cards[i], player_key));
             CardsData memory card = Cards.get(cards[i]);
-            CardOnBoards.set(card_key, CardOnBoardsData({id : card_key, name : card.tid, hp : card.hp, hpOngoing : 0, attack : card.attack, attackOngoing : 0, mana : card.mana, manaOngoing : 0, damage : 0, exhausted : false, equippedUid : 0, playerId : player_key}));
+//            CardOnBoards.set(card_key, CardOnBoardsData({id : card_key, name : card.tid, hp : card.hp, hpOngoing : 0, attack : card.attack, attackOngoing : 0, mana : card.mana, manaOngoing : 0, damage : 0, exhausted : false, equippedUid : 0, playerId : player_key}));
+            CardOnBoards.setId(card_key,card_key);
+//            CardOnBoards.setName(card_key,card.tid);
+            CardOnBoards.setHp(card_key,card.hp);
+//            CardOnBoards.setHpOngoing(card_key,0);
+            CardOnBoards.setAttack(card_key,card.attack);
+//            CardOnBoards.setAttackOngoing(card_key,0);
+            CardOnBoards.setMana(card_key,card.mana);
+//            CardOnBoards.setManaOngoing(card_key,0);
+//            CardOnBoards.setDamage(card_key,0);
+//            CardOnBoards.setExhausted(card_key,false);
+//            CardOnBoards.setEquippedUid(card_key,0);
+            CardOnBoards.setPlayerId(card_key,player_key);
+
             PlayerCardsDeck.pushValue(player_key, card_key);
         }
 
