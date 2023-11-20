@@ -6,7 +6,6 @@ import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
-import {CardCommonSingleton} from "../codegen/index.sol";
 
 import "../libs/AbilityLib.sol";
 

@@ -6,24 +6,23 @@ import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
-import {CardCommonSingleton} from "../codegen/index.sol";
+import {CardRaritySingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
 
-    function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost, bytes32[] memory abilities) public returns (bytes32 key)  {
+    function initCard(string memory name, uint8 mana, uint8 attack, uint8 hp, uint32 cost, bytes32[] memory abilities,CardType cardType,RarityType rarity) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
         Cards.setMana(key, mana);
         Cards.setAttack(key, attack);
         Cards.setHp(key, hp);
         Cards.setCost(key, cost);
         Cards.setTid(key, name);
-        Cards.setCardType(key, CardType.NONE);
+        Cards.setCardType(key, cardType);
         Cards.setTeam(key, "1");
-        Cards.setRarity(key, RarityType.COMMON);
+        Cards.setRarity(key, rarity);
         Cards.setAbilities(key, abilities);
 
-        //        Cards.set(key, CardsData({mana : mana, attack : attack, hp : hp, cost : cost, tid : name, cardType : CardType.NONE, team : "1", rarity : RarityType.COMMON}));
-        CardCommonSingleton.pushValue(key);
+        CardRaritySingleton.pushCommon(key);
     }
 
     function getCard(string memory id) public view returns (CardsData memory _table) {

@@ -118,3 +118,10 @@ enum AbilityTarget {
   LAST_DESTROYED,
   LAST_SUMMONED
 }
+
+enum Team {
+  FIRE,
+  FOREST,
+  WATER,
+  NEUTRAL
+}

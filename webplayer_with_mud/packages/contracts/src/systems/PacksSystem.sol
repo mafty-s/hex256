@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Users, UsersData} from "../codegen/index.sol";
-import {CardCommonSingleton} from "../codegen/index.sol";
+import {CardRaritySingleton} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {RarityType} from "../codegen/common.sol";
 
@@ -21,8 +21,8 @@ contract PacksSystem is System {
         uint256 user_packs_length = Users.lengthPacks(user_key);
         bytes32[] memory user_packs = Users.getPacks(user_key);
         for (uint j = 0; j < user_packs_length; j++) {
-            if (user_packs[j]==key){
-                Users.updatePacks(user_key,j,0);
+            if (user_packs[j] == key) {
+                Users.updatePacks(user_key, j, 0);
 
                 uint8[] memory rarities = Packs.getRarities(key);
                 for (uint i = 0; i < Packs.getCards(key); i++) {
@@ -41,14 +41,41 @@ contract PacksSystem is System {
     function getRandomCardByRarity(RarityType rarity, uint index) public view returns (bytes32) {
 
         if (rarity == RarityType.COMMON) {
-            //todo
+            bytes32[] memory card_keys = CardRaritySingleton.getCommon();
+            require(card_keys.length > 0, "No cards available");
+            uint256 randomIndex = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, index))) % card_keys.length;
+            bytes32 selectedCard = card_keys[randomIndex];
+            return selectedCard;
         }
 
-        bytes32[] memory card_keys = CardCommonSingleton.getValue();
-        require(card_keys.length > 0, "No cards available");
-        uint256 randomIndex = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, index))) % card_keys.length;
-        bytes32 selectedCard = card_keys[randomIndex];
-        return selectedCard;
+
+        if (rarity == RarityType.UNCOMMON) {
+            bytes32[] memory card_keys = CardRaritySingleton.getUncommon();
+            require(card_keys.length > 0, "No cards available");
+            uint256 randomIndex = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, index))) % card_keys.length;
+            bytes32 selectedCard = card_keys[randomIndex];
+            return selectedCard;
+        }
+
+
+        if (rarity == RarityType.RARE) {
+            bytes32[] memory card_keys = CardRaritySingleton.getRare();
+            require(card_keys.length > 0, "No cards available");
+            uint256 randomIndex = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, index))) % card_keys.length;
+            bytes32 selectedCard = card_keys[randomIndex];
+            return selectedCard;
+        }
+
+
+        if (rarity == RarityType.MYTHIC) {
+            bytes32[] memory card_keys = CardRaritySingleton.getMythic();
+            require(card_keys.length > 0, "No cards available");
+            uint256 randomIndex = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, index))) % card_keys.length;
+            bytes32 selectedCard = card_keys[randomIndex];
+            return selectedCard;
+        }
+
+        revert("Unknown rarity");
     }
 
 
