@@ -166,4 +166,8 @@ contract GameStartSystem is System {
         //todo
     }
 
+    function testRevert() public {
+        revert("Can't play card");
+    }
+
 }

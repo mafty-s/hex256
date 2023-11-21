@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,17 +11,14 @@ namespace TcgEngine.UI
     /// CollectionPanel is the panel where players can see all the cards they own
     /// Also the panel where they can use the deckbuilder
     /// </summary>
-
     public class CollectionPanel : UIPanel
     {
-        [Header("Cards")]
-        public ScrollRect scroll_rect;
+        [Header("Cards")] public ScrollRect scroll_rect;
         public RectTransform scroll_content;
         public CardGrid grid_content;
         public GameObject card_prefab;
 
-        [Header("Left Side")]
-        public IconButton[] team_filters;
+        [Header("Left Side")] public IconButton[] team_filters;
         public Toggle toggle_owned;
         public Toggle toggle_not_owned;
 
@@ -39,13 +38,11 @@ namespace TcgEngine.UI
         public Dropdown sort_dropdown;
         public InputField search;
 
-        [Header("Right Side")]
-        public UIPanel deck_list_panel;
+        [Header("Right Side")] public UIPanel deck_list_panel;
         public UIPanel card_list_panel;
         public DeckLine[] deck_lines;
 
-        [Header("Deckbuilding")]
-        public InputField deck_title;
+        [Header("Deckbuilding")] public InputField deck_title;
         public Text deck_quantity;
         public GameObject deck_cards_prefab;
         public RectTransform deck_content;
@@ -115,7 +112,6 @@ namespace TcgEngine.UI
         protected override void Update()
         {
             base.Update();
-
         }
 
         private void LateUpdate()
@@ -216,7 +212,7 @@ namespace TcgEngine.UI
             deck_list_panel.Hide();
             card_list_panel.Show();
         }
-        
+
         public void RefreshCards()
         {
             if (!spawned)
@@ -250,11 +246,26 @@ namespace TcgEngine.UI
             if (filter_dropdown == 0) //Name
                 all_cards.Sort((CardDataQ a, CardDataQ b) => { return a.card.title.CompareTo(b.card.title); });
             if (filter_dropdown == 1) //Attack
-                all_cards.Sort((CardDataQ a, CardDataQ b) => { return b.card.attack == a.card.attack ? b.card.hp.CompareTo(a.card.hp) : b.card.attack.CompareTo(a.card.attack); });
+                all_cards.Sort((CardDataQ a, CardDataQ b) =>
+                {
+                    return b.card.attack == a.card.attack
+                        ? b.card.hp.CompareTo(a.card.hp)
+                        : b.card.attack.CompareTo(a.card.attack);
+                });
             if (filter_dropdown == 2) //hp
-                all_cards.Sort((CardDataQ a, CardDataQ b) => { return b.card.hp == a.card.hp ? b.card.attack.CompareTo(a.card.attack) : b.card.hp.CompareTo(a.card.hp); });
+                all_cards.Sort((CardDataQ a, CardDataQ b) =>
+                {
+                    return b.card.hp == a.card.hp
+                        ? b.card.attack.CompareTo(a.card.attack)
+                        : b.card.hp.CompareTo(a.card.hp);
+                });
             if (filter_dropdown == 3) //Cost
-                all_cards.Sort((CardDataQ a, CardDataQ b) => { return b.card.mana == a.card.mana ? a.card.title.CompareTo(b.card.title) : a.card.mana.CompareTo(b.card.mana); });
+                all_cards.Sort((CardDataQ a, CardDataQ b) =>
+                {
+                    return b.card.mana == a.card.mana
+                        ? a.card.title.CompareTo(b.card.title)
+                        : a.card.mana.CompareTo(b.card.mana);
+                });
 
             foreach (CardDataQ card in all_cards)
             {
@@ -268,27 +279,29 @@ namespace TcgEngine.UI
                         CardType type = icard.type;
 
                         bool owned_check = (owned && toggle_owned.isOn)
-                            || (!owned && toggle_not_owned.isOn)
-                            || toggle_owned.isOn == toggle_not_owned.isOn;
+                                           || (!owned && toggle_not_owned.isOn)
+                                           || toggle_owned.isOn == toggle_not_owned.isOn;
 
                         bool type_check = (type == CardType.Character && toggle_character.isOn)
-                            || (type == CardType.Spell && toggle_spell.isOn)
-                            || (type == CardType.Artifact && toggle_artifact.isOn)
-                            || (type == CardType.Equipment && toggle_equipment.isOn)
-                            || (type == CardType.Secret && toggle_secret.isOn)
-                            || (!toggle_character.isOn && !toggle_spell.isOn && !toggle_artifact.isOn && !toggle_equipment.isOn && !toggle_secret.isOn);
+                                          || (type == CardType.Spell && toggle_spell.isOn)
+                                          || (type == CardType.Artifact && toggle_artifact.isOn)
+                                          || (type == CardType.Equipment && toggle_equipment.isOn)
+                                          || (type == CardType.Secret && toggle_secret.isOn)
+                                          || (!toggle_character.isOn && !toggle_spell.isOn && !toggle_artifact.isOn &&
+                                              !toggle_equipment.isOn && !toggle_secret.isOn);
 
                         bool rarity_check = (rarity.rank == 1 && toggle_common.isOn)
-                            || (rarity.rank == 2 && toggle_uncommon.isOn)
-                            || (rarity.rank == 3 && toggle_rare.isOn)
-                            || (rarity.rank == 4 && toggle_mythic.isOn)
-                            || (!toggle_common.isOn && !toggle_uncommon.isOn && !toggle_rare.isOn && !toggle_mythic.isOn);
+                                            || (rarity.rank == 2 && toggle_uncommon.isOn)
+                                            || (rarity.rank == 3 && toggle_rare.isOn)
+                                            || (rarity.rank == 4 && toggle_mythic.isOn)
+                                            || (!toggle_common.isOn && !toggle_uncommon.isOn && !toggle_rare.isOn &&
+                                                !toggle_mythic.isOn);
 
                         string search = filter_search.ToLower();
                         bool search_check = string.IsNullOrWhiteSpace(search)
-                            || icard.id.Contains(search)
-                            || icard.title.ToLower().Contains(search)
-                            || icard.GetText().ToLower().Contains(search);
+                                            || icard.id.Contains(search)
+                                            || icard.title.ToLower().Contains(search)
+                                            || icard.GetText().ToLower().Contains(search);
 
                         if (owned_check && type_check && rarity_check && search_check)
                         {
@@ -351,6 +364,7 @@ namespace TcgEngine.UI
                     DeckLine line = deck_lines[index];
                     line.SetLine(udata, deck);
                 }
+
                 index++;
             }
 
@@ -359,6 +373,7 @@ namespace TcgEngine.UI
                 DeckLine line = deck_lines[index];
                 line.SetLine("+");
             }
+
             RefreshCardsQuantities();
         }
 
@@ -383,7 +398,7 @@ namespace TcgEngine.UI
                     if (deck.hero != null && btn.value == deck.hero.tid)
                         btn.Activate();
                 }
-                
+
                 for (int i = 0; i < deck.cards.Length; i++)
                 {
                     CardData card = CardData.Get(deck.cards[i].tid);
@@ -412,6 +427,7 @@ namespace TcgEngine.UI
                 acard.quantity = card.quantity;
                 list.Add(acard);
             }
+
             list.Sort((CardDataQ a, CardDataQ b) => { return a.card.title.CompareTo(b.card.title); });
 
             UserData udata = Authenticator.Get().UserData;
@@ -427,10 +443,12 @@ namespace TcgEngine.UI
                     DeckLine line = deck_card_lines[index];
                     if (line != null)
                     {
-                        line.SetLine(card.card, card.variant, card.quantity, !IsCardOwned(udata, card.card, card.variant, card.quantity));
+                        line.SetLine(card.card, card.variant, card.quantity,
+                            !IsCardOwned(udata, card.card, card.variant, card.quantity));
                         count += card.quantity;
                     }
                 }
+
                 index++;
             }
 
@@ -496,7 +514,7 @@ namespace TcgEngine.UI
                 {
                     ucard.quantity--;
 
-                    if(ucard.quantity <= 0)
+                    if (ucard.quantity <= 0)
                         deck_cards.RemoveAt(i);
                 }
             }
@@ -509,6 +527,7 @@ namespace TcgEngine.UI
                 if (ucard.tid == tid && ucard.variant == variant)
                     return ucard;
             }
+
             return null;
         }
 
@@ -529,6 +548,15 @@ namespace TcgEngine.UI
 
             if (Authenticator.Get().IsApi())
                 SaveDeckAPI(udata, udeck);
+
+            List<string> cards_list = new List<string>();
+            for (var i = 0; i < udeck.cards.Length; i++)
+            {
+                cards_list.Add(udeck.cards[i].tid);
+            }
+
+
+            MudManager.Get().SaveDeck(udeck.tid, udeck.hero.tid, String.Join('|', cards_list));
 
             ShowDeckList();
         }
@@ -587,6 +615,7 @@ namespace TcgEngine.UI
                         filter_team = team;
                 }
             }
+
             RefreshCards();
         }
 
@@ -704,7 +733,7 @@ namespace TcgEngine.UI
                 DeleteDeck(deck.tid);
             }
         }
-        
+
         // ---- Getters -----
 
         public int CountDeckCards(CardData card, VariantData cvariant)
@@ -715,6 +744,7 @@ namespace TcgEngine.UI
                 if (ucard.tid == card.id && ucard.variant == cvariant.id)
                     count += ucard.quantity;
             }
+
             return count;
         }
 
@@ -726,6 +756,7 @@ namespace TcgEngine.UI
                 if (ucard.tid == card.id)
                     count += ucard.quantity;
             }
+
             return count;
         }
 
@@ -741,6 +772,7 @@ namespace TcgEngine.UI
                 if (btn.IsActive())
                     return btn.value;
             }
+
             return "";
         }
 

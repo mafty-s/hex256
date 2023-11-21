@@ -52,6 +52,11 @@ export default mudConfig({
                 cards: "bytes32[]",
                 packs: "bytes32[]",
                 id: "string",
+                decks: "bytes32[]",
+            }
+        },
+        UsersExtended: {
+            valueSchema: {
                 avatar: "string",
                 cardback: "string",
             }

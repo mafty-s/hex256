@@ -86,8 +86,8 @@ mergeInto(LibraryManager.library, {
     saveDeck:async function(tid,hero,cards){
         console.log("tid",UTF8ToString(tid));
         console.log("hero",UTF8ToString(hero));
-        console.log("cards",cards);
-
+        console.log("cards",UTF8ToString(cards));
+        let result = await mud.saveDeck(UTF8ToString(tid),UTF8ToString(hero),UTF8ToString(cards));
     },
 
     AddNumbers: async function (x, y, onSuccess) {

@@ -11,4 +11,6 @@ interface IGameStartSystem {
   function GameSetting(string memory game_uid) external;
 
   function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) external;
+
+  function testRevert() external;
 }

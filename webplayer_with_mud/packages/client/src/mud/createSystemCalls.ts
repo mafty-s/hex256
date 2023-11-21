@@ -344,6 +344,12 @@ export function createSystemCalls(
         return tx;
     }
 
+    const testRevert = async () => {
+        const tx = await worldContract.write.testRevert([]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
 
     // let a = async () => {
     //     // const transactionResultPromise = getTransactionResult(publicClient,worldContract.worldAbi, worldContract.write);
@@ -386,6 +392,7 @@ export function createSystemCalls(
         test,
         test2,
         test3,
+        testRevert,
     };
 
     window.mud = out;

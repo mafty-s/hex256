@@ -309,7 +309,9 @@ namespace TcgEngine.Client
 
             SendAction(GameAction.PlayCard, mdata);
 
-            MudManager.Get().PlayCard(this.game_data.game_uid, card.player_id.ToString(), card.CardData.id, slot.x,
+            string player_name = GetPlayer().username;
+
+            MudManager.Get().PlayCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
                 slot.p, false);
         }
@@ -319,6 +321,9 @@ namespace TcgEngine.Client
             MsgAttack mdata = new MsgAttack();
             mdata.attacker_uid = card.uid;
             mdata.target_uid = target.uid;
+            
+            MudManager.Get().AttackCard();
+            
             SendAction(GameAction.Attack, mdata);
         }
 
@@ -327,6 +332,9 @@ namespace TcgEngine.Client
             MsgAttackPlayer mdata = new MsgAttackPlayer();
             mdata.attacker_uid = card.uid;
             mdata.target_id = target.player_id;
+            
+            MudManager.Get().AttackCard();
+
             SendAction(GameAction.AttackPlayer, mdata);
         }
 
@@ -336,8 +344,10 @@ namespace TcgEngine.Client
             mdata.card_uid = card.uid;
             mdata.slot = slot;
             SendAction(GameAction.Move, mdata);
-            
-            MudManager.Get().MoveCard(this.game_data.game_uid, card.player_id.ToString(), card.CardData.id, slot.x,
+
+            string player_name = GetPlayer().username;
+
+            MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
                 slot.p, false);
         }

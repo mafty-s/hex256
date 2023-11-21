@@ -8,19 +8,25 @@ contract UsersSystem is System {
     function addUser(string memory username) public returns (bytes32 key) {
         key = keccak256(abi.encode(_msgSender()));
 
-        UsersData memory userData = UsersData(
-            _msgSender(),
-            1000000, //initialCoinAmount,
-            0, //initialXp,
-            block.timestamp,
-            new bytes32[](0),
-            new bytes32[](0),
-            username,
-            "bear",
-            "user_cardback"
-        );
+//        UsersData memory userData = UsersData(
+//            _msgSender(),
+//            1000000, //initialCoinAmount,
+//            0, //initialXp,
+//            block.timestamp,
+//            new bytes32[](0),
+//            new bytes32[](0),
+//            username,
+//            "bear",
+//            "user_cardback"
+//        );
+//
+//        Users.set(key, userData);
 
-        Users.set(key, userData);
+        Users.setOwner(key, _msgSender());
+        Users.setCoin(key, 1000000);
+        Users.setCreatedAt(key, block.timestamp);
+        Users.setId(key, username);
+
     }
 
     function getUser() public view returns (UsersData memory _table) {
