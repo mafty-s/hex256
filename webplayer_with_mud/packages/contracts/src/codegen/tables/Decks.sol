@@ -26,10 +26,11 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant DecksTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0020010220000000000000000000000000000000000000000000000000000000
+  0x0034020214200000000000000000000000000000000000000000000000000000
 );
 
 struct DecksData {
+  address owner;
   bytes32 hero;
   string tid;
   bytes32[] cards;
@@ -60,10 +61,11 @@ library Decks {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](3);
-    _valueSchema[0] = SchemaType.BYTES32;
-    _valueSchema[1] = SchemaType.STRING;
-    _valueSchema[2] = SchemaType.BYTES32_ARRAY;
+    SchemaType[] memory _valueSchema = new SchemaType[](4);
+    _valueSchema[0] = SchemaType.ADDRESS;
+    _valueSchema[1] = SchemaType.BYTES32;
+    _valueSchema[2] = SchemaType.STRING;
+    _valueSchema[3] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -82,10 +84,11 @@ library Decks {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
-    fieldNames[0] = "hero";
-    fieldNames[1] = "tid";
-    fieldNames[2] = "cards";
+    fieldNames = new string[](4);
+    fieldNames[0] = "owner";
+    fieldNames[1] = "hero";
+    fieldNames[2] = "tid";
+    fieldNames[3] = "cards";
   }
 
   /**
@@ -103,13 +106,55 @@ library Decks {
   }
 
   /**
+   * @notice Get owner.
+   */
+  function getOwner(bytes32 key) internal view returns (address owner) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Get owner.
+   */
+  function _getOwner(bytes32 key) internal view returns (address owner) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Set owner.
+   */
+  function setOwner(bytes32 key, address owner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((owner)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set owner.
+   */
+  function _setOwner(bytes32 key, address owner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((owner)), _fieldLayout);
+  }
+
+  /**
    * @notice Get hero.
    */
   function getHero(bytes32 key) internal view returns (bytes32 hero) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -120,7 +165,7 @@ library Decks {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -131,7 +176,7 @@ library Decks {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((hero)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((hero)), _fieldLayout);
   }
 
   /**
@@ -141,7 +186,7 @@ library Decks {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((hero)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((hero)), _fieldLayout);
   }
 
   /**
@@ -501,8 +546,8 @@ library Decks {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, bytes32 hero, string memory tid, bytes32[] memory cards) internal {
-    bytes memory _staticData = encodeStatic(hero);
+  function set(bytes32 key, address owner, bytes32 hero, string memory tid, bytes32[] memory cards) internal {
+    bytes memory _staticData = encodeStatic(owner, hero);
 
     PackedCounter _encodedLengths = encodeLengths(tid, cards);
     bytes memory _dynamicData = encodeDynamic(tid, cards);
@@ -516,8 +561,8 @@ library Decks {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, bytes32 hero, string memory tid, bytes32[] memory cards) internal {
-    bytes memory _staticData = encodeStatic(hero);
+  function _set(bytes32 key, address owner, bytes32 hero, string memory tid, bytes32[] memory cards) internal {
+    bytes memory _staticData = encodeStatic(owner, hero);
 
     PackedCounter _encodedLengths = encodeLengths(tid, cards);
     bytes memory _dynamicData = encodeDynamic(tid, cards);
@@ -532,7 +577,7 @@ library Decks {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, DecksData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.hero);
+    bytes memory _staticData = encodeStatic(_table.owner, _table.hero);
 
     PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.cards);
     bytes memory _dynamicData = encodeDynamic(_table.tid, _table.cards);
@@ -547,7 +592,7 @@ library Decks {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, DecksData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.hero);
+    bytes memory _staticData = encodeStatic(_table.owner, _table.hero);
 
     PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.cards);
     bytes memory _dynamicData = encodeDynamic(_table.tid, _table.cards);
@@ -561,8 +606,10 @@ library Decks {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (bytes32 hero) {
-    hero = (Bytes.slice32(_blob, 0));
+  function decodeStatic(bytes memory _blob) internal pure returns (address owner, bytes32 hero) {
+    owner = (address(Bytes.slice20(_blob, 0)));
+
+    hero = (Bytes.slice32(_blob, 20));
   }
 
   /**
@@ -597,7 +644,7 @@ library Decks {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (DecksData memory _table) {
-    (_table.hero) = decodeStatic(_staticData);
+    (_table.owner, _table.hero) = decodeStatic(_staticData);
 
     (_table.tid, _table.cards) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -626,8 +673,8 @@ library Decks {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(bytes32 hero) internal pure returns (bytes memory) {
-    return abi.encodePacked(hero);
+  function encodeStatic(address owner, bytes32 hero) internal pure returns (bytes memory) {
+    return abi.encodePacked(owner, hero);
   }
 
   /**
@@ -659,11 +706,12 @@ library Decks {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
+    address owner,
     bytes32 hero,
     string memory tid,
     bytes32[] memory cards
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(hero);
+    bytes memory _staticData = encodeStatic(owner, hero);
 
     PackedCounter _encodedLengths = encodeLengths(tid, cards);
     bytes memory _dynamicData = encodeDynamic(tid, cards);

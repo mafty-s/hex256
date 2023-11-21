@@ -99,6 +99,7 @@ export default mudConfig({
         },
         Decks: {
             valueSchema: {
+                owner: "address",
                 hero: "bytes32",
                 tid: "string",
                 cards: "bytes32[]",

@@ -291,6 +291,29 @@ export function createSystemCalls(
         return tx;
     }
 
+    const moveCard = async (game_id, player_id, card_id, slot, skip_cost) => {
+        const game_key = calculateKeccak256Hash(game_id);
+        const card_config_key = calculateKeccak256Hash(card_id);
+        const player_key = calculateKeccak256HashTwoString(game_id, player_id);
+        const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
+        // let slot = {x: 0, y: 0, z: 0}
+
+        // function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
+
+        const tx = await worldContract.write.MoveCard([game_key, player_key, card_key, slot]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
+    const attackTarget = async (game_id, player_id, card_id, target_id, skip_cost) => {
+
+    }
+
+    const attackPlayer = async (game_id, player_id, card_id, target_id, skip_cost) => {
+
+    }
+
+
     const test = async () => {
         const a = calculateKeccak256Hash("a")
         const tx = await worldContract.write.callEffectToPlayer([a, a, a]);
@@ -346,6 +369,8 @@ export function createSystemCalls(
         gameSetting,
         playerSetting,
         playCard,
+        moveCard,
+        attackPlayer,
         getAbilityTarget,
         getEffectSelector,
         test,

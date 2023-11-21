@@ -19,9 +19,22 @@ library AbilityLib {
         //todo
     }
 
-    function TriggerOtherCardsAbilityType(AbilityTrigger trigger, bytes32 triggerer) internal {
 
-        //todo
+
+    function TriggerOtherCardsAbilityType(AbilityTrigger trigger, bytes32 triggerer) internal {
+        if (trigger == AbilityTrigger.ON_PLAY_OTHER) {
+            // 处理其他卡牌的触发条件为"ON_PLAY_OTHER"的能力
+            // 根据triggerer触发相应的能力逻辑
+            // todo: 添加对应的处理逻辑
+        }
+        else if (trigger == AbilityTrigger.ON_DEATH_OTHER) {
+            // 处理其他卡牌的触发条件为"ON_DEATH_OTHER"的能力
+            // 根据triggerer触发相应的能力逻辑
+            // todo: 添加对应的处理逻辑
+        }
+        else {
+            // 其他未定义的触发条件类型，可以根据需要进行处理
+        }
     }
 
     function TriggerCardAbilityTypeOneCard(bytes32 game_key, AbilityTrigger trigger, bytes32 triggerer) internal {

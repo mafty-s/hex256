@@ -162,14 +162,20 @@ export const App = () => {
         initPack("elite", 1, 5, [0, 0, 80, 20], 250);
 
         // fire_deck,Fire Starter,hero_fire,
-        createDeck("fire_deck", "hero_fire", "imp|imp|lava_beast|lava_beast|fire_chicken|firefox|firefox|hell_hound|ashes_snake|fire_element|wolf_furious|phoenix|dragon_red|spell_burn|spell_burn|potion_red|potion_red|trap_explosive|spell_armageddon|town_volcano");
-        createDeck("forest_deck", "hero_forest", "wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|owl|raccoon|armored_beast|bear|sasquatch|unicorn|dragon_green|spell_roots|spell_roots|potion_green|potion_green|spell_growth|trap_spike|town_forest");
-        createDeck("water_deck", "hero_water", "fish|crab_mana|crab_mana|turtle|turtle|poison_frog|eel|eel|pufferfish|killer_whale|kraken|sea_monster|dragon_blue|spell_wave|spell_wave|spell_storm|potion_blue|potion_blue|trap_fish|town_underwater");
-        return;
-
-
-
-
+        createDeck('fire_deck', 'hero_fire', 'imp|imp|lava_beast|lava_beast|fire_chicken|firefox|firefox|hell_hound|ashes_snake|fire_element|wolf_furious|phoenix|dragon_red|spell_burn|spell_burn|potion_red|potion_red|trap_explosive|spell_armageddon|town_volcano');
+        createDeck('forest_deck', 'hero_forest', 'wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|owl|raccoon|armored_beast|bear|sasquatch|unicorn|dragon_green|spell_roots|spell_roots|potion_green|potion_green|spell_growth|trap_spike|town_forest');
+        createDeck('test_deck', 'hero_fire', 'wolf_alpha|wolf_alpha|wolf_stalker|wolf_stalker|tree_angry|tree_angry|armored_beast|armored_beast|raccoon|raccoon|owl|owl|bear|bear|sasquatch|unicorn|dragon_green|trap_spike|spell_roots|spell_growth|potion_green|town_forest|imp|imp|lava_beast|lava_beast|fire_chicken|fire_chicken|firefox|firefox|wolf_furious|wolf_furious|fire_element|fire_element|phoenix|dragon_red|spell_burn|spell_armageddon|potion_red|trap_explosive|town_volcano|fish|fish|turtle|turtle|crab_mana|crab_mana|eel|pufferfish|pufferfish|killer_whale|killer_whale|sea_monster|kraken|dragon_blue|potion_blue|spell_wave|spell_storm|trap_fish|town_underwater|seagull|seagull|shark|spell_flood|spell_treasure|spell_treasure|octopus|bull_heat|dark_stallion|reaper|spell_aerial_strike|spell_stones|spell_stones|mammoth|gorilla|snake_venom|snake_venom|spell_hibernate|spell_stomp|spell_stomp|bay|cave|woodland|spell_split|spell_extinct|spell_submerge|equip_sword|equip_shield|equip_ring|dragon_egg');
+        createDeck('water_deck', 'hero_water', 'fish|crab_mana|crab_mana|turtle|turtle|poison_frog|eel|eel|pufferfish|killer_whale|kraken|sea_monster|dragon_blue|spell_wave|spell_wave|spell_storm|potion_blue|potion_blue|trap_fish|town_underwater');
+        createDeck('level1_ai', '', 'hell_hound|hell_hound|wolf_furious');
+        createDeck('level1_player', '', 'wolf_alpha|wolf_baby|spell_roots|wolf_baby|spell_roots');
+        createDeck('level2_ai', '', 'imp|imp|spell_stones|fire_chicken|fire_chicken|spell_burn');
+        createDeck('level2_player', '', 'tree_angry|snake_venom|potion_green|raccoon|potion_green|potion_green');
+        createDeck('level3_ai', '', 'potion_red|hell_hound|hell_hound|hell_hound|spell_burn');
+        createDeck('level3_player', '', 'mammoth|snake_venom|spell_stomp|spell_stomp|snake_venom|mammoth');
+        createDeck('level4_ai', '', 'ashes_snake|spell_stones|ashes_snake|spell_stones|ashes_snake|phoenix');
+        createDeck('level4_player', '', 'snake_venom|armored_beast|bear|spell_growth|gorilla|wolf_alpha|unicorn|spell_growth');
+        createDeck('level5_ai', '', 'fire_chicken|firefox|town_volcano|hell_hound|spell_burn|fire_chicken|fire_chicken');
+        createDeck('level5_player', '', 'owl|town_forest|spell_roots|raccoon|snake_venom|tree_angry|potion_green');
 
     };
 

@@ -25,7 +25,7 @@ contract MoveSystem is System {
 
     }
 
-    function Move(bytes32 game_key,bytes32 card_key, Slot memory slot) public {
+    function MoveCard(bytes32 game_key,bytes32 player_key,bytes32 card_key, Slot memory slot) public {
 
         if (BaseLogicLib.CanMoveCard(card_key, slot)) {
             //todo
