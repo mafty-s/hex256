@@ -137,7 +137,23 @@ library BaseLogicLib {
         return true;
     }
 
-    function CanCastAbility() internal pure returns (bool) {
+    function CanCastAbility(bytes32 card_key) internal pure returns (bool) {
+
+//        if (ability == null || card == null || !card.CanDoActivatedAbilities())
+//            return false; //This card cant cast
+//
+//        if (ability.trigger != AbilityTrigger.Activate)
+//            return false; //Not an activated ability
+//
+//        Player player = GetPlayer(card.player_id);
+//        if (!player.CanPayAbility(card, ability))
+//            return false; //Cant pay for ability
+//
+//        if (!ability.AreTriggerConditionsMet(this, card))
+//            return false; //Conditions not met
+//
+//        return true;
+
         //todo
         return true;
     }

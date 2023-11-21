@@ -25,8 +25,15 @@ library CardLogicLib {
     }
 
     function IsBoardCard(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.CHARACTER || Cards.getCardType(card_key) == CardType.ARTIFACT;
+
+        bytes32 card_config_key = CardOnBoards.getId(card_key);
+        if (card_config_key != 0) {
+            return Cards.getCardType(card_config_key) == CardType.CHARACTER || Cards.getCardType(card_config_key) == CardType.ARTIFACT;
+        } else {
+            return Cards.getCardType(card_key) == CardType.CHARACTER || Cards.getCardType(card_key) == CardType.ARTIFACT;
+        }
     }
+
 
     function IsEquipment(bytes32 card_key) internal view returns (bool) {
         return Cards.getCardType(card_key) == CardType.EQUIPMENT;

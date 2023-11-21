@@ -1,5 +1,9 @@
 mergeInto(LibraryManager.library, {
 
+    hasMudInstalled: function(){
+        return typeof mud !== 'undefined';
+    },
+
     addTask: async function(msg){
         await mud.addTask(UTF8ToString(msg));
     },

@@ -22,6 +22,8 @@ public class MudUserData
 
 public class MudManager : MonoBehaviour
 {
+    public bool useMud = false;
+
     private static MudManager instance;
     public string msg = "";
     private Dictionary<string, string> names = new Dictionary<string, string>();
@@ -132,6 +134,9 @@ public class MudManager : MonoBehaviour
 
 #if !UNITY_EDITOR && UNITY_WEBGL
     [DllImport("__Internal")]
+    private static extern bool hasMudInstalled();
+
+    [DllImport("__Internal")]
     private static extern void addTask(string msg);
     
     [DllImport("__Internal")]
@@ -182,8 +187,15 @@ public class MudManager : MonoBehaviour
 
     void Start()
     {
+       
 #if !UNITY_EDITOR && UNITY_WEBGL
-       getUser();
+        this.useMud = hasMudInstalled();
+
+        if (useMud == false)
+        {
+            return;
+        }
+        getUser();
 
         CardData.Load(); // 加载数据
 
@@ -205,17 +217,32 @@ public class MudManager : MonoBehaviour
 
     public void OnUser(string msg)
     {
+        if (useMud == false)
+        {
+            return;
+        }
+
         this.msg = msg;
         Debug.Log("user from MudManager onUser :" + msg);
     }
 
     public void PrintUser()
     {
+        if (useMud == false)
+        {
+            return;
+        }
+
         Debug.Log(this.msg);
     }
 
     public MudUserData GetUserData()
     {
+        if (useMud == false)
+        {
+            return null;
+        }
+
         MudUserData playerData = JsonUtility.FromJson<MudUserData>(this.msg);
 
         // Access the decoded data
@@ -232,6 +259,10 @@ public class MudManager : MonoBehaviour
 
     public void BuyCard(string card_id, int q)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         buyCard(card_id,q);
 #endif
@@ -239,6 +270,10 @@ public class MudManager : MonoBehaviour
 
     public void SellCard(string card_id, int q)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         sellCard(card_id,q);
 #endif
@@ -246,6 +281,10 @@ public class MudManager : MonoBehaviour
 
     public void BuyPack(string pack_id, int q)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         buyPack(pack_id,q);
 #endif
@@ -253,6 +292,10 @@ public class MudManager : MonoBehaviour
 
     public void OpenPack(string pack_id)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         openPack(pack_id);
 #endif
@@ -260,6 +303,10 @@ public class MudManager : MonoBehaviour
 
     public void DoApiTask(string url, string json_data)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         doApiTask(url,json_data);
 #endif
@@ -267,6 +314,10 @@ public class MudManager : MonoBehaviour
 
     public void GameSetting(string game_uid)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         gameSetting(game_uid);
 #endif
@@ -274,6 +325,10 @@ public class MudManager : MonoBehaviour
 
     public void PlayerSetting(string username, string game_uid, string deck_id, bool is_ai)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         playerSetting(username,game_uid,deck_id,is_ai);
 #endif
@@ -295,14 +350,22 @@ public class MudManager : MonoBehaviour
     public void PlayCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,
         bool skip_cost)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         playCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
 #endif
     }
-    
+
     public void MoveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,
         bool skip_cost)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         moveCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
 #endif
@@ -310,26 +373,26 @@ public class MudManager : MonoBehaviour
 
     public void AttackCard()
     {
-        
     }
 
     public void AttackPlayer()
     {
-        
     }
 
     public void CastAbility()
     {
-        
     }
 
     public void EndTurn()
     {
-        
     }
 
-    public void SaveDeck(string tid,string hero,string cards)
+    public void SaveDeck(string tid, string hero, string cards)
     {
+        if (useMud == false)
+        {
+            return;
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         saveDeck(tid,hero,cards);
 #endif

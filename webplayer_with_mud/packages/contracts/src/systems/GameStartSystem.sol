@@ -11,8 +11,6 @@ import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 
 import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 
-//import "../logic/PlayerLogicLib.sol";
-//import "../logic/CardLogicLib.sol";
 
 
 contract GameStartSystem is System {

@@ -5,9 +5,10 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger} from "../codegen/common.sol";
 
-import "../libs/AbilityLib.sol";
+import {AbilityLib} from "../libs/AbilityLib.sol";
+import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 
 contract AttackSystem is System {
 
@@ -15,10 +16,10 @@ contract AttackSystem is System {
 
     }
 
-    function AttackTarget(bytes32 attacker_key, bytes32 target_key, uint8 slot) public {
+    function AttackTarget(bytes32 attacker_key, bytes32 target_key, uint8 slot, bool skip_cost) public {
 
-        //        if (game_data.CanAttackTarget(attacker, target, skip_cost))
-        //        {
+                if (BaseLogicLib.CanAttackTarget(attacker_key, target_key, skip_cost))
+                {
         //
         //            Player player = game_data.GetPlayer(attacker.player_id);
         //            if(!is_ai_predict)
@@ -36,14 +37,32 @@ contract AttackSystem is System {
         //            //Resolve attack
         //            resolve_queue.AddAttack(attacker, target, ResolveAttack, skip_cost);
         //            resolve_queue.ResolveAll();
-        //        }
+                }
 
         //todo
 
     }
 
 
-    function AttackPlayer(bytes32 card_key, uint8 slot, bytes32 player_key) public {
+    function AttackPlayer(bytes32 card_key, uint8 slot, bytes32 player_key, bool skip_cost) public {
+
+        //        if (game_data.CanAttackTarget(attacker, target, skip_cost))
+        //        {
+        //
+        //            Player player = game_data.GetPlayer(attacker.player_id);
+        //            if(!is_ai_predict)
+        //                player.AddHistory(GameAction.Attack, attacker, target);
+        //
+        //            //Trigger before attack abilities
+        //            TriggerCardAbilityType(AbilityTrigger.OnBeforeAttack, attacker, target);
+        //            TriggerCardAbilityType(AbilityTrigger.OnBeforeDefend, target, attacker);
+        //            TriggerSecrets(AbilityTrigger.OnBeforeAttack, attacker);
+        //            TriggerSecrets(AbilityTrigger.OnBeforeDefend, target);
+        //
+        //            //Resolve attack
+        //            resolve_queue.AddAttack(attacker, target, ResolveAttack, skip_cost);
+        //            resolve_queue.ResolveAll();
+        //        }
         //todo
     }
 }

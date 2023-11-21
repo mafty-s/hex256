@@ -14,8 +14,8 @@ import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 //import "../logic/PlayerLogicLib.sol";
 //import "../logic/CardLogicLib.sol";
 //
-import "../libs/BaseLogicLib.sol";
-import "../libs/GameLogicLib.sol";
+import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
+import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
