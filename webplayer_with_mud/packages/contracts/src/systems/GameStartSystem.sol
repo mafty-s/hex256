@@ -6,11 +6,15 @@ import {Cards, CardsData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {Matches, MatchesData} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
-import {PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 
 import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 
+
+//    struct PlayerSettingResult {
+//        CardTuple[] cards;
+//    }
 
 contract GameStartSystem is System {
 
@@ -164,5 +168,31 @@ contract GameStartSystem is System {
     function testRevert() public {
         revert("Can't play card");
     }
+
+    function getPlayerCards(bytes32 player_key) public view returns (bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board) {
+        hand = PlayerCardsHand.getValue(player_key);
+        deck = PlayerCardsDeck.getValue(player_key);
+        board = PlayerCardsBoard.getValue(player_key);
+
+        bytes32[] memory cards = new bytes32[](hand.length + deck.length);
+        for (uint i = 0; i < deck.length; i++) {
+            cards[i] = Cards.get(deck[i]).id;
+        }
+
+        return (cards, hand, deck, board);
+    }
+
+
+
+
+    //    struct CardTuple {
+    //        bytes32 card_key;
+    //        bytes32 card_id;
+    //    }
+    //
+    //    function getCardOnBoards(bytes32[] memory cards) public view returns (CardTuple[] memory){
+    //        CardTuple[] memory result;
+    //        return result;
+    //    }
 
 }

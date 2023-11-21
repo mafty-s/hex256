@@ -21,4 +21,11 @@ interface IGameStartSystem {
   ) external returns (bytes32[] memory);
 
   function testRevert() external;
+
+  function getPlayerCards(
+    bytes32 player_key
+  )
+    external
+    view
+    returns (bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board);
 }

@@ -371,7 +371,7 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void AttackCard()
+    public void AttackCard(string game_id,string player_id,string attacker_id,string target_id)
     {
     }
 

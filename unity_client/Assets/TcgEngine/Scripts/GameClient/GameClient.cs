@@ -293,13 +293,17 @@ namespace TcgEngine.Client
 
             MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
                 hp_max, mana_max, dcards);
-            
+
             SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
+        }
+
+        public void OnPlayerSettingSuccess(string message)
+        {
+            Debug.Log("OnPlayerSettingSuccess:" + message);
         }
 
         public void SendPlayerSettingsAI(PlayerSettings psettings)
         {
-
             DeckPuzzleData pdeck = DeckPuzzleData.Get(psettings.deck.tid);
 
             int hp_max = pdeck != null ? pdeck.start_hp : GameplayData.Get().hp_start;
@@ -310,7 +314,7 @@ namespace TcgEngine.Client
 
             MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
                 hp_max, mana_max, dcards);
-            
+
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
@@ -343,7 +347,7 @@ namespace TcgEngine.Client
             mdata.attacker_uid = card.uid;
             mdata.target_uid = target.uid;
 
-            MudManager.Get().AttackCard();
+            MudManager.Get().AttackCard(game_data.game_uid, GetPlayer().username, card.card_id, target.card_id);
 
             SendAction(GameAction.Attack, mdata);
         }
@@ -354,7 +358,7 @@ namespace TcgEngine.Client
             mdata.attacker_uid = card.uid;
             mdata.target_id = target.player_id;
 
-            MudManager.Get().AttackCard();
+            MudManager.Get().AttackPlayer();
 
             SendAction(GameAction.AttackPlayer, mdata);
         }
