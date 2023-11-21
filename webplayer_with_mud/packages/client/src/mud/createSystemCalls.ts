@@ -313,10 +313,10 @@ export function createSystemCalls(
 
     }
 
-    const saveDeck = async (tid, hero, cards) => {
+    const saveDeck = async (tid: string, hero: string, cards: string) => {
         const hero_key = calculateKeccak256Hash(hero);
-
-        const tx = await worldContract.write.addCard([tid, hero_key, cards]);
+        const cards_keys = cards.split(",").map((card) => calculateKeccak256Hash(card));
+        const tx = await worldContract.write.addDeck([tid, hero_key, cards_keys]);
         await waitForTransaction(tx);
         return tx;
     }

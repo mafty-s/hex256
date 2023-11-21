@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} from "../codegen/common.sol";
 
 library CardLogicLib {
 
@@ -34,6 +34,21 @@ library CardLogicLib {
 
     function IsSecret(bytes32 card_key) internal view returns (bool) {
         return Cards.getCardType(card_key) == CardType.SPELL;
+    }
+
+    function IsOnBoard(bytes32 card_key) internal pure returns (bool) {
+        return true;
+        //,CardOnBoards.getCardOnBoard(card_key) != 0;
+    }
+
+    function IsCharacter(bytes32 card_key) internal pure returns (bool) {
+        return true;
+        //Cards.getCardType(card_key) == CardType.CHARACTER;
+    }
+
+    function HasStatus(bytes32 card_key, Status status) internal pure returns (bool) {
+        return true;
+        //Cards.getCardType(card_key) == CardType.CHARACTER;
     }
 
 

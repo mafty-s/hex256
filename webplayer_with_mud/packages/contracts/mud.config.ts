@@ -95,6 +95,7 @@ export default mudConfig({
                 equippedUid: "bytes32",
                 id: "bytes32",
                 playerId: "bytes32",
+                status: "uint8[]",
             }
         },
         Decks: {

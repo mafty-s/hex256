@@ -8,10 +8,13 @@ import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, 
 
 library PlayerLogicLib {
 
-    function CanPayMana(bytes32 player_key, bytes32 card_key) public view returns (bool) {
-        return Players.getMana(player_key) > Cards.getMana(card_key);
+    function CanAttack(bool skip_cost) internal pure returns (bool) {
+        return true;
     }
 
+    function CanPayMana(bytes32 player_key, bytes32 card_key) internal view returns (bool) {
+        return Players.getMana(player_key) > Cards.getMana(card_key);
+    }
 
     function RemoveCardFromAllGroups(bytes32 player_key, bytes32 card_key) internal {
         //        RemoveCardFromBoard(player_key, card_key);

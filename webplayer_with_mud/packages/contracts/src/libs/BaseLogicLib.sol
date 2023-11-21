@@ -3,10 +3,12 @@ pragma solidity >=0.8.21;
 import "../codegen/common.sol";
 
 import {Matches, MatchesExtended, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
-import {GameState, SelectorType} from "../codegen/common.sol";
+import {GameState, SelectorType, Status} from "../codegen/common.sol";
 
 import "./CardLogicLib.sol";
 import {Slot, SlotLib} from "./SlotLib.sol";
+import {PlayerLogicLib} from "./PlayerLogicLib.sol";
+import {CardLogicLib} from "./CardLogicLib.sol";
 
 library BaseLogicLib {
 
@@ -115,8 +117,23 @@ library BaseLogicLib {
         return true;
     }
 
-    function CanAttackTarget() internal pure returns (bool) {
-        //todo
+    function CanAttackTarget(bytes32 attacker, bytes32 target, bool skip_cost) internal pure returns (bool) {
+
+        if (attacker == 0 || target == 0)
+            return false;
+
+        if (!PlayerLogicLib.CanAttack(skip_cost))
+            return false;
+
+        if (attacker == target)
+            return false;
+
+        if (!CardLogicLib.IsOnBoard(attacker) || !CardLogicLib.IsCharacter(attacker))
+            return false;
+
+        if (CardLogicLib.HasStatus(target, Status.PROTECTED) && !CardLogicLib.HasStatus(attacker, Status.FLYING))
+            return false;
+
         return true;
     }
 

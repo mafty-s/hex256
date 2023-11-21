@@ -26,7 +26,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant CardOnBoardsTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x006a0c0002010101010101010120202000000000000000000000000000000000
+  0x006a0c0102010101010101010120202000000000000000000000000000000000
 );
 
 struct CardOnBoardsData {
@@ -42,6 +42,7 @@ struct CardOnBoardsData {
   bytes32 equippedUid;
   bytes32 id;
   bytes32 playerId;
+  uint8[] status;
 }
 
 library CardOnBoards {
@@ -69,7 +70,7 @@ library CardOnBoards {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](12);
+    SchemaType[] memory _valueSchema = new SchemaType[](13);
     _valueSchema[0] = SchemaType.UINT16;
     _valueSchema[1] = SchemaType.UINT8;
     _valueSchema[2] = SchemaType.UINT8;
@@ -82,6 +83,7 @@ library CardOnBoards {
     _valueSchema[9] = SchemaType.BYTES32;
     _valueSchema[10] = SchemaType.BYTES32;
     _valueSchema[11] = SchemaType.BYTES32;
+    _valueSchema[12] = SchemaType.UINT8_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -100,7 +102,7 @@ library CardOnBoards {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](12);
+    fieldNames = new string[](13);
     fieldNames[0] = "slot";
     fieldNames[1] = "hp";
     fieldNames[2] = "hpOngoing";
@@ -113,6 +115,7 @@ library CardOnBoards {
     fieldNames[9] = "equippedUid";
     fieldNames[10] = "id";
     fieldNames[11] = "playerId";
+    fieldNames[12] = "status";
   }
 
   /**
@@ -634,6 +637,168 @@ library CardOnBoards {
   }
 
   /**
+   * @notice Get status.
+   */
+  function getStatus(bytes32 key) internal view returns (uint8[] memory status) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+  }
+
+  /**
+   * @notice Get status.
+   */
+  function _getStatus(bytes32 key) internal view returns (uint8[] memory status) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+  }
+
+  /**
+   * @notice Set status.
+   */
+  function setStatus(bytes32 key, uint8[] memory status) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((status)));
+  }
+
+  /**
+   * @notice Set status.
+   */
+  function _setStatus(bytes32 key, uint8[] memory status) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((status)));
+  }
+
+  /**
+   * @notice Get the length of status.
+   */
+  function lengthStatus(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of status.
+   */
+  function _lengthStatus(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of status.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemStatus(bytes32 key, uint256 _index) internal view returns (uint8) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (uint8(bytes1(_blob)));
+    }
+  }
+
+  /**
+   * @notice Get an item of status.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemStatus(bytes32 key, uint256 _index) internal view returns (uint8) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (uint8(bytes1(_blob)));
+    }
+  }
+
+  /**
+   * @notice Push an element to status.
+   */
+  function pushStatus(bytes32 key, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Push an element to status.
+   */
+  function _pushStatus(bytes32 key, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Pop an element from status.
+   */
+  function popStatus(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Pop an element from status.
+   */
+  function _popStatus(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Update an element of status at `_index`.
+   */
+  function updateStatus(bytes32 key, uint256 _index, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of status at `_index`.
+   */
+  function _updateStatus(bytes32 key, uint256 _index, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (CardOnBoardsData memory _table) {
@@ -679,7 +844,8 @@ library CardOnBoards {
     bool exhausted,
     bytes32 equippedUid,
     bytes32 id,
-    bytes32 playerId
+    bytes32 playerId,
+    uint8[] memory status
   ) internal {
     bytes memory _staticData = encodeStatic(
       slot,
@@ -696,8 +862,8 @@ library CardOnBoards {
       playerId
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(status);
+    bytes memory _dynamicData = encodeDynamic(status);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -721,7 +887,8 @@ library CardOnBoards {
     bool exhausted,
     bytes32 equippedUid,
     bytes32 id,
-    bytes32 playerId
+    bytes32 playerId,
+    uint8[] memory status
   ) internal {
     bytes memory _staticData = encodeStatic(
       slot,
@@ -738,8 +905,8 @@ library CardOnBoards {
       playerId
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(status);
+    bytes memory _dynamicData = encodeDynamic(status);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -766,8 +933,8 @@ library CardOnBoards {
       _table.playerId
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.status);
+    bytes memory _dynamicData = encodeDynamic(_table.status);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -794,8 +961,8 @@ library CardOnBoards {
       _table.playerId
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.status);
+    bytes memory _dynamicData = encodeDynamic(_table.status);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -852,15 +1019,30 @@ library CardOnBoards {
   }
 
   /**
+   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
+   */
+  function decodeDynamic(
+    PackedCounter _encodedLengths,
+    bytes memory _blob
+  ) internal pure returns (uint8[] memory status) {
+    uint256 _start;
+    uint256 _end;
+    unchecked {
+      _end = _encodedLengths.atIndex(0);
+    }
+    status = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint8());
+  }
+
+  /**
    * @notice Decode the tightly packed blobs using this table's field layout.
    * @param _staticData Tightly packed static fields.
-   *
-   *
+   * @param _encodedLengths Encoded lengths of dynamic fields.
+   * @param _dynamicData Tightly packed dynamic fields.
    */
   function decode(
     bytes memory _staticData,
-    PackedCounter,
-    bytes memory
+    PackedCounter _encodedLengths,
+    bytes memory _dynamicData
   ) internal pure returns (CardOnBoardsData memory _table) {
     (
       _table.slot,
@@ -876,6 +1058,8 @@ library CardOnBoards {
       _table.id,
       _table.playerId
     ) = decodeStatic(_staticData);
+
+    (_table.status) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -934,6 +1118,25 @@ library CardOnBoards {
   }
 
   /**
+   * @notice Tightly pack dynamic data lengths using this table's schema.
+   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
+   */
+  function encodeLengths(uint8[] memory status) internal pure returns (PackedCounter _encodedLengths) {
+    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
+    unchecked {
+      _encodedLengths = PackedCounterLib.pack(status.length * 1);
+    }
+  }
+
+  /**
+   * @notice Tightly pack dynamic (variable length) data using this table's schema.
+   * @return The dynamic data, encoded into a sequence of bytes.
+   */
+  function encodeDynamic(uint8[] memory status) internal pure returns (bytes memory) {
+    return abi.encodePacked(EncodeArray.encode((status)));
+  }
+
+  /**
    * @notice Encode all of a record's fields.
    * @return The static (fixed length) data, encoded into a sequence of bytes.
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
@@ -951,7 +1154,8 @@ library CardOnBoards {
     bool exhausted,
     bytes32 equippedUid,
     bytes32 id,
-    bytes32 playerId
+    bytes32 playerId,
+    uint8[] memory status
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(
       slot,
@@ -968,8 +1172,8 @@ library CardOnBoards {
       playerId
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(status);
+    bytes memory _dynamicData = encodeDynamic(status);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }
