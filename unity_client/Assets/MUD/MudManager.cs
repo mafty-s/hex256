@@ -167,6 +167,9 @@ public class MudManager : MonoBehaviour
     [DllImport("__Internal")]
     private static extern string moveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost);
 
+    [DllImport("__Internal")]
+    private static extern string saveDeck(string tid, string name, string[] cards);
+
 #endif
 
     public static void SendTask(ushort code)
@@ -323,5 +326,12 @@ public class MudManager : MonoBehaviour
     public void EndTurn()
     {
         
+    }
+
+    public void SaveDeck(string tid,string hero,string[] cards)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        saveDeck(tid,hero,cards);
+#endif
     }
 }

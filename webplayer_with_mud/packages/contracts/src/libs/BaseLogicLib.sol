@@ -2,7 +2,7 @@ pragma solidity >=0.8.21;
 
 import "../codegen/common.sol";
 
-import {Matches, MatchesExtended} from "../codegen/index.sol";
+import {Matches, MatchesExtended, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
 import {GameState, SelectorType} from "../codegen/common.sol";
 
 import "./CardLogicLib.sol";
@@ -84,33 +84,33 @@ library BaseLogicLib {
     function CanMoveCard(bytes32 card_key, Slot memory slot) internal view returns (bool) {
         //todo
 
-        if(SlotLib.IsValid(slot)) {
+        if (SlotLib.IsValid(slot)) {
             return false;
         }
 
-        if(CardLogicLib.IsBoardCard(card_key)) {
+        if (CardLogicLib.IsBoardCard(card_key)) {
             return false;
         }
 
 
-//        if (card == null || !slot.IsValid())
-//            return false;
-//
-//        if (!IsOnBoard(card))
-//            return false; //Only cards in play can move
-//
-//        if (!card.CanMove(skip_cost))
-//            return false; //Card cant move
-//
-//        if (Slot.GetP(card.player_id) != slot.p)
-//            return false; //Card played wrong side
-//
-//        if (card.slot == slot)
-//            return false; //Cant move to same slot
-//
-//        Card slot_card = GetSlotCard(slot);
-//        if (slot_card != null)
-//            return false; //Already a card there
+        //        if (card == null || !slot.IsValid())
+        //            return false;
+        //
+        //        if (!IsOnBoard(card))
+        //            return false; //Only cards in play can move
+        //
+        //        if (!card.CanMove(skip_cost))
+        //            return false; //Card cant move
+        //
+        //        if (Slot.GetP(card.player_id) != slot.p)
+        //            return false; //Card played wrong side
+        //
+        //        if (card.slot == slot)
+        //            return false; //Cant move to same slot
+        //
+        //        Card slot_card = GetSlotCard(slot);
+        //        if (slot_card != null)
+        //            return false; //Already a card there
 
         return true;
     }
@@ -130,10 +130,22 @@ library BaseLogicLib {
         return true;
     }
 
-    function GetSlotCard(bytes32 game_key,Slot memory slot) internal view returns (bytes32) {
-        //todo
+    function GetSlotCard(bytes32 game_key, Slot memory slot) internal view returns (bytes32) {
+
+        bytes32[] memory players = Matches.getPlayers(game_key);
+
+        for (uint i = 0; i < players.length; i++) {
+            bytes32 player_key = players[i];
+            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+            for (uint j = 0; j < cards_board.length; j++) {
+                bytes32 card = cards_board[j];
+                if (card != 0 && CardOnBoards.getSlot(card) == SlotLib.EncodeSlot(slot)) {
+                    return card;
+                }
+            }
+        }
+
         return 0;
-//        return MatchesExtended.getSlotCard(game_key, slot);
     }
 }
 

@@ -83,8 +83,10 @@ mergeInto(LibraryManager.library, {
     },
 
 
-    addDeck:async function(user_id,deck_name,cards){
-        
+    saveDeck:async function(tid,hero,cards){
+        console.log("tid",UTF8ToString(tid));
+        console.log("hero",UTF8ToString(hero));
+        console.log("cards",cards);
 
     },
 

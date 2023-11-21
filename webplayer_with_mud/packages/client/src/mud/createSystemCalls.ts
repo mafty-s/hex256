@@ -313,6 +313,14 @@ export function createSystemCalls(
 
     }
 
+    const saveDeck = async (tid, hero, cards) => {
+        const hero_key = calculateKeccak256Hash(hero);
+
+        const tx = await worldContract.write.addCard([tid, hero_key, cards]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
 
     const test = async () => {
         const a = calculateKeccak256Hash("a")
@@ -370,7 +378,9 @@ export function createSystemCalls(
         playerSetting,
         playCard,
         moveCard,
+        saveDeck,
         attackPlayer,
+        attackTarget,
         getAbilityTarget,
         getEffectSelector,
         test,
