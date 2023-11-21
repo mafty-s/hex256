@@ -12,7 +12,6 @@ import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 
 
-
 contract GameStartSystem is System {
 
 
@@ -20,7 +19,7 @@ contract GameStartSystem is System {
 
     }
 
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) public {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 match_key = keccak256(abi.encode(game_uid));
@@ -29,7 +28,7 @@ contract GameStartSystem is System {
         //        DecksData memory deck = Decks.get(desk_key);
 
         Matches.pushPlayers(match_key, player_key);
-        Players.set(player_key, PlayersData({owner : address(0), hp : 20, mana : 2, hpMax : 20, manaMax : 2, name : username, deck : desk_id, isAI : is_ai}));
+        Players.set(player_key, PlayersData({owner : _msgSender(), hp : 20, mana : 2, hpMax : 20, manaMax : 2, name : username, deck : desk_id, isAI : is_ai}));
 
 
         bytes32[] memory cards = Decks.getCards(desk_key);
@@ -37,7 +36,7 @@ contract GameStartSystem is System {
             bytes32 card_key = keccak256(abi.encode(cards[i], player_key));
             CardsData memory card = Cards.get(cards[i]);
             //            CardOnBoards.set(card_key, CardOnBoardsData({id : card_key, name : card.tid, hp : card.hp, hpOngoing : 0, attack : card.attack, attackOngoing : 0, mana : card.mana, manaOngoing : 0, damage : 0, exhausted : false, equippedUid : 0, playerId : player_key}));
-            CardOnBoards.setId(card_key, card_key);
+            CardOnBoards.setId(card_key, cards[i]);
             //            CardOnBoards.setName(card_key,card.tid);
             CardOnBoards.setHp(card_key, card.hp);
             //            CardOnBoards.setHpOngoing(card_key,0);
@@ -57,6 +56,8 @@ contract GameStartSystem is System {
         if (Matches.getPlayers(match_key).length == 2) {
             StartGame(game_uid);
         }
+
+        return PlayerCardsDeck.getValue(player_key);
 
     }
 

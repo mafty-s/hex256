@@ -11,7 +11,7 @@ import {CardOnBoards} from "../codegen/index.sol";
 
 import {GameType, GameState, GamePhase, CardType, AbilityTrigger} from "../codegen/common.sol";
 
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip, CardOnBoards} from "../codegen/index.sol";
 
 import "../libs/PlayerLogicLib.sol";
 import "../libs/CardLogicLib.sol";
@@ -35,6 +35,8 @@ contract PlayCardSystem is System {
 
         //todo
 
+        require(CardOnBoards.getId(card_key) != 0, "Card not found");
+        require(Players.getOwner(player_key) == _msgSender(), "Not owner");
 
         if (!skip_cost) {
             PayMana(player_key, card_key);
@@ -49,7 +51,7 @@ contract PlayCardSystem is System {
         } else if (CardLogicLib.IsEquipment(card_key)) {
             bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
             GameLogicLib.EquipCard(bearer, card_key);
-            CardOnBoards.setExhausted(card_key,true);
+            CardOnBoards.setExhausted(card_key, true);
         } else if (CardLogicLib.IsSecret(card_key)) {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
         } else {

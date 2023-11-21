@@ -10,7 +10,12 @@ pragma solidity >=0.8.21;
 interface IGameStartSystem {
   function GameSetting(string memory game_uid) external;
 
-  function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) external;
+  function PlayerSetting(
+    string memory username,
+    string memory game_uid,
+    string memory desk_id,
+    bool is_ai
+  ) external returns (bytes32[] memory);
 
   function testRevert() external;
 }

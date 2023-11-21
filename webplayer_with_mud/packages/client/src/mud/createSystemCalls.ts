@@ -154,6 +154,12 @@ export function createSystemCalls(
         return user;
     };
 
+    const IsBoardCard = async (key:string) => {
+        return  await worldContract.read.IsBoardCard([key]);
+    };
+
+
+
     const getUserByKey = async (key: string) => {
         const user = await worldContract.read.getUserByKey([key]);
         return user;
@@ -241,11 +247,7 @@ export function createSystemCalls(
         return tx;
     }
 
-    const openPack = async (name: string) => {
-        console.log("worldContract", worldContract);
-        const hash = await worldContract.write.OpenPack([calculateKeccak256Hash(name)]);
-        await waitForTransaction(hash);
-
+    const getTxResult = async (hash: string) => {
         const transaction = await publicClient.getTransaction({hash})
         const transactionReceipt = await publicClient.waitForTransactionReceipt({hash});
         const {functionName, args} = decodeFunctionData({abi: worldContract.abi, data: transaction.input});
@@ -262,7 +264,14 @@ export function createSystemCalls(
         });
 
         console.log("openPack result", tx_result.result);
-        return convertBigIntToInt({hash, transaction, transactionReceipt, functionName, args, tx_result});
+    }
+
+    const openPack = async (name: string) => {
+        console.log("worldContract", worldContract);
+        const hash = await worldContract.write.OpenPack([calculateKeccak256Hash(name)]);
+        await waitForTransaction(hash);
+        const tx_result = await getTxResult(hash);
+        return convertBigIntToInt({hash, tx_result});
     };
 
     const gameSetting = async (game_uid) => {
@@ -280,15 +289,18 @@ export function createSystemCalls(
     const playCard = async (game_id, player_id, card_id, slot, skip_cost) => {
         const game_key = calculateKeccak256Hash(game_id);
         const card_config_key = calculateKeccak256Hash(card_id);
-        const player_key = calculateKeccak256HashTwoString(game_id, player_id);
+        const player_key = calculateKeccak256HashTwoString(game_id, "Player");
         const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
         // let slot = {x: 0, y: 0, z: 0}
 
         // function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
 
-        const tx = await worldContract.write.PlayCard([game_key, player_key, card_key, slot, skip_cost]);
-        await waitForTransaction(tx);
-        return tx;
+        console.log("card_key", card_key);
+        const hash = await worldContract.write.PlayCard([game_key, player_key, card_key, slot, skip_cost]);
+        await waitForTransaction(hash);
+
+        const tx_result = await getTxResult(hash);
+        return convertBigIntToInt({hash, tx_result});
     }
 
     const moveCard = async (game_id, player_id, card_id, slot, skip_cost) => {
@@ -393,6 +405,7 @@ export function createSystemCalls(
         test2,
         test3,
         testRevert,
+        IsBoardCard,
     };
 
     window.mud = out;

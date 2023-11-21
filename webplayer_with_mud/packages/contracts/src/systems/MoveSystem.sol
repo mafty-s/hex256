@@ -25,7 +25,10 @@ contract MoveSystem is System {
 
     }
 
-    function MoveCard(bytes32 game_key,bytes32 player_key,bytes32 card_key, Slot memory slot) public {
+    function MoveCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot) public {
+
+        require(CardOnBoards.getId(card_key) != 0, "Card not found");
+        require(Players.getOwner(player_key) == _msgSender(), "Not owner");
 
         if (BaseLogicLib.CanMoveCard(card_key, slot)) {
             //todo

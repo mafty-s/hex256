@@ -64,6 +64,11 @@ namespace TcgEngine
         {
             UserData res = await Client.LoadUserData();
 #if !UNITY_EDITOR && UNITY_WEBGL
+            if (MudManager.Get().useMud == false)
+            {
+                return res;
+            }
+
             Debug.Log("LoadUserData:" + MudManager.Get().msg);
             res.username = MudManager.Get().GetUserData().id;
             res.coins = MudManager.Get().GetUserData().coin;

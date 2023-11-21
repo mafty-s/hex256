@@ -8,6 +8,7 @@ import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.
 import { IAttackSystem } from "./IAttackSystem.sol";
 import { IConfigSystem } from "./IConfigSystem.sol";
 import { ICounterSystem } from "./ICounterSystem.sol";
+import { IDebugSystem } from "./IDebugSystem.sol";
 import { IDeckSystem } from "./IDeckSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
@@ -28,6 +29,7 @@ interface IWorld is
   IAttackSystem,
   IConfigSystem,
   ICounterSystem,
+  IDebugSystem,
   IDeckSystem,
   IGameStartSystem,
   IMarketSystem,
