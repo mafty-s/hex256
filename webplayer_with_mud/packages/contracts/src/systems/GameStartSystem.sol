@@ -19,7 +19,7 @@ contract GameStartSystem is System {
 
     }
 
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai) public returns (bytes32[] memory) {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, uint8 hp, uint8 mana, uint8 dcards) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 match_key = keccak256(abi.encode(game_uid));
@@ -28,7 +28,7 @@ contract GameStartSystem is System {
         //        DecksData memory deck = Decks.get(desk_key);
 
         Matches.pushPlayers(match_key, player_key);
-        Players.set(player_key, PlayersData({owner : _msgSender(), hp : 20, mana : 2, hpMax : 20, manaMax : 2, name : username, deck : desk_id, isAI : is_ai}));
+        Players.set(player_key, PlayersData({owner : _msgSender(), dcards : dcards, hp : hp, mana : mana, hpMax : hp, manaMax : mana, name : username, deck : desk_id, isAI : is_ai}));
 
 
         bytes32[] memory cards = Decks.getCards(desk_key);
@@ -81,11 +81,7 @@ contract GameStartSystem is System {
 
         for (uint8 i = 0; i < player_keys.length; i++) {
             bytes32 player_key = player_keys[i];
-            PlayersData memory player = Players.get(player_key);
-            //todo
-            Players.setHp(player_key, player.hpMax);
-            Players.setMana(player_key, player.manaMax);
-            DrawCard(player_key, 5);
+            DrawCard(player_key, Players.getDcards(player_key));
         }
 
 

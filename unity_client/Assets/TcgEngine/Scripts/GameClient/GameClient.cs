@@ -283,13 +283,34 @@ namespace TcgEngine.Client
             //+
             //    string.Format("{0},{1}", psettings.username, psettings.deck.cards[0]));
 
-            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false);
+            DeckPuzzleData pdeck = DeckPuzzleData.Get(psettings.deck.tid);
+
+            int hp_max = pdeck != null ? pdeck.start_hp : GameplayData.Get().hp_start;
+            int mana_max = pdeck != null ? pdeck.start_mana : GameplayData.Get().mana_start;
+            //Draw starting cards
+            int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
+
+
+            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
+                hp_max, mana_max, dcards);
+            
             SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
         public void SendPlayerSettingsAI(PlayerSettings psettings)
         {
-            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true);
+
+            DeckPuzzleData pdeck = DeckPuzzleData.Get(psettings.deck.tid);
+
+            int hp_max = pdeck != null ? pdeck.start_hp : GameplayData.Get().hp_start;
+            int mana_max = pdeck != null ? pdeck.start_mana : GameplayData.Get().mana_start;
+            //Draw starting cards
+            int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
+
+
+            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
+                hp_max, mana_max, dcards);
+            
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
@@ -321,9 +342,9 @@ namespace TcgEngine.Client
             MsgAttack mdata = new MsgAttack();
             mdata.attacker_uid = card.uid;
             mdata.target_uid = target.uid;
-            
+
             MudManager.Get().AttackCard();
-            
+
             SendAction(GameAction.Attack, mdata);
         }
 
@@ -332,7 +353,7 @@ namespace TcgEngine.Client
             MsgAttackPlayer mdata = new MsgAttackPlayer();
             mdata.attacker_uid = card.uid;
             mdata.target_id = target.player_id;
-            
+
             MudManager.Get().AttackCard();
 
             SendAction(GameAction.AttackPlayer, mdata);

@@ -42,7 +42,7 @@ contract PlayCardSystem is System {
             PayMana(player_key, card_key);
         }
 
-        //        PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
+        PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
 
         if (CardLogicLib.IsBoardCard(card_key)) {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);

@@ -154,10 +154,9 @@ export function createSystemCalls(
         return user;
     };
 
-    const IsBoardCard = async (key:string) => {
-        return  await worldContract.read.IsBoardCard([key]);
+    const IsBoardCard = async (key: string) => {
+        return await worldContract.read.IsBoardCard([key]);
     };
-
 
 
     const getUserByKey = async (key: string) => {
@@ -280,8 +279,8 @@ export function createSystemCalls(
         return tx;
     }
 
-    const playerSetting = async (username, game_uid, desk_id, is_ai) => {
-        const tx = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai]);
+    const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number, dcards: number) => {
+        const tx = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards]);
         await waitForTransaction(tx);
         return tx;
     }

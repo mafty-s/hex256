@@ -14,7 +14,10 @@ interface IGameStartSystem {
     string memory username,
     string memory game_uid,
     string memory desk_id,
-    bool is_ai
+    bool is_ai,
+    uint8 hp,
+    uint8 mana,
+    uint8 dcards
   ) external returns (bytes32[] memory);
 
   function testRevert() external;
