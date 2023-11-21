@@ -82,6 +82,12 @@ mergeInto(LibraryManager.library, {
 
     },
 
+
+    addDeck:async function(user_id,deck_name,cards){
+        
+
+    },
+
     AddNumbers: async function (x, y, onSuccess) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         dynCall_vi(onSuccess, x + y);

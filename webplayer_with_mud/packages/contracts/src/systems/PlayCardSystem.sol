@@ -17,6 +17,7 @@ import "../libs/PlayerLogicLib.sol";
 import "../libs/CardLogicLib.sol";
 import "../libs/GameLogicLib.sol";
 import "../libs/AbilityLib.sol";
+import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 
@@ -46,7 +47,9 @@ contract PlayCardSystem is System {
             SlotLib.SetSlot(card_key, slot);
             CardOnBoards.setExhausted(card_key, true);
         } else if (CardLogicLib.IsEquipment(card_key)) {
-            //
+            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
+            GameLogicLib.EquipCard(bearer, card_key);
+            CardOnBoards.setExhausted(card_key,true);
         } else if (CardLogicLib.IsSecret(card_key)) {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
         } else {

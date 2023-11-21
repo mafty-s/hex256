@@ -336,6 +336,10 @@ namespace TcgEngine.Client
             mdata.card_uid = card.uid;
             mdata.slot = slot;
             SendAction(GameAction.Move, mdata);
+            
+            MudManager.Get().MoveCard(this.game_data.game_uid, card.player_id.ToString(), card.CardData.id, slot.x,
+                slot.y,
+                slot.p, false);
         }
 
         public void CastAbility(Card card, AbilityData ability)

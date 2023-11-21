@@ -129,5 +129,11 @@ library BaseLogicLib {
         //todo
         return true;
     }
+
+    function GetSlotCard(bytes32 game_key,Slot memory slot) internal view returns (bytes32) {
+        //todo
+        return 0;
+//        return MatchesExtended.getSlotCard(game_key, slot);
+    }
 }
 

@@ -304,4 +304,24 @@ public class MudManager : MonoBehaviour
         moveCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
 #endif
     }
+
+    public void AttackCard()
+    {
+        
+    }
+
+    public void AttackPlayer()
+    {
+        
+    }
+
+    public void CastAbility()
+    {
+        
+    }
+
+    public void EndTurn()
+    {
+        
+    }
 }

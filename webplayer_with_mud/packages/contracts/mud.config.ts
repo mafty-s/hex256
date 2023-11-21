@@ -17,6 +17,10 @@ export default mudConfig({
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
     },
     tables: {
+        AdminSingleton: {
+            keySchema: {},
+            valueSchema: "address",
+        },
         CounterSingleton: {
             keySchema: {},
             valueSchema: "uint256",

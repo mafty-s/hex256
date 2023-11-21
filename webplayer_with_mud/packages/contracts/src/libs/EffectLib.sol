@@ -120,11 +120,18 @@ library EffectLib {
     }
 
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        if(is_card){
+            //logic.TransformCard(target, transform_to);
+        }
         //todo
     }
 
     function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+        uint8 curr_mana = Players.getMana(target) + Ability.getValue(ability_key);
+        Players.setMana(target, curr_mana);
+        if (Players.getMana(target) < 0) {
+            Players.setMana(target, 0);
+        }
     }
 
     function EffectResetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {

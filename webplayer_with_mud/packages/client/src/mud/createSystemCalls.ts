@@ -278,11 +278,15 @@ export function createSystemCalls(
     }
 
     const playCard = async (game_id, player_id, card_id, slot, skip_cost) => {
+        const game_key = calculateKeccak256Hash(game_id);
         const card_config_key = calculateKeccak256Hash(card_id);
         const player_key = calculateKeccak256HashTwoString(game_id, player_id);
         const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
         // let slot = {x: 0, y: 0, z: 0}
-        const tx = await worldContract.write.PlayCard([player_key, card_key, slot, skip_cost]);
+
+        // function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
+
+        const tx = await worldContract.write.PlayCard([game_key, player_key, card_key, slot, skip_cost]);
         await waitForTransaction(tx);
         return tx;
     }

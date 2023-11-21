@@ -23,6 +23,7 @@ library GameLogicLib {
     function DamagePlayer(bytes32 player, uint256 value) internal {
         //        player.hp -= value;
         //        player.hp = Math.clamp(player.hp, 0, player.hp_max);
+        //todo
     }
 
     function UpdateOngoing() internal {
@@ -32,6 +33,14 @@ library GameLogicLib {
     function HealCard(bytes32 target, uint8 value) internal {
         //todo
     }
+
+    function EquipCard(bytes32 card, bytes32 equipment) internal {
+        //todo
+    }
+
+
+
+
 
 
     ////Heal a card
