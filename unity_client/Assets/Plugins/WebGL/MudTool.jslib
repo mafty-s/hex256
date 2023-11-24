@@ -59,6 +59,7 @@ mergeInto(LibraryManager.library, {
 
     gameSetting:async function(game_uid){
         let result = await mud.gameSetting(UTF8ToString(game_uid));
+        MyUnityInstance.SendMessage("Client","OnGameSettingSuccess","returnStr");
     },
 
     playerSetting:async function(username,game_uid,deck_id,is_ai,hp,mana,dcards){
@@ -78,7 +79,7 @@ mergeInto(LibraryManager.library, {
         console.log("card_key",UTF8ToString(card_key));
 
         let slot = {x:slot_x,y:slot_x,p:slot_p};
-        let result = await mud.playCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip,card_key);
+        let result = await mud.playCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip,UTF8ToString(card_key));
         console.log("playCard result",result);
     },
 
@@ -90,7 +91,7 @@ mergeInto(LibraryManager.library, {
 
         let slot = {x:slot_x,y:slot_x,p:slot_p};
 
-        let result = await mud.moveCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip,card_key);
+        let result = await mud.moveCard(UTF8ToString(game_uid),UTF8ToString(player_id),UTF8ToString(card_id),slot,skip,UTF8ToString(card_key));
 
         console.log("moveCard result",result);
     },

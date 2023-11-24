@@ -31,6 +31,9 @@ namespace TcgEngine.UI
             GameClient.Get().onGameStart += OnStart;
 
             SetLoadText("Connecting to server...");
+            
+            //todo
+            Destroy(this.gameObject);
         }
 
         private void OnConnect()

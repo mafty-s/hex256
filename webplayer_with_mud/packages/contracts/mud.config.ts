@@ -1,6 +1,5 @@
 import {mudConfig} from "@latticexyz/world/register";
 
-
 export default mudConfig({
     enums: {
         SelectorType: ["NONE", "SELECT_TARGET", "SELECTOR_CARD", "SELECTOR_CHOICE"],
@@ -8,7 +7,8 @@ export default mudConfig({
         RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
-        GameType: ["SOLO", "PVP"],
+        GameType: ["SOLO", "ADVENTURE", "MULTIPLAYER", "HOST_P2P", "OBSERVER"],
+        GameMode: ["CASUAL", "RANKED"],
         GameState: ["INIT", "PLAY", "GAME_ENDED"],
         GamePhase: ["NONE", "START_TURN", "MAIN", "END_TURN"],
         CardType: ["NONE", "HERO", "CHARACTER", "SPELL", "ARTIFACT", "SECRET", "EQUIPMENT"],
@@ -119,6 +119,8 @@ export default mudConfig({
                 firstPlayer: "bytes32",
                 currentPlayer: "bytes32",
                 turnCount: "uint8",
+                nbPlayer: "uint8",
+                level: "string",
                 uid: "string",
                 players: "bytes32[]",
             }

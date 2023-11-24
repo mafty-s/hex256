@@ -188,7 +188,7 @@ public class MudManager : MonoBehaviour
     private static extern string saveDeck(string tid, string name, string cards);
     
     [DllImport("__Internal")]
-    private static extern string attackCard(string game_id, string player_id, string attacker_id, string target_id,int slot_x, int slot_y, int slot_p,bool skip_cost);
+    private static extern string attackCard(string game_id, string player_id, string attacker_id,string target_id);
 
 #endif
 
@@ -326,7 +326,7 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void GameSetting(string game_uid)
+    public void GameSetting(string game_uid, int nb_players, string level)
     {
         if (useMud == false)
         {
@@ -386,10 +386,10 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void AttackCard(string game_id, string player_id, string attacker_id, string target_id,int slot_x, int slot_y, int slot_p,bool skip_cost)
+    public void AttackCard(string game_id, string player_id, string attacker_id, string target_id)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
-        attackCard(game_id,player_id,attacker_id,target_id,);
+        attackCard(game_id,player_id,attacker_id,target_id);
 #endif
     }
 

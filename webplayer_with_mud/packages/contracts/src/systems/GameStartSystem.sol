@@ -11,7 +11,6 @@ import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 
 import {GameType, GameState, GamePhase} from "../codegen/common.sol";
 
-
 //    struct PlayerSettingResult {
 //        CardTuple[] cards;
 //    }
@@ -32,28 +31,20 @@ contract GameStartSystem is System {
         //        DecksData memory deck = Decks.get(desk_key);
 
         Matches.pushPlayers(match_key, player_key);
-        Players.set(player_key, PlayersData({owner : _msgSender(), dcards : dcards, hp : hp, mana : mana, hpMax : hp, manaMax : mana, name : username, deck : desk_id, isAI : is_ai}));
+        Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
 
 
         bytes32[] memory cards = Decks.getCards(desk_key);
         for (uint i = 0; i < cards.length; i++) {
-            bytes32 card_key = keccak256(abi.encode(cards[i], player_key));
+            bytes32 on_board_card_key = keccak256(abi.encode(cards[i], player_key, i));
             CardsData memory card = Cards.get(cards[i]);
-            //            CardOnBoards.set(card_key, CardOnBoardsData({id : card_key, name : card.tid, hp : card.hp, hpOngoing : 0, attack : card.attack, attackOngoing : 0, mana : card.mana, manaOngoing : 0, damage : 0, exhausted : false, equippedUid : 0, playerId : player_key}));
-            CardOnBoards.setId(card_key, cards[i]);
-            //            CardOnBoards.setName(card_key,card.tid);
-            CardOnBoards.setHp(card_key, card.hp);
-            //            CardOnBoards.setHpOngoing(card_key,0);
-            CardOnBoards.setAttack(card_key, card.attack);
-            //            CardOnBoards.setAttackOngoing(card_key,0);
-            CardOnBoards.setMana(card_key, card.mana);
-            //            CardOnBoards.setManaOngoing(card_key,0);
-            //            CardOnBoards.setDamage(card_key,0);
-            //            CardOnBoards.setExhausted(card_key,false);
-            //            CardOnBoards.setEquippedUid(card_key,0);
-            CardOnBoards.setPlayerId(card_key, player_key);
+            CardOnBoards.setId(on_board_card_key, cards[i]);
+            CardOnBoards.setHp(on_board_card_key, card.hp);
+            CardOnBoards.setAttack(on_board_card_key, card.attack);
+            CardOnBoards.setMana(on_board_card_key, card.mana);
+            CardOnBoards.setPlayerId(on_board_card_key, player_key);
 
-            PlayerCardsDeck.pushValue(player_key, card_key);
+            PlayerCardsDeck.pushValue(player_key, on_board_card_key);
         }
 
 
@@ -87,7 +78,6 @@ contract GameStartSystem is System {
             bytes32 player_key = player_keys[i];
             DrawCard(player_key, Players.getDcards(player_key));
         }
-
 
         //Start state
         StartTurn(match_key);
@@ -179,15 +169,16 @@ contract GameStartSystem is System {
 
         bytes32[] memory cards = new bytes32[](hand.length + deck.length);
 
-        for (uint i = 0; i < deck.length; i++) {
-            cards[i] = CardOnBoards.getId(deck[i]);
+        for (uint i = 0; i < hand.length; i++) {
+            cards[i] = CardOnBoards.getId(hand[i]);
         }
 
-        return (name,cards, hand, deck, board);
+        for (uint i = 0; i < deck.length; i++) {
+            cards[hand.length + i] = CardOnBoards.getId(deck[i]);
+        }
+
+        return (name, cards, hand, deck, board);
     }
-
-
-
 
     //    struct CardTuple {
     //        bytes32 card_key;

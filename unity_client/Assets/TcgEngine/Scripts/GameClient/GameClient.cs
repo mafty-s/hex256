@@ -292,10 +292,38 @@ namespace TcgEngine.Client
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
 
-            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
-                hp_max, mana_max, dcards);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
+                    hp_max, mana_max, dcards);
+            }
+            else
+            {
+                SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
+            }
+        }
 
-            SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
+        public void OnGameSettingSuccess(string message)
+        {
+            Debug.Log("OnGameSettingSuccess:" + message);
+            // game_data.settings = new GameSettings();
+            // game_data.settings.game_uid = "";
+            // game_data.
+
+            if (observe_mode)
+                SetObserverMode(observe_user);
+
+            onConnectGame.Invoke();
+
+
+            game_data.settings.game_mode = GameMode.Casual;
+            game_data.settings.game_type = GameType.Adventure;
+            // game_uid = {string} "VdlXG2Hm26C7"
+            game_data.settings.level = "adventure2";
+            game_data.settings.nb_players = 2;
+            game_data.settings.scene = "Game";
+            game_data.settings.server_url = "";
+            onRefreshAll?.Invoke();
         }
 
         public void OnPlayerSettingSuccess(string message)
@@ -304,39 +332,86 @@ namespace TcgEngine.Client
             MudPlayerSettingResult result = JsonUtility.FromJson<MudPlayerSettingResult>(message);
             foreach (var player in game_data.players)
             {
+                Debug.Log("OnPlayerSettingSuccess: player=" + player.username);
                 if (player.username == result.player_name)
                 {
                     Debug.Log("OnPlayerSettingSuccess find player:" + result.player_name);
-                    player.cards_deck.Clear();
-                    player.cards_hand.Clear();
-                    player.cards_board.Clear();
-                    player.cards_equip.Clear();
-                    player.cards_discard.Clear();
-                    player.cards_secret.Clear();
-                    player.cards_temp.Clear();
-
                     for (var i = 0; i < result.all.Length; i++)
                     {
+                        if (player.IsReady())
+                        {
+                            Debug.Log(player.username + "IsReady");
+                            continue;
+                        }
+
                         var card_key = result.all[i];
                         var card_id_key = result.cards[i];
                         var card_id = MudManager.Get().GetCardIdByHex(card_id_key);
 
+                        Debug.Log("CardId:" + card_id);
+
+
+                        // foreach (var hand_card in player.cards_hand)
+                        // {
+                        //     Debug.Log("HandCard:"+hand_card.card_id);
+                        //     if (hand_card.card_id == card_id)
+                        //     {
+                        //         Debug.Log("HandCard Find:"+hand_card.card_id);
+                        //         hand_card.uid = card_key;
+                        //     }
+                        // }
+
+                        CardData card_data = CardData.Get(card_id);
+                        Card card = Card.Create(card_data, VariantData.Get("normal"), player, card_key);
                         if (Array.Exists(result.deck, element => element == card_key))
                         {
-                            player.cards_deck.Add(new Card(card_id, card_key, player.player_id));
+                            Debug.Log("PlayerDeckAddCard:" + card.card_id + " : " + card.uid);
+                            player.cards_deck.Add(card);
                         }
 
                         if (Array.Exists(result.hand, element => element == card_key))
                         {
-                            player.cards_hand.Add(new Card(card_id, card_key, player.player_id));
+                            Debug.Log("PlayerHand AddCard:" + card.card_id + " : " + card.uid);
+                            player.cards_hand.Add(card);
                         }
 
                         if (Array.Exists(result.board, element => element == card_key))
                         {
-                            player.cards_board.Add(new Card(card_id, card_key, player.player_id));
+                            Debug.Log("PlayerBoard AddCard:" + card.card_id + " : " + card.uid);
+                            player.cards_board.Add(card);
                         }
                     }
+
+                    player.ready = true;
+                    Debug.Log("do onPlayerReady:" + player.player_id);
+                    onPlayerReady.Invoke(player.player_id);
                 }
+            }
+
+            if (game_data.players[0].IsReady() && game_data.players[1].IsReady())
+            {
+                Debug.Log("GameStarted");
+                Debug.Log("Player 0:" + game_data.players[0].player_id + "," + game_data.players[0].username);
+                Debug.Log("Player 1:" + game_data.players[1].player_id + "," + game_data.players[1].username);
+
+                
+                game_data.state = GameState.Play;
+                game_data.first_player = 0;
+                game_data.current_player = game_data.first_player;
+                game_data.turn_count = 1;
+                game_data.turn_timer = GameplayData.Get().turn_duration;
+
+                
+                onGameStart?.Invoke();
+                
+                game_data.phase = GamePhase.StartTurn;
+
+                // player.hp_max = pdeck != null ? pdeck.start_hp : GameplayData.Get().hp_start;
+                // player.hp = player.hp_max;
+                // player.mana_max = pdeck != null ? pdeck.start_mana : GameplayData.Get().mana_start;
+                // player.mana = player.mana_max;
+                
+                onNewTurn?.Invoke(game_data.players[0].player_id);
             }
         }
 
@@ -358,7 +433,7 @@ namespace TcgEngine.Client
 
         public void SendGameplaySettings(GameSettings settings)
         {
-            MudManager.Get().GameSetting(settings.game_uid);
+            MudManager.Get().GameSetting(settings.game_uid, settings.nb_players, settings.level);
             SendAction(GameAction.GameSettings, settings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
@@ -385,7 +460,7 @@ namespace TcgEngine.Client
             mdata.attacker_uid = card.uid;
             mdata.target_uid = target.uid;
 
-            MudManager.Get().AttackCard(game_data.game_uid, GetPlayer().username, card.card_id, target.card_id);
+            MudManager.Get().AttackCard(game_data.game_uid, GetPlayer().username, card.uid, target.uid);
 
             SendAction(GameAction.Attack, mdata);
         }
@@ -412,7 +487,7 @@ namespace TcgEngine.Client
 
             MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
-                slot.p, false,card.uid);
+                slot.p, false, card.uid);
         }
 
         public void CastAbility(Card card, AbilityData ability)

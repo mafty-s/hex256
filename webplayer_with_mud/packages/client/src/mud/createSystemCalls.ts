@@ -273,10 +273,17 @@ export function createSystemCalls(
         return convertBigIntToInt({hash, tx_result});
     };
 
-    const gameSetting = async (game_uid) => {
+    const gameSetting = async (game_uid: string) => {
         const tx = await worldContract.write.GameSetting([game_uid]);
         await waitForTransaction(tx);
-        return tx;
+        let result = {
+            game_uid: game_uid
+        }
+        return {tx, result};
+    }
+
+    const sleep = (ms: number) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number, dcards: number) => {
@@ -285,9 +292,11 @@ export function createSystemCalls(
 
         const tx_result = await getTxResult(hash);
 
-        const player_key = calculateKeccak256HashTwoString(game_uid, "Player");
+        const player_key = calculateKeccak256HashTwoString(game_uid, username);
 
-        const playerSettingResult = await worldContract.read.getPlayerCards([player_key]);
+        const card_pool = await worldContract.read.getPlayerCards([player_key]);
+        console.log("card_pool", card_pool)
+
         let res = {
             player_name: "",
             cards: [],
@@ -297,13 +306,18 @@ export function createSystemCalls(
             all: [],
         }
 
-        res.player_name = playerSettingResult[0];
+        res.player_name = card_pool[0];
         res.cards = card_pool[1];
         res.hand = card_pool[2];
         res.deck = card_pool[3];
         res.board = card_pool[4];
         res.all = res.hand.concat(res.deck);
 
+        if (res.player_name == "Player") {
+            res.player_name = "test"
+        }
+
+        await sleep(1000);
         return convertBigIntToInt({hash, tx_result, res});
     }
 
@@ -331,7 +345,7 @@ export function createSystemCalls(
         return convertBigIntToInt({hash, tx_result});
     }
 
-    const moveCard = async (game_id, player_id, card_id, slot, skip_cost,card_key) => {
+    const moveCard = async (game_id, player_id, card_id, slot, skip_cost, card_key) => {
         const game_key = calculateKeccak256Hash(game_id);
         const card_config_key = calculateKeccak256Hash(card_id);
         const player_key = calculateKeccak256HashTwoString(game_id, "Player");

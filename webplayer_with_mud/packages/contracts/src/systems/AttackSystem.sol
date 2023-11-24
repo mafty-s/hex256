@@ -16,7 +16,7 @@ contract AttackSystem is System {
 
     }
 
-    function AttackTarget(bytes32 game_key, bytes32 attacker_key, bytes32 target_key, uint8 slot, bool skip_cost) public {
+    function AttackTarget(bytes32 game_key, bytes32 attacker_key, bytes32 target_key, bool skip_cost) public {
 
         if (BaseLogicLib.CanAttackTarget(attacker_key, target_key, skip_cost))
         {

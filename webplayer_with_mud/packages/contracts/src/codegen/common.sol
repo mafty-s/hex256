@@ -53,7 +53,15 @@ enum TeamType {
 
 enum GameType {
   SOLO,
-  PVP
+  ADVENTURE,
+  MULTIPLAYER,
+  HOST_P2P,
+  OBSERVER
+}
+
+enum GameMode {
+  CASUAL,
+  RANKED
 }
 
 enum GameState {
