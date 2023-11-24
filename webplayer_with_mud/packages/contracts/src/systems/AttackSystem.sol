@@ -16,35 +16,35 @@ contract AttackSystem is System {
 
     }
 
-    function AttackTarget(bytes32 attacker_key, bytes32 target_key, uint8 slot, bool skip_cost) public {
+    function AttackTarget(bytes32 game_key, bytes32 attacker_key, bytes32 target_key, uint8 slot, bool skip_cost) public {
 
-                if (BaseLogicLib.CanAttackTarget(attacker_key, target_key, skip_cost))
-                {
-        //
-        //            Player player = game_data.GetPlayer(attacker.player_id);
-        //            if(!is_ai_predict)
-        //                player.AddHistory(GameAction.Attack, attacker, target);
-        //
-        //            //Trigger before attack abilities
-        //            TriggerCardAbilityType(AbilityTrigger.OnBeforeAttack, attacker, target);
-        //            TriggerCardAbilityType(AbilityTrigger.OnBeforeDefend, target, attacker);
-        //            TriggerSecrets(AbilityTrigger.OnBeforeAttack, attacker);
-        //            TriggerSecrets(AbilityTrigger.OnBeforeDefend, target);
+        if (BaseLogicLib.CanAttackTarget(attacker_key, target_key, skip_cost))
+        {
+            //
+            //            Player player = game_data.GetPlayer(attacker.player_id);
+            //            if(!is_ai_predict)
+            //                player.AddHistory(GameAction.Attack, attacker, target);
+            //
+            //            //Trigger before attack abilities
+            //            TriggerCardAbilityType(AbilityTrigger.OnBeforeAttack, attacker, target);
+            //            TriggerCardAbilityType(AbilityTrigger.OnBeforeDefend, target, attacker);
+            //            TriggerSecrets(AbilityTrigger.OnBeforeAttack, attacker);
+            //            TriggerSecrets(AbilityTrigger.OnBeforeDefend, target);
 
-        AbilityLib.TriggerCardAbilityTypeTwoCard(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
-        AbilityLib.TriggerCardAbilityTypeTwoCard(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
+            AbilityLib.TriggerCardAbilityTypeTwoCard(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
+            AbilityLib.TriggerCardAbilityTypeTwoCard(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
 
-        //            //Resolve attack
-        //            resolve_queue.AddAttack(attacker, target, ResolveAttack, skip_cost);
-        //            resolve_queue.ResolveAll();
-                }
+            //            //Resolve attack
+            //            resolve_queue.AddAttack(attacker, target, ResolveAttack, skip_cost);
+            //            resolve_queue.ResolveAll();
+        }
 
         //todo
 
     }
 
 
-    function AttackPlayer(bytes32 card_key, uint8 slot, bytes32 player_key, bool skip_cost) public {
+    function AttackPlayer(bytes32 game_key, bytes32 card_key, uint8 slot, bytes32 player_key, bool skip_cost) public {
 
         //        if (game_data.CanAttackTarget(attacker, target, skip_cost))
         //        {

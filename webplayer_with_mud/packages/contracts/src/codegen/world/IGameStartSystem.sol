@@ -27,5 +27,11 @@ interface IGameStartSystem {
   )
     external
     view
-    returns (bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board);
+    returns (
+      string memory name,
+      bytes32[] memory cards,
+      bytes32[] memory hand,
+      bytes32[] memory deck,
+      bytes32[] memory board
+    );
 }

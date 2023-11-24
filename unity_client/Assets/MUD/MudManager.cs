@@ -20,6 +20,18 @@ public class MudUserData
     public string cardback;
 }
 
+
+[System.Serializable]
+public class MudPlayerSettingResult
+{
+    public string player_name;
+    public string[] cards;
+    public string[] hand;
+    public string[] deck;
+    public string[] board;
+    public string[] all;
+}
+
 public class MudManager : MonoBehaviour
 {
     public bool useMud = false;
@@ -167,13 +179,16 @@ public class MudManager : MonoBehaviour
     private static extern string playerSetting(string username, string game_uid, string deck_id,bool is_ai,int hp,int mana,int dcards);
     
     [DllImport("__Internal")]
-    private static extern string playCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost);
+    private static extern string playCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost,string card_key);
 
     [DllImport("__Internal")]
-    private static extern string moveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost);
+    private static extern string moveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,bool skip_cost,string card_key);
 
     [DllImport("__Internal")]
     private static extern string saveDeck(string tid, string name, string cards);
+    
+    [DllImport("__Internal")]
+    private static extern string attackCard(string game_id, string player_id, string attacker_id, string target_id,int slot_x, int slot_y, int slot_p,bool skip_cost);
 
 #endif
 
@@ -187,7 +202,6 @@ public class MudManager : MonoBehaviour
 
     void Start()
     {
-       
 #if !UNITY_EDITOR && UNITY_WEBGL
         this.useMud = hasMudInstalled();
 
@@ -323,7 +337,8 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void PlayerSetting(string username, string game_uid, string deck_id, bool is_ai,int hp,int mana,int dcards)
+    public void PlayerSetting(string username, string game_uid, string deck_id, bool is_ai, int hp, int mana,
+        int dcards)
     {
         if (useMud == false)
         {
@@ -348,31 +363,34 @@ public class MudManager : MonoBehaviour
 
     //game_id, player_id, card_id, slot, skip_cost
     public void PlayCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,
-        bool skip_cost)
+        bool skip_cost, string card_key)
     {
         if (useMud == false)
         {
             return;
         }
 #if !UNITY_EDITOR && UNITY_WEBGL
-        playCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
+        playCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost,card_key);
 #endif
     }
 
     public void MoveCard(string game_id, string player_id, string card_id, int slot_x, int slot_y, int slot_p,
-        bool skip_cost)
+        bool skip_cost, string card_key)
     {
         if (useMud == false)
         {
             return;
         }
 #if !UNITY_EDITOR && UNITY_WEBGL
-        moveCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost);
+        moveCard(game_id,player_id,card_id,slot_x,slot_y,slot_p,skip_cost,card_key);
 #endif
     }
 
-    public void AttackCard(string game_id,string player_id,string attacker_id,string target_id)
+    public void AttackCard(string game_id, string player_id, string attacker_id, string target_id,int slot_x, int slot_y, int slot_p,bool skip_cost)
     {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        attackCard(game_id,player_id,attacker_id,target_id,);
+#endif
     }
 
     public void AttackPlayer()

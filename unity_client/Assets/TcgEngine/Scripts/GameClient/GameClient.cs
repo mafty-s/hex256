@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -300,6 +301,43 @@ namespace TcgEngine.Client
         public void OnPlayerSettingSuccess(string message)
         {
             Debug.Log("OnPlayerSettingSuccess:" + message);
+            MudPlayerSettingResult result = JsonUtility.FromJson<MudPlayerSettingResult>(message);
+            foreach (var player in game_data.players)
+            {
+                if (player.username == result.player_name)
+                {
+                    Debug.Log("OnPlayerSettingSuccess find player:" + result.player_name);
+                    player.cards_deck.Clear();
+                    player.cards_hand.Clear();
+                    player.cards_board.Clear();
+                    player.cards_equip.Clear();
+                    player.cards_discard.Clear();
+                    player.cards_secret.Clear();
+                    player.cards_temp.Clear();
+
+                    for (var i = 0; i < result.all.Length; i++)
+                    {
+                        var card_key = result.all[i];
+                        var card_id_key = result.cards[i];
+                        var card_id = MudManager.Get().GetCardIdByHex(card_id_key);
+
+                        if (Array.Exists(result.deck, element => element == card_key))
+                        {
+                            player.cards_deck.Add(new Card(card_id, card_key, player.player_id));
+                        }
+
+                        if (Array.Exists(result.hand, element => element == card_key))
+                        {
+                            player.cards_hand.Add(new Card(card_id, card_key, player.player_id));
+                        }
+
+                        if (Array.Exists(result.board, element => element == card_key))
+                        {
+                            player.cards_board.Add(new Card(card_id, card_key, player.player_id));
+                        }
+                    }
+                }
+            }
         }
 
         public void SendPlayerSettingsAI(PlayerSettings psettings)
@@ -312,7 +350,7 @@ namespace TcgEngine.Client
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
 
-            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, false,
+            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
                 hp_max, mana_max, dcards);
 
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
@@ -338,7 +376,7 @@ namespace TcgEngine.Client
 
             MudManager.Get().PlayCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
-                slot.p, false);
+                slot.p, false, card.uid);
         }
 
         public void AttackTarget(Card card, Card target)
@@ -374,7 +412,7 @@ namespace TcgEngine.Client
 
             MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
-                slot.p, false);
+                slot.p, false,card.uid);
         }
 
         public void CastAbility(Card card, AbilityData ability)

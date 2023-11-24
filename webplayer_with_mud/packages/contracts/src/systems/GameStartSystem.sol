@@ -169,17 +169,21 @@ contract GameStartSystem is System {
         revert("Can't play card");
     }
 
-    function getPlayerCards(bytes32 player_key) public view returns (bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board) {
+    function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board) {
+
+        name = Players.getName(player_key);
+
         hand = PlayerCardsHand.getValue(player_key);
         deck = PlayerCardsDeck.getValue(player_key);
         board = PlayerCardsBoard.getValue(player_key);
 
         bytes32[] memory cards = new bytes32[](hand.length + deck.length);
+
         for (uint i = 0; i < deck.length; i++) {
-            cards[i] = Cards.get(deck[i]).id;
+            cards[i] = CardOnBoards.getId(deck[i]);
         }
 
-        return (cards, hand, deck, board);
+        return (name,cards, hand, deck, board);
     }
 
 

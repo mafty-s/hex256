@@ -262,7 +262,7 @@ export function createSystemCalls(
             // TODO: do we need to include value, nonce, gas price, etc. to properly simulate?
         });
 
-        console.log("openPack result", tx_result.result);
+        console.log("getTxResult result", tx_result.result);
     }
 
     const openPack = async (name: string) => {
@@ -287,9 +287,24 @@ export function createSystemCalls(
 
         const player_key = calculateKeccak256HashTwoString(game_uid, "Player");
 
-        const cards = await worldContract.read.getPlayerCards([player_key]);
+        const playerSettingResult = await worldContract.read.getPlayerCards([player_key]);
+        let res = {
+            player_name: "",
+            cards: [],
+            hand: [],
+            deck: [],
+            board: [],
+            all: [],
+        }
 
-        return convertBigIntToInt({hash, tx_result, cards});
+        res.player_name = playerSettingResult[0];
+        res.cards = card_pool[1];
+        res.hand = card_pool[2];
+        res.deck = card_pool[3];
+        res.board = card_pool[4];
+        res.all = res.hand.concat(res.deck);
+
+        return convertBigIntToInt({hash, tx_result, res});
     }
 
     const getPlayerCards = async (game_id) => {
@@ -299,11 +314,11 @@ export function createSystemCalls(
         return cards;
     }
 
-    const playCard = async (game_id, player_id, card_id, slot, skip_cost) => {
+    const playCard = async (game_id, player_id, card_id, slot, skip_cost, card_key) => {
         const game_key = calculateKeccak256Hash(game_id);
-        const card_config_key = calculateKeccak256Hash(card_id);
+        // const card_config_key = calculateKeccak256Hash(card_id);
         const player_key = calculateKeccak256HashTwoString(game_id, "Player");
-        const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
+        // const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
         // let slot = {x: 0, y: 0, z: 0}
 
         // function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
@@ -316,12 +331,12 @@ export function createSystemCalls(
         return convertBigIntToInt({hash, tx_result});
     }
 
-    const moveCard = async (game_id, player_id, card_id, slot, skip_cost) => {
+    const moveCard = async (game_id, player_id, card_id, slot, skip_cost,card_key) => {
         const game_key = calculateKeccak256Hash(game_id);
         const card_config_key = calculateKeccak256Hash(card_id);
         const player_key = calculateKeccak256HashTwoString(game_id, "Player");
-        const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
-        console.log("card_key", card_key);
+        // const card_key = calculateKeccak256HashTwoBytes32(card_config_key, player_key);
+        // console.log("card_key", card_key);
 
         // let slot = {x: 0, y: 0, z: 0}
 
@@ -332,11 +347,14 @@ export function createSystemCalls(
         return tx;
     }
 
-    const attackTarget = async (game_id, player_id, card_id, target_id, skip_cost) => {
-
+    const attackTarget = async (game_id, player_id, slot, skip_cost, attacker_key, target_key) => {
+        const game_key = calculateKeccak256Hash(game_id);
+        const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, slot]);
+        await waitForTransaction(tx);
+        return tx;
     }
 
-    const attackPlayer = async (game_id, player_id, card_id, target_id, skip_cost) => {
+    const attackPlayer = async (game_id, player_id, card_id, target_id, skip_cost, card_key) => {
 
     }
 

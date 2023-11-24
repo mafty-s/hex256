@@ -8,7 +8,13 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IAttackSystem {
-  function AttackTarget(bytes32 attacker_key, bytes32 target_key, uint8 slot, bool skip_cost) external;
+  function AttackTarget(
+    bytes32 game_key,
+    bytes32 attacker_key,
+    bytes32 target_key,
+    uint8 slot,
+    bool skip_cost
+  ) external;
 
-  function AttackPlayer(bytes32 card_key, uint8 slot, bytes32 player_key, bool skip_cost) external;
+  function AttackPlayer(bytes32 game_key, bytes32 card_key, uint8 slot, bytes32 player_key, bool skip_cost) external;
 }
