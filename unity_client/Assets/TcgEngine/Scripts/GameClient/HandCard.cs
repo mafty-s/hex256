@@ -210,6 +210,7 @@ namespace TcgEngine.Client
 
         public void TryPlayCard(Vector3 board_pos)
         {
+            Debug.Log("TryPlayCard");
             if (!GameClient.Get().IsYourTurn())
             {
                 WarningText.ShowNotYourTurn();

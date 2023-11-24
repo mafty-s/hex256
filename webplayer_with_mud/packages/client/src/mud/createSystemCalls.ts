@@ -342,7 +342,14 @@ export function createSystemCalls(
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
-        return convertBigIntToInt({hash, tx_result});
+
+        const result = {
+            card_uid: card_key,
+            slot_x: slot.x,
+            slot_y: 1,//slot.y,
+            slot_p: slot.p,
+        }
+        return convertBigIntToInt({hash, tx_result, result});
     }
 
     const moveCard = async (game_id, player_id, card_id, slot, skip_cost, card_key) => {
@@ -358,7 +365,14 @@ export function createSystemCalls(
 
         const tx = await worldContract.write.MoveCard([game_key, player_key, card_key, slot]);
         await waitForTransaction(tx);
-        return tx;
+
+        const result = {
+            card_uid: card_key,
+            slot_x: slot.x,
+            slot_y: 1,//slot.y,
+            slot_p: slot.p,
+        }
+        return {tx, result};
     }
 
     const attackTarget = async (game_id, player_id, slot, skip_cost, attacker_key, target_key) => {
@@ -408,6 +422,8 @@ export function createSystemCalls(
         await waitForTransaction(tx);
         return tx;
     }
+
+    // const EndTurn
 
 
     // let a = async () => {

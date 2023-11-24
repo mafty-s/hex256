@@ -7,6 +7,26 @@ using TcgEngine;
 
 
 [System.Serializable]
+public class MudPlayCard
+{
+    public string card_uid;
+    public int slot_x;
+    public int slot_y;
+    public int slot_p;
+}
+
+
+[System.Serializable]
+public class MovePlayCard
+{
+    public string card_uid;
+    public int slot_x;
+    public int slot_y;
+    public int slot_p;
+}
+
+
+[System.Serializable]
 public class MudUserData
 {
     public string owner;
@@ -393,16 +413,18 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void AttackPlayer()
+    public void AttackPlayer(string game_uid,string attacker_id,int target_id)
     {
+        
     }
 
     public void CastAbility()
     {
     }
 
-    public void EndTurn()
+    public void EndTurn(string game_uid, string player_name)
     {
+        
     }
 
     public void SaveDeck(string tid, string hero, string cards)

@@ -383,6 +383,10 @@ namespace TcgEngine.Client
                     }
 
                     player.ready = true;
+                    player.mana_max = 5;
+                    player.mana = 5;
+                    player.hp = 10;
+                    player.hp_max = 10;
                     Debug.Log("do onPlayerReady:" + player.player_id);
                     onPlayerReady.Invoke(player.player_id);
                 }
@@ -443,7 +447,7 @@ namespace TcgEngine.Client
             mdata.card_uid = card.uid;
             mdata.slot = slot;
 
-            Debug.Log("GameClient PlayCard:" + card.uid + "," + slot.y + "," + slot.x + "," + slot.y);
+            Debug.Log("GameClient PlayCard:" + card.uid + "," + slot.y + "," + slot.x + "," + slot.p);
 
             SendAction(GameAction.PlayCard, mdata);
 
@@ -452,6 +456,30 @@ namespace TcgEngine.Client
             MudManager.Get().PlayCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
                 slot.p, false, card.uid);
+        }
+
+        public void OnPlayCardSuccess(string message)
+        {
+            Debug.Log("OnPlayCardSuccess" + message);
+
+            MudPlayCard msg = JsonUtility.FromJson<MudPlayCard>(message);
+
+            Slot slot = new Slot(msg.slot_x, msg.slot_y, msg.slot_p);
+            
+            Card card = game_data.GetCard(msg.card_uid);
+            if (card == null)
+            {
+                Debug.Log("Card Not Found"+msg.card_uid);
+            }
+
+            card.slot = slot;
+
+            var player = game_data.GetPlayer(card.player_id);
+            player.RemoveCardFromAllGroups(card);
+            player.cards_board.Add(card);
+            
+            onCardPlayed?.Invoke(card, slot);
+            onRefreshAll?.Invoke();
         }
 
         public void AttackTarget(Card card, Card target)
@@ -471,9 +499,11 @@ namespace TcgEngine.Client
             mdata.attacker_uid = card.uid;
             mdata.target_id = target.player_id;
 
-            MudManager.Get().AttackPlayer();
 
             SendAction(GameAction.AttackPlayer, mdata);
+            
+            MudManager.Get().AttackPlayer(game_data.game_uid,card.uid, target.player_id);
+            
         }
 
         public void Move(Card card, Slot slot)
@@ -484,10 +514,38 @@ namespace TcgEngine.Client
             SendAction(GameAction.Move, mdata);
 
             string player_name = GetPlayer().username;
+            
+            
 
             MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
                 slot.p, false, card.uid);
+        }
+
+        public void OnMoveCardSuccess(string message)
+        {
+            Debug.Log("OnMoveCardSuccess:"+message);
+            
+            
+            MudPlayCard msg = JsonUtility.FromJson<MudPlayCard>(message);
+
+            Slot slot = new Slot(msg.slot_x, msg.slot_y, msg.slot_p);
+            
+            Card card = game_data.GetCard(msg.card_uid);
+            
+            if (card == null)
+            {
+                Debug.Log("Card Not Found"+msg.card_uid);
+            }
+
+            card.slot = slot;
+
+            var player = game_data.GetPlayer(card.player_id);
+            player.RemoveCardFromAllGroups(card);
+            player.cards_board.Add(card);
+            
+            onCardMoved?.Invoke(card, slot);
+            onRefreshAll?.Invoke();
         }
 
         public void CastAbility(Card card, AbilityData ability)
@@ -541,6 +599,7 @@ namespace TcgEngine.Client
         public void EndTurn()
         {
             SendAction(GameAction.EndTurn);
+            MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username);
         }
 
         public void Resign()
@@ -675,7 +734,7 @@ namespace TcgEngine.Client
             MsgPlayCard msg = sdata.Get<MsgPlayCard>();
             Card card = game_data.GetCard(msg.card_uid);
             onCardMoved?.Invoke(card, msg.slot);
-        }
+        } 
 
         private void OnCardTransformed(SerializedData sdata)
         {

@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant MatchesTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0044060201010120200100000000000000000000000000000000000000000000
+  0x0045070301010120200101000000000000000000000000000000000000000000
 );
 
 struct MatchesData {
@@ -39,6 +39,8 @@ struct MatchesData {
   bytes32 firstPlayer;
   bytes32 currentPlayer;
   uint8 turnCount;
+  uint8 nbPlayer;
+  string level;
   string uid;
   bytes32[] players;
 }
@@ -68,15 +70,17 @@ library Matches {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](8);
+    SchemaType[] memory _valueSchema = new SchemaType[](10);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.UINT8;
     _valueSchema[2] = SchemaType.UINT8;
     _valueSchema[3] = SchemaType.BYTES32;
     _valueSchema[4] = SchemaType.BYTES32;
     _valueSchema[5] = SchemaType.UINT8;
-    _valueSchema[6] = SchemaType.STRING;
-    _valueSchema[7] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[6] = SchemaType.UINT8;
+    _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[8] = SchemaType.STRING;
+    _valueSchema[9] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -95,15 +99,17 @@ library Matches {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](8);
+    fieldNames = new string[](10);
     fieldNames[0] = "gameType";
     fieldNames[1] = "gameState";
     fieldNames[2] = "gamePhase";
     fieldNames[3] = "firstPlayer";
     fieldNames[4] = "currentPlayer";
     fieldNames[5] = "turnCount";
-    fieldNames[6] = "uid";
-    fieldNames[7] = "players";
+    fieldNames[6] = "nbPlayer";
+    fieldNames[7] = "level";
+    fieldNames[8] = "uid";
+    fieldNames[9] = "players";
   }
 
   /**
@@ -373,13 +379,217 @@ library Matches {
   }
 
   /**
+   * @notice Get nbPlayer.
+   */
+  function getNbPlayer(bytes32 key) internal view returns (uint8 nbPlayer) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Get nbPlayer.
+   */
+  function _getNbPlayer(bytes32 key) internal view returns (uint8 nbPlayer) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Set nbPlayer.
+   */
+  function setNbPlayer(bytes32 key, uint8 nbPlayer) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((nbPlayer)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set nbPlayer.
+   */
+  function _setNbPlayer(bytes32 key, uint8 nbPlayer) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((nbPlayer)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get level.
+   */
+  function getLevel(bytes32 key) internal view returns (string memory level) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get level.
+   */
+  function _getLevel(bytes32 key) internal view returns (string memory level) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set level.
+   */
+  function setLevel(bytes32 key, string memory level) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((level)));
+  }
+
+  /**
+   * @notice Set level.
+   */
+  function _setLevel(bytes32 key, string memory level) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((level)));
+  }
+
+  /**
+   * @notice Get the length of level.
+   */
+  function lengthLevel(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of level.
+   */
+  function _lengthLevel(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of level.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemLevel(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of level.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemLevel(bytes32 key, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to level.
+   */
+  function pushLevel(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to level.
+   */
+  function _pushLevel(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from level.
+   */
+  function popLevel(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Pop a slice from level.
+   */
+  function _popLevel(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Update a slice of level at `_index`.
+   */
+  function updateLevel(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of level at `_index`.
+   */
+  function _updateLevel(bytes32 key, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get uid.
    */
   function getUid(bytes32 key) internal view returns (string memory uid) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
     return (string(_blob));
   }
 
@@ -390,7 +600,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
     return (string(_blob));
   }
 
@@ -401,7 +611,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((uid)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((uid)));
   }
 
   /**
@@ -411,7 +621,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((uid)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((uid)));
   }
 
   /**
@@ -421,7 +631,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
       return _byteLength / 1;
     }
@@ -434,7 +644,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
       return _byteLength / 1;
     }
@@ -449,7 +659,7 @@ library Matches {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
       return (string(_blob));
     }
   }
@@ -463,7 +673,7 @@ library Matches {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
       return (string(_blob));
     }
   }
@@ -475,7 +685,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
 
   /**
@@ -485,7 +695,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
 
   /**
@@ -495,7 +705,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
   }
 
   /**
@@ -505,7 +715,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
   }
 
   /**
@@ -517,7 +727,7 @@ library Matches {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -530,7 +740,7 @@ library Matches {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -541,7 +751,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
@@ -552,7 +762,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
@@ -563,7 +773,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((players)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((players)));
   }
 
   /**
@@ -573,7 +783,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((players)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((players)));
   }
 
   /**
@@ -583,7 +793,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
       return _byteLength / 32;
     }
@@ -596,7 +806,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
       return _byteLength / 32;
     }
@@ -611,7 +821,7 @@ library Matches {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 32, (_index + 1) * 32);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 32, (_index + 1) * 32);
       return (bytes32(_blob));
     }
   }
@@ -625,7 +835,7 @@ library Matches {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 32, (_index + 1) * 32);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 32, (_index + 1) * 32);
       return (bytes32(_blob));
     }
   }
@@ -637,7 +847,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
   }
 
   /**
@@ -647,7 +857,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
   }
 
   /**
@@ -657,7 +867,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 32);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 32);
   }
 
   /**
@@ -667,7 +877,7 @@ library Matches {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 32);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 32);
   }
 
   /**
@@ -679,7 +889,7 @@ library Matches {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -692,7 +902,7 @@ library Matches {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -737,13 +947,23 @@ library Matches {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint8 nbPlayer,
+    string memory level,
     string memory uid,
     bytes32[] memory players
   ) internal {
-    bytes memory _staticData = encodeStatic(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount);
+    bytes memory _staticData = encodeStatic(
+      gameType,
+      gameState,
+      gamePhase,
+      firstPlayer,
+      currentPlayer,
+      turnCount,
+      nbPlayer
+    );
 
-    PackedCounter _encodedLengths = encodeLengths(uid, players);
-    bytes memory _dynamicData = encodeDynamic(uid, players);
+    PackedCounter _encodedLengths = encodeLengths(level, uid, players);
+    bytes memory _dynamicData = encodeDynamic(level, uid, players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -762,13 +982,23 @@ library Matches {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint8 nbPlayer,
+    string memory level,
     string memory uid,
     bytes32[] memory players
   ) internal {
-    bytes memory _staticData = encodeStatic(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount);
+    bytes memory _staticData = encodeStatic(
+      gameType,
+      gameState,
+      gamePhase,
+      firstPlayer,
+      currentPlayer,
+      turnCount,
+      nbPlayer
+    );
 
-    PackedCounter _encodedLengths = encodeLengths(uid, players);
-    bytes memory _dynamicData = encodeDynamic(uid, players);
+    PackedCounter _encodedLengths = encodeLengths(level, uid, players);
+    bytes memory _dynamicData = encodeDynamic(level, uid, players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -786,11 +1016,12 @@ library Matches {
       _table.gamePhase,
       _table.firstPlayer,
       _table.currentPlayer,
-      _table.turnCount
+      _table.turnCount,
+      _table.nbPlayer
     );
 
-    PackedCounter _encodedLengths = encodeLengths(_table.uid, _table.players);
-    bytes memory _dynamicData = encodeDynamic(_table.uid, _table.players);
+    PackedCounter _encodedLengths = encodeLengths(_table.level, _table.uid, _table.players);
+    bytes memory _dynamicData = encodeDynamic(_table.level, _table.uid, _table.players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -808,11 +1039,12 @@ library Matches {
       _table.gamePhase,
       _table.firstPlayer,
       _table.currentPlayer,
-      _table.turnCount
+      _table.turnCount,
+      _table.nbPlayer
     );
 
-    PackedCounter _encodedLengths = encodeLengths(_table.uid, _table.players);
-    bytes memory _dynamicData = encodeDynamic(_table.uid, _table.players);
+    PackedCounter _encodedLengths = encodeLengths(_table.level, _table.uid, _table.players);
+    bytes memory _dynamicData = encodeDynamic(_table.level, _table.uid, _table.players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -834,7 +1066,8 @@ library Matches {
       GamePhase gamePhase,
       bytes32 firstPlayer,
       bytes32 currentPlayer,
-      uint8 turnCount
+      uint8 turnCount,
+      uint8 nbPlayer
     )
   {
     gameType = GameType(uint8(Bytes.slice1(_blob, 0)));
@@ -848,6 +1081,8 @@ library Matches {
     currentPlayer = (Bytes.slice32(_blob, 35));
 
     turnCount = (uint8(Bytes.slice1(_blob, 67)));
+
+    nbPlayer = (uint8(Bytes.slice1(_blob, 68)));
   }
 
   /**
@@ -856,17 +1091,23 @@ library Matches {
   function decodeDynamic(
     PackedCounter _encodedLengths,
     bytes memory _blob
-  ) internal pure returns (string memory uid, bytes32[] memory players) {
+  ) internal pure returns (string memory level, string memory uid, bytes32[] memory players) {
     uint256 _start;
     uint256 _end;
     unchecked {
       _end = _encodedLengths.atIndex(0);
     }
-    uid = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+    level = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(1);
+    }
+    uid = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(2);
     }
     players = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
   }
@@ -888,10 +1129,11 @@ library Matches {
       _table.gamePhase,
       _table.firstPlayer,
       _table.currentPlayer,
-      _table.turnCount
+      _table.turnCount,
+      _table.nbPlayer
     ) = decodeStatic(_staticData);
 
-    (_table.uid, _table.players) = decodeDynamic(_encodedLengths, _dynamicData);
+    (_table.level, _table.uid, _table.players) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -924,9 +1166,10 @@ library Matches {
     GamePhase gamePhase,
     bytes32 firstPlayer,
     bytes32 currentPlayer,
-    uint8 turnCount
+    uint8 turnCount,
+    uint8 nbPlayer
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount);
+    return abi.encodePacked(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount, nbPlayer);
   }
 
   /**
@@ -934,12 +1177,13 @@ library Matches {
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
   function encodeLengths(
+    string memory level,
     string memory uid,
     bytes32[] memory players
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = PackedCounterLib.pack(bytes(uid).length, players.length * 32);
+      _encodedLengths = PackedCounterLib.pack(bytes(level).length, bytes(uid).length, players.length * 32);
     }
   }
 
@@ -947,8 +1191,12 @@ library Matches {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(string memory uid, bytes32[] memory players) internal pure returns (bytes memory) {
-    return abi.encodePacked(bytes((uid)), EncodeArray.encode((players)));
+  function encodeDynamic(
+    string memory level,
+    string memory uid,
+    bytes32[] memory players
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(bytes((level)), bytes((uid)), EncodeArray.encode((players)));
   }
 
   /**
@@ -964,13 +1212,23 @@ library Matches {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint8 nbPlayer,
+    string memory level,
     string memory uid,
     bytes32[] memory players
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount);
+    bytes memory _staticData = encodeStatic(
+      gameType,
+      gameState,
+      gamePhase,
+      firstPlayer,
+      currentPlayer,
+      turnCount,
+      nbPlayer
+    );
 
-    PackedCounter _encodedLengths = encodeLengths(uid, players);
-    bytes memory _dynamicData = encodeDynamic(uid, players);
+    PackedCounter _encodedLengths = encodeLengths(level, uid, players);
+    bytes memory _dynamicData = encodeDynamic(level, uid, players);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }
