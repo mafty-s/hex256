@@ -44,10 +44,10 @@ contract AttackSystem is System {
     }
 
 
-    function AttackPlayer(bytes32 game_key, bytes32 card_key, uint8 slot, bytes32 player_key, bool skip_cost) public {
+    function AttackPlayer(bytes32 game_key, bytes32 attacker_key, bytes32 target_key, bool skip_cost) public {
 
-        //        if (game_data.CanAttackTarget(attacker, target, skip_cost))
-        //        {
+        if (BaseLogicLib.CanAttackTarget(attacker_key, target_key, skip_cost))
+        {
         //
         //            Player player = game_data.GetPlayer(attacker.player_id);
         //            if(!is_ai_predict)
@@ -64,5 +64,9 @@ contract AttackSystem is System {
         //            resolve_queue.ResolveAll();
         //        }
         //todo
+
+            AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
+            AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
+        }
     }
 }
