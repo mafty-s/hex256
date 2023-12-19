@@ -211,7 +211,7 @@ public class MudManager : MonoBehaviour
     private static extern string attackCard(string game_id, string player_id, string attacker_id,string target_id);
 
     [DllImport("__Internal")]
-    private static extern string endTurn(string game_uid,string player_name);
+    private static extern string endTurn(string game_uid,string player_name,int player_id);
 #endif
 
     public static void SendTask(ushort code)
@@ -429,10 +429,10 @@ public class MudManager : MonoBehaviour
     {
     }
 
-    public void EndTurn(string game_uid, string player_name)
+    public void EndTurn(string game_uid, string player_name,int player_id)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
-        endTurn(game_uid,player_name);
+        endTurn(game_uid,player_name,player_id);
 #endif
     }
 

@@ -398,23 +398,23 @@ namespace TcgEngine.Client
                 Debug.Log("Player 0:" + game_data.players[0].player_id + "," + game_data.players[0].username);
                 Debug.Log("Player 1:" + game_data.players[1].player_id + "," + game_data.players[1].username);
 
-                
+
                 game_data.state = GameState.Play;
                 game_data.first_player = 0;
                 game_data.current_player = game_data.first_player;
                 game_data.turn_count = 1;
                 game_data.turn_timer = GameplayData.Get().turn_duration;
 
-                
+
                 onGameStart?.Invoke();
-                
+
                 game_data.phase = GamePhase.StartTurn;
 
                 // player.hp_max = pdeck != null ? pdeck.start_hp : GameplayData.Get().hp_start;
                 // player.hp = player.hp_max;
                 // player.mana_max = pdeck != null ? pdeck.start_mana : GameplayData.Get().mana_start;
                 // player.mana = player.mana_max;
-                
+
                 onNewTurn?.Invoke(game_data.players[0].player_id);
             }
         }
@@ -465,11 +465,11 @@ namespace TcgEngine.Client
             MudPlayCard msg = JsonUtility.FromJson<MudPlayCard>(message);
 
             Slot slot = new Slot(msg.slot_x, msg.slot_y, msg.slot_p);
-            
+
             Card card = game_data.GetCard(msg.card_uid);
             if (card == null)
             {
-                Debug.Log("Card Not Found"+msg.card_uid);
+                Debug.Log("Card Not Found" + msg.card_uid);
             }
 
             card.slot = slot;
@@ -477,7 +477,7 @@ namespace TcgEngine.Client
             var player = game_data.GetPlayer(card.player_id);
             player.RemoveCardFromAllGroups(card);
             player.cards_board.Add(card);
-            
+
             onCardPlayed?.Invoke(card, slot);
             onRefreshAll?.Invoke();
         }
@@ -501,9 +501,8 @@ namespace TcgEngine.Client
 
 
             SendAction(GameAction.AttackPlayer, mdata);
-            
-            MudManager.Get().AttackPlayer(game_data.game_uid,card.uid, target.player_id);
-            
+
+            MudManager.Get().AttackPlayer(game_data.game_uid, card.uid, target.player_id);
         }
 
         public void Move(Card card, Slot slot)
@@ -514,8 +513,7 @@ namespace TcgEngine.Client
             SendAction(GameAction.Move, mdata);
 
             string player_name = GetPlayer().username;
-            
-            
+
 
             MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                 slot.y,
@@ -524,18 +522,18 @@ namespace TcgEngine.Client
 
         public void OnMoveCardSuccess(string message)
         {
-            Debug.Log("OnMoveCardSuccess:"+message);
-            
-            
+            Debug.Log("OnMoveCardSuccess:" + message);
+
+
             MudPlayCard msg = JsonUtility.FromJson<MudPlayCard>(message);
 
             Slot slot = new Slot(msg.slot_x, msg.slot_y, msg.slot_p);
-            
+
             Card card = game_data.GetCard(msg.card_uid);
-            
+
             if (card == null)
             {
-                Debug.Log("Card Not Found"+msg.card_uid);
+                Debug.Log("Card Not Found" + msg.card_uid);
             }
 
             card.slot = slot;
@@ -543,7 +541,7 @@ namespace TcgEngine.Client
             var player = game_data.GetPlayer(card.player_id);
             player.RemoveCardFromAllGroups(card);
             player.cards_board.Add(card);
-            
+
             onCardMoved?.Invoke(card, slot);
             onRefreshAll?.Invoke();
         }
@@ -599,7 +597,8 @@ namespace TcgEngine.Client
         public void EndTurn()
         {
             SendAction(GameAction.EndTurn);
-            MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username);
+
+            MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
         }
 
         public void Resign()
@@ -734,7 +733,7 @@ namespace TcgEngine.Client
             MsgPlayCard msg = sdata.Get<MsgPlayCard>();
             Card card = game_data.GetCard(msg.card_uid);
             onCardMoved?.Invoke(card, msg.slot);
-        } 
+        }
 
         private void OnCardTransformed(SerializedData sdata)
         {

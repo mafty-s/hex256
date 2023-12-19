@@ -138,8 +138,8 @@ mergeInto(LibraryManager.library, {
         return buffer;
     },
 
-    endTurn: async function (game_uid, player_id) {
-        let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_id));
+    endTurn: async function (game_uid, player_name, player_id) {
+        let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_name), player_id);
         console.log(result);
     }
 
