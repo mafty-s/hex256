@@ -69,7 +69,14 @@ library PlayerLogicLib {
         return cards[rand % cards.length];
     }
 
-
-
+    function IsDead(bytes32 player_key) internal view returns (bool) {
+        if (PlayerCardsHand.getValue(player_key).length == 0 && PlayerCardsBoard.getValue(player_key).length == 0 && PlayerCardsDeck.getValue(player_key).length == 0){
+            return true;
+        }
+        if(Players.getHp(player_key) <= 0){
+            return true;
+        }
+        return false;
+    }
 
 }
