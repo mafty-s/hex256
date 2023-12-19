@@ -19,7 +19,6 @@ contract EndTurnSystem is System {
     }
 
     function EndTurn(bytes32 game_key, uint8 player_index) public {
-        //todo
         Matches.setTurnCount(game_key, Matches.getTurnCount(game_key) + 1);
         Matches.setGamePhase(game_key, GamePhase.END_TURN);
 
@@ -27,10 +26,14 @@ contract EndTurnSystem is System {
         uint8 opponent_index = player_index == 0 ? 1 : 0;
         bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
 
+        //todo
+        //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
 
         Matches.setCurrentPlayer(game_key, opponent_player_key);
 //        Matches.setGamePhase(game_key, GamePhase.START_TURN);
-        AiLogicLib.Think(game_key, opponent_player_key);
+        if (Matches.getGameType(game_key) == GameType.SOLO || Matches.getGameType(game_key) == GameType.ADVENTURE) {
+            AiLogicLib.Think(game_key, opponent_player_key);
+        }
 
     }
 }

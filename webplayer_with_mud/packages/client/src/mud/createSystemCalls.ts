@@ -403,7 +403,10 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_uid);
         const tx = await worldContract.write.EndTurn([game_key, player_id]);
         await waitForTransaction(tx);
-        return tx;
+        // return tx;
+        return {
+            player_id: player_id == 0 ? 1 : 0
+        }
     }
 
     const test = async () => {

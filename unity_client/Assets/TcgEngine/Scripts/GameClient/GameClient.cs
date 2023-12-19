@@ -715,6 +715,13 @@ namespace TcgEngine.Client
             onNewTurn?.Invoke(msg.player_id);
         }
 
+        public void OnEndTurnSuccess(string message)
+        {
+            Debug.Log("OnEndTurnSuccess:" + message);
+            MudEndTurnResult result = JsonUtility.FromJson<MudEndTurnResult>(message);
+            onNewTurn?.Invoke(result.player_id);
+        }
+
         private void OnCardPlayed(SerializedData sdata)
         {
             MsgPlayCard msg = sdata.Get<MsgPlayCard>();

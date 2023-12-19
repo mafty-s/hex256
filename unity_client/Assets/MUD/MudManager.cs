@@ -52,6 +52,13 @@ public class MudPlayerSettingResult
     public string[] all;
 }
 
+
+[System.Serializable]
+public class MudEndTurnResult
+{
+    public int player_id;
+}
+
 public class MudManager : MonoBehaviour
 {
     public bool useMud = false;

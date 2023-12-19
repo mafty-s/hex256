@@ -141,6 +141,9 @@ mergeInto(LibraryManager.library, {
     endTurn: async function (game_uid, player_name, player_id) {
         let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_name), player_id);
         console.log(result);
+
+        let returnStr = JSON.stringify(result);
+        MyUnityInstance.SendMessage("Client", "OnEndTurnSuccess", returnStr);
     }
 
 });
