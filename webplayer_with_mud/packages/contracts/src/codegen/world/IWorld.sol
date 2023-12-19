@@ -10,6 +10,7 @@ import { IConfigSystem } from "./IConfigSystem.sol";
 import { ICounterSystem } from "./ICounterSystem.sol";
 import { IDebugSystem } from "./IDebugSystem.sol";
 import { IDeckSystem } from "./IDeckSystem.sol";
+import { IEndTurnSystem } from "./IEndTurnSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
 import { IMoveSystem } from "./IMoveSystem.sol";
@@ -31,6 +32,7 @@ interface IWorld is
   ICounterSystem,
   IDebugSystem,
   IDeckSystem,
+  IEndTurnSystem,
   IGameStartSystem,
   IMarketSystem,
   IMoveSystem,

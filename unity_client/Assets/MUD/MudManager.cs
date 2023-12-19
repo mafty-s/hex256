@@ -210,6 +210,8 @@ public class MudManager : MonoBehaviour
     [DllImport("__Internal")]
     private static extern string attackCard(string game_id, string player_id, string attacker_id,string target_id);
 
+    [DllImport("__Internal")]
+    private static extern string endTurn(string game_uid,string player_name);
 #endif
 
     public static void SendTask(ushort code)
@@ -429,7 +431,9 @@ public class MudManager : MonoBehaviour
 
     public void EndTurn(string game_uid, string player_name)
     {
-        
+#if !UNITY_EDITOR && UNITY_WEBGL
+        endTurn(game_uid,player_name);
+#endif
     }
 
     public void SaveDeck(string tid, string hero, string cards)

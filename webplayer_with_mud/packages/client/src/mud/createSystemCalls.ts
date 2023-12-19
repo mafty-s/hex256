@@ -395,6 +395,16 @@ export function createSystemCalls(
     }
 
 
+    const endTurn = async (game_uid: string, player_name: string) => {
+        console.log(game_uid);
+        console.log(player_name);
+
+        const game_key = calculateKeccak256Hash(game_uid);
+        const tx = await worldContract.write.EndTurn([game_key,]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
     const test = async () => {
         const a = calculateKeccak256Hash("a")
         const tx = await worldContract.write.callEffectToPlayer([a, a, a]);
@@ -470,6 +480,7 @@ export function createSystemCalls(
         testRevert,
         IsBoardCard,
         getPlayerCards,
+        endTurn,
     };
 
     window.mud = out;

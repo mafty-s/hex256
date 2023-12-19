@@ -136,6 +136,11 @@ mergeInto(LibraryManager.library, {
         var buffer = _malloc(bufferSize);
         stringToUTF8(returnStr, buffer, bufferSize);
         return buffer;
+    },
+
+    endTurn: async function (game_uid, player_id) {
+        let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_id));
+        console.log(result);
     }
 
 });
