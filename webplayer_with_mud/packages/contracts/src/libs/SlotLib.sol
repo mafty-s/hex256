@@ -18,6 +18,12 @@ library SlotLib {
 
     bool  constant ignore_p = false; // Set to true if you don't want to use P value
 
+
+    function NewSlot(uint8 x, uint8 y, uint8 p) internal pure returns (Slot memory) {
+        Slot memory slot = Slot({x : x, y : y, p : p});
+        return slot;
+    }
+
     function SetSlot(bytes32 card_key, Slot memory slot) internal {
         CardOnBoards.setSlot(card_key, EncodeSlot(slot));
     }
@@ -95,5 +101,34 @@ library SlotLib {
         uint8 dy2 = (slot2.y - y_min);
         uint8 dp2 = slot2.p;
         return (dx - dx2) + (dy - dy2) + (dp - dp2);
+    }
+
+    function GetRandomEmptySlot(bytes32 player_key) internal view returns (Slot memory) {
+        Slot[] memory slots = GetEmptySlots(player_key);
+        if (slots.length == 0) {
+            Slot memory slot = SlotLib.NewSlot(0,0,0);
+            return slot;
+        }
+        uint rand = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, slots.length)));
+        return slots[rand % slots.length];
+    }
+
+    function GetEmptySlots(bytes32 player_key) internal view returns (Slot[] memory) {
+        Slot[] memory slots = new Slot[](x_max * y_max * 2);
+        //todo
+//        uint8 index = 0;
+//        for (uint8 x = x_min; x <= x_max; x++) {
+//            for (uint8 y = y_min; y <= y_max; y++) {
+//                for (uint8 p = 0; p <= 1; p++) {
+//                    Slot memory slot = SlotLib.NewSlot(x, y, p);
+//                    if (CardOnBoards.getSlotCard(player_key, EncodeSlot(slot)) == 0) {
+//                        slots[index] = slot;
+//                        index++;
+//                    }
+//                }
+//            }
+//        }
+        return slots;
+
     }
 }

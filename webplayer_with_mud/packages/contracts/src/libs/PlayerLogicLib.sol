@@ -60,5 +60,16 @@ library PlayerLogicLib {
         PlayerCardsDeck.setValue(player_key, BytesArrayTools.removeElementFromArray(PlayerCardsDeck.getValue(player_key), card_key));
     }
 
+    function GetRandomCard(bytes32 player_key) internal view returns (bytes32) {
+        bytes32[] memory cards = PlayerCardsHand.getValue(player_key);
+        if (cards.length == 0) {
+            return 0;
+        }
+        uint rand = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cards.length)));
+        return cards[rand % cards.length];
+    }
+
+
+
 
 }

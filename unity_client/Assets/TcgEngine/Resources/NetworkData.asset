@@ -17,4 +17,4 @@ MonoBehaviour:
   api_url: 3.28.16.185:8085
   api_https: 0
   solo_type: 10
-  auth_type: 10
+  auth_type: 0

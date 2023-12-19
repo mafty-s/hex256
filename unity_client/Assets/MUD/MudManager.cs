@@ -277,6 +277,11 @@ public class MudManager : MonoBehaviour
             return null;
         }
 
+        if (this.msg ==  "")
+        {
+            return null;
+        }
+
         MudUserData playerData = JsonUtility.FromJson<MudUserData>(this.msg);
 
         // Access the decoded data

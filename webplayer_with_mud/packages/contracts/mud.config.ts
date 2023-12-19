@@ -34,6 +34,18 @@ export default mudConfig({
                 mythic: "bytes32[]",
             }
         },
+        AiActions: {
+            valueSchema: {
+                card_uid: "bytes32",
+                target_uid: "bytes32",
+                target_player_id: "uint8",
+                slot: "uint16",
+                value:"uint16",
+                score:"uint16",
+                sort:"uint16",
+                valid:"bool"
+            },
+        },
         Packs: {
             valueSchema: {
                 packType: "PackType",
