@@ -9,17 +9,18 @@ import {PlayerLogicLib} from "./PlayerLogicLib.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {BaseLogicLib} from "./BaseLogicLib.sol";
 import {Slot, SlotLib} from "./SlotLib.sol";
+import {Matches, AiActions} from "../codegen/index.sol";
 
 library AiLogicLib {
     function Think(bytes32 game_key, bytes32 player_key) internal {
         if (!CanPlay(player_key)) {
-            return;
+            revert("AI cant play");
         }
 
-
-        if (BaseLogicLib.IsPlayerTurn(game_key, player_key)) {
-            AiTurn(player_key);
+        if (!BaseLogicLib.IsPlayerTurn(game_key, player_key)) {
+            revert("AI is not your turn");
         }
+        AiTurn(game_key, player_key);
 //
 //        if (game_data.IsPlayerTurn(player) && !gameplay.IsResolving())
 //        {
@@ -32,21 +33,26 @@ library AiLogicLib {
 
     }
 
-    function AiTurn(bytes32 player_key) internal {
+    function AiTurn(bytes32 game_key, bytes32 player_key) internal {
         //todo
-        AiPlayCard(player_key);
-        AiPlayCard(player_key);
-        AiPlayCard(player_key);
+        AiPlayCard(game_key, player_key);
+        AiPlayCard(game_key, player_key);
+        AiPlayCard(game_key, player_key);
         AiAttackCard(player_key);
         AiAttackCard(player_key);
         AiAttackPlayer(player_key);
         AiEndTurn(player_key);
     }
 
-    function AiPlayCard(bytes32 player_key) internal{
+    function AiPlayCard(bytes32 game_key, bytes32 player_key) internal {
         bytes32 random_card_key = PlayerLogicLib.GetRandomCard(player_key);
         Slot memory random_slot = SlotLib.GetRandomEmptySlot(player_key);
+        uint8 turnCount = Matches.getTurnCount(game_key);
 
+        bytes32 action_key = keccak256(abi.encode(game_key, turnCount));
+
+        AiActions.setCard_uid(action_key, random_card_key);
+        AiActions.setSlot(action_key, SlotLib.EncodeSlot(random_slot));
         //todo
     }
 

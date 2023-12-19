@@ -27,6 +27,9 @@ contract EndTurnSystem is System {
         uint8 opponent_index = player_index == 0 ? 1 : 0;
         bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
 
+
+        Matches.setCurrentPlayer(game_key, opponent_player_key);
+//        Matches.setGamePhase(game_key, GamePhase.START_TURN);
         AiLogicLib.Think(game_key, opponent_player_key);
 
     }
