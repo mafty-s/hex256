@@ -38,7 +38,7 @@ library GameLogicLib {
         //todo
     }
 
-    function CheckForWinner(bytes32 game_key) internal {
+    function CheckForWinner(bytes32 game_key) in1`              `1                          ternal {
         uint8 count_alive = 0;
         bytes32 alive = 0;
         bytes32[] memory players = Matches.getPlayers(game_key);
