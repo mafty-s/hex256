@@ -26,3 +26,4 @@ import { PlayerCardsSecret, PlayerCardsSecretTableId } from "./tables/PlayerCard
 import { PlayerCardsTemp, PlayerCardsTempTableId } from "./tables/PlayerCardsTemp.sol";
 import { ActionHistory, ActionHistoryData, ActionHistoryTableId } from "./tables/ActionHistory.sol";
 import { Tasks, TasksData, TasksTableId } from "./tables/Tasks.sol";
+import { EndTurnResult, EndTurnResultData, EndTurnResultTableId } from "./tables/EndTurnResult.sol";

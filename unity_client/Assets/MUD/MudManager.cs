@@ -218,6 +218,9 @@ public class MudManager : MonoBehaviour
     private static extern string attackCard(string game_id, string player_id, string attacker_id,string target_id);
 
     [DllImport("__Internal")]
+    private static extern string attackPlayer(string game_id, string cardkey, int target_id);
+
+    [DllImport("__Internal")]
     private static extern string endTurn(string game_uid,string player_name,int player_id);
 #endif
 
@@ -429,7 +432,9 @@ public class MudManager : MonoBehaviour
 
     public void AttackPlayer(string game_uid,string attacker_id,int target_id)
     {
-        
+#if !UNITY_EDITOR && UNITY_WEBGL
+        attackPlayer(game_uid,attacker_id,target_id);
+#endif
     }
 
     public void CastAbility()

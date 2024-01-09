@@ -340,8 +340,8 @@ namespace TcgEngine.Client
                     {
                         if (player.IsReady())
                         {
-                            Debug.Log(player.username + "IsReady");
-                            continue;
+                            //Debug.Log(player.username + " IsReady");
+                            // continue;
                         }
 
                         var card_key = result.all[i];
@@ -715,11 +715,76 @@ namespace TcgEngine.Client
             onNewTurn?.Invoke(msg.player_id);
         }
 
-        public void OnEndTurnSuccess(string message)
+        public IEnumerable OnEndTurnSuccess(string message)
         {
             Debug.Log("OnEndTurnSuccess:" + message);
             MudEndTurnResult result = JsonUtility.FromJson<MudEndTurnResult>(message);
+            game_data.current_player = (game_data.current_player + 1) % game_data.settings.nb_players;
+            game_data.turn_timer = GameplayData.Get().turn_duration;
+
+            if (game_data.current_player == game_data.first_player)
+                game_data.turn_count++;
+
             onNewTurn?.Invoke(result.player_id);
+
+            Player player = game_data.GetPlayer(game_data.current_player);
+
+            if (player.is_ai)
+            {
+                System.Random rand = new System.Random();
+
+
+                if (player.cards_hand.Count > 0 && game_data.IsPlayerActionTurn(player))
+                {
+                    Card random = player.GetRandomCard(player.cards_hand, rand);
+                    Slot slot = player.GetRandomEmptySlot(rand);
+
+                    if (random != null && random.CardData.IsRequireTargetSpell())
+                        slot = game_data.GetRandomSlot(rand); //Spell can target any slot, not just your side
+
+                    if (random != null && random.CardData.IsEquipment())
+                        slot = player.GetRandomOccupiedSlot(rand);
+
+                    if (random != null)
+                    {
+                        // gameplay.PlayCard(random, slot);
+
+                        MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
+                            slot.x, Slot.y_min, slot.p, false, random.uid);
+                    }
+                }
+                
+                yield return new WaitForSeconds(0.5f);
+
+                //attack
+                if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
+                {
+                    Card random = player.GetRandomCard(player.cards_board, rand);
+                    Card rtarget = game_data.GetRandomBoardCard(rand);
+                    if (random != null && rtarget != null)
+                    {
+                        //gameplay.AttackTarget(random, rtarget);
+                        MudManager.Get().AttackCard(game_data.game_uid,player.username,random.uid,rtarget.uid);
+                    }
+                }
+                
+                yield return new WaitForSeconds(0.5f);
+                
+                //attack player
+                Player oplayer = game_data.GetRandomPlayer(rand);
+                if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
+                {
+                    Card random = player.GetRandomCard(player.cards_board, rand);
+                    if (random != null && oplayer != null && oplayer != player)
+                    {
+                        //gameplay.AttackPlayer(random, oplayer);
+                        MudManager.Get().AttackPlayer(game_data.game_uid, random.uid, oplayer.player_id);
+                    }
+                }
+                
+
+                MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
+            }
         }
 
         private void OnCardPlayed(SerializedData sdata)

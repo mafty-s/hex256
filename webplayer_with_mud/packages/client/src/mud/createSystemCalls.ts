@@ -263,6 +263,8 @@ export function createSystemCalls(
         });
 
         console.log("getTxResult result", tx_result.result);
+
+        return tx_result;
     }
 
     const openPack = async (name: string) => {
@@ -375,9 +377,9 @@ export function createSystemCalls(
         return {tx, result};
     }
 
-    const attackTarget = async (game_id, player_id, slot, skip_cost, attacker_key, target_key) => {
+    const attackCard = async (game_id, player_id, slot, skip_cost, attacker_key, target_key) => {
         const game_key = calculateKeccak256Hash(game_id);
-        const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, slot]);
+        const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, skip_cost]);
         await waitForTransaction(tx);
         return tx;
     }
@@ -403,6 +405,10 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_uid);
         const tx = await worldContract.write.EndTurn([game_key, player_id]);
         await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log("tx-result",tx_result)
+
         // return tx;
         return {
             player_id: player_id == 0 ? 1 : 0
@@ -475,7 +481,7 @@ export function createSystemCalls(
         moveCard,
         saveDeck,
         attackPlayer,
-        attackTarget,
+        attackCard,
         getAbilityTarget,
         getEffectSelector,
         test,

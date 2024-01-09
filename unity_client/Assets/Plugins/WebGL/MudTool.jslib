@@ -73,6 +73,7 @@ mergeInto(LibraryManager.library, {
     },
 
     playCard: async function (game_uid, player_id, card_id, slot_x, slot_y, slot_p, skip, card_key) {
+        console.log("playCard=====================================");
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("player_id", UTF8ToString(player_id));
         console.log("card_id", UTF8ToString(card_id));
@@ -87,6 +88,8 @@ mergeInto(LibraryManager.library, {
     },
 
     moveCard: async function (game_uid, player_id, card_id, slot_x, slot_y, slot_p, skip, card_key) {
+        console.log("moveCard=====================================");
+
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("player_id", UTF8ToString(player_id));
         console.log("card_id", UTF8ToString(card_id));
@@ -104,6 +107,8 @@ mergeInto(LibraryManager.library, {
     },
 
     attackCard: async function (game_uid, player_id, attacker_key, target_key, slot_x, slot_y, slot_p, skip,) {
+        console.log("attackCard=====================================");
+
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("player_id", UTF8ToString(player_id));
         console.log("attacker_key", UTF8ToString(attacker_key));
@@ -112,9 +117,9 @@ mergeInto(LibraryManager.library, {
         let slot = {x: slot_x, y: slot_x, p: slot_p};
 
 
-        let result = await mud.attackCard(UTF8ToString(game_uid), UTF8ToString(player_id), UTF8ToString(card_id), slot, skip, card_key);
+        let result = await mud.attackCard(UTF8ToString(game_uid), UTF8ToString(player_id), UTF8ToString(attacker_key), slot, skip, UTF8ToString(target_key));
 
-        console.log("moveCard result", result);
+        console.log("attackCard result", result);
     },
 
 

@@ -11,14 +11,17 @@ import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Matches, MatchesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
+import {EndTurnResultData} from "../codegen/index.sol";
 
 contract EndTurnSystem is System {
+
+
 
     constructor() {
 
     }
 
-    function EndTurn(bytes32 game_key, uint8 player_index) public {
+    function EndTurn(bytes32 game_key, uint8 player_index) public returns ( EndTurnResultData memory result) {
         Matches.setTurnCount(game_key, Matches.getTurnCount(game_key) + 1);
         Matches.setGamePhase(game_key, GamePhase.END_TURN);
 
@@ -27,13 +30,23 @@ contract EndTurnSystem is System {
         bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
 
         //todo
+
+        //todo 抽张卡出来
+
+
+
         //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
 
         Matches.setCurrentPlayer(game_key, opponent_player_key);
 //        Matches.setGamePhase(game_key, GamePhase.START_TURN);
         if (Matches.getGameType(game_key) == GameType.SOLO || Matches.getGameType(game_key) == GameType.ADVENTURE) {
-            AiLogicLib.Think(game_key, opponent_player_key);
+            //AiLogicLib.Think(game_key, opponent_player_key);
         }
 
+        EndTurnResultData memory result = EndTurnResultData(
+            opponent_player_key,
+            0
+        );
+        return result;
     }
 }
