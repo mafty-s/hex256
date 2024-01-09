@@ -122,6 +122,12 @@ mergeInto(LibraryManager.library, {
         console.log("attackCard result", result);
     },
 
+    attackPlayer: async function( game_id,  cardkey,  target_id){
+        console.log("attackPlayer=====================================");
+        console.log("game_uid", UTF8ToString(game_uid));
+        console.log("cardkey", UTF8ToString(cardkey));
+
+    },
 
     saveDeck: async function (tid, hero, cards) {
         console.log("tid", UTF8ToString(tid));

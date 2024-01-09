@@ -342,15 +342,15 @@ namespace TcgEngine.Gameplay
             DeckPuzzleData puzzle = deck as DeckPuzzleData;
 
             //Board cards
-            if (puzzle != null)
-            {
-                foreach (DeckCardSlot card in puzzle.board_cards)
-                {
-                    Card acard = Card.Create(card.card, variant, player);
-                    acard.slot = new Slot(card.slot, Slot.GetP(player.player_id));
-                    player.cards_board.Add(acard);
-                }
-            }
+            // if (puzzle != null)
+            // {
+            //     foreach (DeckCardSlot card in puzzle.board_cards)
+            //     {
+            //         Card acard = Card.Create(card.card, variant, player);
+            //         acard.slot = new Slot(card.slot, Slot.GetP(player.player_id));
+            //         player.cards_board.Add(acard);
+            //     }
+            // }
 
             //Shuffle deck
             if(puzzle == null || !puzzle.dont_shuffle_deck)

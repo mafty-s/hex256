@@ -11,10 +11,9 @@ import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Matches, MatchesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
-import {EndTurnResultData} from "../codegen/index.sol";
+import {EndTurnResultData ,PlayerCardsHand,PlayerCardsDeck} from "../codegen/index.sol";
 
 contract EndTurnSystem is System {
-
 
 
     constructor() {
@@ -29,11 +28,10 @@ contract EndTurnSystem is System {
         uint8 opponent_index = player_index == 0 ? 1 : 0;
         bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
 
-        //todo
+        //todo 恢复mana
 
-        //todo 抽张卡出来
-
-
+        //抽张卡出来
+        bytes32 board_card_key = DrawCard(player_key);
 
         //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
 
@@ -45,8 +43,16 @@ contract EndTurnSystem is System {
 
         EndTurnResultData memory result = EndTurnResultData(
             opponent_player_key,
-            0
+            board_card_key
         );
         return result;
+    }
+
+    function DrawCard(bytes32 player_key) internal returns(bytes32){
+        bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
+        bytes32 card_key = cards[cards.length - 1];
+        PlayerCardsDeck.popValue(player_key);
+        PlayerCardsHand.pushValue(player_key, card_key);
+        return card_key;
     }
 }

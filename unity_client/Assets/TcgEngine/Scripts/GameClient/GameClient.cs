@@ -715,7 +715,7 @@ namespace TcgEngine.Client
             onNewTurn?.Invoke(msg.player_id);
         }
 
-        public IEnumerable OnEndTurnSuccess(string message)
+        public void OnEndTurnSuccess(string message)
         {
             Debug.Log("OnEndTurnSuccess:" + message);
             MudEndTurnResult result = JsonUtility.FromJson<MudEndTurnResult>(message);
@@ -731,6 +731,7 @@ namespace TcgEngine.Client
 
             if (player.is_ai)
             {
+                 Debug.Log("is-ai");
                 System.Random rand = new System.Random();
 
 
@@ -752,9 +753,17 @@ namespace TcgEngine.Client
                         MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
                             slot.x, Slot.y_min, slot.p, false, random.uid);
                     }
+                    else
+                    {
+                        Debug.Log("ai play card is null");
+                    }
+                }
+                else
+                {
+                    Debug.Log("ai play card not turn or hands 0");
                 }
                 
-                yield return new WaitForSeconds(0.5f);
+                //yield return new WaitForSeconds(0.5f);
 
                 //attack
                 if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
@@ -768,7 +777,7 @@ namespace TcgEngine.Client
                     }
                 }
                 
-                yield return new WaitForSeconds(0.5f);
+                //yield return new WaitForSeconds(0.5f);
                 
                 //attack player
                 Player oplayer = game_data.GetRandomPlayer(rand);
