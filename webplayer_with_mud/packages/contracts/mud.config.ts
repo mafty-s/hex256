@@ -183,7 +183,18 @@ export default mudConfig({
             valueSchema: {
                 opponent_player_key: "bytes32",
                 board_card_key: "bytes32",
-
+                mana:"uint8"
+            }
+        },
+        AttackResult: {
+            valueSchema: {
+                mana_cost: "uint8",
+                target_hp: "bytes32",
+            }
+        },
+        PlayCardResult:{
+            valueSchema: {
+                mana_cost: "uint8",
             }
         }
     },

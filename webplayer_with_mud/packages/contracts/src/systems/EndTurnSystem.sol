@@ -11,7 +11,7 @@ import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Matches, MatchesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
-import {EndTurnResultData ,PlayerCardsHand,PlayerCardsDeck} from "../codegen/index.sol";
+import {EndTurnResultData ,PlayerCardsHand,PlayerCardsDeck,Players} from "../codegen/index.sol";
 
 contract EndTurnSystem is System {
 
@@ -29,6 +29,11 @@ contract EndTurnSystem is System {
         bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
 
         //todo 恢复mana
+        uint8 mana = Players.getMana(player_key) + 1;
+        if(mana > Players.getManaMax(player_key)){
+            mana = Players.getManaMax(player_key);
+        }
+        Players.setMana(player_key,mana);
 
         //抽张卡出来
         bytes32 board_card_key = DrawCard(player_key);
@@ -43,7 +48,8 @@ contract EndTurnSystem is System {
 
         EndTurnResultData memory result = EndTurnResultData(
             opponent_player_key,
-            board_card_key
+            board_card_key,
+            mana
         );
         return result;
     }

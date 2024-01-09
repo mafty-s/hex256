@@ -411,7 +411,8 @@ export function createSystemCalls(
 
         // return tx;
         return {
-            player_id: player_id == 0 ? 1 : 0
+            player_id: player_id == 0 ? 1 : 0,
+            board_card_key:tx_result.result.board_card_key
         }
     }
 

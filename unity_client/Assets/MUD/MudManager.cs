@@ -57,6 +57,8 @@ public class MudPlayerSettingResult
 public class MudEndTurnResult
 {
     public int player_id;
+    public string board_card_key;
+    public int mana;
 }
 
 public class MudManager : MonoBehaviour

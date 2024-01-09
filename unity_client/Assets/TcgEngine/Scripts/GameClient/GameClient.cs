@@ -470,12 +470,15 @@ namespace TcgEngine.Client
             if (card == null)
             {
                 Debug.Log("Card Not Found" + msg.card_uid);
+                return;
             }
 
             card.slot = slot;
 
             var player = game_data.GetPlayer(card.player_id);
-            player.RemoveCardFromAllGroups(card);
+            Debug.Log("is-ai"+player.username);
+
+            //player.RemoveCardFromAllGroups(card);
             player.cards_board.Add(card);
 
             onCardPlayed?.Invoke(card, slot);
@@ -729,6 +732,13 @@ namespace TcgEngine.Client
 
             Player player = game_data.GetPlayer(game_data.current_player);
 
+            Card board_card_key = player.GetCard(result.board_card_key);
+            if (board_card_key!=null)
+            {
+                player.cards_board.Add(board_card_key);
+                player.cards_hand.Remove(board_card_key);
+            }
+
             if (player.is_ai)
             {
                  Debug.Log("is-ai");
@@ -766,31 +776,31 @@ namespace TcgEngine.Client
                 //yield return new WaitForSeconds(0.5f);
 
                 //attack
-                if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
-                {
-                    Card random = player.GetRandomCard(player.cards_board, rand);
-                    Card rtarget = game_data.GetRandomBoardCard(rand);
-                    if (random != null && rtarget != null)
-                    {
-                        //gameplay.AttackTarget(random, rtarget);
-                        MudManager.Get().AttackCard(game_data.game_uid,player.username,random.uid,rtarget.uid);
-                    }
-                }
+                // if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
+                // {
+                //     Card random = player.GetRandomCard(player.cards_board, rand);
+                //     Card rtarget = game_data.GetRandomBoardCard(rand);
+                //     if (random != null && rtarget != null)
+                //     {
+                //         //gameplay.AttackTarget(random, rtarget);
+                //         MudManager.Get().AttackCard(game_data.game_uid,player.username,random.uid,rtarget.uid);
+                //     }
+                // }
                 
                 //yield return new WaitForSeconds(0.5f);
                 
                 //attack player
-                Player oplayer = game_data.GetRandomPlayer(rand);
-                if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
-                {
-                    Card random = player.GetRandomCard(player.cards_board, rand);
-                    if (random != null && oplayer != null && oplayer != player)
-                    {
-                        //gameplay.AttackPlayer(random, oplayer);
-                        MudManager.Get().AttackPlayer(game_data.game_uid, random.uid, oplayer.player_id);
-                    }
-                }
-                
+                // Player oplayer = game_data.GetRandomPlayer(rand);
+                // if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
+                // {
+                //     Card random = player.GetRandomCard(player.cards_board, rand);
+                //     if (random != null && oplayer != null && oplayer != player)
+                //     {
+                //         //gameplay.AttackPlayer(random, oplayer);
+                //         MudManager.Get().AttackPlayer(game_data.game_uid, random.uid, oplayer.player_id);
+                //     }
+                // }
+                //
 
                 MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
             }
