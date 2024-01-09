@@ -121,11 +121,12 @@ mergeInto(LibraryManager.library, {
         console.log("attackCard result", result);
     },
 
-    attackPlayer: async function( game_id,  cardkey,  target_id){
+    attackPlayer: async function( game_uid,  cardkey,  target_id){
         console.log("attackPlayer=====================================");
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("cardkey", UTF8ToString(cardkey));
-
+        let result = await mud.attackPlayer(UTF8ToString(game_uid), UTF8ToString(cardkey), target_id);
+        console.log("attackPlayer result", result);
     },
 
     saveDeck: async function (tid, hero, cards) {

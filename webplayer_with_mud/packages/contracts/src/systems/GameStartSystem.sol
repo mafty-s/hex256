@@ -22,7 +22,7 @@ contract GameStartSystem is System {
 
     }
 
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, uint8 hp, uint8 mana, uint8 dcards) public returns (bytes32[] memory) {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, uint8 hp, uint8 mana, uint8 dcards,bool shuffle) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 match_key = keccak256(abi.encode(game_uid));
@@ -34,7 +34,12 @@ contract GameStartSystem is System {
         Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
 
 
+
         bytes32[] memory cards = Decks.getCards(desk_key);
+        if(shuffle){
+            cards = shuffle(cards);
+        }
+
         for (uint i = 0; i < cards.length; i++) {
             bytes32 on_board_card_key = keccak256(abi.encode(cards[i], player_key, i));
             CardsData memory card = Cards.get(cards[i]);
@@ -190,4 +195,23 @@ contract GameStartSystem is System {
     //        return result;
     //    }
 
+    function shuffle(bytes32[] memory array) internal view returns (bytes32[] memory) {
+        uint256 arrSize = array.length;
+        bytes32[] memory shuffled = new bytes32[](arrSize);
+
+        // Copy the original deck to the shuffled deck array
+        for (uint256 i = 0; i < arrSize; i++) {
+            shuffled[i] = array[i];
+        }
+
+        // Shuffle the deck using Fisher-Yates algorithm
+        for (uint256 i = arrSize - 1; i > 0; i--) {
+            uint256 j = uint256(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, i))) % (i + 1);
+            bytes32 temp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp;
+        }
+
+        return shuffled;
+    }
 }

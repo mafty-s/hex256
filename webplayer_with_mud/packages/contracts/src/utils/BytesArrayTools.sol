@@ -29,7 +29,7 @@ library BytesArrayTools {
         return newArray;
     }
 
-    function shuffle(bytes32[] memory array) internal view returns (bytes32[] memory) {
+    function Shuffle(bytes32[] memory array) internal view returns (bytes32[] memory) {
         uint256 arrSize = array.length;
         bytes32[] memory shuffled = new bytes32[](arrSize);
 

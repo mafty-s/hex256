@@ -26,13 +26,14 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant EndTurnResultTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0041030020200100000000000000000000000000000000000000000000000000
+  0x0042040020200101000000000000000000000000000000000000000000000000
 );
 
 struct EndTurnResultData {
   bytes32 opponent_player_key;
   bytes32 board_card_key;
   uint8 mana;
+  uint8 mana_max;
 }
 
 library EndTurnResult {
@@ -60,10 +61,11 @@ library EndTurnResult {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](3);
+    SchemaType[] memory _valueSchema = new SchemaType[](4);
     _valueSchema[0] = SchemaType.BYTES32;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.UINT8;
+    _valueSchema[3] = SchemaType.UINT8;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -82,10 +84,11 @@ library EndTurnResult {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
+    fieldNames = new string[](4);
     fieldNames[0] = "opponent_player_key";
     fieldNames[1] = "board_card_key";
     fieldNames[2] = "mana";
+    fieldNames[3] = "mana_max";
   }
 
   /**
@@ -229,6 +232,48 @@ library EndTurnResult {
   }
 
   /**
+   * @notice Get mana_max.
+   */
+  function getMana_max(bytes32 key) internal view returns (uint8 mana_max) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Get mana_max.
+   */
+  function _getMana_max(bytes32 key) internal view returns (uint8 mana_max) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Set mana_max.
+   */
+  function setMana_max(bytes32 key, uint8 mana_max) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((mana_max)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set mana_max.
+   */
+  function _setMana_max(bytes32 key, uint8 mana_max) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((mana_max)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (EndTurnResultData memory _table) {
@@ -261,8 +306,8 @@ library EndTurnResult {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, bytes32 opponent_player_key, bytes32 board_card_key, uint8 mana) internal {
-    bytes memory _staticData = encodeStatic(opponent_player_key, board_card_key, mana);
+  function set(bytes32 key, bytes32 opponent_player_key, bytes32 board_card_key, uint8 mana, uint8 mana_max) internal {
+    bytes memory _staticData = encodeStatic(opponent_player_key, board_card_key, mana, mana_max);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -276,8 +321,8 @@ library EndTurnResult {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, bytes32 opponent_player_key, bytes32 board_card_key, uint8 mana) internal {
-    bytes memory _staticData = encodeStatic(opponent_player_key, board_card_key, mana);
+  function _set(bytes32 key, bytes32 opponent_player_key, bytes32 board_card_key, uint8 mana, uint8 mana_max) internal {
+    bytes memory _staticData = encodeStatic(opponent_player_key, board_card_key, mana, mana_max);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -292,7 +337,12 @@ library EndTurnResult {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, EndTurnResultData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.opponent_player_key, _table.board_card_key, _table.mana);
+    bytes memory _staticData = encodeStatic(
+      _table.opponent_player_key,
+      _table.board_card_key,
+      _table.mana,
+      _table.mana_max
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -307,7 +357,12 @@ library EndTurnResult {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, EndTurnResultData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.opponent_player_key, _table.board_card_key, _table.mana);
+    bytes memory _staticData = encodeStatic(
+      _table.opponent_player_key,
+      _table.board_card_key,
+      _table.mana,
+      _table.mana_max
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -323,12 +378,14 @@ library EndTurnResult {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (bytes32 opponent_player_key, bytes32 board_card_key, uint8 mana) {
+  ) internal pure returns (bytes32 opponent_player_key, bytes32 board_card_key, uint8 mana, uint8 mana_max) {
     opponent_player_key = (Bytes.slice32(_blob, 0));
 
     board_card_key = (Bytes.slice32(_blob, 32));
 
     mana = (uint8(Bytes.slice1(_blob, 64)));
+
+    mana_max = (uint8(Bytes.slice1(_blob, 65)));
   }
 
   /**
@@ -342,7 +399,7 @@ library EndTurnResult {
     PackedCounter,
     bytes memory
   ) internal pure returns (EndTurnResultData memory _table) {
-    (_table.opponent_player_key, _table.board_card_key, _table.mana) = decodeStatic(_staticData);
+    (_table.opponent_player_key, _table.board_card_key, _table.mana, _table.mana_max) = decodeStatic(_staticData);
   }
 
   /**
@@ -372,9 +429,10 @@ library EndTurnResult {
   function encodeStatic(
     bytes32 opponent_player_key,
     bytes32 board_card_key,
-    uint8 mana
+    uint8 mana,
+    uint8 mana_max
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(opponent_player_key, board_card_key, mana);
+    return abi.encodePacked(opponent_player_key, board_card_key, mana, mana_max);
   }
 
   /**
@@ -386,9 +444,10 @@ library EndTurnResult {
   function encode(
     bytes32 opponent_player_key,
     bytes32 board_card_key,
-    uint8 mana
+    uint8 mana,
+    uint8 mana_max
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(opponent_player_key, board_card_key, mana);
+    bytes memory _staticData = encodeStatic(opponent_player_key, board_card_key, mana, mana_max);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

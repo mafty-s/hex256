@@ -30,11 +30,14 @@ contract EndTurnSystem is System {
 
         //todo 恢复mana
         uint8 mana = Players.getMana(player_key);
+        uint8 mana_max =  Players.getManaMax(player_key);
         mana += 1;
-        if(mana > Players.getManaMax(player_key)){
+        mana_max +=1;
+        if(mana >mana_max){
             mana = Players.getManaMax(player_key);
         }
         Players.setMana(player_key,mana);
+        Players.setManaMax(player_key,mana_max);
 
         //抽张卡出来
         bytes32 board_card_key = 0;
@@ -57,7 +60,8 @@ contract EndTurnSystem is System {
         EndTurnResultData memory result = EndTurnResultData(
             opponent_player_key,
             board_card_key,
-            mana
+            mana,
+            mana_max
         );
         return result;
     }

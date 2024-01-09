@@ -288,10 +288,11 @@ export function createSystemCalls(
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number, dcards: number,pid:number) => {
+    const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
+                                 dcards: number,pid:number,shuffer:boolean) => {
         await sleep(200)
 
-        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards]);
+        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards,shuffer]);
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
@@ -393,8 +394,11 @@ export function createSystemCalls(
         return tx;
     }
 
-    const attackPlayer = async (game_id, player_id, card_id, target_id, skip_cost, card_key) => {
-
+    const attackPlayer = async (game_uid:string,cardkey:string,target:number) => {
+        const game_key = calculateKeccak256Hash(game_id);
+        const tx = await worldContract.write.AttackPlayer([game_key, cardkey, target]);
+        await waitForTransaction(tx);
+        return tx;
     }
 
     const saveDeck = async (tid: string, hero: string, cards: string) => {
@@ -425,6 +429,7 @@ export function createSystemCalls(
             player_id: player_id == 0 ? 1 : 0,
             board_card_key:tx_result.result.board_card_key,
             mana:tx_result.result.mana,
+            mana_max:tx_result.result.mana_max
         }
     }
 

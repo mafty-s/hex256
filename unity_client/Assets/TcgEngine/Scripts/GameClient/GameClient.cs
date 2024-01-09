@@ -292,11 +292,12 @@ namespace TcgEngine.Client
             //Draw starting cards
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
+            bool shuffer = pdeck != null ? false : !pdeck.dont_shuffle_deck;
 
             if (MudManager.Get().useMud)
             {
                 MudManager.Get().PlayerSetting(GetPlayer().username, game_settings.game_uid, psettings.deck.tid, false,
-                    hp_max, mana_max, dcards,GetPlayer().player_id);
+                    hp_max, mana_max, dcards, GetPlayer().player_id,shuffer);
             }
             else
             {
@@ -384,7 +385,7 @@ namespace TcgEngine.Client
                     }
 
                     player.ready = true;
-                    player.mana_max =result.mana;
+                    player.mana_max = result.mana;
                     player.mana = result.mana;
                     player.hp = result.hp;
                     player.hp_max = result.hp;
@@ -430,8 +431,10 @@ namespace TcgEngine.Client
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
 
+            bool shuffer = pdeck != null ? false : !pdeck.dont_shuffle_deck;
+
             MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
-                hp_max, mana_max, dcards,GetPlayer().player_id);
+                hp_max, mana_max, dcards, GetPlayer().player_id,shuffer);
 
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
@@ -477,7 +480,7 @@ namespace TcgEngine.Client
             card.slot = slot;
 
             var player = game_data.GetPlayer(card.player_id);
-            Debug.Log("playername:"+player.username);
+            Debug.Log("playername:" + player.username);
 
             player.RemoveCardFromAllGroups(card);
             player.cards_board.Add(card);
@@ -730,40 +733,40 @@ namespace TcgEngine.Client
         {
             Debug.Log("OnEndTurnSuccess:" + message);
             MudEndTurnResult result = JsonUtility.FromJson<MudEndTurnResult>(message);
-            
+
             Player caller = game_data.GetPlayer(game_data.current_player);
             caller.mana = result.mana;
-            
+            caller.mana_max = result.mana_max;
+
             Card board_card = game_data.GetCard(result.board_card_key);
-            if (board_card!=null)
+            if (board_card != null)
             {
-                Assert.IsTrue(board_card.player_id == caller.player_id,"board_card.player_id == caller.player_id");
-                Debug.Log("board_card:"+board_card.CardData.id);
+                Assert.IsTrue(board_card.player_id == caller.player_id, "board_card.player_id == caller.player_id");
+                Debug.Log("board_card:" + board_card.CardData.id);
                 caller.RemoveCardFromAllGroups(board_card);
                 caller.cards_hand.Add(board_card);
                 // caller.cards_hand.Remove(board_card_key);
                 onCardDraw?.Invoke(1);
                 onRefreshAll?.Invoke();
-                Debug.Log("cards_deck"+caller.cards_deck.Count);
-                Debug.Log("cards_hand"+caller.cards_hand.Count);
-
+                Debug.Log("cards_deck" + caller.cards_deck.Count);
+                Debug.Log("cards_hand" + caller.cards_hand.Count);
             }
-            
+
             game_data.current_player = (game_data.current_player + 1) % game_data.settings.nb_players;
             game_data.turn_timer = GameplayData.Get().turn_duration;
 
             if (game_data.current_player == game_data.first_player)
                 game_data.turn_count++;
 
-            Debug.Log("callermana:"+caller.mana);
+            Debug.Log("callermana:" + caller.mana);
             onRefreshAll?.Invoke();
             onNewTurn?.Invoke(result.player_id);
 
             Player player = game_data.GetPlayer(game_data.current_player);
-            
+
             if (player.is_ai)
             {
-                 Debug.Log("is-ai");
+                Debug.Log("is-ai");
                 System.Random rand = new System.Random();
                 yield return new WaitForSeconds(1.5f);
 
@@ -795,7 +798,7 @@ namespace TcgEngine.Client
                 {
                     Debug.Log("ai play card not turn or hands 0");
                 }
-                
+
                 //yield return new WaitForSeconds(1.5f);
 
                 //attack
@@ -809,9 +812,9 @@ namespace TcgEngine.Client
                 //         MudManager.Get().AttackCard(game_data.game_uid,player.username,random.uid,rtarget.uid);
                 //     }
                 // }
-                
+
                 //yield return new WaitForSeconds(0.5f);
-                
+
                 //attack player
                 // Player oplayer = game_data.GetRandomPlayer(rand);
                 // if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
@@ -827,7 +830,6 @@ namespace TcgEngine.Client
 
                 MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
             }
-            
         }
 
         private void OnCardPlayed(SerializedData sdata)
