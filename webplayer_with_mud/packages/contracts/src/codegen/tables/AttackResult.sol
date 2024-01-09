@@ -26,12 +26,12 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant AttackResultTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0021020001200000000000000000000000000000000000000000000000000000
+  0x0002020001010000000000000000000000000000000000000000000000000000
 );
 
 struct AttackResultData {
-  uint8 mana_cost;
-  bytes32 target_hp;
+  uint8 attacker_hp;
+  uint8 target_hp;
 }
 
 library AttackResult {
@@ -61,7 +61,7 @@ library AttackResult {
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](2);
     _valueSchema[0] = SchemaType.UINT8;
-    _valueSchema[1] = SchemaType.BYTES32;
+    _valueSchema[1] = SchemaType.UINT8;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -81,7 +81,7 @@ library AttackResult {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](2);
-    fieldNames[0] = "mana_cost";
+    fieldNames[0] = "attacker_hp";
     fieldNames[1] = "target_hp";
   }
 
@@ -100,9 +100,9 @@ library AttackResult {
   }
 
   /**
-   * @notice Get mana_cost.
+   * @notice Get attacker_hp.
    */
-  function getMana_cost(bytes32 key) internal view returns (uint8 mana_cost) {
+  function getAttacker_hp(bytes32 key) internal view returns (uint8 attacker_hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -111,9 +111,9 @@ library AttackResult {
   }
 
   /**
-   * @notice Get mana_cost.
+   * @notice Get attacker_hp.
    */
-  function _getMana_cost(bytes32 key) internal view returns (uint8 mana_cost) {
+  function _getAttacker_hp(bytes32 key) internal view returns (uint8 attacker_hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -122,51 +122,51 @@ library AttackResult {
   }
 
   /**
-   * @notice Set mana_cost.
+   * @notice Set attacker_hp.
    */
-  function setMana_cost(bytes32 key, uint8 mana_cost) internal {
+  function setAttacker_hp(bytes32 key, uint8 attacker_hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((mana_cost)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((attacker_hp)), _fieldLayout);
   }
 
   /**
-   * @notice Set mana_cost.
+   * @notice Set attacker_hp.
    */
-  function _setMana_cost(bytes32 key, uint8 mana_cost) internal {
+  function _setAttacker_hp(bytes32 key, uint8 attacker_hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((mana_cost)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((attacker_hp)), _fieldLayout);
   }
 
   /**
    * @notice Get target_hp.
    */
-  function getTarget_hp(bytes32 key) internal view returns (bytes32 target_hp) {
+  function getTarget_hp(bytes32 key) internal view returns (uint8 target_hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (bytes32(_blob));
+    return (uint8(bytes1(_blob)));
   }
 
   /**
    * @notice Get target_hp.
    */
-  function _getTarget_hp(bytes32 key) internal view returns (bytes32 target_hp) {
+  function _getTarget_hp(bytes32 key) internal view returns (uint8 target_hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (bytes32(_blob));
+    return (uint8(bytes1(_blob)));
   }
 
   /**
    * @notice Set target_hp.
    */
-  function setTarget_hp(bytes32 key, bytes32 target_hp) internal {
+  function setTarget_hp(bytes32 key, uint8 target_hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -176,7 +176,7 @@ library AttackResult {
   /**
    * @notice Set target_hp.
    */
-  function _setTarget_hp(bytes32 key, bytes32 target_hp) internal {
+  function _setTarget_hp(bytes32 key, uint8 target_hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -216,8 +216,8 @@ library AttackResult {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, uint8 mana_cost, bytes32 target_hp) internal {
-    bytes memory _staticData = encodeStatic(mana_cost, target_hp);
+  function set(bytes32 key, uint8 attacker_hp, uint8 target_hp) internal {
+    bytes memory _staticData = encodeStatic(attacker_hp, target_hp);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -231,8 +231,8 @@ library AttackResult {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, uint8 mana_cost, bytes32 target_hp) internal {
-    bytes memory _staticData = encodeStatic(mana_cost, target_hp);
+  function _set(bytes32 key, uint8 attacker_hp, uint8 target_hp) internal {
+    bytes memory _staticData = encodeStatic(attacker_hp, target_hp);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -247,7 +247,7 @@ library AttackResult {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, AttackResultData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.mana_cost, _table.target_hp);
+    bytes memory _staticData = encodeStatic(_table.attacker_hp, _table.target_hp);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -262,7 +262,7 @@ library AttackResult {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, AttackResultData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.mana_cost, _table.target_hp);
+    bytes memory _staticData = encodeStatic(_table.attacker_hp, _table.target_hp);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -276,10 +276,10 @@ library AttackResult {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint8 mana_cost, bytes32 target_hp) {
-    mana_cost = (uint8(Bytes.slice1(_blob, 0)));
+  function decodeStatic(bytes memory _blob) internal pure returns (uint8 attacker_hp, uint8 target_hp) {
+    attacker_hp = (uint8(Bytes.slice1(_blob, 0)));
 
-    target_hp = (Bytes.slice32(_blob, 1));
+    target_hp = (uint8(Bytes.slice1(_blob, 1)));
   }
 
   /**
@@ -293,7 +293,7 @@ library AttackResult {
     PackedCounter,
     bytes memory
   ) internal pure returns (AttackResultData memory _table) {
-    (_table.mana_cost, _table.target_hp) = decodeStatic(_staticData);
+    (_table.attacker_hp, _table.target_hp) = decodeStatic(_staticData);
   }
 
   /**
@@ -320,8 +320,8 @@ library AttackResult {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint8 mana_cost, bytes32 target_hp) internal pure returns (bytes memory) {
-    return abi.encodePacked(mana_cost, target_hp);
+  function encodeStatic(uint8 attacker_hp, uint8 target_hp) internal pure returns (bytes memory) {
+    return abi.encodePacked(attacker_hp, target_hp);
   }
 
   /**
@@ -331,10 +331,10 @@ library AttackResult {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    uint8 mana_cost,
-    bytes32 target_hp
+    uint8 attacker_hp,
+    uint8 target_hp
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(mana_cost, target_hp);
+    bytes memory _staticData = encodeStatic(attacker_hp, target_hp);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

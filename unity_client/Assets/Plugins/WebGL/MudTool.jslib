@@ -62,9 +62,8 @@ mergeInto(LibraryManager.library, {
         MyUnityInstance.SendMessage("Client", "OnGameSettingSuccess", "returnStr");
     },
 
-    playerSetting: async function (username, game_uid, deck_id, is_ai, hp, mana, dcards) {
-        console.log(username, "is_ai", is_ai);
-        let result = await mud.playerSetting(UTF8ToString(username), UTF8ToString(game_uid), UTF8ToString(deck_id), is_ai, hp, mana, dcards);
+    playerSetting: async function (username, game_uid, deck_id, is_ai, hp, mana, dcards,pid) {
+        let result = await mud.playerSetting(UTF8ToString(username), UTF8ToString(game_uid), UTF8ToString(deck_id), is_ai, hp, mana, dcards,pid);
         console.log("playerSetting result", result);
 
         let returnStr = JSON.stringify(result.res);
@@ -150,6 +149,8 @@ mergeInto(LibraryManager.library, {
     },
 
     endTurn: async function (game_uid, player_name, player_id) {
+        console.log("player_name", UTF8ToString(player_name));
+
         let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_name), player_id);
         console.log(result);
 

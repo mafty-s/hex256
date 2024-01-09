@@ -372,7 +372,7 @@ export const App = () => {
         return user;
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         // window.addTask = addTask;
         // window.addUser = addUser;
         window.getUser = getUser;
@@ -390,8 +390,15 @@ export const App = () => {
             console.log("111", url, JSON.parse(json_data))
         }
 
-        initUnity();
-
+        while (true) {
+            const user = await getUser();
+            if (user) {
+                initUnity();
+                break;
+            }else{
+                window.mud.addUser('hhh')
+            }
+        }
         return () => {
         };
     }, []);

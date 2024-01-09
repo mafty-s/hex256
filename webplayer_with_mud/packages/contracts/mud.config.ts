@@ -188,8 +188,8 @@ export default mudConfig({
         },
         AttackResult: {
             valueSchema: {
-                mana_cost: "uint8",
-                target_hp: "bytes32",
+                attacker_hp: "uint8",
+                target_hp: "uint8",
             }
         },
         PlayCardResult:{

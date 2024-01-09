@@ -29,14 +29,22 @@ contract EndTurnSystem is System {
         bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
 
         //todo 恢复mana
-        uint8 mana = Players.getMana(player_key) + 1;
+        uint8 mana = Players.getMana(player_key);
+        mana += 1;
         if(mana > Players.getManaMax(player_key)){
             mana = Players.getManaMax(player_key);
         }
         Players.setMana(player_key,mana);
 
         //抽张卡出来
-        bytes32 board_card_key = DrawCard(player_key);
+        bytes32 board_card_key = 0;
+
+        bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
+        if(cards.length>0){
+            board_card_key = cards[cards.length - 1];
+            PlayerCardsDeck.popValue(player_key);
+            PlayerCardsHand.pushValue(player_key, board_card_key);
+        }
 
         //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
 
@@ -54,11 +62,4 @@ contract EndTurnSystem is System {
         return result;
     }
 
-    function DrawCard(bytes32 player_key) internal returns(bytes32){
-        bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
-        bytes32 card_key = cards[cards.length - 1];
-        PlayerCardsDeck.popValue(player_key);
-        PlayerCardsHand.pushValue(player_key, card_key);
-        return card_key;
-    }
 }

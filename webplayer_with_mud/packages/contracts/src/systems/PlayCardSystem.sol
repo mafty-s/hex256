@@ -117,6 +117,7 @@ contract PlayCardSystem is System {
 
             uint8 mana_cost = CardOnBoards.getMana(card_key);
             uint8 player_mana =  Players.getMana(player_key);
+            require(player_mana>=mana_cost,"not enough mana");
             player_mana -= mana_cost;
             Players.setMana(player_key, player_mana);
 
