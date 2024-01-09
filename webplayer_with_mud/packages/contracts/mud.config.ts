@@ -195,6 +195,7 @@ export default mudConfig({
         PlayCardResult:{
             valueSchema: {
                 mana_cost: "uint8",
+                player_mana:"uint8",
             }
         }
     },

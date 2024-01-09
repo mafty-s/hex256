@@ -26,8 +26,13 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant PlayCardResultTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0001010001000000000000000000000000000000000000000000000000000000
+  0x0002020001010000000000000000000000000000000000000000000000000000
 );
+
+struct PlayCardResultData {
+  uint8 mana_cost;
+  uint8 player_mana;
+}
 
 library PlayCardResult {
   /**
@@ -54,8 +59,9 @@ library PlayCardResult {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](1);
+    SchemaType[] memory _valueSchema = new SchemaType[](2);
     _valueSchema[0] = SchemaType.UINT8;
+    _valueSchema[1] = SchemaType.UINT8;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -74,8 +80,9 @@ library PlayCardResult {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](1);
+    fieldNames = new string[](2);
     fieldNames[0] = "mana_cost";
+    fieldNames[1] = "player_mana";
   }
 
   /**
@@ -115,28 +122,6 @@ library PlayCardResult {
   }
 
   /**
-   * @notice Get mana_cost.
-   */
-  function get(bytes32 key) internal view returns (uint8 mana_cost) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Get mana_cost.
-   */
-  function _get(bytes32 key) internal view returns (uint8 mana_cost) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint8(bytes1(_blob)));
-  }
-
-  /**
    * @notice Set mana_cost.
    */
   function setMana_cost(bytes32 key, uint8 mana_cost) internal {
@@ -157,23 +142,158 @@ library PlayCardResult {
   }
 
   /**
-   * @notice Set mana_cost.
+   * @notice Get player_mana.
    */
-  function set(bytes32 key, uint8 mana_cost) internal {
+  function getPlayer_mana(bytes32 key) internal view returns (uint8 player_mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((mana_cost)), _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (uint8(bytes1(_blob)));
   }
 
   /**
-   * @notice Set mana_cost.
+   * @notice Get player_mana.
    */
-  function _set(bytes32 key, uint8 mana_cost) internal {
+  function _getPlayer_mana(bytes32 key) internal view returns (uint8 player_mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((mana_cost)), _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Set player_mana.
+   */
+  function setPlayer_mana(bytes32 key, uint8 player_mana) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((player_mana)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set player_mana.
+   */
+  function _setPlayer_mana(bytes32 key, uint8 player_mana) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((player_mana)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get the full data.
+   */
+  function get(bytes32 key) internal view returns (PlayCardResultData memory _table) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
+      _tableId,
+      _keyTuple,
+      _fieldLayout
+    );
+    return decode(_staticData, _encodedLengths, _dynamicData);
+  }
+
+  /**
+   * @notice Get the full data.
+   */
+  function _get(bytes32 key) internal view returns (PlayCardResultData memory _table) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
+      _tableId,
+      _keyTuple,
+      _fieldLayout
+    );
+    return decode(_staticData, _encodedLengths, _dynamicData);
+  }
+
+  /**
+   * @notice Set the full data using individual values.
+   */
+  function set(bytes32 key, uint8 mana_cost, uint8 player_mana) internal {
+    bytes memory _staticData = encodeStatic(mana_cost, player_mana);
+
+    PackedCounter _encodedLengths;
+    bytes memory _dynamicData;
+
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
+  }
+
+  /**
+   * @notice Set the full data using individual values.
+   */
+  function _set(bytes32 key, uint8 mana_cost, uint8 player_mana) internal {
+    bytes memory _staticData = encodeStatic(mana_cost, player_mana);
+
+    PackedCounter _encodedLengths;
+    bytes memory _dynamicData;
+
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
+  }
+
+  /**
+   * @notice Set the full data using the data struct.
+   */
+  function set(bytes32 key, PlayCardResultData memory _table) internal {
+    bytes memory _staticData = encodeStatic(_table.mana_cost, _table.player_mana);
+
+    PackedCounter _encodedLengths;
+    bytes memory _dynamicData;
+
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
+  }
+
+  /**
+   * @notice Set the full data using the data struct.
+   */
+  function _set(bytes32 key, PlayCardResultData memory _table) internal {
+    bytes memory _staticData = encodeStatic(_table.mana_cost, _table.player_mana);
+
+    PackedCounter _encodedLengths;
+    bytes memory _dynamicData;
+
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
+  }
+
+  /**
+   * @notice Decode the tightly packed blob of static data using this table's field layout.
+   */
+  function decodeStatic(bytes memory _blob) internal pure returns (uint8 mana_cost, uint8 player_mana) {
+    mana_cost = (uint8(Bytes.slice1(_blob, 0)));
+
+    player_mana = (uint8(Bytes.slice1(_blob, 1)));
+  }
+
+  /**
+   * @notice Decode the tightly packed blobs using this table's field layout.
+   * @param _staticData Tightly packed static fields.
+   *
+   *
+   */
+  function decode(
+    bytes memory _staticData,
+    PackedCounter,
+    bytes memory
+  ) internal pure returns (PlayCardResultData memory _table) {
+    (_table.mana_cost, _table.player_mana) = decodeStatic(_staticData);
   }
 
   /**
@@ -200,8 +320,8 @@ library PlayCardResult {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint8 mana_cost) internal pure returns (bytes memory) {
-    return abi.encodePacked(mana_cost);
+  function encodeStatic(uint8 mana_cost, uint8 player_mana) internal pure returns (bytes memory) {
+    return abi.encodePacked(mana_cost, player_mana);
   }
 
   /**
@@ -210,8 +330,11 @@ library PlayCardResult {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint8 mana_cost) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(mana_cost);
+  function encode(
+    uint8 mana_cost,
+    uint8 player_mana
+  ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+    bytes memory _staticData = encodeStatic(mana_cost, player_mana);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

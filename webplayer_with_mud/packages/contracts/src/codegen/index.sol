@@ -28,4 +28,4 @@ import { ActionHistory, ActionHistoryData, ActionHistoryTableId } from "./tables
 import { Tasks, TasksData, TasksTableId } from "./tables/Tasks.sol";
 import { EndTurnResult, EndTurnResultData, EndTurnResultTableId } from "./tables/EndTurnResult.sol";
 import { AttackResult, AttackResultData, AttackResultTableId } from "./tables/AttackResult.sol";
-import { PlayCardResult, PlayCardResultTableId } from "./tables/PlayCardResult.sol";
+import { PlayCardResult, PlayCardResultData, PlayCardResultTableId } from "./tables/PlayCardResult.sol";

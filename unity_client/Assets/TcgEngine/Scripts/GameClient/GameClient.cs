@@ -383,10 +383,10 @@ namespace TcgEngine.Client
                     }
 
                     player.ready = true;
-                    player.mana_max = 5;
-                    player.mana = 5;
-                    player.hp = 10;
-                    player.hp_max = 10;
+                    player.mana_max =result.mana;
+                    player.mana = result.mana;
+                    player.hp = result.hp;
+                    player.hp_max = result.hp;
                     Debug.Log("do onPlayerReady:" + player.player_id);
                     onPlayerReady.Invoke(player.player_id);
                 }
@@ -480,6 +480,7 @@ namespace TcgEngine.Client
 
             //player.RemoveCardFromAllGroups(card);
             player.cards_board.Add(card);
+            player.mana = msg.player_mana;
 
             onCardPlayed?.Invoke(card, slot);
             onRefreshAll?.Invoke();
@@ -735,8 +736,14 @@ namespace TcgEngine.Client
             Card board_card_key = player.GetCard(result.board_card_key);
             if (board_card_key!=null)
             {
+                Debug.Log("card");
                 player.cards_board.Add(board_card_key);
                 player.cards_hand.Remove(board_card_key);
+                onCardDraw?.Invoke(1);
+                onRefreshAll?.Invoke();
+                Debug.Log("cards_board"+player.cards_board.Count);
+                Debug.Log("cards_hand"+player.cards_hand.Count);
+
             }
 
             if (player.is_ai)

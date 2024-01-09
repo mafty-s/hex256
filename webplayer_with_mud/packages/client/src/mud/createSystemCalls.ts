@@ -289,6 +289,8 @@ export function createSystemCalls(
     }
 
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number, dcards: number) => {
+        await sleep(200)
+
         const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards]);
         await waitForTransaction(hash);
 
@@ -306,6 +308,10 @@ export function createSystemCalls(
             deck: [],
             board: [],
             all: [],
+            mana:mana,
+            hp:hp,
+            is_ai:is_ai,
+            dcards:dcards
         }
 
         res.player_name = card_pool[0];
@@ -319,7 +325,7 @@ export function createSystemCalls(
             res.player_name = "test"
         }
 
-        await sleep(1000);
+        await sleep(1500);
         return convertBigIntToInt({hash, tx_result, res});
     }
 
@@ -350,6 +356,8 @@ export function createSystemCalls(
             slot_x: slot.x,
             slot_y: 1,//slot.y,
             slot_p: slot.p,
+            mana_cost : tx_result.result.mana_cost,
+            player_mana : tx_result.result.player_mana,
         }
         return convertBigIntToInt({hash, tx_result, result});
     }

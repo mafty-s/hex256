@@ -13,6 +13,8 @@ public class MudPlayCard
     public int slot_x;
     public int slot_y;
     public int slot_p;
+    public int mana_cost;
+    public int player_mana;
 }
 
 
@@ -23,6 +25,7 @@ public class MovePlayCard
     public int slot_x;
     public int slot_y;
     public int slot_p;
+
 }
 
 
@@ -50,6 +53,8 @@ public class MudPlayerSettingResult
     public string[] deck;
     public string[] board;
     public string[] all;
+    public int mana;
+    public int hp;
 }
 
 
