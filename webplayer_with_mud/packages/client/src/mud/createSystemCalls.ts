@@ -488,7 +488,9 @@ export function createSystemCalls(
         const tx_result = await getTxResult(tx);
         console.log("tx-result",tx_result)
 
-        return {};
+        return {
+            players:tx_result.result.players
+        };
     }
 
     const out = {

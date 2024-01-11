@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TcgEngine.Client;
@@ -233,6 +234,7 @@ namespace TcgEngine.UI
                 if (MudManager.Get().HasMudInstalled())
                 {
                     MudManager.Get().StartMatchmaking(group, GameClient.game_settings.nb_players);
+                    GameClientMatchmaker.Get().onMatchmaking?.Invoke(null);
                 }
                 else
                 {
@@ -243,7 +245,17 @@ namespace TcgEngine.UI
 
         public void OnStartMatchmakingSuccess(string message)
         {
+            Debug.Log("OnStartMatchmakingSuccess:" + message);
+            // MatchmakingList list = new MatchmakingList();
+            // MatchmakingListItem item = new MatchmakingListItem();
+            // item.username = "aaa";
+            // item.group = "";
+            // item.user_id = "aaa";
+            // list.items = new[] { item };
+            // GameClientMatchmaker.Get().onMatchmakingList?.Invoke(list);
             
+            StartGame(GameType.Multiplayer, "pvp", "");
+
         }
 
         public void OnClickSolo()

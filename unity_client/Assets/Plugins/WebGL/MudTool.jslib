@@ -169,7 +169,7 @@ mergeInto(LibraryManager.library, {
         let result = await mud.startMatchmaking(UTF8ToString(game_uid), nb_players);
         console.log(result);
         let returnStr = JSON.stringify(result);
-        MyUnityInstance.SendMessage("Client", "OnStartMatchmakingSuccess", returnStr);
+        MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
     },
 
 });
