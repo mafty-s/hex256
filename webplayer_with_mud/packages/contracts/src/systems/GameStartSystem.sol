@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {Matches, MatchesData} from "../codegen/index.sol";
+import {Games, GamesData} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
@@ -50,7 +50,7 @@ contract GameStartSystem is System {
 
         //        DecksData memory deck = Decks.get(desk_key);
 
-        Matches.pushPlayers(match_key, player_key);
+        Games.pushPlayers(match_key, player_key);
         Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
 
 
@@ -73,7 +73,7 @@ contract GameStartSystem is System {
         }
 
 
-        if (Matches.getPlayers(match_key).length == 2) {
+        if (Games.getPlayers(match_key).length == 2) {
             StartGame(game_uid);
         }
 
@@ -85,17 +85,17 @@ contract GameStartSystem is System {
     function StartGame(string memory game_uid) internal {
 
         bytes32 match_key = keccak256(abi.encode(game_uid));
-        if (Matches.get(match_key).gameState == GameState.GAME_ENDED) {
+        if (Games.get(match_key).gameState == GameState.GAME_ENDED) {
             revert("Game already ended");
         }
 
-        bytes32[] memory player_keys = Matches.getPlayers(match_key);
+        bytes32[] memory player_keys = Games.getPlayers(match_key);
 
         //Choose first player
-        Matches.setGameState(match_key, GameState.PLAY);
-        Matches.setFirstPlayer(match_key, player_keys[uint8(block.prevrandao % 2)]);
-        Matches.setCurrentPlayer(match_key, Matches.getFirstPlayer(match_key));
-        Matches.setTurnCount(match_key, 1);
+        Games.setGameState(match_key, GameState.PLAY);
+        Games.setFirstPlayer(match_key, player_keys[uint8(block.prevrandao % 2)]);
+        Games.setCurrentPlayer(match_key, Games.getFirstPlayer(match_key));
+        Games.setTurnCount(match_key, 1);
 
         //Init each players
 
@@ -119,11 +119,11 @@ contract GameStartSystem is System {
     }
 
     function StartTurn(bytes32 match_key) internal {
-        if (Matches.get(match_key).gameState == GameState.GAME_ENDED) {
+        if (Games.get(match_key).gameState == GameState.GAME_ENDED) {
             revert("Game already ended");
         }
         ClearTurnData();
-        Matches.setGamePhase(match_key, GamePhase.START_TURN);
+        Games.setGamePhase(match_key, GamePhase.START_TURN);
 
         //todo
 

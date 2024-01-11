@@ -2,7 +2,7 @@ pragma solidity >=0.8.21;
 
 import "../codegen/common.sol";
 
-import {Matches, MatchesExtended, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
+import {Games, GamesExtended, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
 import {GameState, SelectorType, Status} from "../codegen/common.sol";
 
 import "./CardLogicLib.sol";
@@ -18,16 +18,16 @@ library BaseLogicLib {
 
     function IsPlayerActionTurn(bytes32 match_key, bytes32 player_key) internal view returns (bool) {
         return player_key != 0
-        && Matches.getCurrentPlayer(match_key) == player_key
-        && Matches.getGameState(match_key) == GameState.PLAY
-        && MatchesExtended.getSelector(match_key) == SelectorType.NONE;
+        && Games.getCurrentPlayer(match_key) == player_key
+        && Games.getGameState(match_key) == GameState.PLAY
+        && GamesExtended.getSelector(match_key) == SelectorType.NONE;
     }
 
     function IsPlayerSelectorTurn(bytes32 match_key, bytes32 player_key) internal view returns (bool) {
         return player_key != 0
-        && MatchesExtended.getSelectorPlayerId(match_key) == player_key
-        && Matches.getGameState(match_key) == GameState.PLAY
-        && MatchesExtended.getSelector(match_key) != SelectorType.NONE;
+        && GamesExtended.getSelectorPlayerId(match_key) == player_key
+        && Games.getGameState(match_key) == GameState.PLAY
+        && GamesExtended.getSelector(match_key) != SelectorType.NONE;
     }
 
     function CanPlayCard(bytes32 card_key, Slot memory slot, bool skip_cost) internal view returns (bool) {
@@ -165,7 +165,7 @@ library BaseLogicLib {
 
     function GetSlotCard(bytes32 game_key, Slot memory slot) internal view returns (bytes32) {
 
-        bytes32[] memory players = Matches.getPlayers(game_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
 
         for (uint i = 0; i < players.length; i++) {
             bytes32 player_key = players[i];

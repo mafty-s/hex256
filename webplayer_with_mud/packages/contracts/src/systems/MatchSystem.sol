@@ -8,7 +8,7 @@ import {Users, UsersData} from "../codegen/index.sol";
 
 contract MatchSystem is System {
 
-    function StartMatchmaking(string game_uid, uint256 nplayer ) public {
+    function StartMatchmaking(string memory game_uid, uint256 nplayer ) public {
 
     }
 }

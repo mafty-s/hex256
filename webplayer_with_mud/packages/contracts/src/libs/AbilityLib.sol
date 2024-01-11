@@ -1,7 +1,7 @@
 pragma solidity >=0.8.21;
 
 import "../codegen/common.sol";
-import {Cards, Matches, Ability, PlayerCardsBoard} from "../codegen/index.sol";
+import {Cards, Games, Ability, PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {EffectLib} from "./EffectLib.sol";
@@ -38,7 +38,7 @@ library AbilityLib {
     }
 
     function TriggerCardAbilityTypeOneCard(bytes32 game_key, AbilityTrigger trigger, bytes32 triggerer) internal {
-        bytes32[] memory players = Matches.getPlayers(game_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
         for (uint i = 0; i < players.length; i++) {
             TriggerCardAbilityTypePlayer(trigger, triggerer, players[i]);
 

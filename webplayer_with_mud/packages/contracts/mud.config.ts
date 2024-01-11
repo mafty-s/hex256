@@ -123,7 +123,7 @@ export default mudConfig({
                 cards: "bytes32[]",
             }
         },
-        Matches: {
+        Games: {
             valueSchema: {
                 gameType: "GameType",
                 gameState: "GameState",
@@ -137,7 +137,7 @@ export default mudConfig({
                 players: "bytes32[]",
             }
         },
-        MatchesExtended: {
+        GamesExtended: {
             valueSchema: {
                 selector: "SelectorType",
                 selectorPlayerId: "bytes32",

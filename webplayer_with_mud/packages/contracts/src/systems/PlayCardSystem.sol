@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards} from "../codegen/index.sol";
 //import {Decks, DecksData} from "../codegen/index.sol";
-//import {Matches, MatchesData} from "../codegen/index.sol";
+//import {Games, GamesData} from "../codegen/index.sol";
 import {Players} from "../codegen/index.sol";
 //import {PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
 import {CardOnBoards,PlayCardResultData} from "../codegen/index.sol";

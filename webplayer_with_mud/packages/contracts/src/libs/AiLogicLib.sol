@@ -1,7 +1,7 @@
 pragma solidity >=0.8.21;
 
 import "../codegen/common.sol";
-import {Cards, Matches, Ability, PlayerCardsBoard} from "../codegen/index.sol";
+import {Cards, Games, Ability, PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {EffectLib} from "./EffectLib.sol";
@@ -9,7 +9,7 @@ import {PlayerLogicLib} from "./PlayerLogicLib.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {BaseLogicLib} from "./BaseLogicLib.sol";
 import {Slot, SlotLib} from "./SlotLib.sol";
-import {Matches, AiActions} from "../codegen/index.sol";
+import {Games, AiActions} from "../codegen/index.sol";
 
 library AiLogicLib {
     function Think(bytes32 game_key, bytes32 player_key) internal {
@@ -47,7 +47,7 @@ library AiLogicLib {
     function AiPlayCard(bytes32 game_key, bytes32 player_key) internal {
         bytes32 random_card_key = PlayerLogicLib.GetRandomCard(player_key);
         Slot memory random_slot = SlotLib.GetRandomEmptySlot(player_key);
-        uint8 turnCount = Matches.getTurnCount(game_key);
+        uint8 turnCount = Games.getTurnCount(game_key);
 
         bytes32 action_key = keccak256(abi.encode(game_key, turnCount));
 

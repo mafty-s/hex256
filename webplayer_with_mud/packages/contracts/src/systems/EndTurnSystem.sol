@@ -9,7 +9,7 @@ import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityT
 
 import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
-import {Matches, MatchesData} from "../codegen/index.sol";
+import {Games, GamesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
 import {EndTurnResultData ,PlayerCardsHand,PlayerCardsDeck,Players} from "../codegen/index.sol";
 
@@ -21,12 +21,12 @@ contract EndTurnSystem is System {
     }
 
     function EndTurn(bytes32 game_key, uint8 player_index) public returns ( EndTurnResultData memory result) {
-        Matches.setTurnCount(game_key, Matches.getTurnCount(game_key) + 1);
-        Matches.setGamePhase(game_key, GamePhase.END_TURN);
+        Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
+        Games.setGamePhase(game_key, GamePhase.END_TURN);
 
-        bytes32 player_key = Matches.getPlayers(game_key)[player_index];
+        bytes32 player_key = Games.getPlayers(game_key)[player_index];
         uint8 opponent_index = player_index == 0 ? 1 : 0;
-        bytes32 opponent_player_key = Matches.getPlayers(game_key)[opponent_index];
+        bytes32 opponent_player_key = Games.getPlayers(game_key)[opponent_index];
 
         //todo 恢复mana
         uint8 mana = Players.getMana(player_key);
@@ -51,9 +51,9 @@ contract EndTurnSystem is System {
 
         //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
 
-        Matches.setCurrentPlayer(game_key, opponent_player_key);
-//        Matches.setGamePhase(game_key, GamePhase.START_TURN);
-        if (Matches.getGameType(game_key) == GameType.SOLO || Matches.getGameType(game_key) == GameType.ADVENTURE) {
+        Games.setCurrentPlayer(game_key, opponent_player_key);
+//        Games.setGamePhase(game_key, GamePhase.START_TURN);
+        if (Games.getGameType(game_key) == GameType.SOLO || Games.getGameType(game_key) == GameType.ADVENTURE) {
             //AiLogicLib.Think(game_key, opponent_player_key);
         }
 

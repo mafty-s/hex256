@@ -1,6 +1,6 @@
 pragma solidity >=0.8.21;
 
-import {Cards, Matches, Ability, Players, PlayerCardsBoard} from "../codegen/index.sol";
+import {Cards, Games, Ability, Players, PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {GameLogicLib} from "./GameLogicLib.sol";

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {Matches, Cards, CardsData} from "../codegen/index.sol";
+import {Games, Cards, CardsData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
 
@@ -41,7 +41,7 @@ library GameLogicLib {
     function CheckForWinner(bytes32 game_key) internal {
         uint8 count_alive = 0;
         bytes32 alive = 0;
-        bytes32[] memory players = Matches.getPlayers(game_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
         for (uint8 i = 0; i < players.length; i++) {
             bytes32 player = players[i];
             if (!PlayerLogicLib.IsDead(player)) {
@@ -68,10 +68,10 @@ library GameLogicLib {
 //            onGameEnd?.Invoke(player);
 //        }
         //todo
-        if (Matches.getGameState(game_key) != GameState.GAME_ENDED) {
-            Matches.setGameState(game_key, GameState.GAME_ENDED);
-            Matches.setGamePhase(game_key, GamePhase.NONE);
-            Matches.setCurrentPlayer(game_key, winner);
+        if (Games.getGameState(game_key) != GameState.GAME_ENDED) {
+            Games.setGameState(game_key, GameState.GAME_ENDED);
+            Games.setGamePhase(game_key, GamePhase.NONE);
+            Games.setCurrentPlayer(game_key, winner);
         }
     }
 

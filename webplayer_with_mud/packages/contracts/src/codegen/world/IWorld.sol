@@ -13,6 +13,7 @@ import { IDeckSystem } from "./IDeckSystem.sol";
 import { IEndTurnSystem } from "./IEndTurnSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
+import { IMatchSystem } from "./IMatchSystem.sol";
 import { IMoveSystem } from "./IMoveSystem.sol";
 import { IPacksSystem } from "./IPacksSystem.sol";
 import { IPlayCardSystem } from "./IPlayCardSystem.sol";
@@ -35,6 +36,7 @@ interface IWorld is
   IEndTurnSystem,
   IGameStartSystem,
   IMarketSystem,
+  IMatchSystem,
   IMoveSystem,
   IPacksSystem,
   IPlayCardSystem,
