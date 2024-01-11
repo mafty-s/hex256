@@ -234,7 +234,8 @@ namespace TcgEngine.UI
                 if (MudManager.Get().HasMudInstalled())
                 {
                     MudManager.Get().StartMatchmaking(group, GameClient.game_settings.nb_players);
-                    GameClientMatchmaker.Get().onMatchmaking?.Invoke(null);
+                    //GameClientMatchmaker.Get().onMatchmaking?.Invoke(null);
+                    GameClientMatchmaker.Get().matchmaking = true;
                 }
                 else
                 {
@@ -257,7 +258,16 @@ namespace TcgEngine.UI
             MudMatchingResult result = JsonUtility.FromJson<MudMatchingResult>(message);
             if (result.players.Length == result.nb_players)
             {
-                StartGame(GameType.Multiplayer, "pvp_" + result.game, "");
+                GameClientMatchmaker.Get().matchmaking = false;
+
+                string uid = "pvp_" + result.game;
+                StartGame(GameType.Multiplayer,uid , "");
+
+                GameClient.player_settings.username = MudManager.Get().GetUserData().owner;
+                Debug.Log(MudManager.Get().GetUserData().owner);
+                GameClient.game_settings.game_uid = uid;
+                GameClient.Get().SendGameSettings();
+                GameClient.Get().SendPlayerSettings(GameClient.player_settings);
             }
             else
             {
