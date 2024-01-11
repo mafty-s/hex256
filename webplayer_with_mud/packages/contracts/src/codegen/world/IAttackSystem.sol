@@ -10,5 +10,5 @@ pragma solidity >=0.8.21;
 interface IAttackSystem {
   function AttackTarget(bytes32 game_key, bytes32 attacker_key, bytes32 target_key, bool skip_cost) external;
 
-  function AttackPlayer(bytes32 game_key, bytes32 attacker_key, bytes32 target_key, bool skip_cost) external;
+  function AttackPlayer(bytes32 game_key, bytes32 attacker_key, uint256 target, bool skip_cost) external;
 }

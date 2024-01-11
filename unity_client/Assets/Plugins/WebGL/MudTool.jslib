@@ -130,6 +130,8 @@ mergeInto(LibraryManager.library, {
         console.log("cardkey", UTF8ToString(cardkey));
         let result = await mud.attackPlayer(UTF8ToString(game_uid), UTF8ToString(cardkey), target_id);
         console.log("attackPlayer result", result);
+
+        MyUnityInstance.SendMessage("Client", "OnAttackPlayerSuccess", JSON.stringify(result));
     },
 
     saveDeck: async function (tid, hero, cards) {

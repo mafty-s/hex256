@@ -392,11 +392,11 @@ export const App = () => {
 
         while (true) {
             const user = await getUser();
-            if (user) {
+            if (user && user.owner!='0x0000000000000000000000000000000000000000') {
                 initUnity();
                 break;
             }else{
-                window.mud.addUser('hhh')
+               await addUser(walletClient.account.address)
             }
         }
         return () => {

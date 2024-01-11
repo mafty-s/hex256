@@ -398,10 +398,13 @@ export function createSystemCalls(
     }
 
     const attackPlayer = async (game_uid:string,cardkey:string,target:number) => {
-        const game_key = calculateKeccak256Hash(game_id);
-        const tx = await worldContract.write.AttackPlayer([game_key, cardkey, target]);
+        const game_key = calculateKeccak256Hash(game_uid);
+        const tx = await worldContract.write.AttackPlayer([game_key, cardkey, target,false]);
         await waitForTransaction(tx);
-        return tx;
+        return  {
+            attacker_uid:cardkey,
+            target_id:target,
+        };
     }
 
     const saveDeck = async (tid: string, hero: string, cards: string) => {

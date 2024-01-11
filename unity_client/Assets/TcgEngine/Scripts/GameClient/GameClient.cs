@@ -294,8 +294,37 @@ namespace TcgEngine.Client
             // attacker.hp = result.attacker_hp;
             // defender.hp = result.defender_hp;
 
+            onAttackStart?.Invoke(attacker,target);
+            target.hp = 0;
             onAttackEnd?.Invoke(attacker, target);
             onRefreshAll?.Invoke();
+        }
+        
+        public void OnAttackPlayerSuccess(string message)
+        {
+            Debug.Log("OnAttackPlayerSuccess:" + message);
+            MudAttackPlayerResult result = JsonUtility.FromJson<MudAttackPlayerResult>(message);
+
+            Card attacker = game_data.GetCard(result.attacker_uid);
+            Player target = game_data.GetPlayer(result.target_id);
+
+            if (attacker == null || target == null)
+            {
+                Debug.Log("OnAttackPlayerSuccess attacker or defender is null");
+                return;
+            }
+            //
+            // attacker.hp = result.attacker_hp;
+            // defender.hp = result.defender_hp;
+
+            onAttackPlayerStart?.Invoke(attacker,target);
+            target.hp = 0;
+
+            onAttackPlayerEnd?.Invoke(attacker, target);
+            onRefreshAll?.Invoke();
+            
+            onGameEnd?.Invoke(result.target_id);
+
         }
 
         //--------------------------

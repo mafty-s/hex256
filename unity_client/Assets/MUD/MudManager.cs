@@ -74,6 +74,12 @@ public class MudAttackCardResult
     public string target_uid;
 }
 
+[System.Serializable]
+public class MudAttackPlayerResult
+{
+    public string attacker_uid;
+    public int target_id;
+}
 
 public class MudManager : MonoBehaviour
 {
