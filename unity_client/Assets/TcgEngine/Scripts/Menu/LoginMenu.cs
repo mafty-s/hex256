@@ -49,8 +49,19 @@ namespace TcgEngine.UI
             error_msg.text = "";
             test_area.SetActive(Authenticator.Get().IsTest());
 
-            string user = PlayerPrefs.GetString("tcg_last_user", "");
-            login_user.text = user;
+            string user = null;
+            if (MudManager.Get().useMud)
+            {
+                login_user.text = MudManager.Get().GetUserData().owner;
+                login_user.readOnly = true;
+            }
+            else
+            {
+                 user = PlayerPrefs.GetString("tcg_last_user", "");
+                login_user.text = user;
+            }
+
+
 
             if (Authenticator.Get().IsTest())
             {
