@@ -25,6 +25,10 @@ export default mudConfig({
             keySchema: {},
             valueSchema: "uint256",
         },
+        MatchingSingleton: {
+            keySchema: {},
+            valueSchema: "bytes32",
+        },
         CardRaritySingleton: {
             keySchema: {},
             valueSchema: {
@@ -144,6 +148,13 @@ export default mudConfig({
                 lastPlayed: "bytes32",
                 lastTarget: "bytes32",
                 lastDestroyed: "bytes32",
+            }
+        },
+        Matches: {
+            valueSchema: {
+                game:"bytes32",
+                nplayer:"uint8",
+                player:"bytes32[]",
             }
         },
         Players: {
