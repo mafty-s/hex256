@@ -162,6 +162,14 @@ mergeInto(LibraryManager.library, {
 
         let returnStr = JSON.stringify(result);
         MyUnityInstance.SendMessage("Client", "OnEndTurnSuccess", returnStr);
-    }
+    },
+
+    startMatchmaking: async function ( game_uid, nb_players) {
+        console.log("startMatchmaking=====================================");
+        let result = await mud.startMatchmaking(UTF8ToString(game_uid), nb_players);
+        console.log(result);
+        let returnStr = JSON.stringify(result);
+        MyUnityInstance.SendMessage("Client", "OnStartMatchmakingSuccess", returnStr);
+    },
 
 });

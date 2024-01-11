@@ -478,6 +478,19 @@ export function createSystemCalls(
     // }
 
 
+    const startMatchmaking = async (game_uid: string, nb_players: number) => {
+        console.log("game_uid", game_uid);
+        console.log("nb_players", nb_players);
+
+        const tx = await worldContract.write.StartMatchmaking([nb_players]);
+        await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log("tx-result",tx_result)
+
+        return {};
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -515,6 +528,7 @@ export function createSystemCalls(
         IsBoardCard,
         getPlayerCards,
         endTurn,
+        startMatchmaking
     };
 
     window.mud = out;

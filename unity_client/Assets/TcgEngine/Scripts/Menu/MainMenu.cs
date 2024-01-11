@@ -229,8 +229,21 @@ namespace TcgEngine.UI
                 GameClient.game_settings.game_mode = mode;
                 GameClient.player_settings.deck = deck;
                 GameClient.game_settings.scene = GameplayData.Get().GetRandomArena();
-                GameClientMatchmaker.Get().StartMatchmaking(group, GameClient.game_settings.nb_players);
+
+                if (MudManager.Get().HasMudInstalled())
+                {
+                    MudManager.Get().StartMatchmaking(group, GameClient.game_settings.nb_players);
+                }
+                else
+                {
+                    GameClientMatchmaker.Get().StartMatchmaking(group, GameClient.game_settings.nb_players);
+                }
             }
+        }
+
+        public void OnStartMatchmakingSuccess(string message)
+        {
+            
         }
 
         public void OnClickSolo()

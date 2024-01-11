@@ -244,6 +244,9 @@ public class MudManager : MonoBehaviour
 
     [DllImport("__Internal")]
     private static extern string endTurn(string game_uid,string player_name,int player_id);
+
+    [DllImport("__Internal")]
+    private static extern string startMatchmaking(string game_uid, int nb_players);
 #endif
 
     public static void SendTask(ushort code)
@@ -485,6 +488,17 @@ public class MudManager : MonoBehaviour
         }
 #if !UNITY_EDITOR && UNITY_WEBGL
         saveDeck(tid,hero,cards);
+#endif
+    }
+
+    public void StartMatchmaking(string game_uid, int nb_players)
+    {
+        if (useMud == false)
+        {
+            return;
+        }
+#if !UNITY_EDITOR && UNITY_WEBGL
+        startMatchmaking(game_uid,nb_players);
 #endif
     }
 }
