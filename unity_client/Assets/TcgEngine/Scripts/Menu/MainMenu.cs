@@ -261,7 +261,7 @@ namespace TcgEngine.UI
             }
             else
             {
-                MudManager.Get().CheckMatching(result.game);
+                MudManager.Get().CheckMatchmaking(result.game);
             }
 
         }

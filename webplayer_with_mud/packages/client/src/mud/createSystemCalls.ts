@@ -491,7 +491,16 @@ export function createSystemCalls(
         return {
             game:(Number)(tx_result.result.game),
             players:tx_result.result.players,
-            nb_players:tx_result.result.nb_players,
+            nb_players:tx_result.result.nbPlayers,
+        };
+    }
+
+    const checkMatchmaking = async (match_id:number)=>{
+        const record = await worldContract.read.CheckMatchmaking([match_id]);
+        return {
+            game:(Number)(record.game),
+            players:record.players,
+            nb_players:record.nbPlayers,
         };
     }
 
@@ -532,7 +541,8 @@ export function createSystemCalls(
         IsBoardCard,
         getPlayerCards,
         endTurn,
-        startMatchmaking
+        startMatchmaking,
+        checkMatchmaking,
     };
 
     window.mud = out;

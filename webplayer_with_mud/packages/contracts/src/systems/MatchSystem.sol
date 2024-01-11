@@ -29,4 +29,9 @@ contract MatchSystem is System {
             return Matches.get(matching_key);
         }
     }
+
+    function CheckMatchmaking(uint256 matching_id) public view returns(MatchesData memory){
+        bytes32 matching_key = keccak256(abi.encode(matching_id));
+        return Matches.get(matching_key);
+    }
 }

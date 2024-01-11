@@ -11,4 +11,6 @@ import { MatchesData } from "./../index.sol";
  */
 interface IMatchSystem {
   function StartMatchmaking(uint8 nb_players) external returns (MatchesData memory);
+
+  function CheckMatchmaking(uint256 matching_id) external view returns (MatchesData memory);
 }

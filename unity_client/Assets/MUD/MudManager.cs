@@ -515,14 +515,14 @@ public class MudManager : MonoBehaviour
 #endif
     }
     
-    public void CheckMatching(int match_id)
+    public void CheckMatchmaking(int match_id)
     {
         if (useMud == false)
         {
             return;
         }
 #if !UNITY_EDITOR && UNITY_WEBGL
-        checkMatching(game_uid,match_id);
+        checkMatchmaking(match_id);
 #endif
     }
     
