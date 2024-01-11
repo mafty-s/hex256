@@ -5,6 +5,7 @@ pragma solidity >=0.8.21;
 
 import { AdminSingleton, AdminSingletonTableId } from "./tables/AdminSingleton.sol";
 import { CounterSingleton, CounterSingletonTableId } from "./tables/CounterSingleton.sol";
+import { MatchingSingleton, MatchingSingletonTableId } from "./tables/MatchingSingleton.sol";
 import { CardRaritySingleton, CardRaritySingletonData, CardRaritySingletonTableId } from "./tables/CardRaritySingleton.sol";
 import { AiActions, AiActionsData, AiActionsTableId } from "./tables/AiActions.sol";
 import { Packs, PacksData, PacksTableId } from "./tables/Packs.sol";
