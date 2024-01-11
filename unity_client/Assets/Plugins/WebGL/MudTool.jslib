@@ -62,8 +62,8 @@ mergeInto(LibraryManager.library, {
         MyUnityInstance.SendMessage("Client", "OnGameSettingSuccess", "returnStr");
     },
 
-    playerSetting: async function (username, game_uid, deck_id, is_ai, hp, mana, dcards,pid) {
-        let result = await mud.playerSetting(UTF8ToString(username), UTF8ToString(game_uid), UTF8ToString(deck_id), is_ai, hp, mana, dcards,pid);
+    playerSetting: async function (username, game_uid, deck_id, is_ai, hp, mana, dcards, pid, shuffle) {
+        let result = await mud.playerSetting(UTF8ToString(username), UTF8ToString(game_uid), UTF8ToString(deck_id), is_ai, hp, mana, dcards, pid, shuffle);
         console.log("playerSetting result", result);
 
         let returnStr = JSON.stringify(result.res);
@@ -119,9 +119,12 @@ mergeInto(LibraryManager.library, {
         let result = await mud.attackCard(UTF8ToString(game_uid), UTF8ToString(player_id), UTF8ToString(attacker_key), slot, skip, UTF8ToString(target_key));
 
         console.log("attackCard result", result);
+
+        MyUnityInstance.SendMessage("Client", "OnAttackCardSuccess", JSON.stringify(result));
+
     },
 
-    attackPlayer: async function( game_uid,  cardkey,  target_id){
+    attackPlayer: async function (game_uid, cardkey, target_id) {
         console.log("attackPlayer=====================================");
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("cardkey", UTF8ToString(cardkey));

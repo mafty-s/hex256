@@ -18,7 +18,7 @@ interface IGameStartSystem {
     uint8 hp,
     uint8 mana,
     uint8 dcards,
-    bool shuffle
+    bool need_shuffle
   ) external returns (bytes32[] memory);
 
   function testRevert() external;

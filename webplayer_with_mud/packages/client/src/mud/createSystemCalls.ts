@@ -289,10 +289,10 @@ export function createSystemCalls(
     }
 
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
-                                 dcards: number,pid:number,shuffer:boolean) => {
+                                 dcards: number,pid:number,shuffle:boolean) => {
         await sleep(200)
 
-        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards,shuffer]);
+        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards,shuffle]);
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
@@ -391,7 +391,10 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_id);
         const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, false]);
         await waitForTransaction(tx);
-        return tx;
+        return  {
+            attacker_uid:attacker_key,
+            target_uid:target_key,
+        };
     }
 
     const attackPlayer = async (game_uid:string,cardkey:string,target:number) => {
