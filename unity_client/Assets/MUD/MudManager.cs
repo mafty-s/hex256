@@ -67,6 +67,14 @@ public class MudEndTurnResult
     public int mana_max;
 }
 
+[System.Serializable]
+public class MudAttackCardResult
+{
+    public string attacker_uid;
+    public string target_uid;
+}
+
+
 public class MudManager : MonoBehaviour
 {
     public bool useMud = false;
