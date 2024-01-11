@@ -49,19 +49,8 @@ namespace TcgEngine.UI
             error_msg.text = "";
             test_area.SetActive(Authenticator.Get().IsTest());
 
-            string user = null;
-            if (MudManager.Get().useMud)
-            {
-                login_user.text = MudManager.Get().GetUserData().owner;
-                login_user.readOnly = true;
-            }
-            else
-            {
-                 user = PlayerPrefs.GetString("tcg_last_user", "");
-                login_user.text = user;
-            }
-
-
+            string user  = PlayerPrefs.GetString("tcg_last_user", "");
+            login_user.text = user;
 
             if (Authenticator.Get().IsTest())
             {
@@ -78,6 +67,13 @@ namespace TcgEngine.UI
 
         void Update()
         {
+            if (MudManager.Get().HasMudInstalled())
+            {
+                login_user.text = MudManager.Get().GetUserData().owner;
+                login_user.readOnly = true;
+            }
+            
+            
             login_button.interactable = !clicked && !string.IsNullOrWhiteSpace(login_user.text);
             register_button.interactable = !clicked && !string.IsNullOrWhiteSpace(register_username.text) && !string.IsNullOrWhiteSpace(register_email.text)
                 && !string.IsNullOrWhiteSpace(register_password.text) && register_password.text == register_password_confirm.text;

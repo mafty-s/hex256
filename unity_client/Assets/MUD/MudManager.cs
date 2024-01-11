@@ -253,7 +253,7 @@ public class MudManager : MonoBehaviour
             addTask(msg);
 #endif
     }
-
+    
     void Start()
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
@@ -283,6 +283,13 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
+    public bool HasMudInstalled()
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        return hasMudInstalled();
+#endif
+        return false;
+    }
     public void OnUser(string msg)
     {
         if (useMud == false)
