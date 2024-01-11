@@ -221,6 +221,7 @@ namespace TcgEngine.UI
 
         public void StartMathmaking(GameMode mode, string group)
         {
+            Debug.Log("StartMathmaking");
             UserDeckData deck = deck_selector.GetDeck();
             if (deck != null)
             {
