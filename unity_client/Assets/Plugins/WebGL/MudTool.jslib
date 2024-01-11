@@ -172,4 +172,11 @@ mergeInto(LibraryManager.library, {
         MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
     },
 
+    checkMatchmaking: async function ( match_id) {
+        console.log("checkMatchmaking=====================================");
+        let result = await mud.checkMatchmaking(match_id);
+        console.log(result);
+        let returnStr = JSON.stringify(result);
+        MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
+    },
 });

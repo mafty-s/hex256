@@ -489,7 +489,9 @@ export function createSystemCalls(
         console.log("tx-result",tx_result)
 
         return {
-            players:tx_result.result.players
+            game:(Number)(tx_result.result.game),
+            players:tx_result.result.players,
+            nb_players:tx_result.result.nb_players,
         };
     }
 

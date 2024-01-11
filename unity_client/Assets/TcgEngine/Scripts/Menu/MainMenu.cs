@@ -254,7 +254,15 @@ namespace TcgEngine.UI
             // list.items = new[] { item };
             // GameClientMatchmaker.Get().onMatchmakingList?.Invoke(list);
             
-            StartGame(GameType.Multiplayer, "pvp", "");
+            MudMatchingResult result = JsonUtility.FromJson<MudMatchingResult>(message);
+            if (result.players.Length == result.nb_players)
+            {
+                StartGame(GameType.Multiplayer, "pvp_" + result.game, "");
+            }
+            else
+            {
+                MudManager.Get().CheckMatching(result.game);
+            }
 
         }
 
