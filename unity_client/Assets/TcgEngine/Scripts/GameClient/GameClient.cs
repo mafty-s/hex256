@@ -111,33 +111,48 @@ namespace TcgEngine.Client
             RegisterRefresh(GameAction.ServerMessage, OnServerMsg);
             RegisterRefresh(GameAction.RefreshAll, OnRefreshAll);
 
-            TcgNetwork.Get().onConnect += OnConnectedServer;
-            TcgNetwork.Get().Messaging.ListenMsg("refresh", OnReceiveRefresh);
+            //TcgNetwork.Get().onConnect += OnConnectedServer;
+            //TcgNetwork.Get().Messaging.ListenMsg("refresh", OnReceiveRefresh);
 
-            ConnectToAPI();
-            ConnectToServer();
+            
+            //ConnectToAPI();
+            //ConnectToServer();
         }
 
         protected virtual void OnDestroy()
         {
-            TcgNetwork.Get().onConnect -= OnConnectedServer;
-            TcgNetwork.Get().Messaging.UnListenMsg("refresh");
+            //TcgNetwork.Get().onConnect -= OnConnectedServer;
+            //TcgNetwork.Get().Messaging.UnListenMsg("refresh");
         }
 
         protected virtual void Update()
         {
             bool is_starting = game_data == null || game_data.state == GameState.Connecting;
             bool is_client = !game_settings.IsHost();
-            bool is_connecting = TcgNetwork.Get().IsConnecting();
-            bool is_connected = TcgNetwork.Get().IsConnected();
 
-            //Exit game scene if cannot connect after a while
-            if (is_starting && is_client)
+            bool is_connecting = false;
+            bool is_connected = false;
+            if (MudManager.Get().useMud)
+            {
+                is_connecting = false;
+                is_connected = true;
+
+            }
+            else
+            {
+                 is_connecting = TcgNetwork.Get().IsConnecting();
+                 is_connected = TcgNetwork.Get().IsConnected();
+            }
+
+           
+
+        //Exit game scene if cannot connect after a while
+        if (is_starting && is_client)
             {
                 timer += Time.deltaTime;
                 if (timer > 10f)
                 {
-                    Debug.Log("is_starting && is_client)");
+                    Debug.Log("is_starting && is_client");
                     SceneNav.GoTo("Menu");
                 }
             }
@@ -149,7 +164,8 @@ namespace TcgEngine.Client
                 if (timer > 5f)
                 {
                     timer = 0f;
-                    ConnectToServer();
+                    Debug.Log("start ConnectToServer");
+                    //ConnectToServer();
                 }
             }
         }
@@ -220,12 +236,13 @@ namespace TcgEngine.Client
 
         public virtual async void ConnectToGame(string uid)
         {
+            Debug.Log("Connect to Game: " + uid);
+
             await Task.Yield(); //Wait for initialization to finish
 
-            if (!TcgNetwork.Get().IsActive())
-                return; //Not connected to server
+            //if (!TcgNetwork.Get().IsActive())
+            //    return; //Not connected to server
 
-            Debug.Log("Connect to Game: " + uid);
 
             MsgPlayerConnect nplayer = new MsgPlayerConnect();
             nplayer.user_id = Authenticator.Get().UserID;
@@ -367,7 +384,7 @@ namespace TcgEngine.Client
             if (observe_mode)
                 SetObserverMode(observe_user);
 
-            onConnectGame.Invoke();
+            //onConnectGame.Invoke();
 
 
             game_data.settings.game_mode = GameMode.Casual;
@@ -809,9 +826,11 @@ namespace TcgEngine.Client
             b.player_id = 1;
             b.ready = true;
 
+
+            
             Game data = new Game();
-            // data.state = GameState.Play;
-            data.settings.nb_players = 2;
+            data.state = GameState.Play;
+            data.settings.nb_players = result.nb_players;
             // data.settings.game_mode = GameMode.Casual;
             // data.settings.game_type = GameType.Multiplayer;
             data.players = new[] { a, b };
@@ -823,7 +842,7 @@ namespace TcgEngine.Client
                 new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             MsgAfterConnected msg_data = new MsgAfterConnected();
             msg_data.success = true;
-            msg_data.player_id = 0;
+            msg_data.player_id = MudManager.Get().GetUserData().owner == a.username ?0 :1;
             msg_data.game_data = data;
             writer1.WriteValueSafe(GameAction.Connected);
             writer1.WriteNetworkSerializable(msg_data);
@@ -836,16 +855,11 @@ namespace TcgEngine.Client
             writer2.WriteValueSafe(GameAction.GameStart);
             FastBufferReader reader2 = new FastBufferReader(writer2, Allocator.Temp);
             OnReceiveRefresh(0, reader2);
+            
+            // game_data.state = GameState.Play;
+            
+            onPlayerReady?.Invoke(MudManager.Get().GetUserData().owner == a.username ?0 :1);
 
-
-            GameClient.player_settings.username = MudManager.Get().GetUserData().owner;
-            Debug.Log(MudManager.Get().GetUserData().owner);
-            GameClient.game_settings.game_uid = "uid";
-            SendGameSettings();
-            SendPlayerSettings(GameClient.player_settings);
-
-            //MudManager.Get().PlayerSetting(GetPlayer().username, uid, "forest_deck", false,
-            //  10, 10, dcards, GetPlayer().player_id,shuffer);
         }
 
         public IEnumerator OnEndTurnSuccessLogic(string message)

@@ -248,19 +248,8 @@ namespace TcgEngine.UI
 
         public void OnStartMatchmakingSuccess(string message)
         {
-        //     StartCoroutine(DoStartMatchmakingSuccess(message));
-        // }
-        //
-        // public IEnumerator DoStartMatchmakingSuccess(string message)
-        // {
+       
             Debug.Log("OnStartMatchmakingSuccess:" + message);
-            // MatchmakingList list = new MatchmakingList();
-            // MatchmakingListItem item = new MatchmakingListItem();
-            // item.username = "aaa";
-            // item.group = "";
-            // item.user_id = "aaa";
-            // list.items = new[] { item };
-            // GameClientMatchmaker.Get().onMatchmakingList?.Invoke(list);
             
             MudMatchingResult result = JsonUtility.FromJson<MudMatchingResult>(message);
             if (result.players.Length == result.nb_players)
@@ -269,7 +258,6 @@ namespace TcgEngine.UI
 
                 string uid = "pvp_" + result.game;
                 StartGame(GameType.Multiplayer,uid , "");
-                
                 Debug.Log("done");
             }
             else
