@@ -302,6 +302,10 @@ export function createSystemCalls(
         const card_pool = await worldContract.read.getPlayerCards([player_key]);
         console.log("card_pool", card_pool)
 
+        let intervel = setInterval(async () => {
+            console.log("1")
+        },1000);
+
         let res = {
             player_name: username,
             cards: [],

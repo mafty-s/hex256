@@ -152,6 +152,7 @@ export default mudConfig({
         },
         Matches: {
             valueSchema: {
+                startTime: "uint256",
                 game:"uint256",
                 nbPlayers:"uint8",
                 players:"address[]",

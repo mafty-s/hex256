@@ -18,7 +18,7 @@ namespace TcgEngine.Client
         public UnityAction<MatchmakingList> onMatchmakingList;
         public UnityAction<MatchList> onMatchList;
 
-        private bool matchmaking = false;
+        public bool matchmaking = false;
         private float timer = 0f;
         private float match_timer = 0f;
         private string matchmaking_group;

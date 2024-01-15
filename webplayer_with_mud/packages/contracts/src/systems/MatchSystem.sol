@@ -9,11 +9,14 @@ contract MatchSystem is System {
 
     function StartMatchmaking(uint8 nb_players ) public returns(MatchesData memory){
         uint256 matching = MatchingSingleton.getValue();
-        if(matching == 0){
+        bytes32 matching_key = keccak256(abi.encode(matching));
+
+    if(matching == 0 && Matches.getStartTime(matching_key) <= block.timestamp - 5){
 //            MatchingSingleton.setValue(game_uid);
             CounterSingleton.setValue(CounterSingleton.getValue() + 1);
             uint256 matching_id = CounterSingleton.getValue();
             bytes32 matching_key = keccak256(abi.encode(matching_id));
+            Matches.setStartTime(matching_key, block.timestamp);
             Matches.setGame(matching_key, matching_id);
             Matches.setNbPlayers(matching_key, nb_players);
 
@@ -22,7 +25,6 @@ contract MatchSystem is System {
 
             return Matches.get(matching_key);
         }else{
-            bytes32 matching_key = keccak256(abi.encode(matching));
             require(Matches.getItemPlayers(matching_key,0) != _msgSender(),"You are already in the queue");
             Matches.pushPlayers(matching_key,_msgSender());
             MatchingSingleton.setValue(0);

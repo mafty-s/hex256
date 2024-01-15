@@ -170,6 +170,10 @@ mergeInto(LibraryManager.library, {
         console.log(result);
         let returnStr = JSON.stringify(result);
         MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
+        if(result.players.length==result.nb_players) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            MyUnityInstance.SendMessage("Client", "OnStartMatchmakingSuccess", returnStr);
+        }
     },
 
     checkMatchmaking: async function ( match_id) {
@@ -178,5 +182,9 @@ mergeInto(LibraryManager.library, {
         console.log(result);
         let returnStr = JSON.stringify(result);
         MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
+        if(result.players.length==result.nb_players) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            MyUnityInstance.SendMessage("Client", "OnStartMatchmakingSuccess", returnStr);
+        }
     },
 });
