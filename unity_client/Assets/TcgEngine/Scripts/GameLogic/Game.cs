@@ -508,6 +508,7 @@ namespace TcgEngine
         //Clone all variables into another var, used mostly by the AI when building a prediction tree
         public static void Clone(Game source, Game dest)
         {
+            Debug.Log("game clone");
             dest.game_uid = source.game_uid;
             dest.settings = source.settings;
 

@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TcgEngine.Client;
+using Unity.Collections;
+using Unity.Netcode;
 
 namespace TcgEngine.UI
 {
@@ -246,6 +248,11 @@ namespace TcgEngine.UI
 
         public void OnStartMatchmakingSuccess(string message)
         {
+        //     StartCoroutine(DoStartMatchmakingSuccess(message));
+        // }
+        //
+        // public IEnumerator DoStartMatchmakingSuccess(string message)
+        // {
             Debug.Log("OnStartMatchmakingSuccess:" + message);
             // MatchmakingList list = new MatchmakingList();
             // MatchmakingListItem item = new MatchmakingListItem();
@@ -262,12 +269,8 @@ namespace TcgEngine.UI
 
                 string uid = "pvp_" + result.game;
                 StartGame(GameType.Multiplayer,uid , "");
-
-                GameClient.player_settings.username = MudManager.Get().GetUserData().owner;
-                Debug.Log(MudManager.Get().GetUserData().owner);
-                GameClient.game_settings.game_uid = uid;
-                GameClient.Get().SendGameSettings();
-                GameClient.Get().SendPlayerSettings(GameClient.player_settings);
+                
+                Debug.Log("done");
             }
             else
             {

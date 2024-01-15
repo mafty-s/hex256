@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Unity.Netcode;
 using System.Threading.Tasks;
+using Unity.Collections;
 using UnityEngine.Assertions;
 
 namespace TcgEngine.Client
@@ -136,6 +137,7 @@ namespace TcgEngine.Client
                 timer += Time.deltaTime;
                 if (timer > 10f)
                 {
+                    Debug.Log("is_starting && is_client)");
                     SceneNav.GoTo("Menu");
                 }
             }
@@ -276,7 +278,7 @@ namespace TcgEngine.Client
                 command.callback.Invoke(new SerializedData(reader));
             }
         }
-        
+
         public void OnAttackCardSuccess(string message)
         {
             Debug.Log("OnAttackCardSuccess:" + message);
@@ -294,12 +296,12 @@ namespace TcgEngine.Client
             // attacker.hp = result.attacker_hp;
             // defender.hp = result.defender_hp;
 
-            onAttackStart?.Invoke(attacker,target);
+            onAttackStart?.Invoke(attacker, target);
             target.hp = 0;
             onAttackEnd?.Invoke(attacker, target);
             onRefreshAll?.Invoke();
         }
-        
+
         public void OnAttackPlayerSuccess(string message)
         {
             Debug.Log("OnAttackPlayerSuccess:" + message);
@@ -317,21 +319,20 @@ namespace TcgEngine.Client
             // attacker.hp = result.attacker_hp;
             // defender.hp = result.defender_hp;
 
-            onAttackPlayerStart?.Invoke(attacker,target);
+            onAttackPlayerStart?.Invoke(attacker, target);
             target.hp = 0;
 
             onAttackPlayerEnd?.Invoke(attacker, target);
             onRefreshAll?.Invoke();
-            
-            onGameEnd?.Invoke(result.target_id);
 
+            onGameEnd?.Invoke(result.target_id);
         }
 
         //--------------------------
 
         public void SendPlayerSettings(PlayerSettings psettings)
         {
-            Debug.Log("GameClient SendPlayerSettings");
+            Debug.Log("GameClient SendPlayerSettings:" + GetPlayerID());
             //+
             //    string.Format("{0},{1}", psettings.username, psettings.deck.cards[0]));
 
@@ -347,13 +348,14 @@ namespace TcgEngine.Client
             if (MudManager.Get().useMud)
             {
                 MudManager.Get().PlayerSetting(GetPlayer().username, game_settings.game_uid, psettings.deck.tid, false,
-                    hp_max, mana_max, dcards, GetPlayer().player_id,shuffer);
+                    hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
             }
             else
             {
                 SendAction(GameAction.PlayerSettings, psettings, NetworkDelivery.ReliableFragmentedSequenced);
             }
         }
+
 
         public void OnGameSettingSuccess(string message)
         {
@@ -484,7 +486,7 @@ namespace TcgEngine.Client
             bool shuffer = pdeck != null ? false : !pdeck.dont_shuffle_deck;
 
             MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
-                hp_max, mana_max, dcards, GetPlayer().player_id,shuffer);
+                hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
 
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
@@ -733,6 +735,8 @@ namespace TcgEngine.Client
 
         protected virtual void OnConnectedToGame(SerializedData sdata)
         {
+            Debug.Log("gameclient OnConnectedToGame");
+
             MsgAfterConnected msg = sdata.Get<MsgAfterConnected>();
             player_id = msg.player_id;
             game_data = msg.game_data;
@@ -749,6 +753,8 @@ namespace TcgEngine.Client
 
         protected virtual void OnPlayerReady(SerializedData sdata)
         {
+            Debug.Log("gameclient OnPlayerReady");
+
             MsgInt msg = sdata.Get<MsgInt>();
             int pid = msg.value;
 
@@ -758,6 +764,7 @@ namespace TcgEngine.Client
 
         private void OnGameStart(SerializedData sdata)
         {
+            Debug.Log("gameclient ongamestart");
             onGameStart?.Invoke();
         }
 
@@ -777,6 +784,68 @@ namespace TcgEngine.Client
         {
             Debug.Log("Starting Coroutine...");
             StartCoroutine(OnEndTurnSuccessLogic(message));
+        }
+
+        public void OnStartMatchmakingSuccess(string message)
+        {
+            Debug.Log("OnStartMatchmakingSuccess:" + message);
+            // MatchmakingList list = new MatchmakingList();
+            // MatchmakingListItem item = new MatchmakingListItem();
+            // item.username = "aaa";
+            // item.group = "";
+            // item.user_id = "aaa";
+            // list.items = new[] { item };
+            // GameClientMatchmaker.Get().onMatchmakingList?.Invoke(list);
+
+            MudMatchingResult result = JsonUtility.FromJson<MudMatchingResult>(message);
+
+            var a = new Player(0);
+            a.username = result.players[0];
+            a.player_id = 0;
+            a.ready = true;
+
+            var b = new Player(1);
+            b.username = result.players[1];
+            b.player_id = 1;
+            b.ready = true;
+
+            Game data = new Game();
+            // data.state = GameState.Play;
+            data.settings.nb_players = 2;
+            // data.settings.game_mode = GameMode.Casual;
+            // data.settings.game_type = GameType.Multiplayer;
+            data.players = new[] { a, b };
+
+            // yield return new WaitForSeconds(1f);
+
+
+            FastBufferWriter writer1 =
+                new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            MsgAfterConnected msg_data = new MsgAfterConnected();
+            msg_data.success = true;
+            msg_data.player_id = 0;
+            msg_data.game_data = data;
+            writer1.WriteValueSafe(GameAction.Connected);
+            writer1.WriteNetworkSerializable(msg_data);
+            FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+            OnReceiveRefresh(0, reader1);
+
+
+            FastBufferWriter writer2 =
+                new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            writer2.WriteValueSafe(GameAction.GameStart);
+            FastBufferReader reader2 = new FastBufferReader(writer2, Allocator.Temp);
+            OnReceiveRefresh(0, reader2);
+
+
+            GameClient.player_settings.username = MudManager.Get().GetUserData().owner;
+            Debug.Log(MudManager.Get().GetUserData().owner);
+            GameClient.game_settings.game_uid = "uid";
+            SendGameSettings();
+            SendPlayerSettings(GameClient.player_settings);
+
+            //MudManager.Get().PlayerSetting(GetPlayer().username, uid, "forest_deck", false,
+            //  10, 10, dcards, GetPlayer().player_id,shuffer);
         }
 
         public IEnumerator OnEndTurnSuccessLogic(string message)

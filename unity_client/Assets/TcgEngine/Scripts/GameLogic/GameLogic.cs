@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using TcgEngine.Client;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Profiling;
@@ -85,6 +88,7 @@ namespace TcgEngine.Gameplay
 
         public virtual void StartGame()
         {
+            Debug.Log("gamelogic startgame");
             if (game_data.state == GameState.GameEnded)
                 return;
 
