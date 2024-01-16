@@ -289,7 +289,13 @@ export function createSystemCalls(
     }
 
     const checkPlayerSetting = async (username: string, game_uid: string)=>{
+        console.log("checkPlayerSetting",username,game_uid);
+
+        await sleep(4500);
+
         const player_key = calculateKeccak256HashTwoString(game_uid, username);
+
+        console.log("player_key",player_key)
 
         const card_pool = await worldContract.read.getPlayerCards([player_key]);
 
@@ -304,7 +310,8 @@ export function createSystemCalls(
             // hp:hp,
             // is_ai:is_ai,
             // dcards:dcards,
-            // pid:pid
+            // pid:pid,
+            game_uid:game_uid
         };
 
         res.player_name = card_pool[0];
@@ -319,7 +326,8 @@ export function createSystemCalls(
         // }
 
         //await sleep(1500);
-        return convertBigIntToInt({hash, tx_result, res});
+        console.log(res);
+        return convertBigIntToInt( res);
 
     }
 
@@ -352,7 +360,8 @@ export function createSystemCalls(
             hp:hp,
             is_ai:is_ai,
             dcards:dcards,
-            pid:pid
+            pid:pid,
+            game_uid:game_uid
         }
 
         res.player_name = card_pool[0];

@@ -452,6 +452,7 @@ namespace TcgEngine.Client
                     player.hp_max = result.hp;
                     Debug.Log("do onPlayerReady:" + player.player_id);
                     onPlayerReady.Invoke(player.player_id);
+                    onRefreshAll?.Invoke();
                 }
             }
 
@@ -479,6 +480,7 @@ namespace TcgEngine.Client
                 // player.mana = player.mana_max;
 
                 onNewTurn?.Invoke(game_data.players[0].player_id);
+                onRefreshAll?.Invoke();
             }
         }
 
@@ -803,11 +805,19 @@ namespace TcgEngine.Client
             var a = new Player(0);
             a.username = result.players[0];
             a.player_id = 0;
+            a.hp = 10;
+            a.hp_max = 10;
+            a.mana_max = 5;
+            a.mana = 5;
             a.ready = false;
 
             var b = new Player(1);
             b.username = result.players[1];
             b.player_id = 1;
+            b.hp = 10;
+            b.hp_max = 10;
+            b.mana_max = 5;
+            b.mana = 5;
             b.ready = false;
 
             
@@ -845,12 +855,16 @@ namespace TcgEngine.Client
 
             var op = a.username == MudManager.Get().GetUserData().owner ? b.username : a.username;
             Debug.Log("op:"+op);
-            MudManager.Get().CheckPlayerSetting(a.username, game_settings.game_uid);
+            MudManager.Get().CheckPlayerSetting(op, game_settings.game_uid);
         }
 
         public void OnActionHistorySuccess(string message)
         {
-            
+            MudActionHistory action = JsonUtility.FromJson<MudActionHistory>(message);
+            if (action.type == GameAction.PlayCard)
+            {
+                
+            }
         }
         
         public IEnumerator OnEndTurnSuccessLogic(string message)
@@ -1115,6 +1129,11 @@ namespace TcgEngine.Client
 
         public virtual bool IsReady()
         {
+            if (MudManager.Get().useMud)
+            {
+                return game_data != null;
+            }
+            
             return game_data != null && TcgNetwork.Get().IsConnected();
         }
 

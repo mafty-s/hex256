@@ -91,9 +91,9 @@ public class MudMatchingResult
 }
 
 [System.Serializable]
-public class ActionHistory
+public class MudActionHistory
 {
-    public string action;
+    public ushort type;
 }
 
 
@@ -538,6 +538,7 @@ public class MudManager : MonoBehaviour
 
     public void CheckPlayerSetting(string player_name,string game_uid)
     {
+        Debug.Log("CheckPlayerSetting:"+player_name+","+game_uid);
         if (useMud == false)
         {
             return;

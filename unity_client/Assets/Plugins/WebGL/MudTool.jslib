@@ -192,8 +192,8 @@ mergeInto(LibraryManager.library, {
 
     checkPlayerSetting: async function (username,game_uid) {
         console.log("checkPlayerSetting=====================================");
-        await new Promise(resolve => setTimeout(resolve, 3000));
-
+        console.log("username", UTF8ToString(username));
+        console.log("game_uid", UTF8ToString(game_uid));
         let result = await mud.checkPlayerSetting(UTF8ToString(username), UTF8ToString(game_uid));
         console.log(result);
         let returnStr = JSON.stringify(result);
