@@ -30,7 +30,7 @@ namespace TcgEngine.UI
             GameClient.Get().onPlayerReady += OnReady;
             GameClient.Get().onGameStart += OnStart;
 
-            SetLoadText("Connecting to server...");
+            SetLoadText("Connecting to remote server....");
             
             //todo
             Destroy(this.gameObject);

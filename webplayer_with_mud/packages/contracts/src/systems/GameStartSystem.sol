@@ -81,7 +81,6 @@ contract GameStartSystem is System {
 
     }
 
-
     function StartGame(string memory game_uid) internal {
 
         bytes32 match_key = keccak256(abi.encode(game_uid));

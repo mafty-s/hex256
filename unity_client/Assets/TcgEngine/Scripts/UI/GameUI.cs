@@ -62,7 +62,8 @@ namespace TcgEngine.UI
             Game data = GameClient.Get().GetGameData();
 			bool is_connecting = data == null || data.state == GameState.Connecting;
             bool connection_lost = !is_connecting && !GameClient.Get().IsReady();
-            ConnectionPanel.Get().SetVisible(connection_lost);
+            // ConnectionPanel.Get().SetVisible(connection_lost);
+            ConnectionPanel.Get().SetVisible(false);
 
             //Menu
             if (Input.GetKeyDown(KeyCode.Escape))

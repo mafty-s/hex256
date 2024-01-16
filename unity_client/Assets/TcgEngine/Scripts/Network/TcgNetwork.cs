@@ -71,6 +71,9 @@ namespace TcgEngine
 
         public void Init()
         {
+            
+            Debug.Log("TcgWebSocketServer Init:");
+
             if (!inited || transport == null)
             {
                 instance = this;

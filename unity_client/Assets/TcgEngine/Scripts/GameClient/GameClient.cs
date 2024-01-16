@@ -111,18 +111,18 @@ namespace TcgEngine.Client
             RegisterRefresh(GameAction.ServerMessage, OnServerMsg);
             RegisterRefresh(GameAction.RefreshAll, OnRefreshAll);
 
-            //TcgNetwork.Get().onConnect += OnConnectedServer;
-            //TcgNetwork.Get().Messaging.ListenMsg("refresh", OnReceiveRefresh);
+            TcgNetwork.Get().onConnect += OnConnectedServer;
+            TcgNetwork.Get().Messaging.ListenMsg("refresh", OnReceiveRefresh);
 
             
-            //ConnectToAPI();
-            //ConnectToServer();
+            ConnectToAPI();
+            ConnectToServer();
         }
 
         protected virtual void OnDestroy()
         {
-            //TcgNetwork.Get().onConnect -= OnConnectedServer;
-            //TcgNetwork.Get().Messaging.UnListenMsg("refresh");
+            TcgNetwork.Get().onConnect -= OnConnectedServer;
+            TcgNetwork.Get().Messaging.UnListenMsg("refresh");
         }
 
         protected virtual void Update()
@@ -130,19 +130,11 @@ namespace TcgEngine.Client
             bool is_starting = game_data == null || game_data.state == GameState.Connecting;
             bool is_client = !game_settings.IsHost();
 
-            bool is_connecting = false;
-            bool is_connected = false;
-            if (MudManager.Get().useMud)
-            {
-                is_connecting = false;
-                is_connected = true;
-
-            }
-            else
-            {
-                 is_connecting = TcgNetwork.Get().IsConnecting();
-                 is_connected = TcgNetwork.Get().IsConnected();
-            }
+           
+            
+             bool    is_connecting = TcgNetwork.Get().IsConnecting();
+             bool  is_connected = TcgNetwork.Get().IsConnected();
+            
 
            
 
@@ -165,7 +157,7 @@ namespace TcgEngine.Client
                 {
                     timer = 0f;
                     Debug.Log("start ConnectToServer");
-                    //ConnectToServer();
+                    ConnectToServer();
                 }
             }
         }
@@ -806,26 +798,17 @@ namespace TcgEngine.Client
         public void OnStartMatchmakingSuccess(string message)
         {
             Debug.Log("OnStartMatchmakingSuccess:" + message);
-            // MatchmakingList list = new MatchmakingList();
-            // MatchmakingListItem item = new MatchmakingListItem();
-            // item.username = "aaa";
-            // item.group = "";
-            // item.user_id = "aaa";
-            // list.items = new[] { item };
-            // GameClientMatchmaker.Get().onMatchmakingList?.Invoke(list);
-
             MudMatchingResult result = JsonUtility.FromJson<MudMatchingResult>(message);
 
             var a = new Player(0);
             a.username = result.players[0];
             a.player_id = 0;
-            a.ready = true;
+            a.ready = false;
 
             var b = new Player(1);
             b.username = result.players[1];
             b.player_id = 1;
-            b.ready = true;
-
+            b.ready = false;
 
             
             Game data = new Game();
@@ -858,8 +841,11 @@ namespace TcgEngine.Client
             
             // game_data.state = GameState.Play;
             
-            onPlayerReady?.Invoke(MudManager.Get().GetUserData().owner == a.username ?0 :1);
+            //onPlayerReady?.Invoke(MudManager.Get().GetUserData().owner == a.username ?0 :1);
 
+            var op = a.username == MudManager.Get().GetUserData().owner ? b.username : a.username;
+            
+            MudManager.Get().CheckPlayerSetting(a.username, game_settings.game_uid);
         }
 
         public IEnumerator OnEndTurnSuccessLogic(string message)

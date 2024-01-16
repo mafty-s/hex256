@@ -165,27 +165,38 @@ mergeInto(LibraryManager.library, {
         MyUnityInstance.SendMessage("Client", "OnEndTurnSuccess", returnStr);
     },
 
-    startMatchmaking: async function ( game_uid, nb_players) {
+    startMatchmaking: async function (game_uid, nb_players) {
         console.log("startMatchmaking=====================================");
         let result = await mud.startMatchmaking(UTF8ToString(game_uid), nb_players);
         console.log(result);
         let returnStr = JSON.stringify(result);
         MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
-        if(result.players.length==result.nb_players) {
+        if (result.players.length == result.nb_players) {
             await new Promise(resolve => setTimeout(resolve, 2000));
             MyUnityInstance.SendMessage("Client", "OnStartMatchmakingSuccess", returnStr);
         }
     },
 
-    checkMatchmaking: async function ( match_id) {
+    checkMatchmaking: async function (match_id) {
         console.log("checkMatchmaking=====================================");
         let result = await mud.checkMatchmaking(match_id);
         console.log(result);
         let returnStr = JSON.stringify(result);
         MyUnityInstance.SendMessage("Menu", "OnStartMatchmakingSuccess", returnStr);
-        if(result.players.length==result.nb_players) {
+        if (result.players.length == result.nb_players) {
             await new Promise(resolve => setTimeout(resolve, 2000));
             MyUnityInstance.SendMessage("Client", "OnStartMatchmakingSuccess", returnStr);
         }
     },
+
+    checkPlayerSetting: async function (username,game_uid) {
+        console.log("checkPlayerSetting=====================================");
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        let result = await mud.checkPlayerSetting(UTF8ToString(username), UTF8ToString(game_uid));
+        console.log(result);
+        let returnStr = JSON.stringify(result);
+        MyUnityInstance.SendMessage("Client", "OnPlayerSettingSuccess", returnStr);
+    },
+
 });

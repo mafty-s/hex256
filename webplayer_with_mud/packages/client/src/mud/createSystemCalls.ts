@@ -288,6 +288,41 @@ export function createSystemCalls(
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    const getPlayerSetting = async (username: string, game_uid: string)=>{
+        const player_key = calculateKeccak256HashTwoString(game_uid, username);
+
+        const card_pool = await worldContract.read.getPlayerCards([player_key]);
+
+        let res = {
+            player_name: username,
+            cards: [],
+            hand: [],
+            deck: [],
+            board: [],
+            all: [],
+            // mana:mana,
+            // hp:hp,
+            // is_ai:is_ai,
+            // dcards:dcards,
+            // pid:pid
+        };
+
+        res.player_name = card_pool[0];
+        res.cards = card_pool[1];
+        res.hand = card_pool[2];
+        res.deck = card_pool[3];
+        res.board = card_pool[4];
+        res.all = res.hand.concat(res.deck);
+
+        // if (res.player_name == "Player") {
+        //     res.player_name = "test"
+        // }
+
+        //await sleep(1500);
+        return convertBigIntToInt({hash, tx_result, res});
+
+    }
+
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
                                  dcards: number,pid:number,shuffle:boolean) => {
         await sleep(200)
@@ -302,9 +337,9 @@ export function createSystemCalls(
         const card_pool = await worldContract.read.getPlayerCards([player_key]);
         console.log("card_pool", card_pool)
 
-        let intervel = setInterval(async () => {
-            console.log("1")
-        },1000);
+        // let intervel = setInterval(async () => {
+        //     console.log("1")
+        // },1000);
 
         let res = {
             player_name: username,
@@ -547,6 +582,7 @@ export function createSystemCalls(
         endTurn,
         startMatchmaking,
         checkMatchmaking,
+        getPlayerSetting,
     };
 
     window.mud = out;

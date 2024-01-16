@@ -37,7 +37,7 @@ namespace TcgEngine.UI
             if (GameClientMatchmaker.Get().IsConnected())
                 text.text = "Finding Opponent...";
             else
-                text.text = "Connecting to server...";
+                text.text = "Match making...";
 
             code_txt.text = "";
 
