@@ -281,14 +281,14 @@ export function createSystemCalls(
         let result = {
             game_uid: game_uid
         }
-        return {tx, result};
+        return { res:result};
     }
 
     const sleep = (ms: number) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    const getPlayerSetting = async (username: string, game_uid: string)=>{
+    const checkPlayerSetting = async (username: string, game_uid: string)=>{
         const player_key = calculateKeccak256HashTwoString(game_uid, username);
 
         const card_pool = await worldContract.read.getPlayerCards([player_key]);
@@ -582,7 +582,7 @@ export function createSystemCalls(
         endTurn,
         startMatchmaking,
         checkMatchmaking,
-        getPlayerSetting,
+        checkPlayerSetting,
     };
 
     window.mud = out;

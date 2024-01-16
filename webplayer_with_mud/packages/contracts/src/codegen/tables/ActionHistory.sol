@@ -26,12 +26,14 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant ActionHistoryTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0021020001200000000000000000000000000000000000000000000000000000
+  0x0043040001202002000000000000000000000000000000000000000000000000
 );
 
 struct ActionHistoryData {
   uint8 historyType;
   bytes32 cardId;
+  bytes32 target;
+  uint16 slot;
 }
 
 library ActionHistory {
@@ -59,9 +61,11 @@ library ActionHistory {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](2);
+    SchemaType[] memory _valueSchema = new SchemaType[](4);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
+    _valueSchema[2] = SchemaType.BYTES32;
+    _valueSchema[3] = SchemaType.UINT16;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -80,9 +84,11 @@ library ActionHistory {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](2);
+    fieldNames = new string[](4);
     fieldNames[0] = "historyType";
     fieldNames[1] = "cardId";
+    fieldNames[2] = "target";
+    fieldNames[3] = "slot";
   }
 
   /**
@@ -184,6 +190,90 @@ library ActionHistory {
   }
 
   /**
+   * @notice Get target.
+   */
+  function getTarget(bytes32 key) internal view returns (bytes32 target) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get target.
+   */
+  function _getTarget(bytes32 key) internal view returns (bytes32 target) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set target.
+   */
+  function setTarget(bytes32 key, bytes32 target) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((target)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set target.
+   */
+  function _setTarget(bytes32 key, bytes32 target) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((target)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get slot.
+   */
+  function getSlot(bytes32 key) internal view returns (uint16 slot) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (uint16(bytes2(_blob)));
+  }
+
+  /**
+   * @notice Get slot.
+   */
+  function _getSlot(bytes32 key) internal view returns (uint16 slot) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (uint16(bytes2(_blob)));
+  }
+
+  /**
+   * @notice Set slot.
+   */
+  function setSlot(bytes32 key, uint16 slot) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((slot)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set slot.
+   */
+  function _setSlot(bytes32 key, uint16 slot) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((slot)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (ActionHistoryData memory _table) {
@@ -216,8 +306,8 @@ library ActionHistory {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, uint8 historyType, bytes32 cardId) internal {
-    bytes memory _staticData = encodeStatic(historyType, cardId);
+  function set(bytes32 key, uint8 historyType, bytes32 cardId, bytes32 target, uint16 slot) internal {
+    bytes memory _staticData = encodeStatic(historyType, cardId, target, slot);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -231,8 +321,8 @@ library ActionHistory {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, uint8 historyType, bytes32 cardId) internal {
-    bytes memory _staticData = encodeStatic(historyType, cardId);
+  function _set(bytes32 key, uint8 historyType, bytes32 cardId, bytes32 target, uint16 slot) internal {
+    bytes memory _staticData = encodeStatic(historyType, cardId, target, slot);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -247,7 +337,7 @@ library ActionHistory {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, ActionHistoryData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.historyType, _table.cardId);
+    bytes memory _staticData = encodeStatic(_table.historyType, _table.cardId, _table.target, _table.slot);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -262,7 +352,7 @@ library ActionHistory {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, ActionHistoryData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.historyType, _table.cardId);
+    bytes memory _staticData = encodeStatic(_table.historyType, _table.cardId, _table.target, _table.slot);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -276,10 +366,16 @@ library ActionHistory {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint8 historyType, bytes32 cardId) {
+  function decodeStatic(
+    bytes memory _blob
+  ) internal pure returns (uint8 historyType, bytes32 cardId, bytes32 target, uint16 slot) {
     historyType = (uint8(Bytes.slice1(_blob, 0)));
 
     cardId = (Bytes.slice32(_blob, 1));
+
+    target = (Bytes.slice32(_blob, 33));
+
+    slot = (uint16(Bytes.slice2(_blob, 65)));
   }
 
   /**
@@ -293,7 +389,7 @@ library ActionHistory {
     PackedCounter,
     bytes memory
   ) internal pure returns (ActionHistoryData memory _table) {
-    (_table.historyType, _table.cardId) = decodeStatic(_staticData);
+    (_table.historyType, _table.cardId, _table.target, _table.slot) = decodeStatic(_staticData);
   }
 
   /**
@@ -320,8 +416,13 @@ library ActionHistory {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint8 historyType, bytes32 cardId) internal pure returns (bytes memory) {
-    return abi.encodePacked(historyType, cardId);
+  function encodeStatic(
+    uint8 historyType,
+    bytes32 cardId,
+    bytes32 target,
+    uint16 slot
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(historyType, cardId, target, slot);
   }
 
   /**
@@ -330,8 +431,13 @@ library ActionHistory {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint8 historyType, bytes32 cardId) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(historyType, cardId);
+  function encode(
+    uint8 historyType,
+    bytes32 cardId,
+    bytes32 target,
+    uint16 slot
+  ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+    bytes memory _staticData = encodeStatic(historyType, cardId, target, slot);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

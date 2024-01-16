@@ -26,6 +26,7 @@ import { PlayerCardsEquip, PlayerCardsEquipTableId } from "./tables/PlayerCardsE
 import { PlayerCardsDiscard, PlayerCardsDiscardTableId } from "./tables/PlayerCardsDiscard.sol";
 import { PlayerCardsSecret, PlayerCardsSecretTableId } from "./tables/PlayerCardsSecret.sol";
 import { PlayerCardsTemp, PlayerCardsTempTableId } from "./tables/PlayerCardsTemp.sol";
+import { PlayerActionHistory, PlayerActionHistoryTableId } from "./tables/PlayerActionHistory.sol";
 import { ActionHistory, ActionHistoryData, ActionHistoryTableId } from "./tables/ActionHistory.sol";
 import { Tasks, TasksData, TasksTableId } from "./tables/Tasks.sol";
 import { EndTurnResult, EndTurnResultData, EndTurnResultTableId } from "./tables/EndTurnResult.sol";

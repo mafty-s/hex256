@@ -844,10 +844,15 @@ namespace TcgEngine.Client
             //onPlayerReady?.Invoke(MudManager.Get().GetUserData().owner == a.username ?0 :1);
 
             var op = a.username == MudManager.Get().GetUserData().owner ? b.username : a.username;
-            
+            Debug.Log("op:"+op);
             MudManager.Get().CheckPlayerSetting(a.username, game_settings.game_uid);
         }
 
+        public void OnActionHistorySuccess(string message)
+        {
+            
+        }
+        
         public IEnumerator OnEndTurnSuccessLogic(string message)
         {
             Debug.Log("OnEndTurnSuccess:" + message);

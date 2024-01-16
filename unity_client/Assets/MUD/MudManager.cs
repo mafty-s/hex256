@@ -90,6 +90,13 @@ public class MudMatchingResult
     public int nb_players;
 }
 
+[System.Serializable]
+public class ActionHistory
+{
+    public string action;
+}
+
+
 
 public class MudManager : MonoBehaviour
 {
@@ -260,6 +267,9 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern string checkMatchmaking(int match_id);
+    
+    [DllImport("__Internal")]
+    private static extern string checkPlayerSetting(string player_name,string game_uid);
 #endif
 
     public static void SendTask(ushort code)
@@ -524,6 +534,18 @@ public class MudManager : MonoBehaviour
 #if !UNITY_EDITOR && UNITY_WEBGL
         checkMatchmaking(match_id);
 #endif
+    }
+
+    public void CheckPlayerSetting(string player_name,string game_uid)
+    {
+        if (useMud == false)
+        {
+            return;
+        }
+#if !UNITY_EDITOR && UNITY_WEBGL
+        checkPlayerSetting(player_name,game_uid);
+#endif
+            
     }
     
     

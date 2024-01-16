@@ -133,3 +133,17 @@ enum Team {
   WATER,
   NEUTRAL
 }
+
+enum PlayCard {
+  PlayCard,
+  Attack,
+  AttackPlayer,
+  Move,
+  CastAbility,
+  SelectCard,
+  SelectPlayer,
+  SelectSlot,
+  SelectChoice,
+  CancelSelect,
+  EndTurn
+}
