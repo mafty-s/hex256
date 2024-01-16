@@ -7,12 +7,12 @@ import {Cards} from "../codegen/index.sol";
 //import {Games, GamesData} from "../codegen/index.sol";
 import {Players} from "../codegen/index.sol";
 //import {PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
-import {CardOnBoards,PlayCardResultData} from "../codegen/index.sol";
+import {CardOnBoards, PlayCardResultData} from "../codegen/index.sol";
 
-import {GameType, GameState, GamePhase, CardType, AbilityTrigger} from "../codegen/common.sol";
+import {GameType, GameState, GamePhase, CardType, AbilityTrigger, Action} from "../codegen/common.sol";
 
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip, CardOnBoards} from "../codegen/index.sol";
-
+import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import "../libs/PlayerLogicLib.sol";
 import "../libs/CardLogicLib.sol";
 import "../libs/GameLogicLib.sol";
@@ -24,7 +24,7 @@ import {Slot, SlotLib} from "../libs/SlotLib.sol";
 contract PlayCardSystem is System {
 
 
-    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public returns(PlayCardResultData memory){
+    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public returns (PlayCardResultData memory){
 
         //        uint8 card_mana = CardOnBoards.getMana(card_key);
         //        PlayersData memory player = Players.get(player_key);
@@ -115,17 +115,26 @@ contract PlayCardSystem is System {
         //            onCardPlayed?.Invoke(card, slot);
         //            resolve_queue.ResolveAll(0.3f);
 
-            uint8 mana_cost = CardOnBoards.getMana(card_key);
-            uint8 player_mana =  Players.getMana(player_key);
-            require(player_mana>=mana_cost,"not enough mana");
-            player_mana -= mana_cost;
-            Players.setMana(player_key, player_mana);
+        uint8 mana_cost = CardOnBoards.getMana(card_key);
+        uint8 player_mana = Players.getMana(player_key);
+        require(player_mana >= mana_cost, "not enough mana");
+        player_mana -= mana_cost;
+        Players.setMana(player_key, player_mana);
 
-            PlayCardResultData memory result = PlayCardResultData(
-                mana_cost,
-                player_mana
-            );
-            return result;
+        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+        uint256 len = PlayerActionHistory.length(player_key);
+        bytes32 action_key = keccak256(abi.encode(player_key, len));
+        PlayerActionHistory.push(player_key, action_key);
+        ActionHistory.setActionType(action_key, Action.PlayCard);
+        ActionHistory.setCardId(action_key, card_key);
+        ActionHistory.setSlot(action_key, slot_encode);
+        ActionHistory.setPlayer(action_key, player_key);
+
+        PlayCardResultData memory result = PlayCardResultData(
+            mana_cost,
+            player_mana
+        );
+        return result;
 
     }
 

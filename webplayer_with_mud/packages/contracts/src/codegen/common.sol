@@ -134,7 +134,7 @@ enum Team {
   NEUTRAL
 }
 
-enum PlayCard {
+enum Action {
   PlayCard,
   Attack,
   AttackPlayer,
