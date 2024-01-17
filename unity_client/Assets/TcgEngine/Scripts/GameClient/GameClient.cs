@@ -65,6 +65,7 @@ namespace TcgEngine.Client
         private bool observe_mode = false;
         private int observe_player_id = 0;
         private float timer = 0f;
+        private float action_timer = 0f;
 
 
         private Dictionary<ushort, RefreshEvent> registered_commands = new Dictionary<ushort, RefreshEvent>();
@@ -114,7 +115,7 @@ namespace TcgEngine.Client
             TcgNetwork.Get().onConnect += OnConnectedServer;
             TcgNetwork.Get().Messaging.ListenMsg("refresh", OnReceiveRefresh);
 
-            
+
             ConnectToAPI();
             ConnectToServer();
         }
@@ -130,16 +131,13 @@ namespace TcgEngine.Client
             bool is_starting = game_data == null || game_data.state == GameState.Connecting;
             bool is_client = !game_settings.IsHost();
 
-           
-            
-             bool    is_connecting = TcgNetwork.Get().IsConnecting();
-             bool  is_connected = TcgNetwork.Get().IsConnected();
-            
 
-           
+            bool is_connecting = TcgNetwork.Get().IsConnecting();
+            bool is_connected = TcgNetwork.Get().IsConnected();
 
-        //Exit game scene if cannot connect after a while
-        if (is_starting && is_client)
+
+            //Exit game scene if cannot connect after a while
+            if (is_starting && is_client)
             {
                 timer += Time.deltaTime;
                 if (timer > 10f)
@@ -158,6 +156,17 @@ namespace TcgEngine.Client
                     timer = 0f;
                     Debug.Log("start ConnectToServer");
                     ConnectToServer();
+                }
+            }
+            
+            if(game_data!=null && game_data.state== GameState.Play && game_data.current_player != GetPlayerID() && game_data.turn_timer > 0)
+            {
+                action_timer += Time.deltaTime;
+                if (action_timer > 5f)
+                {
+                    action_timer = 0f;
+                    MudManager.Get().CheckAction(game_data.GetOpponentPlayer(GetPlayerID()).username,
+                        game_data.game_uid);
                 }
             }
         }
@@ -820,7 +829,7 @@ namespace TcgEngine.Client
             b.mana = 5;
             b.ready = false;
 
-            
+
             Game data = new Game();
             data.state = GameState.Play;
             data.settings.nb_players = result.nb_players;
@@ -835,7 +844,7 @@ namespace TcgEngine.Client
                 new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             MsgAfterConnected msg_data = new MsgAfterConnected();
             msg_data.success = true;
-            msg_data.player_id = MudManager.Get().GetUserData().owner == a.username ?0 :1;
+            msg_data.player_id = MudManager.Get().GetUserData().owner == a.username ? 0 : 1;
             msg_data.game_data = data;
             writer1.WriteValueSafe(GameAction.Connected);
             writer1.WriteNetworkSerializable(msg_data);
@@ -848,13 +857,13 @@ namespace TcgEngine.Client
             writer2.WriteValueSafe(GameAction.GameStart);
             FastBufferReader reader2 = new FastBufferReader(writer2, Allocator.Temp);
             OnReceiveRefresh(0, reader2);
-            
+
             // game_data.state = GameState.Play;
-            
+
             //onPlayerReady?.Invoke(MudManager.Get().GetUserData().owner == a.username ?0 :1);
 
             var op = a.username == MudManager.Get().GetUserData().owner ? b.username : a.username;
-            Debug.Log("op:"+op);
+            Debug.Log("op:" + op);
             MudManager.Get().CheckPlayerSetting(op, game_settings.game_uid);
         }
 
@@ -863,10 +872,37 @@ namespace TcgEngine.Client
             MudActionHistory action = JsonUtility.FromJson<MudActionHistory>(message);
             if (action.type == GameAction.PlayCard)
             {
-                
+                FastBufferWriter writer1 =
+                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+                MsgPlayCard mdata = new MsgPlayCard();
+                mdata.card_uid = action.card_uid;
+                mdata.slot = new Slot();
+                mdata.slot.x = action.slot_x;
+                mdata.slot.y = action.slot_y;
+                mdata.slot.p = action.slot_p;
+                writer1.WriteValueSafe(GameAction.PlayCard);
+                writer1.WriteNetworkSerializable(mdata);
+                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+                OnReceiveRefresh(0, reader1);
+            }
+
+            if (action.type == GameAction.Move)
+            {
+                FastBufferWriter writer1 =
+                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+                MsgPlayCard mdata = new MsgPlayCard();
+                mdata.card_uid = action.card_uid;
+                mdata.slot = new Slot();
+                mdata.slot.x = action.slot_x;
+                mdata.slot.y = action.slot_y;
+                mdata.slot.p = action.slot_p;
+                writer1.WriteValueSafe(GameAction.Move);
+                writer1.WriteNetworkSerializable(mdata);
+                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+                OnReceiveRefresh(0, reader1);
             }
         }
-        
+
         public IEnumerator OnEndTurnSuccessLogic(string message)
         {
             Debug.Log("OnEndTurnSuccess:" + message);
@@ -1133,7 +1169,7 @@ namespace TcgEngine.Client
             {
                 return game_data != null;
             }
-            
+
             return game_data != null && TcgNetwork.Get().IsConnected();
         }
 
