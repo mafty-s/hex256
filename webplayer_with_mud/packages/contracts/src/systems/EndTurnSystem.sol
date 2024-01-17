@@ -65,9 +65,9 @@ contract EndTurnSystem is System {
             mana_max
         );
 
-        uint256 len = PlayerActionHistory.length(player_key);
-        bytes32 action_key = keccak256(abi.encode(player_key, len));
-        PlayerActionHistory.push(player_key, action_key);
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
         ActionHistory.setActionType(action_key, Action.EndTurn);
         ActionHistory.setPlayerId(action_key, player_index);
 

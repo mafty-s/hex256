@@ -10,10 +10,9 @@ contract ActionSystem is System {
 
     }
 
-    function GetAction(bytes32 player_key) public view returns (uint256,ActionHistoryData memory){
-        uint256 len = PlayerActionHistory.length(player_key);
-        require(len > 0, "no action");
-        bytes32 key = PlayerActionHistory.getItemValue(player_key, len - 1);
+    function GetAction(bytes32 game_key, uint256 i) public view returns (uint256,ActionHistoryData memory){
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 key = PlayerActionHistory.getItemValue(game_key, i);
         return (len,ActionHistory.get(key));
     }
 }

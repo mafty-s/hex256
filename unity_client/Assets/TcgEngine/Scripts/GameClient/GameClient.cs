@@ -158,11 +158,11 @@ namespace TcgEngine.Client
                     ConnectToServer();
                 }
             }
-             
-            if(game_data!=null && game_data.state== GameState.Play)
+
+            if (game_data != null && game_data.state == GameState.Play)
             {
                 action_timer += Time.deltaTime;
-                if (action_timer > 5f)
+                if (action_timer > 1f)
                 {
                     action_timer = 0f;
                     MudManager.Get().CheckAction(game_data.GetOpponentPlayer(GetPlayerID()).username,
@@ -871,6 +871,7 @@ namespace TcgEngine.Client
 
         public void OnActionHistorySuccess(string message)
         {
+            Debug.Log("OnActionHistorySuccess:"+message);
             MudActionHistory action = JsonUtility.FromJson<MudActionHistory>(message);
             if (action.type == GameAction.EndTurn)
             {
@@ -882,8 +883,8 @@ namespace TcgEngine.Client
                 writer1.WriteNetworkSerializable(mdata);
                 FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
                 OnReceiveRefresh(0, reader1);
-                
             }
+
             if (action.type == GameAction.PlayCard)
             {
                 FastBufferWriter writer1 =
@@ -911,6 +912,19 @@ namespace TcgEngine.Client
                 mdata.slot.y = action.slot_y;
                 mdata.slot.p = action.slot_p;
                 writer1.WriteValueSafe(GameAction.Move);
+                writer1.WriteNetworkSerializable(mdata);
+                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+                OnReceiveRefresh(0, reader1);
+            }
+
+            if (action.type == GameAction.Attack)
+            {
+                FastBufferWriter writer1 =
+                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+                MsgAttack mdata = new MsgAttack();
+                mdata.attacker_uid = action.card_uid;
+                mdata.target_uid = action.target_uid;
+                writer1.WriteValueSafe(GameAction.Attack);
                 writer1.WriteNetworkSerializable(mdata);
                 FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
                 OnReceiveRefresh(0, reader1);

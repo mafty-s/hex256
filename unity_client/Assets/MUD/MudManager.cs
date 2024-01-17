@@ -104,6 +104,7 @@ public class MudActionHistory
 {
     public ushort type;
     public string card_uid;
+    public string target_uid;
     public int slot_x;
     public int slot_y;
     public int slot_p;

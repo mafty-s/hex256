@@ -552,14 +552,40 @@ export function createSystemCalls(
         };
     }
 
+    let index=0;
     const checkAction = async(username:string,game_uid:string)=>{
-        const player_key = calculateKeccak256HashTwoString(game_uid, username);
+        // const player_key = calculateKeccak256HashTwoString(game_uid, username);
+        const game_key = calculateKeccak256Hash(game_uid);
+
         try {
-            const record = await worldContract.read.GetAction([player_key]);
-            console.log("action",record,convertBigIntToInt(record));
-            return convertBigIntToInt(record);
+            const record = await worldContract.read.GetAction([game_key,index]);
+
+        // public ushort type;
+        // public string card_uid;
+        // public string target_uid;
+        // public int slot_x;
+        // public int slot_y;
+        // public int slot_p;
+        // public int player_id;
+            let res =  convertBigIntToInt({
+                type:record[1].actionType,
+                card_uid:record[1].cardId,
+                target_uid:record[1].target,
+                slot_x:0,
+                slot_y:0,
+                slot_p:0,
+                player_id:record[1].playerId
+            });
+            if(res.type===10){
+                res.type = 1040;
+            }
+
+            console.log("action",res);
+
+            index++;
+            return res;
         }catch (e) {
-            console.warn(e);
+            //console.warn(e);
             return null;
         }
     }

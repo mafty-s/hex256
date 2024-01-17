@@ -10,5 +10,5 @@ import { ActionHistoryData } from "./../index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IActionSystem {
-  function GetAction(bytes32 player_key) external view returns (uint256, ActionHistoryData memory);
+  function GetAction(bytes32 game_key, uint256 i) external view returns (uint256, ActionHistoryData memory);
 }
