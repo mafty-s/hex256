@@ -552,6 +552,12 @@ export function createSystemCalls(
         };
     }
 
+    const checkAction = async(username:string,game_uid:string)=>{
+        const player_key = calculateKeccak256HashTwoString(game_uid, username);
+        const record = await worldContract.read.checkAction([player_key]);
+        return record;
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -592,6 +598,7 @@ export function createSystemCalls(
         startMatchmaking,
         checkMatchmaking,
         checkPlayerSetting,
+        checkAction,
     };
 
     window.mud = out;
