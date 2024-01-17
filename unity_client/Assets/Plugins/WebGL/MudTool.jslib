@@ -190,7 +190,7 @@ mergeInto(LibraryManager.library, {
         }
     },
 
-    checkPlayerSetting: async function (username,game_uid) {
+    checkPlayerSetting: async function (username, game_uid) {
         console.log("checkPlayerSetting=====================================");
         console.log("username", UTF8ToString(username));
         console.log("game_uid", UTF8ToString(game_uid));
@@ -198,6 +198,18 @@ mergeInto(LibraryManager.library, {
         console.log(result);
         let returnStr = JSON.stringify(result);
         MyUnityInstance.SendMessage("Client", "OnPlayerSettingSuccess", returnStr);
+    },
+
+    checkAction: async function (username, game_uid) {
+        console.log("checkAction=====================================");
+        console.log("username", UTF8ToString(username));
+        console.log("game_uid", UTF8ToString(game_uid));
+        let result = await mud.checkAction(UTF8ToString(username), UTF8ToString(game_uid));
+        console.log(result);
+        if (result != null) {
+            let returnStr = JSON.stringify(result);
+            MyUnityInstance.SendMessage("Client", "OnActionHistorySuccess", returnStr);
+        }
     },
 
 });

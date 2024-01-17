@@ -94,6 +94,10 @@ public class MudMatchingResult
 public class MudActionHistory
 {
     public ushort type;
+    public string card_uid;
+    public int slot_x;
+    public int slot_y;
+    public int slot_p;
 }
 
 
@@ -270,6 +274,9 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern string checkPlayerSetting(string player_name,string game_uid);
+    
+    [DllImport("__Internal")]
+    private static extern string checkAction(string player_name,string game_uid);
 #endif
 
     public static void SendTask(ushort code)
@@ -548,6 +555,16 @@ public class MudManager : MonoBehaviour
 #endif
             
     }
-    
-    
+
+    public void CheckAction(string player_name, string game_uid)
+    {
+        Debug.Log("CheckAction:" + player_name + "," + game_uid);
+        if (useMud == false)
+        {
+            return;
+        }
+#if !UNITY_EDITOR && UNITY_WEBGL
+            checkAction(player_name,game_uid);
+#endif
+    }
 }
