@@ -799,6 +799,7 @@ namespace TcgEngine.Client
         private void OnNewTurn(SerializedData sdata)
         {
             MsgPlayer msg = sdata.Get<MsgPlayer>();
+            Debug.Log("OnNewTurn:"+msg.player_id);
             onNewTurn?.Invoke(msg.player_id);
         }
 
@@ -873,62 +874,76 @@ namespace TcgEngine.Client
         {
             Debug.Log("OnActionHistorySuccess:"+message);
             MudActionHistory action = JsonUtility.FromJson<MudActionHistory>(message);
-            if (action.type == GameAction.EndTurn)
+            Debug.Log(action.type+":"+GameAction.EndTurn);
+
+            FastBufferWriter writer1 =
+                new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            switch (action.type)
             {
-                FastBufferWriter writer1 =
-                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
-                MsgPlayer mdata = new MsgPlayer();
-                mdata.player_id = action.player_id;
-                writer1.WriteValueSafe(GameAction.EndTurn);
-                writer1.WriteNetworkSerializable(mdata);
-                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
-                OnReceiveRefresh(0, reader1);
+                case GameAction.NewTurn:
+                    // MsgPlayer mdata = new MsgPlayer();
+                    // mdata.player_id = action.player_id;
+                    // writer1.WriteValueSafe(GameAction.EndTurn);
+                    // writer1.WriteNetworkSerializable(mdata);
+                    // OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    
+                    MsgPlayer mdata2 = new MsgPlayer();
+                    mdata2.player_id = action.player_id;
+                    writer1.WriteValueSafe(GameAction.NewTurn);
+                    writer1.WriteNetworkSerializable(mdata2);
+                    OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    game_data.current_player = action.player_id;
+                    game_data.turn_timer = GameplayData.Get().turn_duration;
+                    break;
+                case GameAction.PlayCard:
+                    MsgPlayCard mdata_playcard = new MsgPlayCard();
+                    mdata_playcard.card_uid = action.card_uid;
+                    mdata_playcard.slot = new Slot();
+                    mdata_playcard.slot.x = action.slot_x;
+                    mdata_playcard.slot.y = action.slot_y;
+                    mdata_playcard.slot.p = action.slot_p;
+                    writer1.WriteValueSafe(GameAction.PlayCard);
+                    writer1.WriteNetworkSerializable(mdata_playcard);
+                    OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    break;
+                default:
+                    Debug.Log("unknown:"+action.type);
+                    break;
             }
 
-            if (action.type == GameAction.PlayCard)
-            {
-                FastBufferWriter writer1 =
-                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
-                MsgPlayCard mdata = new MsgPlayCard();
-                mdata.card_uid = action.card_uid;
-                mdata.slot = new Slot();
-                mdata.slot.x = action.slot_x;
-                mdata.slot.y = action.slot_y;
-                mdata.slot.p = action.slot_p;
-                writer1.WriteValueSafe(GameAction.PlayCard);
-                writer1.WriteNetworkSerializable(mdata);
-                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
-                OnReceiveRefresh(0, reader1);
-            }
-
-            if (action.type == GameAction.Move)
-            {
-                FastBufferWriter writer1 =
-                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
-                MsgPlayCard mdata = new MsgPlayCard();
-                mdata.card_uid = action.card_uid;
-                mdata.slot = new Slot();
-                mdata.slot.x = action.slot_x;
-                mdata.slot.y = action.slot_y;
-                mdata.slot.p = action.slot_p;
-                writer1.WriteValueSafe(GameAction.Move);
-                writer1.WriteNetworkSerializable(mdata);
-                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
-                OnReceiveRefresh(0, reader1);
-            }
-
-            if (action.type == GameAction.Attack)
-            {
-                FastBufferWriter writer1 =
-                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
-                MsgAttack mdata = new MsgAttack();
-                mdata.attacker_uid = action.card_uid;
-                mdata.target_uid = action.target_uid;
-                writer1.WriteValueSafe(GameAction.Attack);
-                writer1.WriteNetworkSerializable(mdata);
-                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
-                OnReceiveRefresh(0, reader1);
-            }
+            // if (action.type == GameAction.PlayCard)
+            // {
+            //     
+            // }
+            //
+            // if (action.type == GameAction.Move)
+            // {
+            //     FastBufferWriter writer1 =
+            //         new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            //     MsgPlayCard mdata = new MsgPlayCard();
+            //     mdata.card_uid = action.card_uid;
+            //     mdata.slot = new Slot();
+            //     mdata.slot.x = action.slot_x;
+            //     mdata.slot.y = action.slot_y;
+            //     mdata.slot.p = action.slot_p;
+            //     writer1.WriteValueSafe(GameAction.Move);
+            //     writer1.WriteNetworkSerializable(mdata);
+            //     FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+            //     OnReceiveRefresh(0, reader1);
+            // }
+            //
+            // if (action.type == GameAction.Attack)
+            // {
+            //     FastBufferWriter writer1 =
+            //         new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+            //     MsgAttack mdata = new MsgAttack();
+            //     mdata.attacker_uid = action.card_uid;
+            //     mdata.target_uid = action.target_uid;
+            //     writer1.WriteValueSafe(GameAction.Attack);
+            //     writer1.WriteNetworkSerializable(mdata);
+            //     FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+            //     OnReceiveRefresh(0, reader1);
+            // }
         }
 
         public IEnumerator OnEndTurnSuccessLogic(string message)

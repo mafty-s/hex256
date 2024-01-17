@@ -281,21 +281,21 @@ export function createSystemCalls(
         let result = {
             game_uid: game_uid
         }
-        return { res:result};
+        return {res: result};
     }
 
     const sleep = (ms: number) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    const checkPlayerSetting = async (username: string, game_uid: string)=>{
-        console.log("checkPlayerSetting",username,game_uid);
+    const checkPlayerSetting = async (username: string, game_uid: string) => {
+        console.log("checkPlayerSetting", username, game_uid);
 
         await sleep(4500);
 
         const player_key = calculateKeccak256HashTwoString(game_uid, username);
 
-        console.log("player_key",player_key)
+        console.log("player_key", player_key)
 
         const card_pool = await worldContract.read.getPlayerCards([player_key]);
 
@@ -311,7 +311,7 @@ export function createSystemCalls(
             // is_ai:is_ai,
             // dcards:dcards,
             // pid:pid,
-            game_uid:game_uid
+            game_uid: game_uid
         };
 
         res.player_name = card_pool[0];
@@ -327,15 +327,15 @@ export function createSystemCalls(
 
         //await sleep(1500);
         console.log(res);
-        return convertBigIntToInt( res);
+        return convertBigIntToInt(res);
 
     }
 
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
-                                 dcards: number,pid:number,shuffle:boolean) => {
+                                 dcards: number, pid: number, shuffle: boolean) => {
         await sleep(200)
 
-        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards,shuffle]);
+        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards, shuffle]);
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
@@ -356,12 +356,12 @@ export function createSystemCalls(
             deck: [],
             board: [],
             all: [],
-            mana:mana,
-            hp:hp,
-            is_ai:is_ai,
-            dcards:dcards,
-            pid:pid,
-            game_uid:game_uid
+            mana: mana,
+            hp: hp,
+            is_ai: is_ai,
+            dcards: dcards,
+            pid: pid,
+            game_uid: game_uid
         }
 
         res.player_name = card_pool[0];
@@ -379,14 +379,14 @@ export function createSystemCalls(
         return convertBigIntToInt({hash, tx_result, res});
     }
 
-    const getPlayerCards = async (game_id,name) => {
+    const getPlayerCards = async (game_id, name) => {
         const player_key = calculateKeccak256HashTwoString(game_id, name);
 
         const cards = await worldContract.read.getPlayerCards([player_key]);
         return cards;
     }
 
-    const playCard = async (game_id:string, player_name:string, card_id:string, slot, skip_cost, card_key) => {
+    const playCard = async (game_id: string, player_name: string, card_id: string, slot, skip_cost, card_key) => {
         const game_key = calculateKeccak256Hash(game_id);
         // const card_config_key = calculateKeccak256Hash(card_id);
         const player_key = calculateKeccak256HashTwoString(game_id, player_name);
@@ -406,8 +406,8 @@ export function createSystemCalls(
             slot_x: slot.x,
             slot_y: 1,//slot.y,
             slot_p: slot.p,
-            mana_cost : tx_result.result.mana_cost,
-            player_mana : tx_result.result.player_mana,
+            mana_cost: tx_result.result.mana_cost,
+            player_mana: tx_result.result.player_mana,
         }
         return convertBigIntToInt({hash, tx_result, result});
     }
@@ -435,23 +435,23 @@ export function createSystemCalls(
         return {tx, result};
     }
 
-    const attackCard = async (game_id, player_id, attacker_key,slot, skip_cost, target_key) => {
+    const attackCard = async (game_id, player_id, attacker_key, slot, skip_cost, target_key) => {
         const game_key = calculateKeccak256Hash(game_id);
         const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, false]);
         await waitForTransaction(tx);
-        return  {
-            attacker_uid:attacker_key,
-            target_uid:target_key,
+        return {
+            attacker_uid: attacker_key,
+            target_uid: target_key,
         };
     }
 
-    const attackPlayer = async (game_uid:string,cardkey:string,target:number) => {
+    const attackPlayer = async (game_uid: string, cardkey: string, target: number) => {
         const game_key = calculateKeccak256Hash(game_uid);
-        const tx = await worldContract.write.AttackPlayer([game_key, cardkey, target,false]);
+        const tx = await worldContract.write.AttackPlayer([game_key, cardkey, target, false]);
         await waitForTransaction(tx);
-        return  {
-            attacker_uid:cardkey,
-            target_id:target,
+        return {
+            attacker_uid: cardkey,
+            target_id: target,
         };
     }
 
@@ -469,21 +469,21 @@ export function createSystemCalls(
         console.log("player_name", player_name);
         console.log("player_id", player_id);
 
-        player_id = player_id==1?0:1;
+        player_id = player_id == 1 ? 0 : 1;
 
         const game_key = calculateKeccak256Hash(game_uid);
         const tx = await worldContract.write.EndTurn([game_key, player_id]);
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);
-        console.log("tx-result",tx_result)
+        console.log("tx-result", tx_result)
 
         // return tx;
         return {
             player_id: player_id == 0 ? 1 : 0,
-            board_card_key:tx_result.result.board_card_key,
-            mana:tx_result.result.mana,
-            mana_max:tx_result.result.mana_max
+            board_card_key: tx_result.result.board_card_key,
+            mana: tx_result.result.mana,
+            mana_max: tx_result.result.mana_max
         }
     }
 
@@ -534,57 +534,69 @@ export function createSystemCalls(
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);
-        console.log("tx-result",tx_result)
+        console.log("tx-result", tx_result)
 
         return {
-            game:(Number)(tx_result.result.game),
-            players:tx_result.result.players,
-            nb_players:tx_result.result.nbPlayers,
+            game: (Number)(tx_result.result.game),
+            players: tx_result.result.players,
+            nb_players: tx_result.result.nbPlayers,
         };
     }
 
-    const checkMatchmaking = async (match_id:number)=>{
+    const checkMatchmaking = async (match_id: number) => {
         const record = await worldContract.read.CheckMatchmaking([match_id]);
         return {
-            game:(Number)(record.game),
-            players:record.players,
-            nb_players:record.nbPlayers,
+            game: (Number)(record.game),
+            players: record.players,
+            nb_players: record.nbPlayers,
         };
     }
 
-    let index=0;
-    const checkAction = async(username:string,game_uid:string)=>{
+    function DecodeSlotX(slot) {
+        return (slot % 10);
+    }
+
+    function DecodeSlotY(slot) {
+        return ((slot / 10) % 10);
+    }
+
+    function DecodeSlotP(slot) {
+        return (slot / 100);
+    }
+
+    let index = 0;
+    const checkAction = async (username: string, game_uid: string) => {
         // const player_key = calculateKeccak256HashTwoString(game_uid, username);
         const game_key = calculateKeccak256Hash(game_uid);
 
         try {
-            const record = await worldContract.read.GetAction([game_key,index]);
+            const record = await worldContract.read.GetAction([game_key, index]);
 
-        // public ushort type;
-        // public string card_uid;
-        // public string target_uid;
-        // public int slot_x;
-        // public int slot_y;
-        // public int slot_p;
-        // public int player_id;
-            let res =  convertBigIntToInt({
-                type:record[1].actionType,
-                card_uid:record[1].cardId,
-                target_uid:record[1].target,
-                slot_x:0,
-                slot_y:0,
-                slot_p:0,
-                player_id:record[1].playerId
+            // public ushort type;
+            // public string card_uid;
+            // public string target_uid;
+            // public int slot_x;
+            // public int slot_y;
+            // public int slot_p;
+            // public int player_id;
+            let res = convertBigIntToInt({
+                type: record[1].actionType,
+                card_uid: record[1].cardId,
+                target_uid: record[1].target,
+                slot_x: DecodeSlotX(record[1].slot),
+                slot_y: DecodeSlotY(record[1].slot),
+                slot_p: DecodeSlotP(record[1].slot),
+                player_id: record[1].playerId
             });
-            if(res.type===10){
-                res.type = 1040;
+            if (res.type === 10) {
+                res.type = 2015;
             }
 
-            console.log("action",res);
+            console.log("action", res);
 
             index++;
             return res;
-        }catch (e) {
+        } catch (e) {
             //console.warn(e);
             return null;
         }

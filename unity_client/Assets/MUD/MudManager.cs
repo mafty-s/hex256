@@ -569,7 +569,7 @@ public class MudManager : MonoBehaviour
 
     public void CheckAction(string player_name, string game_uid)
     {
-        Debug.Log("CheckAction:" + player_name + "," + game_uid);
+        //Debug.Log("CheckAction:" + player_name + "," + game_uid);
         if (useMud == false)
         {
             return;
