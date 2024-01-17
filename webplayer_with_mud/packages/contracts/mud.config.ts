@@ -186,7 +186,7 @@ export default mudConfig({
                 cardId: "bytes32",
                 target: "bytes32",
                 slot:"uint16",
-                player:"bytes32",
+                playerId:"uint8",
             }
         },
         Tasks: {

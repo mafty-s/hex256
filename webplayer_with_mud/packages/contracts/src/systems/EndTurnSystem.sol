@@ -5,13 +5,14 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase,Action} from "../codegen/common.sol";
 
 import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Games, GamesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
 import {EndTurnResultData ,PlayerCardsHand,PlayerCardsDeck,Players} from "../codegen/index.sol";
+import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 
 contract EndTurnSystem is System {
 
@@ -63,6 +64,13 @@ contract EndTurnSystem is System {
             mana,
             mana_max
         );
+
+        uint256 len = PlayerActionHistory.length(player_key);
+        bytes32 action_key = keccak256(abi.encode(player_key, len));
+        PlayerActionHistory.push(player_key, action_key);
+        ActionHistory.setActionType(action_key, Action.EndTurn);
+        ActionHistory.setPlayerId(action_key, player_index);
+
         return result;
     }
 

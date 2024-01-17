@@ -128,7 +128,7 @@ contract PlayCardSystem is System {
         ActionHistory.setActionType(action_key, Action.PlayCard);
         ActionHistory.setCardId(action_key, card_key);
         ActionHistory.setSlot(action_key, slot_encode);
-        ActionHistory.setPlayer(action_key, player_key);
+        //todo ActionHistory.setPlayer(action_key, player_key);
 
         PlayCardResultData memory result = PlayCardResultData(
             mana_cost,

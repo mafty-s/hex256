@@ -44,6 +44,15 @@ public class MudUserData
 }
 
 
+
+    [System.Serializable]
+public class MudGameSettingResult
+{
+    public string game_uid;
+}
+
+
+
 [System.Serializable]
 public class MudPlayerSettingResult
 {
@@ -98,6 +107,7 @@ public class MudActionHistory
     public int slot_x;
     public int slot_y;
     public int slot_p;
+    public int player_id;
 }
 
 

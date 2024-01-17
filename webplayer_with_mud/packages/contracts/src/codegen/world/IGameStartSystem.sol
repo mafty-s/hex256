@@ -33,6 +33,8 @@ interface IGameStartSystem {
       bytes32[] memory cards,
       bytes32[] memory hand,
       bytes32[] memory deck,
-      bytes32[] memory board
+      bytes32[] memory board,
+      uint256 mana,
+      uint256 hp
     );
 }

@@ -554,8 +554,14 @@ export function createSystemCalls(
 
     const checkAction = async(username:string,game_uid:string)=>{
         const player_key = calculateKeccak256HashTwoString(game_uid, username);
-        const record = await worldContract.read.checkAction([player_key]);
-        return record;
+        try {
+            const record = await worldContract.read.GetAction([player_key]);
+            console.log("action",record,convertBigIntToInt(record));
+            return convertBigIntToInt(record);
+        }catch (e) {
+            console.warn(e);
+            return null;
+        }
     }
 
     const out = {

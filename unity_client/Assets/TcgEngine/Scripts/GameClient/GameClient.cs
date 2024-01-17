@@ -158,8 +158,8 @@ namespace TcgEngine.Client
                     ConnectToServer();
                 }
             }
-            
-            if(game_data!=null && game_data.state== GameState.Play && game_data.current_player != GetPlayerID() && game_data.turn_timer > 0)
+             
+            if(game_data!=null && game_data.state== GameState.Play)
             {
                 action_timer += Time.deltaTime;
                 if (action_timer > 5f)
@@ -378,6 +378,8 @@ namespace TcgEngine.Client
         public void OnGameSettingSuccess(string message)
         {
             Debug.Log("OnGameSettingSuccess:" + message);
+            MudGameSettingResult result = JsonUtility.FromJson<MudGameSettingResult>(message);
+
             // game_data.settings = new GameSettings();
             // game_data.settings.game_uid = "";
             // game_data.
@@ -390,7 +392,7 @@ namespace TcgEngine.Client
 
             game_data.settings.game_mode = GameMode.Casual;
             game_data.settings.game_type = GameType.Adventure;
-            // game_uid = {string} "VdlXG2Hm26C7"
+            game_data.game_uid = result.game_uid;
             game_data.settings.level = "adventure2";
             game_data.settings.nb_players = 2;
             game_data.settings.scene = "Game";
@@ -870,6 +872,18 @@ namespace TcgEngine.Client
         public void OnActionHistorySuccess(string message)
         {
             MudActionHistory action = JsonUtility.FromJson<MudActionHistory>(message);
+            if (action.type == GameAction.EndTurn)
+            {
+                FastBufferWriter writer1 =
+                    new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
+                MsgPlayer mdata = new MsgPlayer();
+                mdata.player_id = action.player_id;
+                writer1.WriteValueSafe(GameAction.EndTurn);
+                writer1.WriteNetworkSerializable(mdata);
+                FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
+                OnReceiveRefresh(0, reader1);
+                
+            }
             if (action.type == GameAction.PlayCard)
             {
                 FastBufferWriter writer1 =

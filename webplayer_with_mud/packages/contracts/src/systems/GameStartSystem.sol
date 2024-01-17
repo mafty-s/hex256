@@ -42,7 +42,7 @@ contract GameStartSystem is System {
         return shuffled;
     }
 
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, uint8 hp, uint8 mana, uint8 dcards,bool need_shuffle) public returns (bytes32[] memory) {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, uint8 hp, uint8 mana, uint8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 match_key = keccak256(abi.encode(game_uid));
@@ -54,9 +54,8 @@ contract GameStartSystem is System {
         Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
 
 
-
         bytes32[] memory cards = Decks.getCards(desk_key);
-        if(need_shuffle){
+        if (need_shuffle) {
             cards = shuffle(cards);
         }
 
@@ -183,9 +182,11 @@ contract GameStartSystem is System {
         revert("Can't play card");
     }
 
-    function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board) {
+    function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board, uint256 mana, uint256 hp) {
 
         name = Players.getName(player_key);
+        mana = Players.getMana(player_key);
+        hp = Players.getHp(player_key);
 
         hand = PlayerCardsHand.getValue(player_key);
         deck = PlayerCardsDeck.getValue(player_key);
@@ -201,7 +202,7 @@ contract GameStartSystem is System {
             cards[hand.length + i] = CardOnBoards.getId(deck[i]);
         }
 
-        return (name, cards, hand, deck, board);
+        return (name, cards, hand, deck, board, mana, hp);
     }
 
     //    struct CardTuple {
