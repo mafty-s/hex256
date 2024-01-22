@@ -552,16 +552,16 @@ export function createSystemCalls(
         };
     }
 
-    function DecodeSlotX(slot) {
-        return (slot % 10);
+    function DecodeSlotX(slot:number) {
+        return  Math.floor(slot % 10);
     }
 
-    function DecodeSlotY(slot) {
-        return ((slot / 10) % 10);
+    function DecodeSlotY(slot:number) {
+        return  Math.floor((slot / 10) % 10);
     }
 
-    function DecodeSlotP(slot) {
-        return (slot / 100);
+    function DecodeSlotP(slot:number) {
+        return Math.floor(slot / 100);
     }
 
     let index = 0;
@@ -588,6 +588,9 @@ export function createSystemCalls(
                 slot_p: DecodeSlotP(record[1].slot),
                 player_id: record[1].playerId
             });
+            if (res.type === 0) {
+                res.type = 1000;
+            }
             if (res.type === 10) {
                 res.type = 2015;
             }

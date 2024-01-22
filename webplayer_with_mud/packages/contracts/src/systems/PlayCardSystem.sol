@@ -121,14 +121,16 @@ contract PlayCardSystem is System {
         player_mana -= mana_cost;
         Players.setMana(player_key, player_mana);
 
+        bytes32[] memory players =  Games.getPlayers(game_key);
+
         uint16 slot_encode = SlotLib.EncodeSlot(slot);
-        uint256 len = PlayerActionHistory.length(player_key);
-        bytes32 action_key = keccak256(abi.encode(player_key, len));
-        PlayerActionHistory.push(player_key, action_key);
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
         ActionHistory.setActionType(action_key, Action.PlayCard);
         ActionHistory.setCardId(action_key, card_key);
         ActionHistory.setSlot(action_key, slot_encode);
-        //todo ActionHistory.setPlayer(action_key, player_key);
+        ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1 );
 
         PlayCardResultData memory result = PlayCardResultData(
             mana_cost,
