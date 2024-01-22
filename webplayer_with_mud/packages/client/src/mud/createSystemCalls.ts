@@ -591,6 +591,9 @@ export function createSystemCalls(
             if (res.type === 0) {
                 res.type = 1000;
             }
+            if (res.type === 3) {
+                res.type = 1015;
+            }
             if (res.type === 10) {
                 res.type = 2015;
             }

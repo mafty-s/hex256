@@ -881,12 +881,6 @@ namespace TcgEngine.Client
             switch (action.type)
             {
                 case GameAction.NewTurn:
-                    // MsgPlayer mdata = new MsgPlayer();
-                    // mdata.player_id = action.player_id;
-                    // writer1.WriteValueSafe(GameAction.EndTurn);
-                    // writer1.WriteNetworkSerializable(mdata);
-                    // OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
-                    
                     MsgPlayer mdata2 = new MsgPlayer();
                     mdata2.player_id = action.player_id;
                     writer1.WriteValueSafe(GameAction.NewTurn);
@@ -905,6 +899,45 @@ namespace TcgEngine.Client
                     writer1.WriteValueSafe(GameAction.PlayCard);
                     writer1.WriteNetworkSerializable(mdata_playcard);
                     OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    
+                    Card card = game_data.GetCard(action.card_uid);
+                    if (card == null)
+                    {
+                        Debug.Log("Card Not Found" + action.card_uid);
+                        return;
+                    }
+
+                    card.slot = mdata_playcard.slot;
+
+                    var player = game_data.GetPlayer(card.player_id);
+                    Debug.Log("playername:" + player.username);
+
+                    player.RemoveCardFromAllGroups(card);
+                    player.cards_board.Add(card);
+                    break;
+                case GameAction.Move:
+                    MsgPlayCard mdata3 = new MsgPlayCard();
+                    mdata3.card_uid = action.card_uid;
+                    mdata3.slot = new Slot();
+                    mdata3.slot.x = action.slot_x;
+                    mdata3.slot.y = action.slot_y;
+                    mdata3.slot.p = action.slot_p;
+                    writer1.WriteValueSafe(GameAction.NewTurn);
+                    writer1.WriteNetworkSerializable(mdata3);
+                    OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    Card move_card = game_data.GetCard(action.card_uid);
+
+                    if (move_card == null)
+                    {
+                        Debug.Log("Card Not Found" + action.card_uid);
+                    }
+
+                    move_card.slot = mdata3.slot;
+
+                    var move_card_player = game_data.GetPlayer(move_card.player_id);
+                    move_card_player.RemoveCardFromAllGroups(move_card);
+                    move_card_player.cards_board.Add(move_card);
+
                     break;
                 default:
                     Debug.Log("unknown:"+action.type);

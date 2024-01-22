@@ -9,7 +9,8 @@ import {Players, PlayersData} from "../codegen/index.sol";
 import {PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 
-import {GameType, GameState, GamePhase} from "../codegen/common.sol";
+import {GameType, GameState, GamePhase, Action} from "../codegen/common.sol";
+import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 
 //import "../logic/PlayerLogicLib.sol";
 //import "../logic/CardLogicLib.sol";
@@ -37,6 +38,15 @@ contract MoveSystem is System {
             GameLogicLib.UpdateOngoing();
         }
 
+        bytes32[] memory players = Games.getPlayers(game_key);
+        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
+        ActionHistory.setActionType(action_key, Action.Move);
+        ActionHistory.setCardId(action_key, card_key);
+        ActionHistory.setSlot(action_key, slot_encode);
+        ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
 
         //        if (game_data.CanMoveCard(card, slot, skip_cost))
         //        {
