@@ -6,10 +6,11 @@ import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {Games} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, Action} from "../codegen/common.sol";
 
 import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
+import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 
 contract AttackSystem is System {
 
@@ -42,6 +43,19 @@ contract AttackSystem is System {
 
         //todo
 
+        bytes32[] memory players =  Games.getPlayers(game_key);
+
+        //uint16 slot_encode = SlotLib.EncodeSlot(slot);
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
+        ActionHistory.setActionType(action_key, Action.Attack);
+        ActionHistory.setCardId(action_key, attacker_key);
+        ActionHistory.setTarget(action_key, target_key);
+        //ActionHistory.setSlot(action_key, slot_encode);
+        ActionHistory.setPlayerId(action_key, players[0] == attacker_key ? 0 : 1 );
+
+
     }
 
 
@@ -50,7 +64,7 @@ contract AttackSystem is System {
         bytes32 target_key = Games.getPlayers(game_key)[target];
 
         if (BaseLogicLib.CanAttackTarget(attacker_key, target_key, skip_cost))
-            {
+        {
             //
             //            Player player = game_data.GetPlayer(attacker.player_id);
             //            if(!is_ai_predict)
@@ -68,8 +82,8 @@ contract AttackSystem is System {
             //        }
             //todo
 
-                AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
-                AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
-            }
+            AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
+            AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
         }
+    }
 }

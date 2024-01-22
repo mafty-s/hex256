@@ -799,7 +799,7 @@ namespace TcgEngine.Client
         private void OnNewTurn(SerializedData sdata)
         {
             MsgPlayer msg = sdata.Get<MsgPlayer>();
-            Debug.Log("OnNewTurn:"+msg.player_id);
+            Debug.Log("OnNewTurn:" + msg.player_id);
             onNewTurn?.Invoke(msg.player_id);
         }
 
@@ -872,9 +872,9 @@ namespace TcgEngine.Client
 
         public void OnActionHistorySuccess(string message)
         {
-            Debug.Log("OnActionHistorySuccess:"+message);
+            Debug.Log("OnActionHistorySuccess:" + message);
             MudActionHistory action = JsonUtility.FromJson<MudActionHistory>(message);
-            Debug.Log(action.type+":"+GameAction.EndTurn);
+            Debug.Log(action.type + ":" + GameAction.EndTurn);
 
             FastBufferWriter writer1 =
                 new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
@@ -899,7 +899,7 @@ namespace TcgEngine.Client
                     writer1.WriteValueSafe(GameAction.PlayCard);
                     writer1.WriteNetworkSerializable(mdata_playcard);
                     OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
-                    
+
                     Card card = game_data.GetCard(action.card_uid);
                     if (card == null)
                     {
@@ -939,44 +939,35 @@ namespace TcgEngine.Client
                     move_card_player.cards_board.Add(move_card);
 
                     break;
+                case GameAction.Attack:
+                    MsgAttack mdata4 = new MsgAttack();
+                    mdata4.attacker_uid = action.card_uid;
+                    mdata4.target_uid = action.target_uid;
+                    writer1.WriteValueSafe(GameAction.Attack);
+                    writer1.WriteNetworkSerializable(mdata4);
+                    OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    
+                    Card attacker = game_data.GetCard(action.card_uid);
+                    Card target = game_data.GetCard(action.target_uid);
+
+                    if (attacker == null || target == null)
+                    {
+                        Debug.Log("OnAttackCardSuccess attacker or defender is null");
+                        return;
+                    }
+                    //
+                    // attacker.hp = result.attacker_hp;
+                    // defender.hp = result.defender_hp;
+
+                    onAttackStart?.Invoke(attacker, target);
+                    target.hp = 0;
+                    onAttackEnd?.Invoke(attacker, target);
+                    onRefreshAll?.Invoke();
+                    break;
                 default:
-                    Debug.Log("unknown:"+action.type);
+                    Debug.Log("unknown action type:" + action.type);
                     break;
             }
-
-            // if (action.type == GameAction.PlayCard)
-            // {
-            //     
-            // }
-            //
-            // if (action.type == GameAction.Move)
-            // {
-            //     FastBufferWriter writer1 =
-            //         new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
-            //     MsgPlayCard mdata = new MsgPlayCard();
-            //     mdata.card_uid = action.card_uid;
-            //     mdata.slot = new Slot();
-            //     mdata.slot.x = action.slot_x;
-            //     mdata.slot.y = action.slot_y;
-            //     mdata.slot.p = action.slot_p;
-            //     writer1.WriteValueSafe(GameAction.Move);
-            //     writer1.WriteNetworkSerializable(mdata);
-            //     FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
-            //     OnReceiveRefresh(0, reader1);
-            // }
-            //
-            // if (action.type == GameAction.Attack)
-            // {
-            //     FastBufferWriter writer1 =
-            //         new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
-            //     MsgAttack mdata = new MsgAttack();
-            //     mdata.attacker_uid = action.card_uid;
-            //     mdata.target_uid = action.target_uid;
-            //     writer1.WriteValueSafe(GameAction.Attack);
-            //     writer1.WriteNetworkSerializable(mdata);
-            //     FastBufferReader reader1 = new FastBufferReader(writer1, Allocator.Temp);
-            //     OnReceiveRefresh(0, reader1);
-            // }
         }
 
         public IEnumerator OnEndTurnSuccessLogic(string message)
