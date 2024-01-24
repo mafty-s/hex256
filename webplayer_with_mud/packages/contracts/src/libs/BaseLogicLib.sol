@@ -117,7 +117,7 @@ library BaseLogicLib {
         return true;
     }
 
-    function CanAttackTarget(bytes32 attacker, bytes32 target, bool skip_cost) internal pure returns (bool) {
+    function CanAttackTarget(bytes32 attacker, bytes32 target, bool skip_cost) internal view returns (bool) {
 
         if (attacker == 0 || target == 0)
             return false;

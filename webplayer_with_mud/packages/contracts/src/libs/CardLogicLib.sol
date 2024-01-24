@@ -48,12 +48,11 @@ library CardLogicLib {
         //,CardOnBoards.getCardOnBoard(card_key) != 0;
     }
 
-    function IsCharacter(bytes32 card_key) internal pure returns (bool) {
-        return true;
-        //Cards.getCardType(card_key) == CardType.CHARACTER;
+    function IsCharacter(bytes32 card_key) internal view returns (bool) {
+        return Cards.getCardType(card_key) == CardType.CHARACTER;
     }
 
-    function HasStatus(bytes32 card_uid, Status status) internal pure returns (bool) {
+    function HasStatus(bytes32 card_uid, Status status) internal view returns (bool) {
         uint8[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {

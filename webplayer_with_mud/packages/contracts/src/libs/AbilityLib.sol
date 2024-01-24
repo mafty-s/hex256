@@ -1,7 +1,7 @@
 pragma solidity >=0.8.21;
 
 import "../codegen/common.sol";
-import {Cards, Games, Ability, PlayerCardsBoard} from "../codegen/index.sol";
+import {Cards, Games, Ability, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {EffectLib} from "./EffectLib.sol";
@@ -67,4 +67,34 @@ library AbilityLib {
         //todo
     }
 
+    function TriggerCardAbility(AbilityTrigger trigger, bytes32 caster) internal {
+
+    }
+
+    function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
+        //todo
+        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
+        for (uint i = 0; i < targets.length; i++) {
+            bytes32 target = targets[i];
+            ResolveEffectTarget(ability_key, caster_key, target);
+        }
+    }
+
+    function ResolveEffectTarget(bytes32 ability_key, bytes32 caster_key, bytes32 target_key) internal {
+            DoEffects(ability_key,caster_key,target_key);
+    }
+
+    //Return player targets,  memory_array is used for optimization and avoid allocating new memory
+    function GetPlayerTargets(bytes32 ability_key, bytes32 caster_key) internal returns (bytes32[] memory){
+
+        AbilityTarget target = Ability.getTarget(ability_key);
+        bytes32[] memory targets = new bytes32[](1);
+
+        if (target == AbilityTarget.PLAYER_SELF) {
+            bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
+            targets[0] = player_key;
+        }
+
+        return targets;
+    }
 }

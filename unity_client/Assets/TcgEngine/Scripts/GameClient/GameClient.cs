@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using Unity.Netcode;
 using System.Threading.Tasks;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine.Assertions;
 
 namespace TcgEngine.Client
@@ -361,10 +362,10 @@ namespace TcgEngine.Client
             //Draw starting cards
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
-            bool shuffer = pdeck != null ? false : !pdeck.dont_shuffle_deck;
 
             if (MudManager.Get().useMud)
             {
+                bool shuffer = pdeck != null ? !pdeck.dont_shuffle_deck : false;
                 MudManager.Get().PlayerSetting(GetPlayer().username, game_settings.game_uid, psettings.deck.tid, false,
                     hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
             }
@@ -504,18 +505,23 @@ namespace TcgEngine.Client
             //Draw starting cards
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
-
-            bool shuffer = pdeck != null ? false : !pdeck.dont_shuffle_deck;
-
-            MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
-                hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
+            if (MudManager.Get().useMud)
+            {
+                bool shuffer = pdeck != null ? !pdeck.dont_shuffle_deck : false;
+                MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
+                    hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
+            }
 
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
         public void SendGameplaySettings(GameSettings settings)
         {
-            MudManager.Get().GameSetting(settings.game_uid, settings.nb_players, settings.level);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().GameSetting(settings.game_uid, settings.nb_players, settings.level);
+            }
+
             SendAction(GameAction.GameSettings, settings, NetworkDelivery.ReliableFragmentedSequenced);
         }
 
@@ -531,9 +537,12 @@ namespace TcgEngine.Client
 
             string player_name = GetPlayer().username;
 
-            MudManager.Get().PlayCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
-                slot.y,
-                slot.p, false, card.uid);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().PlayCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
+                    slot.y,
+                    slot.p, false, card.uid);
+            }
         }
 
         public void OnPlayCardSuccess(string message)
@@ -570,7 +579,10 @@ namespace TcgEngine.Client
             mdata.attacker_uid = card.uid;
             mdata.target_uid = target.uid;
 
-            MudManager.Get().AttackCard(game_data.game_uid, GetPlayer().username, card.uid, target.uid);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().AttackCard(game_data.game_uid, GetPlayer().username, card.uid, target.uid);
+            }
 
             SendAction(GameAction.Attack, mdata);
         }
@@ -583,8 +595,10 @@ namespace TcgEngine.Client
 
 
             SendAction(GameAction.AttackPlayer, mdata);
-
-            MudManager.Get().AttackPlayer(game_data.game_uid, card.uid, target.player_id);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().AttackPlayer(game_data.game_uid, card.uid, target.player_id);
+            }
         }
 
         public void Move(Card card, Slot slot)
@@ -594,12 +608,16 @@ namespace TcgEngine.Client
             mdata.slot = slot;
             SendAction(GameAction.Move, mdata);
 
-            string player_name = GetPlayer().username;
 
 
-            MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
-                slot.y,
-                slot.p, false, card.uid);
+            if (MudManager.Get().useMud)
+            {
+                string player_name = GetPlayer().username;
+
+                MudManager.Get().MoveCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
+                    slot.y,
+                    slot.p, false, card.uid);
+            }
         }
 
         public void OnMoveCardSuccess(string message)
@@ -679,8 +697,10 @@ namespace TcgEngine.Client
         public void EndTurn()
         {
             SendAction(GameAction.EndTurn);
-
-            MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
+            }
         }
 
         public void Resign()
