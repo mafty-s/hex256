@@ -10,18 +10,6 @@ import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} 
 
 library GameLogicLib {
 
-    //public virtual void DamagePlayer(Card attacker, Player target, int value)
-    //{
-    ////Damage player
-    //target.hp -= value;
-    //target.hp = Mathf.Clamp(target.hp, 0, target.hp_max);
-    //
-    ////Lifesteal
-    //Player aplayer = game_data.GetPlayer(attacker.player_id);
-    //if (attacker.HasStatus(StatusType.LifeSteal))
-    //aplayer.hp += value;
-    //}
-
     function DamageCard(bytes32 attacker, bytes32 target, uint8 value, bool spell_damage) internal {
         if (CardLogicLib.HasStatus(target, Status.INVINCIBILITY)) {
             return;

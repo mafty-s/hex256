@@ -53,19 +53,26 @@ library CardLogicLib {
         //Cards.getCardType(card_key) == CardType.CHARACTER;
     }
 
-    function HasStatus(bytes32 card_key, Status status) internal pure returns (bool) {
-        //todo
-        return true;
-        //Cards.getCardType(card_key) == CardType.CHARACTER;
+    function HasStatus(bytes32 card_uid, Status status) internal pure returns (bool) {
+        uint8[] memory card_status = CardOnBoards.getStatus(card_uid);
+        uint len = CardOnBoards.lengthStatus(card_uid);
+        for (uint i = 0; i < len; i++) {
+            if (card_status[i] == uint8(status)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    function RemoveStatus(bytes32 card_key, Status status) internal  {
-        //todo
-        //Cards.getCardType(card_key) == CardType.CHARACTER;
+    function RemoveStatus(bytes32 card_uid, Status status) internal {
+        uint8[] memory card_status = CardOnBoards.getStatus(card_uid);
+        uint len = CardOnBoards.lengthStatus(card_uid);
+        for (uint i = 0; i < len; i++) {
+            if (card_status[i] == uint8(status)) {
+                CardOnBoards.updateStatus(card_uid, i, uint8(Status.NONE));
+            }
+        }
     }
-
-
-
 
     //    internal bool IsBoardCard()
     //    {
