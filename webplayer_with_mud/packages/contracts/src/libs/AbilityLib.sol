@@ -5,6 +5,7 @@ import {Cards, Games, Ability, PlayerCardsBoard, CardOnBoards} from "../codegen/
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {EffectLib} from "./EffectLib.sol";
+import {CardLogicLib} from "./CardLogicLib.sol";
 
 library AbilityLib {
 
@@ -81,7 +82,7 @@ library AbilityLib {
     }
 
     function ResolveEffectTarget(bytes32 ability_key, bytes32 caster_key, bytes32 target_key) internal {
-            DoEffects(ability_key,caster_key,target_key);
+        DoEffects(ability_key, caster_key, target_key);
     }
 
     //Return player targets,  memory_array is used for optimization and avoid allocating new memory
@@ -96,5 +97,25 @@ library AbilityLib {
         }
 
         return targets;
+    }
+
+    function CanTargetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+
+        if (CardLogicLib.HasStatus(target, Status.STEALTH)) {
+            return false; //Hidden
+        }
+
+        if (CardLogicLib.HasStatus(target, Status.SPELL_IMMUNITY)) {
+            return false; ////Spell immunity
+        }
+
+        bool condition_match = AreTargetConditionsMetCard(game_uid, caster, target);
+        return condition_match;
+    }
+
+    //Check if the card target is valid
+    function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+
+        return true;
     }
 }
