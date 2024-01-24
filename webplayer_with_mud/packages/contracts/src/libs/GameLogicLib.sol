@@ -4,7 +4,9 @@ pragma solidity >=0.8.21;
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {Games, Cards, CardsData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType} from "../codegen/common.sol";
+import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {MathLib} from "./MathLib.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} from "../codegen/common.sol";
 
 library GameLogicLib {
 
@@ -19,6 +21,40 @@ library GameLogicLib {
     //if (attacker.HasStatus(StatusType.LifeSteal))
     //aplayer.hp += value;
     //}
+
+    function DamageCard(bytes32 attacker, bytes32 target, uint8 value, bool spell_damage) internal {
+        if (CardLogicLib.HasStatus(target, Status.INVINCIBILITY)) {
+            return;
+        }
+        bytes32 attack_card_config_key = CardOnBoards.getId(attacker);
+        if (CardLogicLib.HasStatus(target, Status.SPELL_IMMUNITY) && Cards.getCardType(attack_card_config_key) != CardType.CHARACTER) {
+            return;
+        }
+
+        //Shell
+        bool doublelife = CardLogicLib.HasStatus(target, Status.SHELL);
+        if (doublelife && value > 0) {
+            CardLogicLib.RemoveStatus(target, Status.SHELL);
+            return;
+        }
+
+        //Armor
+        if (!spell_damage && CardLogicLib.HasStatus(target, Status.ARMOR)) {
+            //todo value = Mathf.Max(value - target.GetStatusValue(StatusType.Armor), 0);
+        }
+
+        //Damage
+        uint8 target_hp = CardOnBoards.getHp(target);
+        uint8 damage_max = MathLib.min_u8(value, target_hp);
+        uint8 extra = value - target_hp;
+        CardOnBoards.setDamage(target, value + CardOnBoards.getDamage(target));
+
+        //Remove sleep on damage
+        //todo target.RemoveStatus(StatusType.Sleep);
+
+
+
+    }
 
     function DamagePlayer(bytes32 player, uint256 value) internal {
         //        player.hp -= value;

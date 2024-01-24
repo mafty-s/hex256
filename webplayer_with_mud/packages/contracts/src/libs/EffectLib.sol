@@ -1,6 +1,6 @@
 pragma solidity >=0.8.21;
 
-import {Cards, Games, Ability, Players, PlayerCardsBoard} from "../codegen/index.sol";
+import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability,CardOnBoards} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {GameLogicLib} from "./GameLogicLib.sol";
@@ -24,7 +24,16 @@ library EffectLib {
     }
 
     function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        uint8 damage = GetDamage(ability_key);
+        GameLogicLib.DamageCard(caster,target,damage,true);
+
         //todo
+    }
+
+    function GetDamage(bytes32 ability_key) internal returns (uint8){
+        uint8 value = Ability.getValue(ability_key);
+        //todo 加上别的影响
+        return value;
     }
 
     function EffectAddStatCount(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
@@ -120,7 +129,7 @@ library EffectLib {
     }
 
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        if(is_card){
+        if (is_card) {
             //logic.TransformCard(target, transform_to);
         }
         //todo

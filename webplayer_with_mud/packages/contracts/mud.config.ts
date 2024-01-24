@@ -15,7 +15,7 @@ export default mudConfig({
         AbilityTrigger: ["NONE", "ONGOING", "ACTIVATE", "ON_PLAY", "ON_PLAY_OTHER", "START_OF_TURN", "END_OF_TURN", "ON_BEFORE_ATTACK", "ON_AFTER_ATTACK", "ON_BEFORE_DEFEND", "ON_AFTER_DEFEND", "ON_KILL", "ON_DEATH", "ON_DEATH_OTHER"],
         AbilityTarget: ["NONE", "SELF", "PLAYER_SELF", "PLAYER_OPPONENT", "ALL_PLAYERS", "ALL_CARDS_BOARD", "ALL_CARDS_HAND", "ALL_CARDS_ALL_PILES", "ALL_SLOTS", "ALL_CARD_DATA", "PLAY_TARGET", "ABILITY_TRIGGERER", "EQUIPPED_CARD", "SELECT_TARGET", "CARD_SELECTOR", "CHOICE_SELECTOR", "LAST_PLAYED", "LAST_TARGETED", "LAST_DESTROYED", "LAST_SUMMONED"],
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
-        Action:["PlayCard","Attack","AttackPlayer","Move","CastAbility","SelectCard","SelectPlayer","SelectSlot","SelectChoice","CancelSelect","EndTurn"],
+        Action: ["PlayCard", "Attack", "AttackPlayer", "Move", "CastAbility", "SelectCard", "SelectPlayer", "SelectSlot", "SelectChoice", "CancelSelect", "EndTurn"],
     },
     tables: {
         AdminSingleton: {
@@ -45,10 +45,10 @@ export default mudConfig({
                 target_uid: "bytes32",
                 target_player_id: "uint8",
                 slot: "uint16",
-                value:"uint16",
-                score:"uint16",
-                sort:"uint16",
-                valid:"bool"
+                value: "uint16",
+                score: "uint16",
+                sort: "uint16",
+                valid: "bool"
             },
         },
         Packs: {
@@ -154,9 +154,9 @@ export default mudConfig({
         Matches: {
             valueSchema: {
                 startTime: "uint256",
-                game:"uint256",
-                nbPlayers:"uint8",
-                players:"address[]",
+                game: "uint256",
+                nbPlayers: "uint8",
+                players: "address[]",
             }
         },
         Players: {
@@ -185,8 +185,8 @@ export default mudConfig({
                 actionType: "Action",
                 cardId: "bytes32",
                 target: "bytes32",
-                slot:"uint16",
-                playerId:"uint8",
+                slot: "uint16",
+                playerId: "uint8",
             }
         },
         Tasks: {
@@ -200,8 +200,8 @@ export default mudConfig({
             valueSchema: {
                 opponent_player_key: "bytes32",
                 board_card_key: "bytes32",
-                mana:"uint8",
-                mana_max:"uint8",
+                mana: "uint8",
+                mana_max: "uint8",
             }
         },
         AttackResult: {
@@ -210,10 +210,10 @@ export default mudConfig({
                 target_hp: "uint8",
             }
         },
-        PlayCardResult:{
+        PlayCardResult: {
             valueSchema: {
                 mana_cost: "uint8",
-                player_mana:"uint8",
+                player_mana: "uint8",
             }
         }
     },

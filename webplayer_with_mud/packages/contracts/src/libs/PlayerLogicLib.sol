@@ -65,7 +65,7 @@ library PlayerLogicLib {
         if (cards.length == 0) {
             return 0;
         }
-        uint rand = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cards.length)));
+        uint rand = uint(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, cards.length)));
         return cards[rand % cards.length];
     }
 

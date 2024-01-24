@@ -54,9 +54,17 @@ library CardLogicLib {
     }
 
     function HasStatus(bytes32 card_key, Status status) internal pure returns (bool) {
+        //todo
         return true;
         //Cards.getCardType(card_key) == CardType.CHARACTER;
     }
+
+    function RemoveStatus(bytes32 card_key, Status status) internal  {
+        //todo
+        //Cards.getCardType(card_key) == CardType.CHARACTER;
+    }
+
+
 
 
     //    internal bool IsBoardCard()
