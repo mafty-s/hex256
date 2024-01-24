@@ -109,7 +109,7 @@ library SlotLib {
             Slot memory slot = SlotLib.NewSlot(0,0,0);
             return slot;
         }
-        uint rand = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, slots.length)));
+        uint rand = uint(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, slots.length)));
         return slots[rand % slots.length];
     }
 

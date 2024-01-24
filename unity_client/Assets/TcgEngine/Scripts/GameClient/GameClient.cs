@@ -946,7 +946,7 @@ namespace TcgEngine.Client
                     writer1.WriteValueSafe(GameAction.Attack);
                     writer1.WriteNetworkSerializable(mdata4);
                     OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
-                    
+
                     Card attacker = game_data.GetCard(action.card_uid);
                     Card target = game_data.GetCard(action.target_uid);
 
@@ -963,6 +963,31 @@ namespace TcgEngine.Client
                     target.hp = 0;
                     onAttackEnd?.Invoke(attacker, target);
                     onRefreshAll?.Invoke();
+                    break;
+                case GameAction.AttackPlayer:
+                    int target_id = action.target_uid ==
+                                    "0x0000000000000000000000000000000000000000000000000000000000000000"
+                        ? 0
+                        : 1;
+                    Card attacker_card = game_data.GetCard(action.card_uid);
+                    Player target_player = game_data.GetPlayer(target_id);
+
+                    if (attacker_card == null || target_player == null)
+                    {
+                        Debug.Log("OnAttackPlayerSuccess attacker or defender is null");
+                        return;
+                    }
+                    //
+                    // attacker.hp = result.attacker_hp;
+                    // defender.hp = result.defender_hp;
+
+                    onAttackPlayerStart?.Invoke(attacker_card, target_player);
+                    target_player.hp = 0;
+
+                    onAttackPlayerEnd?.Invoke(attacker_card, target_player);
+                    onRefreshAll?.Invoke();
+
+                    onGameEnd?.Invoke(target_id);
                     break;
                 default:
                     Debug.Log("unknown action type:" + action.type);

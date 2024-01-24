@@ -85,5 +85,13 @@ contract AttackSystem is System {
             AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
             AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
         }
+
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
+        ActionHistory.setActionType(action_key, Action.AttackPlayer);
+        ActionHistory.setCardId(action_key, attacker_key);
+        ActionHistory.setTarget(action_key, bytes32(target));
+
     }
 }

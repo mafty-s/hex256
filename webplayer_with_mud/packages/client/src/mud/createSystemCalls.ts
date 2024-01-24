@@ -291,7 +291,7 @@ export function createSystemCalls(
     const checkPlayerSetting = async (username: string, game_uid: string) => {
         console.log("checkPlayerSetting", username, game_uid);
 
-        await sleep(4500);
+        await sleep(5500);
 
         const player_key = calculateKeccak256HashTwoString(game_uid, username);
 
@@ -593,6 +593,9 @@ export function createSystemCalls(
             }
             if (res.type === 1) {
                 res.type = 1010;
+            }
+            if (res.type === 2) {
+                res.type = 1012;
             }
             if (res.type === 3) {
                 res.type = 1015;
