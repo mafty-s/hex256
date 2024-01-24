@@ -113,9 +113,52 @@ library AbilityLib {
         return condition_match;
     }
 
+
+
+    function AreTriggerConditionsMet(bytes32 game_uid, bytes32 caster) internal returns (bool) {
+
+        //todo
+        return true;
+    }
+
+    //Check if the card target is valid
+    function AreTriggerConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+
+        //todo
+        return true;
+    }
+
+    function AreTriggerConditionsMetPlayer(bytes32 game_uid, bytes32 caster, bytes32 player) internal returns (bool) {
+        //todo
+        return true;
+    }
+
     //Check if the card target is valid
     function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
 
+        //todo
         return true;
     }
+
+    function AreTargetConditionsMetPlayer(bytes32 game_uid, bytes32 caster, bytes32 player) internal returns (bool) {
+
+        //todo
+        return true;
+    }
+
+    function AreTargetConditionsMetSlot(bytes32 game_uid, bytes32 caster, bytes32 slot) internal returns (bool) {
+
+        //todo
+        return true;
+    }
+
+
+    function AreTargetConditionsMetCardConfig(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+
+        //todo
+        return true;
+    }
+
+
+
 }

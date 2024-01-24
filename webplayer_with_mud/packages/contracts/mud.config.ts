@@ -217,6 +217,12 @@ export default mudConfig({
                 mana_cost: "uint8",
                 player_mana: "uint8",
             }
+        },
+        Condition: {
+            valueSchema: {
+                name: "uint8",
+                objType: "uint8",
+            }
         }
     },
 });
