@@ -8,7 +8,7 @@ import {SelectorType} from "../codegen/common.sol";
 
 contract SelectSystem is System {
     function SelectCard(bytes32 game_uid, bytes32 card_uid) public {
-        if (GamesExtended.getSelectorType(game_uid) == SelectorType.NONE) {
+        if (GamesExtended.getSelector(game_uid) == SelectorType.NONE) {
             return;
         }
 

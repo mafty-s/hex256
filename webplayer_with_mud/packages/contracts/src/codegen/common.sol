@@ -147,3 +147,7 @@ enum Action {
   CancelSelect,
   EndTurn
 }
+
+enum ConditionObjType {
+  ConditionCardType
+}
