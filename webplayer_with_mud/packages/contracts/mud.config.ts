@@ -17,6 +17,7 @@ export default mudConfig({
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
         Action: ["PlayCard", "Attack", "AttackPlayer", "Move", "CastAbility", "SelectCard", "SelectPlayer", "SelectSlot", "SelectChoice", "CancelSelect", "EndTurn"],
         PileType:["None","Board","Hand","Deck","Discard","Secret","Equipped","Temp"],
+        EffectStatType:["None","Attack","HP","Mana"],
         ConditionObjType: ["ConditionCardType"],
     },
     tables: {

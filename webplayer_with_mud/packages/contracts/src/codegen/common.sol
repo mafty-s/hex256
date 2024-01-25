@@ -159,6 +159,13 @@ enum PileType {
   Temp
 }
 
+enum EffectStatType {
+  None,
+  Attack,
+  HP,
+  Mana
+}
+
 enum ConditionObjType {
   ConditionCardType
 }
