@@ -102,7 +102,9 @@ export default mudConfig({
                 exhaust: "bool",
                 id: "string",
                 effects: "bytes4[]",
-                conditions: "bytes32[]"
+                conditionsTrigger: "bytes32[]",
+                filtersTarget: "bytes32[]",
+                chainAbilities: "bytes32[]",
             },
         },
         CardOnBoards: {

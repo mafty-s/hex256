@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant AbilityTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0006060301010101010100000000000000000000000000000000000000000000
+  0x0006060501010101010100000000000000000000000000000000000000000000
 );
 
 struct AbilityData {
@@ -41,7 +41,9 @@ struct AbilityData {
   bool exhaust;
   string id;
   bytes4[] effects;
-  bytes32[] conditions;
+  bytes32[] conditionsTrigger;
+  bytes32[] filtersTarget;
+  bytes32[] chainAbilities;
 }
 
 library Ability {
@@ -69,7 +71,7 @@ library Ability {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](9);
+    SchemaType[] memory _valueSchema = new SchemaType[](11);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.UINT8;
     _valueSchema[2] = SchemaType.UINT8;
@@ -79,6 +81,8 @@ library Ability {
     _valueSchema[6] = SchemaType.STRING;
     _valueSchema[7] = SchemaType.BYTES4_ARRAY;
     _valueSchema[8] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[9] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[10] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -97,7 +101,7 @@ library Ability {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](9);
+    fieldNames = new string[](11);
     fieldNames[0] = "trigger";
     fieldNames[1] = "target";
     fieldNames[2] = "value";
@@ -106,7 +110,9 @@ library Ability {
     fieldNames[5] = "exhaust";
     fieldNames[6] = "id";
     fieldNames[7] = "effects";
-    fieldNames[8] = "conditions";
+    fieldNames[8] = "conditionsTrigger";
+    fieldNames[9] = "filtersTarget";
+    fieldNames[10] = "chainAbilities";
   }
 
   /**
@@ -700,9 +706,9 @@ library Ability {
   }
 
   /**
-   * @notice Get conditions.
+   * @notice Get conditionsTrigger.
    */
-  function getConditions(bytes32 key) internal view returns (bytes32[] memory conditions) {
+  function getConditionsTrigger(bytes32 key) internal view returns (bytes32[] memory conditionsTrigger) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -711,9 +717,9 @@ library Ability {
   }
 
   /**
-   * @notice Get conditions.
+   * @notice Get conditionsTrigger.
    */
-  function _getConditions(bytes32 key) internal view returns (bytes32[] memory conditions) {
+  function _getConditionsTrigger(bytes32 key) internal view returns (bytes32[] memory conditionsTrigger) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -722,29 +728,29 @@ library Ability {
   }
 
   /**
-   * @notice Set conditions.
+   * @notice Set conditionsTrigger.
    */
-  function setConditions(bytes32 key, bytes32[] memory conditions) internal {
+  function setConditionsTrigger(bytes32 key, bytes32[] memory conditionsTrigger) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((conditions)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((conditionsTrigger)));
   }
 
   /**
-   * @notice Set conditions.
+   * @notice Set conditionsTrigger.
    */
-  function _setConditions(bytes32 key, bytes32[] memory conditions) internal {
+  function _setConditionsTrigger(bytes32 key, bytes32[] memory conditionsTrigger) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((conditions)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((conditionsTrigger)));
   }
 
   /**
-   * @notice Get the length of conditions.
+   * @notice Get the length of conditionsTrigger.
    */
-  function lengthConditions(bytes32 key) internal view returns (uint256) {
+  function lengthConditionsTrigger(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -755,9 +761,9 @@ library Ability {
   }
 
   /**
-   * @notice Get the length of conditions.
+   * @notice Get the length of conditionsTrigger.
    */
-  function _lengthConditions(bytes32 key) internal view returns (uint256) {
+  function _lengthConditionsTrigger(bytes32 key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -768,10 +774,10 @@ library Ability {
   }
 
   /**
-   * @notice Get an item of conditions.
+   * @notice Get an item of conditionsTrigger.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemConditions(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function getItemConditionsTrigger(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -782,10 +788,10 @@ library Ability {
   }
 
   /**
-   * @notice Get an item of conditions.
+   * @notice Get an item of conditionsTrigger.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemConditions(bytes32 key, uint256 _index) internal view returns (bytes32) {
+  function _getItemConditionsTrigger(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -796,9 +802,9 @@ library Ability {
   }
 
   /**
-   * @notice Push an element to conditions.
+   * @notice Push an element to conditionsTrigger.
    */
-  function pushConditions(bytes32 key, bytes32 _element) internal {
+  function pushConditionsTrigger(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -806,9 +812,9 @@ library Ability {
   }
 
   /**
-   * @notice Push an element to conditions.
+   * @notice Push an element to conditionsTrigger.
    */
-  function _pushConditions(bytes32 key, bytes32 _element) internal {
+  function _pushConditionsTrigger(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -816,9 +822,9 @@ library Ability {
   }
 
   /**
-   * @notice Pop an element from conditions.
+   * @notice Pop an element from conditionsTrigger.
    */
-  function popConditions(bytes32 key) internal {
+  function popConditionsTrigger(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -826,9 +832,9 @@ library Ability {
   }
 
   /**
-   * @notice Pop an element from conditions.
+   * @notice Pop an element from conditionsTrigger.
    */
-  function _popConditions(bytes32 key) internal {
+  function _popConditionsTrigger(bytes32 key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -836,9 +842,9 @@ library Ability {
   }
 
   /**
-   * @notice Update an element of conditions at `_index`.
+   * @notice Update an element of conditionsTrigger at `_index`.
    */
-  function updateConditions(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function updateConditionsTrigger(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -849,15 +855,339 @@ library Ability {
   }
 
   /**
-   * @notice Update an element of conditions at `_index`.
+   * @notice Update an element of conditionsTrigger at `_index`.
    */
-  function _updateConditions(bytes32 key, uint256 _index, bytes32 _element) internal {
+  function _updateConditionsTrigger(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
       StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 32), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Get filtersTarget.
+   */
+  function getFiltersTarget(bytes32 key) internal view returns (bytes32[] memory filtersTarget) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 3);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /**
+   * @notice Get filtersTarget.
+   */
+  function _getFiltersTarget(bytes32 key) internal view returns (bytes32[] memory filtersTarget) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 3);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /**
+   * @notice Set filtersTarget.
+   */
+  function setFiltersTarget(bytes32 key, bytes32[] memory filtersTarget) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((filtersTarget)));
+  }
+
+  /**
+   * @notice Set filtersTarget.
+   */
+  function _setFiltersTarget(bytes32 key, bytes32[] memory filtersTarget) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((filtersTarget)));
+  }
+
+  /**
+   * @notice Get the length of filtersTarget.
+   */
+  function lengthFiltersTarget(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 3);
+    unchecked {
+      return _byteLength / 32;
+    }
+  }
+
+  /**
+   * @notice Get the length of filtersTarget.
+   */
+  function _lengthFiltersTarget(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 3);
+    unchecked {
+      return _byteLength / 32;
+    }
+  }
+
+  /**
+   * @notice Get an item of filtersTarget.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemFiltersTarget(bytes32 key, uint256 _index) internal view returns (bytes32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of filtersTarget.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemFiltersTarget(bytes32 key, uint256 _index) internal view returns (bytes32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
+    }
+  }
+
+  /**
+   * @notice Push an element to filtersTarget.
+   */
+  function pushFiltersTarget(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Push an element to filtersTarget.
+   */
+  function _pushFiltersTarget(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Pop an element from filtersTarget.
+   */
+  function popFiltersTarget(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 3, 32);
+  }
+
+  /**
+   * @notice Pop an element from filtersTarget.
+   */
+  function _popFiltersTarget(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 3, 32);
+  }
+
+  /**
+   * @notice Update an element of filtersTarget at `_index`.
+   */
+  function updateFiltersTarget(bytes32 key, uint256 _index, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 32), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of filtersTarget at `_index`.
+   */
+  function _updateFiltersTarget(bytes32 key, uint256 _index, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 32), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Get chainAbilities.
+   */
+  function getChainAbilities(bytes32 key) internal view returns (bytes32[] memory chainAbilities) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 4);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /**
+   * @notice Get chainAbilities.
+   */
+  function _getChainAbilities(bytes32 key) internal view returns (bytes32[] memory chainAbilities) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 4);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /**
+   * @notice Set chainAbilities.
+   */
+  function setChainAbilities(bytes32 key, bytes32[] memory chainAbilities) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 4, EncodeArray.encode((chainAbilities)));
+  }
+
+  /**
+   * @notice Set chainAbilities.
+   */
+  function _setChainAbilities(bytes32 key, bytes32[] memory chainAbilities) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 4, EncodeArray.encode((chainAbilities)));
+  }
+
+  /**
+   * @notice Get the length of chainAbilities.
+   */
+  function lengthChainAbilities(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 4);
+    unchecked {
+      return _byteLength / 32;
+    }
+  }
+
+  /**
+   * @notice Get the length of chainAbilities.
+   */
+  function _lengthChainAbilities(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 4);
+    unchecked {
+      return _byteLength / 32;
+    }
+  }
+
+  /**
+   * @notice Get an item of chainAbilities.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemChainAbilities(bytes32 key, uint256 _index) internal view returns (bytes32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 4, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of chainAbilities.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemChainAbilities(bytes32 key, uint256 _index) internal view returns (bytes32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 4, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
+    }
+  }
+
+  /**
+   * @notice Push an element to chainAbilities.
+   */
+  function pushChainAbilities(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 4, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Push an element to chainAbilities.
+   */
+  function _pushChainAbilities(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 4, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Pop an element from chainAbilities.
+   */
+  function popChainAbilities(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 4, 32);
+  }
+
+  /**
+   * @notice Pop an element from chainAbilities.
+   */
+  function _popChainAbilities(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 4, 32);
+  }
+
+  /**
+   * @notice Update an element of chainAbilities at `_index`.
+   */
+  function updateChainAbilities(bytes32 key, uint256 _index, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 4, uint40(_index * 32), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of chainAbilities at `_index`.
+   */
+  function _updateChainAbilities(bytes32 key, uint256 _index, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 4, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -904,12 +1234,14 @@ library Ability {
     bool exhaust,
     string memory id,
     bytes4[] memory effects,
-    bytes32[] memory conditions
+    bytes32[] memory conditionsTrigger,
+    bytes32[] memory filtersTarget,
+    bytes32[] memory chainAbilities
   ) internal {
     bytes memory _staticData = encodeStatic(trigger, target, value, manaCost, duration, exhaust);
 
-    PackedCounter _encodedLengths = encodeLengths(id, effects, conditions);
-    bytes memory _dynamicData = encodeDynamic(id, effects, conditions);
+    PackedCounter _encodedLengths = encodeLengths(id, effects, conditionsTrigger, filtersTarget, chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(id, effects, conditionsTrigger, filtersTarget, chainAbilities);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -930,12 +1262,14 @@ library Ability {
     bool exhaust,
     string memory id,
     bytes4[] memory effects,
-    bytes32[] memory conditions
+    bytes32[] memory conditionsTrigger,
+    bytes32[] memory filtersTarget,
+    bytes32[] memory chainAbilities
   ) internal {
     bytes memory _staticData = encodeStatic(trigger, target, value, manaCost, duration, exhaust);
 
-    PackedCounter _encodedLengths = encodeLengths(id, effects, conditions);
-    bytes memory _dynamicData = encodeDynamic(id, effects, conditions);
+    PackedCounter _encodedLengths = encodeLengths(id, effects, conditionsTrigger, filtersTarget, chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(id, effects, conditionsTrigger, filtersTarget, chainAbilities);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -956,8 +1290,20 @@ library Ability {
       _table.exhaust
     );
 
-    PackedCounter _encodedLengths = encodeLengths(_table.id, _table.effects, _table.conditions);
-    bytes memory _dynamicData = encodeDynamic(_table.id, _table.effects, _table.conditions);
+    PackedCounter _encodedLengths = encodeLengths(
+      _table.id,
+      _table.effects,
+      _table.conditionsTrigger,
+      _table.filtersTarget,
+      _table.chainAbilities
+    );
+    bytes memory _dynamicData = encodeDynamic(
+      _table.id,
+      _table.effects,
+      _table.conditionsTrigger,
+      _table.filtersTarget,
+      _table.chainAbilities
+    );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -978,8 +1324,20 @@ library Ability {
       _table.exhaust
     );
 
-    PackedCounter _encodedLengths = encodeLengths(_table.id, _table.effects, _table.conditions);
-    bytes memory _dynamicData = encodeDynamic(_table.id, _table.effects, _table.conditions);
+    PackedCounter _encodedLengths = encodeLengths(
+      _table.id,
+      _table.effects,
+      _table.conditionsTrigger,
+      _table.filtersTarget,
+      _table.chainAbilities
+    );
+    bytes memory _dynamicData = encodeDynamic(
+      _table.id,
+      _table.effects,
+      _table.conditionsTrigger,
+      _table.filtersTarget,
+      _table.chainAbilities
+    );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -1016,7 +1374,17 @@ library Ability {
   function decodeDynamic(
     PackedCounter _encodedLengths,
     bytes memory _blob
-  ) internal pure returns (string memory id, bytes4[] memory effects, bytes32[] memory conditions) {
+  )
+    internal
+    pure
+    returns (
+      string memory id,
+      bytes4[] memory effects,
+      bytes32[] memory conditionsTrigger,
+      bytes32[] memory filtersTarget,
+      bytes32[] memory chainAbilities
+    )
+  {
     uint256 _start;
     uint256 _end;
     unchecked {
@@ -1034,7 +1402,19 @@ library Ability {
     unchecked {
       _end += _encodedLengths.atIndex(2);
     }
-    conditions = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+    conditionsTrigger = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(3);
+    }
+    filtersTarget = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(4);
+    }
+    chainAbilities = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
   }
 
   /**
@@ -1052,7 +1432,10 @@ library Ability {
       _staticData
     );
 
-    (_table.id, _table.effects, _table.conditions) = decodeDynamic(_encodedLengths, _dynamicData);
+    (_table.id, _table.effects, _table.conditionsTrigger, _table.filtersTarget, _table.chainAbilities) = decodeDynamic(
+      _encodedLengths,
+      _dynamicData
+    );
   }
 
   /**
@@ -1097,11 +1480,19 @@ library Ability {
   function encodeLengths(
     string memory id,
     bytes4[] memory effects,
-    bytes32[] memory conditions
+    bytes32[] memory conditionsTrigger,
+    bytes32[] memory filtersTarget,
+    bytes32[] memory chainAbilities
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = PackedCounterLib.pack(bytes(id).length, effects.length * 4, conditions.length * 32);
+      _encodedLengths = PackedCounterLib.pack(
+        bytes(id).length,
+        effects.length * 4,
+        conditionsTrigger.length * 32,
+        filtersTarget.length * 32,
+        chainAbilities.length * 32
+      );
     }
   }
 
@@ -1112,9 +1503,18 @@ library Ability {
   function encodeDynamic(
     string memory id,
     bytes4[] memory effects,
-    bytes32[] memory conditions
+    bytes32[] memory conditionsTrigger,
+    bytes32[] memory filtersTarget,
+    bytes32[] memory chainAbilities
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(bytes((id)), EncodeArray.encode((effects)), EncodeArray.encode((conditions)));
+    return
+      abi.encodePacked(
+        bytes((id)),
+        EncodeArray.encode((effects)),
+        EncodeArray.encode((conditionsTrigger)),
+        EncodeArray.encode((filtersTarget)),
+        EncodeArray.encode((chainAbilities))
+      );
   }
 
   /**
@@ -1132,12 +1532,14 @@ library Ability {
     bool exhaust,
     string memory id,
     bytes4[] memory effects,
-    bytes32[] memory conditions
+    bytes32[] memory conditionsTrigger,
+    bytes32[] memory filtersTarget,
+    bytes32[] memory chainAbilities
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(trigger, target, value, manaCost, duration, exhaust);
 
-    PackedCounter _encodedLengths = encodeLengths(id, effects, conditions);
-    bytes memory _dynamicData = encodeDynamic(id, effects, conditions);
+    PackedCounter _encodedLengths = encodeLengths(id, effects, conditionsTrigger, filtersTarget, chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(id, effects, conditionsTrigger, filtersTarget, chainAbilities);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

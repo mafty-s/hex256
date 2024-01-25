@@ -114,16 +114,25 @@ library AbilityLib {
     }
 
 
-
-    function AreTriggerConditionsMet(bytes32 game_uid, bytes32 caster) internal returns (bool) {
-
-        //todo
-        return true;
+    function AreTriggerConditionsMet(bytes32 ability_key, bytes32 game_uid, bytes32 caster) internal returns (bool) {
+        return AreTriggerConditionsMetCard(ability_key, game_uid, caster, caster);
     }
 
     //Check if the card target is valid
-    function AreTriggerConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+    function AreTriggerConditionsMetCard(bytes32 ability_key, bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
 
+
+//        foreach (ConditionData cond in conditions_trigger)
+//        {
+//        if (cond != null)
+//        {
+//        if (!cond.IsTriggerConditionMet(data, this, caster))
+//        return false;
+//        if (!cond.IsTargetConditionMet(data, this, caster, trigger_card))
+//        return false;
+//        }
+//        }
+//        return true;
         //todo
         return true;
     }
@@ -158,7 +167,6 @@ library AbilityLib {
         //todo
         return true;
     }
-
 
 
 }
