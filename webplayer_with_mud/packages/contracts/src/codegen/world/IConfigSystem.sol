@@ -44,6 +44,7 @@ interface IConfigSystem {
     uint8 manaCost,
     uint8 duration,
     bool exhaust,
-    bytes4[] memory effects
+    bytes4[] memory effects,
+    bytes32[] memory conditionsTrigger
   ) external returns (bytes32 key);
 }
