@@ -148,6 +148,17 @@ enum Action {
   EndTurn
 }
 
+enum PileType {
+  None,
+  Board,
+  Hand,
+  Deck,
+  Discard,
+  Secret,
+  Equipped,
+  Temp
+}
+
 enum ConditionObjType {
   ConditionCardType
 }

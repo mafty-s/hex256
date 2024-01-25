@@ -16,6 +16,7 @@ export default mudConfig({
         AbilityTarget: ["NONE", "SELF", "PLAYER_SELF", "PLAYER_OPPONENT", "ALL_PLAYERS", "ALL_CARDS_BOARD", "ALL_CARDS_HAND", "ALL_CARDS_ALL_PILES", "ALL_SLOTS", "ALL_CARD_DATA", "PLAY_TARGET", "ABILITY_TRIGGERER", "EQUIPPED_CARD", "SELECT_TARGET", "CARD_SELECTOR", "CHOICE_SELECTOR", "LAST_PLAYED", "LAST_TARGETED", "LAST_DESTROYED", "LAST_SUMMONED"],
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
         Action: ["PlayCard", "Attack", "AttackPlayer", "Move", "CastAbility", "SelectCard", "SelectPlayer", "SelectSlot", "SelectChoice", "CancelSelect", "EndTurn"],
+        PileType:["None","Board","Hand","Deck","Discard","Secret","Equipped","Temp"],
         ConditionObjType: ["ConditionCardType"],
     },
     tables: {

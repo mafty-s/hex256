@@ -42,7 +42,11 @@ library EffectLib {
 
     function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
         int8 value = Ability.getValue(ability_key);
-
+        if (is_card) {
+            CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
+        }else{
+            Players.setHp(target, value + Players.getHp(target));
+        }
         //todo
     }
 
