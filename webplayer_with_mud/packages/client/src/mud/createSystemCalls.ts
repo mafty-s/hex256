@@ -83,7 +83,7 @@ export function createSystemCalls(
     }
 
     const arrStr2Bytes32 = (arr_str: string) => {
-        if(arr_str.length==0){
+        if (arr_str.length == 0) {
             return [];
         }
         const arr = arr_str.split('|');
@@ -178,6 +178,7 @@ export function createSystemCalls(
         const rarityCode = getRarityType(rarity_str.substr(2,));
         const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode]);
         await waitForTransaction(tx);
+        console.log("init_card", name, calculateKeccak256Hash(name));
         return tx;
     };
 
@@ -531,6 +532,13 @@ export function createSystemCalls(
         return tx;
     }
 
+    const testCoinCard = async()=>{
+        const a = calculateKeccak256Hash("a")
+        const tx = await worldContract.write.TestCoinCard([]);
+        await waitForTransaction(tx);
+        return tx;
+    }
+
     const testRevert = async () => {
         const tx = await worldContract.write.testRevert([]);
         await waitForTransaction(tx);
@@ -670,6 +678,7 @@ export function createSystemCalls(
         test2,
         test3,
         testRevert,
+        testCoinCard,
         IsBoardCard,
         getPlayerCards,
         endTurn,

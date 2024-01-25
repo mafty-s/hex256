@@ -265,4 +265,18 @@ library EffectLib {
 //        return bytes4(keccak256("DoEffectToCard(bytes32,bytes32,bytes32)"));
 //    }
 
+    //------------------------------------------------------------------------------------------------------------
+
+    function gain_mana(bytes32 ability_key, bytes32 target) public returns(bool){
+
+        revert("asd");
+        return true;
+    }
+
+    function test(bytes32 ability_key, bytes32 card_config_key) internal {
+        bytes4 selector = 0x3f9d84e9;//Ability.getEffects(ability_key)[0];
+
+        (bool success,) = address(this).call(abi.encodeWithSelector(selector, ability_key, card_config_key));
+//        require(success, "DebugSystem: TestCoinCard failed");
+    }
 }
