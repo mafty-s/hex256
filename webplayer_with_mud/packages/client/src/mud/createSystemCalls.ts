@@ -208,9 +208,9 @@ export function createSystemCalls(
         const target_code = getAbilityTarget(convertToEnumFormat(target));
 
 
-        const conditionsTrigger = [];//todo
-        const filtersTarget = [];//todo
-        const chainAbilities = [];//todo
+        const conditionsTrigger_byes32 = [];//todo
+        const filtersTarget_byes32 = [];//todo
+        const chainAbilities_byes32 = [];//todo
 
         const tx = await worldContract.write.initAbility([
             id,
@@ -221,9 +221,9 @@ export function createSystemCalls(
             duration,
             exhaust,
             getEffectSelectorFromArrStr(effect_str),
-            conditionsTrigger,
-            filtersTarget,
-            chainAbilities
+            conditionsTrigger_byes32,
+            filtersTarget_byes32,
+            chainAbilities_byes32
         ]);
 
         await waitForTransaction(tx);
