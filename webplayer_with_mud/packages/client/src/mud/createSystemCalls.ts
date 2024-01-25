@@ -202,12 +202,30 @@ export function createSystemCalls(
         return formattedStr;
     }
 
-    const initAbility = async (id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str) => {
+    const initAbility = async (id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str, conditionsTrigger = [], filtersTarget, chainAbilities) => {
 
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget(convertToEnumFormat(target));
 
-        const tx = await worldContract.write.initAbility([id, trigger_code, target_code, value, manaCost, duration, exhaust, getEffectSelectorFromArrStr(effect_str)]);
+
+        const conditionsTrigger = [];//todo
+        const filtersTarget = [];//todo
+        const chainAbilities = [];//todo
+
+        const tx = await worldContract.write.initAbility([
+            id,
+            trigger_code,
+            target_code,
+            value,
+            manaCost,
+            duration,
+            exhaust,
+            getEffectSelectorFromArrStr(effect_str),
+            conditionsTrigger,
+            filtersTarget,
+            chainAbilities
+        ]);
+
         await waitForTransaction(tx);
         return tx;
     }
@@ -552,15 +570,15 @@ export function createSystemCalls(
         };
     }
 
-    function DecodeSlotX(slot:number) {
-        return  Math.floor(slot % 10);
+    function DecodeSlotX(slot: number) {
+        return Math.floor(slot % 10);
     }
 
-    function DecodeSlotY(slot:number) {
-        return  Math.floor((slot / 10) % 10);
+    function DecodeSlotY(slot: number) {
+        return Math.floor((slot / 10) % 10);
     }
 
-    function DecodeSlotP(slot:number) {
+    function DecodeSlotP(slot: number) {
         return Math.floor(slot / 100);
     }
 

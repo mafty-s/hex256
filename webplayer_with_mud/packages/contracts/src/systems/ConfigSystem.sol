@@ -53,7 +53,7 @@ contract ConfigSystem is System {
 
     function initPack(string memory name, PackType _packType, uint8 _cards, uint8[] memory _rarities, uint32 _cost) public returns (bytes32 key) {
         key = keccak256(abi.encode(name));
-        Packs.set(key, PacksData({packType : _packType, cards : _cards, id : name, rarities : _rarities, cost : _cost}));
+        Packs.set(key, PacksData({packType: _packType, cards: _cards, id: name, rarities: _rarities, cost: _cost}));
     }
 
     function initDeck(string memory name, bytes32 hero, bytes32[] memory _cards) public returns (bytes32 key) {
@@ -63,7 +63,21 @@ contract ConfigSystem is System {
         Decks.setCards(key, _cards);
     }
 
-    function initAbility(string memory id, AbilityTrigger trigger, AbilityTarget target, int8 value, uint8 manaCost, uint8 duration, bool exhaust, bytes4[] memory effects) public returns (bytes32 key){
+    function initAbility(
+        string memory id,
+        AbilityTrigger trigger,
+        AbilityTarget target,
+        int8 value,
+        uint8 manaCost,
+        uint8 duration,
+        bool exhaust,
+        bytes4[]
+        memory effects,
+        bytes32[] memory conditionsTrigger,
+        bytes32[] memory filtersTarget,
+        bytes32[] memory chainAbilities
+    )
+    public returns (bytes32 key){
         key = keccak256(abi.encode(id));
         Ability.setId(key, id);
         Ability.setValue(key, value);
@@ -73,6 +87,9 @@ contract ConfigSystem is System {
         Ability.setEffects(key, effects);
         Ability.setTrigger(key, trigger);
         Ability.setTarget(key, target);
+        Ability.setConditionsTrigger(key, conditionsTrigger);
+        Ability.setFiltersTarget(key, filtersTarget);
+        Ability.setChainAbilities(key, chainAbilities);
     }
 
 
