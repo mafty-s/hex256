@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {Cards, Players} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, Status} from "../codegen/common.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
 import {BytesArrayTools} from "../utils/BytesArrayTools.sol";
 import "./SlotLib.sol";
@@ -84,5 +84,14 @@ library PlayerLogicLib {
         Slot memory slot = SlotLib.NewSlot(0, 0, 0);
         return slot;
     }
+
+    function ClearStatus(bytes32 card_uid) internal {
+        //todo
+    }
+
+    function RemoveStatus(bytes32 card_uid, Status status) internal {
+        //todo
+    }
+
 
 }

@@ -1,7 +1,7 @@
 pragma solidity >=0.8.21;
 
 import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards, CardsData, PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
-import {AbilityTrigger, AbilityTarget, PileType, EffectStatType} from "../codegen/common.sol";
+import {AbilityTrigger, AbilityTarget, PileType, EffectStatType, Status} from "../codegen/common.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {CardLogicLib} from "./CardLogicLib.sol";
 import {PlayerLogicLib} from "./PlayerLogicLib.sol";
@@ -132,8 +132,20 @@ library EffectLib {
         //todo
     }
 
-    function EffectClearStatus(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+    function EffectClearStatus(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, Status status) internal {
+        if (is_card) {
+            if (status == Status.NONE) {
+                CardLogicLib.ClearStatus(target);
+            } else {
+                CardLogicLib.RemoveStatus(target, status);
+            }
+        } else {
+            if (status == Status.NONE) {
+                PlayerLogicLib.ClearStatus(target);
+            } else {
+                PlayerLogicLib.RemoveStatus(target, status);
+            }
+        }
     }
 
     function EffectPlay(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {

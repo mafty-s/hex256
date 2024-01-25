@@ -3,7 +3,6 @@ pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
-
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} from "../codegen/common.sol";
 
 library CardLogicLib {
@@ -71,6 +70,11 @@ library CardLogicLib {
                 CardOnBoards.updateStatus(card_uid, i, uint8(Status.NONE));
             }
         }
+    }
+
+    function ClearStatus(bytes32 card_uid) internal {
+        //todo
+        //CardOnBoards.setStatus(card_uid,[]);
     }
 
     //    internal bool IsBoardCard()

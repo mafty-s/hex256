@@ -177,6 +177,7 @@ export default mudConfig({
                 dcards: "uint8",
                 name: "string",
                 deck: "string",
+                status: "uint8[]",
             }
         },
         PlayerCardsDeck: "bytes32[]",

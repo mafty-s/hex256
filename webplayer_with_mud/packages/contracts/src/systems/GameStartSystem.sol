@@ -51,8 +51,16 @@ contract GameStartSystem is System {
         //        DecksData memory deck = Decks.get(desk_key);
 
         Games.pushPlayers(match_key, player_key);
-        Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
-
+//        Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
+        Players.setOwner(player_key,_msgSender());
+        Players.setDcards(player_key,dcards);
+        Players.setHp(player_key,hp);
+        Players.setMana(player_key,mana);
+        Players.setHpMax(player_key,hp);
+        Players.setManaMax(player_key,mana);
+        Players.setName(player_key,username);
+        Players.setDeck(player_key,desk_id);
+        Players.setIsAI(player_key,is_ai);
 
         bytes32[] memory cards = Decks.getCards(desk_key);
         if (need_shuffle) {
