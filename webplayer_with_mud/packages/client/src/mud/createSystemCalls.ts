@@ -83,6 +83,9 @@ export function createSystemCalls(
     }
 
     const arrStr2Bytes32 = (arr_str: string) => {
+        if(arr_str.length==0){
+            return [];
+        }
         const arr = arr_str.split('|');
         const arr_bytes32 = arr.map((item) => {
             return calculateKeccak256Hash(item);
@@ -202,15 +205,16 @@ export function createSystemCalls(
         return formattedStr;
     }
 
-    const initAbility = async (id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str, conditionsTrigger = [], filtersTarget, chainAbilities) => {
+    const initAbility = async (
+        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str, conditionsTrigger: string, filtersTarget: string, chainAbilities: string) => {
 
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget(convertToEnumFormat(target));
 
 
-        const conditionsTrigger_byes32 = [];//todo
-        const filtersTarget_byes32 = [];//todo
-        const chainAbilities_byes32 = [];//todo
+        const conditionsTrigger_byes32 = arrStr2Bytes32(conditionsTrigger);
+        const filtersTarget_byes32 = arrStr2Bytes32(filtersTarget);
+        const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
 
         const tx = await worldContract.write.initAbility([
             id,
