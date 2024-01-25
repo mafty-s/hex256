@@ -33,3 +33,4 @@ import { EndTurnResult, EndTurnResultData, EndTurnResultTableId } from "./tables
 import { AttackResult, AttackResultData, AttackResultTableId } from "./tables/AttackResult.sol";
 import { PlayCardResult, PlayCardResultData, PlayCardResultTableId } from "./tables/PlayCardResult.sol";
 import { Condition, ConditionData, ConditionTableId } from "./tables/Condition.sol";
+import { ConditionCardType, ConditionCardTypeData, ConditionCardTypeTableId } from "./tables/ConditionCardType.sol";

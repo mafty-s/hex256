@@ -8,5 +8,10 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IConditionSystem {
-
+  function SetConditionCardTypeConfig(
+    string memory name,
+    string memory team,
+    string memory has_type,
+    string memory has_trait
+  ) external;
 }

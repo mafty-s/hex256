@@ -222,9 +222,17 @@ export default mudConfig({
         },
         Condition: {
             valueSchema: {
-                name: "uint8",
-                objType: "uint8",
+                objType: "ConditionObjType",
+                name: "string",
             }
-        }
+        },
+        ConditionCardType: {
+            valueSchema: {
+                name: "string",
+                hasTeam: "string",
+                hasTrait: "string",
+                hasType: "string"
+            }
+        },
     },
 });
