@@ -10,6 +10,18 @@ import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} 
 
 library GameLogicLib {
 
+    function KillCard(bytes32 caster, bytes32 target) internal {
+        //todo
+    }
+
+    function DiscardCard(bytes32 target) internal {
+        //todo
+    }
+
+    function DrawDiscardCard(bytes32 target, int8 nb) internal {
+        //todo
+    }
+
     function DamageCard(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
         if (CardLogicLib.HasStatus(target, Status.INVINCIBILITY)) {
             return;

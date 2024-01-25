@@ -1,9 +1,9 @@
 pragma solidity >=0.8.21;
 
-import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards, CardsData, PlayerCardsDeck} from "../codegen/index.sol";
+import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards, CardsData, PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget, PileType, EffectStatType} from "../codegen/common.sol";
-
 import {GameLogicLib} from "./GameLogicLib.sol";
+import {CardLogicLib} from "./CardLogicLib.sol";
 
 library EffectLib {
 
@@ -77,6 +77,8 @@ library EffectLib {
 
             if (pile_type == PileType.Deck) {
                 PlayerCardsDeck.pushValue(player_key, on_board_card_key);
+            } else if (pile_type == PileType.Hand) {
+                PlayerCardsHand.pushValue(player_key, on_board_card_key);
             } else {
                 revert("unknown pile type");
             }
@@ -92,7 +94,24 @@ library EffectLib {
     }
 
     function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType effect_stat_type) internal {
-        //todo
+
+        int8 value = Ability.getValue(ability_key);
+
+        if (is_card) {
+            if (effect_stat_type == EffectStatType.HP) {
+                CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
+            }
+            if (effect_stat_type == EffectStatType.Mana) {
+                CardOnBoards.setMana(target, value + CardOnBoards.getMana(target));
+            }
+        } else {
+            if (effect_stat_type == EffectStatType.HP) {
+                Players.setHp(target, value + Players.getHp(target));
+            }
+            if (effect_stat_type == EffectStatType.Mana) {
+                Players.setMana(target, value + Players.getMana(target));
+            }
+        }
     }
 
     function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
@@ -127,7 +146,7 @@ library EffectLib {
         //todo
     }
 
-    function EffectChangeOwner(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+    function EffectChangeOwner(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bool owner_opponent) internal {
         //todo
     }
 
@@ -153,11 +172,23 @@ library EffectLib {
     }
 
     function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+        if (is_card) {
+            GameLogicLib.DiscardCard(target);
+        } else {
+            int8 value = Ability.getValue(ability_key);
+            GameLogicLib.DrawDiscardCard(target, value); //Discard first card of deck
+        }
     }
 
     function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+        if (is_card) {
+            if (CardLogicLib.IsEquipment(target)) {
+                GameLogicLib.DiscardCard(target);
+            } else {
+                bytes32 equipped_uid = CardOnBoards.getEquippedUid(target);
+                GameLogicLib.DiscardCard(equipped_uid);
+            }
+        }
     }
 
     function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
@@ -188,7 +219,13 @@ library EffectLib {
     }
 
     function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+        if (is_card) {
+            if (CardLogicLib.IsOnBoard(target)) {
+                GameLogicLib.KillCard(caster, target);
+            } else {
+                GameLogicLib.DiscardCard(target);
+            }
+        }
     }
 
     function EffectShuffle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
