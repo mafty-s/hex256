@@ -5,6 +5,7 @@ import {Cards, Players} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase} from "../codegen/common.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
 import {BytesArrayTools} from "../utils/BytesArrayTools.sol";
+import "./SlotLib.sol";
 
 library PlayerLogicLib {
 
@@ -70,13 +71,18 @@ library PlayerLogicLib {
     }
 
     function IsDead(bytes32 player_key) internal view returns (bool) {
-        if (PlayerCardsHand.getValue(player_key).length == 0 && PlayerCardsBoard.getValue(player_key).length == 0 && PlayerCardsDeck.getValue(player_key).length == 0){
+        if (PlayerCardsHand.getValue(player_key).length == 0 && PlayerCardsBoard.getValue(player_key).length == 0 && PlayerCardsDeck.getValue(player_key).length == 0) {
             return true;
         }
-        if(Players.getHp(player_key) <= 0){
+        if (Players.getHp(player_key) <= 0) {
             return true;
         }
         return false;
+    }
+
+    function GetRandomEmptySlot(bytes32 player_key) internal pure returns (Slot memory) {
+        Slot memory slot = SlotLib.NewSlot(0, 0, 0);
+        return slot;
     }
 
 }

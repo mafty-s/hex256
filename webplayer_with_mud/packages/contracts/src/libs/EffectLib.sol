@@ -4,6 +4,8 @@ import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards,
 import {AbilityTrigger, AbilityTarget, PileType, EffectStatType} from "../codegen/common.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {CardLogicLib} from "./CardLogicLib.sol";
+import {PlayerLogicLib} from "./PlayerLogicLib.sol";
+import "./SlotLib.sol";
 
 library EffectLib {
 
@@ -136,6 +138,21 @@ library EffectLib {
 
     function EffectPlay(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
         //todo
+
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        Slot memory slot = PlayerLogicLib.GetRandomEmptySlot(player_key);
+
+//        Game game = logic.GetGameData();
+//        Player player = game.GetPlayer(caster.player_id);
+//        Slot slot = player.GetRandomEmptySlot(logic.GetRandom());
+//
+//        player.RemoveCardFromAllGroups(target);
+//        player.cards_hand.Add(target);
+//
+//        if (slot != Slot.None)
+//        {
+//            logic.PlayCard(target, slot, true);
+//        }
     }
 
     function EffectRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
