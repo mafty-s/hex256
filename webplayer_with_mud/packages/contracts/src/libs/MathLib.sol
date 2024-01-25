@@ -25,4 +25,12 @@ library MathLib {
             return b;
         }
     }
+
+    function min_int8(int8 a, int8 b) public pure returns (int8) {
+        if (a <= b) {
+            return a;
+        } else {
+            return b;
+        }
+    }
 }

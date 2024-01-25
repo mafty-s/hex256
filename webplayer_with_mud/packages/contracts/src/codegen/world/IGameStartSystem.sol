@@ -15,8 +15,8 @@ interface IGameStartSystem {
     string memory game_uid,
     string memory desk_id,
     bool is_ai,
-    uint8 hp,
-    uint8 mana,
+    int8 hp,
+    int8 mana,
     uint8 dcards,
     bool need_shuffle
   ) external returns (bytes32[] memory);
@@ -34,7 +34,7 @@ interface IGameStartSystem {
       bytes32[] memory hand,
       bytes32[] memory deck,
       bytes32[] memory board,
-      uint256 mana,
-      uint256 hp
+      int8 mana,
+      int8 hp
     );
 }

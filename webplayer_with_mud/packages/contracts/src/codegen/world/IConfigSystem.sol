@@ -13,9 +13,9 @@ import { CardsData } from "./../index.sol";
 interface IConfigSystem {
   function initCard(
     string memory name,
-    uint8 mana,
-    uint8 attack,
-    uint8 hp,
+    int8 mana,
+    int8 attack,
+    int8 hp,
     uint32 cost,
     bytes32[] memory abilities,
     CardType cardType,
@@ -40,7 +40,7 @@ interface IConfigSystem {
     string memory id,
     AbilityTrigger trigger,
     AbilityTarget target,
-    uint8 value,
+    int8 value,
     uint8 manaCost,
     uint8 duration,
     bool exhaust,

@@ -5,13 +5,13 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase,Action} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action} from "../codegen/common.sol";
 
 import {AbilityLib} from "../libs/AbilityLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Games, GamesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
-import {EndTurnResultData ,PlayerCardsHand,PlayerCardsDeck,Players} from "../codegen/index.sol";
+import {PlayerCardsHand, PlayerCardsDeck, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 
 contract EndTurnSystem is System {
@@ -21,7 +21,7 @@ contract EndTurnSystem is System {
 
     }
 
-    function EndTurn(bytes32 game_key, uint8 player_index) public returns ( EndTurnResultData memory result) {
+    function EndTurn(bytes32 game_key, uint8 player_index) public returns (bytes32, bytes32, int8, int8){
         Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
         Games.setGamePhase(game_key, GamePhase.END_TURN);
 
@@ -30,21 +30,21 @@ contract EndTurnSystem is System {
         bytes32 opponent_player_key = Games.getPlayers(game_key)[opponent_index];
 
         //todo 恢复mana
-        uint8 mana = Players.getMana(player_key);
-        uint8 mana_max =  Players.getManaMax(player_key);
+        int8 mana = Players.getMana(player_key);
+        int8 mana_max = Players.getManaMax(player_key);
         mana += 1;
-        mana_max +=1;
-        if(mana >mana_max){
+        mana_max += 1;
+        if (mana > mana_max) {
             mana = Players.getManaMax(player_key);
         }
-        Players.setMana(player_key,mana);
-        Players.setManaMax(player_key,mana_max);
+        Players.setMana(player_key, mana);
+        Players.setManaMax(player_key, mana_max);
 
         //抽张卡出来
         bytes32 board_card_key = 0;
 
         bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
-        if(cards.length>0){
+        if (cards.length > 0) {
             board_card_key = cards[cards.length - 1];
             PlayerCardsDeck.popValue(player_key);
             PlayerCardsHand.pushValue(player_key, board_card_key);
@@ -58,12 +58,7 @@ contract EndTurnSystem is System {
             //AiLogicLib.Think(game_key, opponent_player_key);
         }
 
-        EndTurnResultData memory result = EndTurnResultData(
-            opponent_player_key,
-            board_card_key,
-            mana,
-            mana_max
-        );
+//        EndTurnResultData memory result = EndTurnResultData
 
         uint256 len = PlayerActionHistory.length(game_key);
         bytes32 action_key = keccak256(abi.encode(game_key, len));
@@ -71,7 +66,7 @@ contract EndTurnSystem is System {
         ActionHistory.setActionType(action_key, Action.EndTurn);
         ActionHistory.setPlayerId(action_key, player_index);
 
-        return result;
+        return (opponent_player_key, board_card_key, mana, mana_max);
     }
 
 }

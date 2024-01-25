@@ -82,9 +82,9 @@ export default mudConfig({
         Cards: {
             valueSchema: {
                 rarity: "RarityType",
-                mana: "uint8",
-                attack: "uint8",
-                hp: "uint8",
+                mana: "int8",
+                attack: "int8",
+                hp: "int8",
                 cost: "uint32",
                 cardType: "CardType",
                 tid: "string",
@@ -96,7 +96,7 @@ export default mudConfig({
             valueSchema: {
                 trigger: "AbilityTrigger",
                 target: "AbilityTarget",
-                value: "uint8",
+                value: "int8",
                 manaCost: "uint8",
                 duration: "uint8",
                 exhaust: "bool",
@@ -110,18 +110,19 @@ export default mudConfig({
         CardOnBoards: {
             valueSchema: {
                 slot: "uint16",
-                hp: "uint8",
-                hpOngoing: "uint8",
-                attack: "uint8",
-                attackOngoing: "uint8",
-                mana: "uint8",
-                manaOngoing: "uint8",
-                damage: "uint8",
+                hp: "int8",
+                hpOngoing: "int8",
+                attack: "int8",
+                attackOngoing: "int8",
+                mana: "int8",
+                manaOngoing: "int8",
+                damage: "int8",
                 exhausted: "bool",
                 equippedUid: "bytes32",
                 id: "bytes32",
                 playerId: "bytes32",
                 status: "uint8[]",
+                ability:"bytes32[]"
             }
         },
         Decks: {
@@ -166,10 +167,10 @@ export default mudConfig({
         Players: {
             valueSchema: {
                 owner: "address",
-                hp: "uint8",
-                mana: "uint8",
-                hpMax: "uint8",
-                manaMax: "uint8",
+                hp: "int8",
+                mana: "int8",
+                hpMax: "int8",
+                manaMax: "int8",
                 isAI: "bool",
                 dcards: "uint8",
                 name: "string",
@@ -200,24 +201,10 @@ export default mudConfig({
                 description: "string",
             },
         },
-        EndTurnResult: {
-            valueSchema: {
-                opponent_player_key: "bytes32",
-                board_card_key: "bytes32",
-                mana: "uint8",
-                mana_max: "uint8",
-            }
-        },
         AttackResult: {
             valueSchema: {
                 attacker_hp: "uint8",
                 target_hp: "uint8",
-            }
-        },
-        PlayCardResult: {
-            valueSchema: {
-                mana_cost: "uint8",
-                player_mana: "uint8",
             }
         },
         Condition: {

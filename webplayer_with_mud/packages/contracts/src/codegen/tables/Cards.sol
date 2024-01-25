@@ -34,9 +34,9 @@ FieldLayout constant _fieldLayout = FieldLayout.wrap(
 
 struct CardsData {
   RarityType rarity;
-  uint8 mana;
-  uint8 attack;
-  uint8 hp;
+  int8 mana;
+  int8 attack;
+  int8 hp;
   uint32 cost;
   CardType cardType;
   string tid;
@@ -71,9 +71,9 @@ library Cards {
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](9);
     _valueSchema[0] = SchemaType.UINT8;
-    _valueSchema[1] = SchemaType.UINT8;
-    _valueSchema[2] = SchemaType.UINT8;
-    _valueSchema[3] = SchemaType.UINT8;
+    _valueSchema[1] = SchemaType.INT8;
+    _valueSchema[2] = SchemaType.INT8;
+    _valueSchema[3] = SchemaType.INT8;
     _valueSchema[4] = SchemaType.UINT32;
     _valueSchema[5] = SchemaType.UINT8;
     _valueSchema[6] = SchemaType.STRING;
@@ -168,29 +168,29 @@ library Cards {
   /**
    * @notice Get mana.
    */
-  function getMana(bytes32 key) internal view returns (uint8 mana) {
+  function getMana(bytes32 key) internal view returns (int8 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get mana.
    */
-  function _getMana(bytes32 key) internal view returns (uint8 mana) {
+  function _getMana(bytes32 key) internal view returns (int8 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set mana.
    */
-  function setMana(bytes32 key, uint8 mana) internal {
+  function setMana(bytes32 key, int8 mana) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -200,7 +200,7 @@ library Cards {
   /**
    * @notice Set mana.
    */
-  function _setMana(bytes32 key, uint8 mana) internal {
+  function _setMana(bytes32 key, int8 mana) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -210,29 +210,29 @@ library Cards {
   /**
    * @notice Get attack.
    */
-  function getAttack(bytes32 key) internal view returns (uint8 attack) {
+  function getAttack(bytes32 key) internal view returns (int8 attack) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get attack.
    */
-  function _getAttack(bytes32 key) internal view returns (uint8 attack) {
+  function _getAttack(bytes32 key) internal view returns (int8 attack) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set attack.
    */
-  function setAttack(bytes32 key, uint8 attack) internal {
+  function setAttack(bytes32 key, int8 attack) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -242,7 +242,7 @@ library Cards {
   /**
    * @notice Set attack.
    */
-  function _setAttack(bytes32 key, uint8 attack) internal {
+  function _setAttack(bytes32 key, int8 attack) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -252,29 +252,29 @@ library Cards {
   /**
    * @notice Get hp.
    */
-  function getHp(bytes32 key) internal view returns (uint8 hp) {
+  function getHp(bytes32 key) internal view returns (int8 hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get hp.
    */
-  function _getHp(bytes32 key) internal view returns (uint8 hp) {
+  function _getHp(bytes32 key) internal view returns (int8 hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set hp.
    */
-  function setHp(bytes32 key, uint8 hp) internal {
+  function setHp(bytes32 key, int8 hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -284,7 +284,7 @@ library Cards {
   /**
    * @notice Set hp.
    */
-  function _setHp(bytes32 key, uint8 hp) internal {
+  function _setHp(bytes32 key, int8 hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -897,9 +897,9 @@ library Cards {
   function set(
     bytes32 key,
     RarityType rarity,
-    uint8 mana,
-    uint8 attack,
-    uint8 hp,
+    int8 mana,
+    int8 attack,
+    int8 hp,
     uint32 cost,
     CardType cardType,
     string memory tid,
@@ -923,9 +923,9 @@ library Cards {
   function _set(
     bytes32 key,
     RarityType rarity,
-    uint8 mana,
-    uint8 attack,
-    uint8 hp,
+    int8 mana,
+    int8 attack,
+    int8 hp,
     uint32 cost,
     CardType cardType,
     string memory tid,
@@ -992,14 +992,14 @@ library Cards {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (RarityType rarity, uint8 mana, uint8 attack, uint8 hp, uint32 cost, CardType cardType) {
+  ) internal pure returns (RarityType rarity, int8 mana, int8 attack, int8 hp, uint32 cost, CardType cardType) {
     rarity = RarityType(uint8(Bytes.slice1(_blob, 0)));
 
-    mana = (uint8(Bytes.slice1(_blob, 1)));
+    mana = (int8(uint8(Bytes.slice1(_blob, 1))));
 
-    attack = (uint8(Bytes.slice1(_blob, 2)));
+    attack = (int8(uint8(Bytes.slice1(_blob, 2))));
 
-    hp = (uint8(Bytes.slice1(_blob, 3)));
+    hp = (int8(uint8(Bytes.slice1(_blob, 3))));
 
     cost = (uint32(Bytes.slice4(_blob, 4)));
 
@@ -1075,9 +1075,9 @@ library Cards {
    */
   function encodeStatic(
     RarityType rarity,
-    uint8 mana,
-    uint8 attack,
-    uint8 hp,
+    int8 mana,
+    int8 attack,
+    int8 hp,
     uint32 cost,
     CardType cardType
   ) internal pure returns (bytes memory) {
@@ -1119,9 +1119,9 @@ library Cards {
    */
   function encode(
     RarityType rarity,
-    uint8 mana,
-    uint8 attack,
-    uint8 hp,
+    int8 mana,
+    int8 attack,
+    int8 hp,
     uint32 cost,
     CardType cardType,
     string memory tid,

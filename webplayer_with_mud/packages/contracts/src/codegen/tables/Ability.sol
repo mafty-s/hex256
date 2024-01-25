@@ -35,7 +35,7 @@ FieldLayout constant _fieldLayout = FieldLayout.wrap(
 struct AbilityData {
   AbilityTrigger trigger;
   AbilityTarget target;
-  uint8 value;
+  int8 value;
   uint8 manaCost;
   uint8 duration;
   bool exhaust;
@@ -74,7 +74,7 @@ library Ability {
     SchemaType[] memory _valueSchema = new SchemaType[](11);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.UINT8;
-    _valueSchema[2] = SchemaType.UINT8;
+    _valueSchema[2] = SchemaType.INT8;
     _valueSchema[3] = SchemaType.UINT8;
     _valueSchema[4] = SchemaType.UINT8;
     _valueSchema[5] = SchemaType.BOOL;
@@ -216,29 +216,29 @@ library Ability {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 key) internal view returns (uint8 value) {
+  function getValue(bytes32 key) internal view returns (int8 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 key) internal view returns (uint8 value) {
+  function _getValue(bytes32 key) internal view returns (int8 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 key, uint8 value) internal {
+  function setValue(bytes32 key, int8 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -248,7 +248,7 @@ library Ability {
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 key, uint8 value) internal {
+  function _setValue(bytes32 key, int8 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -1228,7 +1228,7 @@ library Ability {
     bytes32 key,
     AbilityTrigger trigger,
     AbilityTarget target,
-    uint8 value,
+    int8 value,
     uint8 manaCost,
     uint8 duration,
     bool exhaust,
@@ -1256,7 +1256,7 @@ library Ability {
     bytes32 key,
     AbilityTrigger trigger,
     AbilityTarget target,
-    uint8 value,
+    int8 value,
     uint8 manaCost,
     uint8 duration,
     bool exhaust,
@@ -1353,13 +1353,13 @@ library Ability {
   )
     internal
     pure
-    returns (AbilityTrigger trigger, AbilityTarget target, uint8 value, uint8 manaCost, uint8 duration, bool exhaust)
+    returns (AbilityTrigger trigger, AbilityTarget target, int8 value, uint8 manaCost, uint8 duration, bool exhaust)
   {
     trigger = AbilityTrigger(uint8(Bytes.slice1(_blob, 0)));
 
     target = AbilityTarget(uint8(Bytes.slice1(_blob, 1)));
 
-    value = (uint8(Bytes.slice1(_blob, 2)));
+    value = (int8(uint8(Bytes.slice1(_blob, 2))));
 
     manaCost = (uint8(Bytes.slice1(_blob, 3)));
 
@@ -1465,7 +1465,7 @@ library Ability {
   function encodeStatic(
     AbilityTrigger trigger,
     AbilityTarget target,
-    uint8 value,
+    int8 value,
     uint8 manaCost,
     uint8 duration,
     bool exhaust
@@ -1526,7 +1526,7 @@ library Ability {
   function encode(
     AbilityTrigger trigger,
     AbilityTarget target,
-    uint8 value,
+    int8 value,
     uint8 manaCost,
     uint8 duration,
     bool exhaust,

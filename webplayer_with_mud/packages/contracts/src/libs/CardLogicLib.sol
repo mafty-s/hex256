@@ -8,19 +8,19 @@ import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} 
 
 library CardLogicLib {
 
-    function GetAttack(CardOnBoardsData memory card) internal pure returns (uint256) {
+    function GetAttack(CardOnBoardsData memory card) internal pure returns (int8) {
         return card.attack + card.attackOngoing;
     }
 
-    function GetHP(CardOnBoardsData memory card) internal pure returns (uint256) {
+    function GetHP(CardOnBoardsData memory card) internal pure returns (int8) {
         return card.hp + card.hpOngoing - card.damage;
     }
 
-    function GetHPMax(CardOnBoardsData memory card) internal pure returns (uint256) {
+    function GetHPMax(CardOnBoardsData memory card) internal pure returns (int8) {
         return card.hp + card.hpOngoing;
     }
 
-    function GetMana(CardOnBoardsData memory card) internal pure returns (uint256) {
+    function GetMana(CardOnBoardsData memory card) internal pure returns (int8) {
         return card.mana + card.manaOngoing;
     }
 

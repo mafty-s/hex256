@@ -10,7 +10,7 @@ import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} 
 
 library GameLogicLib {
 
-    function DamageCard(bytes32 attacker, bytes32 target, uint8 value, bool spell_damage) internal {
+    function DamageCard(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
         if (CardLogicLib.HasStatus(target, Status.INVINCIBILITY)) {
             return;
         }
@@ -32,14 +32,13 @@ library GameLogicLib {
         }
 
         //Damage
-        uint8 target_hp = CardOnBoards.getHp(target);
-        uint8 damage_max = MathLib.min_u8(value, target_hp);
-        uint8 extra = value - target_hp;
+        int8 target_hp = CardOnBoards.getHp(target);
+        int8 damage_max = MathLib.min_int8(value, target_hp);
+        int8 extra = value - target_hp;
         CardOnBoards.setDamage(target, value + CardOnBoards.getDamage(target));
 
         //Remove sleep on damage
         //todo target.RemoveStatus(StatusType.Sleep);
-
 
 
     }
@@ -54,11 +53,15 @@ library GameLogicLib {
         //todo
     }
 
-    function HealCard(bytes32 target, uint8 value) internal {
+    function HealCard(bytes32 target, int8 value) internal {
         //todo
     }
 
     function EquipCard(bytes32 card, bytes32 equipment) internal {
+        //todo
+    }
+
+    function DrawCard(bytes32 player, int8 card_number) internal {
         //todo
     }
 

@@ -42,7 +42,7 @@ contract GameStartSystem is System {
         return shuffled;
     }
 
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, uint8 hp, uint8 mana, uint8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, uint8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 match_key = keccak256(abi.encode(game_uid));
@@ -182,7 +182,7 @@ contract GameStartSystem is System {
         revert("Can't play card");
     }
 
-    function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board, uint256 mana, uint256 hp) {
+    function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board, int8 mana, int8 hp) {
 
         name = Players.getName(player_key);
         mana = Players.getMana(player_key);

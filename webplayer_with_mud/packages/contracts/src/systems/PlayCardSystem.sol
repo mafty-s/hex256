@@ -3,14 +3,9 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards} from "../codegen/index.sol";
-//import {Decks, DecksData} from "../codegen/index.sol";
-//import {Games, GamesData} from "../codegen/index.sol";
 import {Players} from "../codegen/index.sol";
-//import {PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
-import {CardOnBoards, PlayCardResultData} from "../codegen/index.sol";
-
+import {CardOnBoards} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, CardType, AbilityTrigger, Action} from "../codegen/common.sol";
-
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip, CardOnBoards} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import "../libs/PlayerLogicLib.sol";
@@ -24,7 +19,7 @@ import {Slot, SlotLib} from "../libs/SlotLib.sol";
 contract PlayCardSystem is System {
 
 
-    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public returns (PlayCardResultData memory){
+    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public returns (int8,int8){
 
         //        uint8 card_mana = CardOnBoards.getMana(card_key);
         //        PlayersData memory player = Players.get(player_key);
@@ -115,8 +110,8 @@ contract PlayCardSystem is System {
         //            onCardPlayed?.Invoke(card, slot);
         //            resolve_queue.ResolveAll(0.3f);
 
-        uint8 mana_cost = CardOnBoards.getMana(card_key);
-        uint8 player_mana = Players.getMana(player_key);
+        int8 mana_cost = CardOnBoards.getMana(card_key);
+        int8 player_mana = Players.getMana(player_key);
         require(player_mana >= mana_cost, "not enough mana");
         player_mana -= mana_cost;
         Players.setMana(player_key, player_mana);
@@ -132,18 +127,14 @@ contract PlayCardSystem is System {
         ActionHistory.setSlot(action_key, slot_encode);
         ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1 );
 
-        PlayCardResultData memory result = PlayCardResultData(
-            mana_cost,
-            player_mana
-        );
-        return result;
 
+        return (mana_cost,player_mana);
     }
 
 
     function PayMana(bytes32 player_key, bytes32 card_key) public {
         //        PlayersData memory player = Players.get(player_key);
-        uint8 player_mana = Players.getMana(player_key);
+        int8 player_mana = Players.getMana(player_key);
         Players.setMana(player_key, player_mana - Cards.get(card_key).mana);
     }
 

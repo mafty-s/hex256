@@ -31,10 +31,10 @@ FieldLayout constant _fieldLayout = FieldLayout.wrap(
 
 struct PlayersData {
   address owner;
-  uint8 hp;
-  uint8 mana;
-  uint8 hpMax;
-  uint8 manaMax;
+  int8 hp;
+  int8 mana;
+  int8 hpMax;
+  int8 manaMax;
   bool isAI;
   uint8 dcards;
   string name;
@@ -68,10 +68,10 @@ library Players {
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](9);
     _valueSchema[0] = SchemaType.ADDRESS;
-    _valueSchema[1] = SchemaType.UINT8;
-    _valueSchema[2] = SchemaType.UINT8;
-    _valueSchema[3] = SchemaType.UINT8;
-    _valueSchema[4] = SchemaType.UINT8;
+    _valueSchema[1] = SchemaType.INT8;
+    _valueSchema[2] = SchemaType.INT8;
+    _valueSchema[3] = SchemaType.INT8;
+    _valueSchema[4] = SchemaType.INT8;
     _valueSchema[5] = SchemaType.BOOL;
     _valueSchema[6] = SchemaType.UINT8;
     _valueSchema[7] = SchemaType.STRING;
@@ -165,29 +165,29 @@ library Players {
   /**
    * @notice Get hp.
    */
-  function getHp(bytes32 key) internal view returns (uint8 hp) {
+  function getHp(bytes32 key) internal view returns (int8 hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get hp.
    */
-  function _getHp(bytes32 key) internal view returns (uint8 hp) {
+  function _getHp(bytes32 key) internal view returns (int8 hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set hp.
    */
-  function setHp(bytes32 key, uint8 hp) internal {
+  function setHp(bytes32 key, int8 hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -197,7 +197,7 @@ library Players {
   /**
    * @notice Set hp.
    */
-  function _setHp(bytes32 key, uint8 hp) internal {
+  function _setHp(bytes32 key, int8 hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -207,29 +207,29 @@ library Players {
   /**
    * @notice Get mana.
    */
-  function getMana(bytes32 key) internal view returns (uint8 mana) {
+  function getMana(bytes32 key) internal view returns (int8 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get mana.
    */
-  function _getMana(bytes32 key) internal view returns (uint8 mana) {
+  function _getMana(bytes32 key) internal view returns (int8 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set mana.
    */
-  function setMana(bytes32 key, uint8 mana) internal {
+  function setMana(bytes32 key, int8 mana) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -239,7 +239,7 @@ library Players {
   /**
    * @notice Set mana.
    */
-  function _setMana(bytes32 key, uint8 mana) internal {
+  function _setMana(bytes32 key, int8 mana) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -249,29 +249,29 @@ library Players {
   /**
    * @notice Get hpMax.
    */
-  function getHpMax(bytes32 key) internal view returns (uint8 hpMax) {
+  function getHpMax(bytes32 key) internal view returns (int8 hpMax) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get hpMax.
    */
-  function _getHpMax(bytes32 key) internal view returns (uint8 hpMax) {
+  function _getHpMax(bytes32 key) internal view returns (int8 hpMax) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set hpMax.
    */
-  function setHpMax(bytes32 key, uint8 hpMax) internal {
+  function setHpMax(bytes32 key, int8 hpMax) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -281,7 +281,7 @@ library Players {
   /**
    * @notice Set hpMax.
    */
-  function _setHpMax(bytes32 key, uint8 hpMax) internal {
+  function _setHpMax(bytes32 key, int8 hpMax) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -291,29 +291,29 @@ library Players {
   /**
    * @notice Get manaMax.
    */
-  function getManaMax(bytes32 key) internal view returns (uint8 manaMax) {
+  function getManaMax(bytes32 key) internal view returns (int8 manaMax) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get manaMax.
    */
-  function _getManaMax(bytes32 key) internal view returns (uint8 manaMax) {
+  function _getManaMax(bytes32 key) internal view returns (int8 manaMax) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set manaMax.
    */
-  function setManaMax(bytes32 key, uint8 manaMax) internal {
+  function setManaMax(bytes32 key, int8 manaMax) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -323,7 +323,7 @@ library Players {
   /**
    * @notice Set manaMax.
    */
-  function _setManaMax(bytes32 key, uint8 manaMax) internal {
+  function _setManaMax(bytes32 key, int8 manaMax) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -774,10 +774,10 @@ library Players {
   function set(
     bytes32 key,
     address owner,
-    uint8 hp,
-    uint8 mana,
-    uint8 hpMax,
-    uint8 manaMax,
+    int8 hp,
+    int8 mana,
+    int8 hpMax,
+    int8 manaMax,
     bool isAI,
     uint8 dcards,
     string memory name,
@@ -800,10 +800,10 @@ library Players {
   function _set(
     bytes32 key,
     address owner,
-    uint8 hp,
-    uint8 mana,
-    uint8 hpMax,
-    uint8 manaMax,
+    int8 hp,
+    int8 mana,
+    int8 hpMax,
+    int8 manaMax,
     bool isAI,
     uint8 dcards,
     string memory name,
@@ -871,16 +871,16 @@ library Players {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (address owner, uint8 hp, uint8 mana, uint8 hpMax, uint8 manaMax, bool isAI, uint8 dcards) {
+  ) internal pure returns (address owner, int8 hp, int8 mana, int8 hpMax, int8 manaMax, bool isAI, uint8 dcards) {
     owner = (address(Bytes.slice20(_blob, 0)));
 
-    hp = (uint8(Bytes.slice1(_blob, 20)));
+    hp = (int8(uint8(Bytes.slice1(_blob, 20))));
 
-    mana = (uint8(Bytes.slice1(_blob, 21)));
+    mana = (int8(uint8(Bytes.slice1(_blob, 21))));
 
-    hpMax = (uint8(Bytes.slice1(_blob, 22)));
+    hpMax = (int8(uint8(Bytes.slice1(_blob, 22))));
 
-    manaMax = (uint8(Bytes.slice1(_blob, 23)));
+    manaMax = (int8(uint8(Bytes.slice1(_blob, 23))));
 
     isAI = (_toBool(uint8(Bytes.slice1(_blob, 24))));
 
@@ -952,10 +952,10 @@ library Players {
    */
   function encodeStatic(
     address owner,
-    uint8 hp,
-    uint8 mana,
-    uint8 hpMax,
-    uint8 manaMax,
+    int8 hp,
+    int8 mana,
+    int8 hpMax,
+    int8 manaMax,
     bool isAI,
     uint8 dcards
   ) internal pure returns (bytes memory) {
@@ -989,10 +989,10 @@ library Players {
    */
   function encode(
     address owner,
-    uint8 hp,
-    uint8 mana,
-    uint8 hpMax,
-    uint8 manaMax,
+    int8 hp,
+    int8 mana,
+    int8 hpMax,
+    int8 manaMax,
     bool isAI,
     uint8 dcards,
     string memory name,

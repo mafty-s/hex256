@@ -1,6 +1,6 @@
 pragma solidity >=0.8.21;
 
-import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability,CardOnBoards} from "../codegen/index.sol";
+import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 import {GameLogicLib} from "./GameLogicLib.sol";
@@ -24,14 +24,14 @@ library EffectLib {
     }
 
     function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        uint8 damage = GetDamage(ability_key);
-        GameLogicLib.DamageCard(caster,target,damage,true);
+        int8 damage = GetDamage(ability_key);
+        GameLogicLib.DamageCard(caster, target, damage, true);
 
         //todo
     }
 
-    function GetDamage(bytes32 ability_key) internal returns (uint8){
-        uint8 value = Ability.getValue(ability_key);
+    function GetDamage(bytes32 ability_key) internal returns (int8){
+        int8 value = Ability.getValue(ability_key);
         //todo 加上别的影响
         return value;
     }
@@ -41,6 +41,8 @@ library EffectLib {
     }
 
     function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        int8 value = Ability.getValue(ability_key);
+
         //todo
     }
 
@@ -101,11 +103,20 @@ library EffectLib {
     }
 
     function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+        int8 value = Ability.getValue(ability_key);
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(target);
+            GameLogicLib.DrawCard(player_key, value);
+        } else {
+            GameLogicLib.DrawCard(target, value);
+        }
     }
 
     function EffectAddAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        //todo
+        //target.AddAbility(ability_key);
+        if (is_card) {
+            CardOnBoards.pushAbility(target, ability_key);
+        }
     }
 
     function EffectRemoveTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
@@ -136,7 +147,7 @@ library EffectLib {
     }
 
     function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        uint8 curr_mana = Players.getMana(target) + Ability.getValue(ability_key);
+        int8 curr_mana = Players.getMana(target) + Ability.getValue(ability_key);
         Players.setMana(target, curr_mana);
         if (Players.getMana(target) < 0) {
             Players.setMana(target, 0);

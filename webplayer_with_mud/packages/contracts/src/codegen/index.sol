@@ -29,8 +29,6 @@ import { PlayerCardsTemp, PlayerCardsTempTableId } from "./tables/PlayerCardsTem
 import { PlayerActionHistory, PlayerActionHistoryTableId } from "./tables/PlayerActionHistory.sol";
 import { ActionHistory, ActionHistoryData, ActionHistoryTableId } from "./tables/ActionHistory.sol";
 import { Tasks, TasksData, TasksTableId } from "./tables/Tasks.sol";
-import { EndTurnResult, EndTurnResultData, EndTurnResultTableId } from "./tables/EndTurnResult.sol";
 import { AttackResult, AttackResultData, AttackResultTableId } from "./tables/AttackResult.sol";
-import { PlayCardResult, PlayCardResultData, PlayCardResultTableId } from "./tables/PlayCardResult.sol";
 import { Condition, ConditionData, ConditionTableId } from "./tables/Condition.sol";
 import { ConditionCardType, ConditionCardTypeData, ConditionCardTypeTableId } from "./tables/ConditionCardType.sol";
