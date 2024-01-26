@@ -62,6 +62,10 @@ library CardLogicLib {
         return false;
     }
 
+    function AddStatus(bytes32 card_uid, Status status) internal {
+        //todo
+    }
+
     function RemoveStatus(bytes32 card_uid, Status status) internal {
         uint8[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);

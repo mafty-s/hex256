@@ -48,7 +48,7 @@ contract EffectSystem is System {
     }
 
     function EffectAddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectAddStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
     function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -234,6 +234,20 @@ contract EffectSystem is System {
                 Players.setMana(target, value + Players.getMana(target));
             }
         }
+    }
+
+    function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        int8 value = Ability.getValue(ability_key);
+        if (is_card) {
+            if (effect_stat_type == EffectStatType.HP) {
+                CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
+            }
+        } else {
+            if (effect_stat_type == EffectStatType.HP) {
+                Players.setHp(target, value + Players.getHp(target));
+            }
+        }
+        //todo
     }
 
 }

@@ -5,7 +5,9 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {Ability, CardOnBoards, Cards} from "../codegen/index.sol";
-import {AbilityTrigger} from "../codegen/common.sol";
+import {AbilityTrigger,Status} from "../codegen/common.sol";
+import {CardLogicLib} from "../lib/CardLogicLib.sol";
+import {PlayerLogicLib} from "../lib/PlayerLogicLib.sol";
 
 contract AbilitySystem is System {
 
@@ -15,11 +17,21 @@ contract AbilitySystem is System {
 
     //使用技能
     function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
         for (uint i = 0; i < effects.length; i++) {
             SystemSwitch.call(
                 abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card))
             );
+        }
+        //添加状态，如嘲讽等
+        uint8[] memory status = Ability.getStatus(ability_key);
+        for (uint i = 0; i < status.length; i++) {
+            if (is_card) {
+                CardLogicLib.AddStatus(target, (Status)(status[i]));
+            } else {
+                PlayerLogicLib.AddStatus(target, (Status)(status[i]));
+            }
         }
     }
 
@@ -29,7 +41,7 @@ contract AbilitySystem is System {
         bytes32[] memory abilities = Cards.getAbilities(card_config_id);
         for (uint i = 0; i < abilities.length; i++) {
             if (Ability.getTrigger(abilities[i]) == trigger) {
-            TriggerCardAbility(abilities[i], caster, target, is_card);
+                TriggerCardAbility(abilities[i], caster, target, is_card);
             }
         }
     }

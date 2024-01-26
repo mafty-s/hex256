@@ -85,6 +85,10 @@ library PlayerLogicLib {
         return slot;
     }
 
+    function AddStatus(bytes32 card_uid, Status status) internal {
+        //todo
+    }
+
     function ClearStatus(bytes32 card_uid) internal {
         //todo
     }
