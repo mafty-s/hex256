@@ -29,12 +29,14 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GamesExtendedTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0081050001202020200000000000000000000000000000000000000000000000
+  0x00c1070001202020202020000000000000000000000000000000000000000000
 );
 
 struct GamesExtendedData {
   SelectorType selector;
   bytes32 selectorPlayerId;
+  bytes32 selectorCasterUid;
+  bytes32 selectorAbility;
   bytes32 lastPlayed;
   bytes32 lastTarget;
   bytes32 lastDestroyed;
@@ -65,12 +67,14 @@ library GamesExtended {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](5);
+    SchemaType[] memory _valueSchema = new SchemaType[](7);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.BYTES32;
     _valueSchema[3] = SchemaType.BYTES32;
     _valueSchema[4] = SchemaType.BYTES32;
+    _valueSchema[5] = SchemaType.BYTES32;
+    _valueSchema[6] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -89,12 +93,14 @@ library GamesExtended {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](5);
+    fieldNames = new string[](7);
     fieldNames[0] = "selector";
     fieldNames[1] = "selectorPlayerId";
-    fieldNames[2] = "lastPlayed";
-    fieldNames[3] = "lastTarget";
-    fieldNames[4] = "lastDestroyed";
+    fieldNames[2] = "selectorCasterUid";
+    fieldNames[3] = "selectorAbility";
+    fieldNames[4] = "lastPlayed";
+    fieldNames[5] = "lastTarget";
+    fieldNames[6] = "lastDestroyed";
   }
 
   /**
@@ -196,13 +202,97 @@ library GamesExtended {
   }
 
   /**
+   * @notice Get selectorCasterUid.
+   */
+  function getSelectorCasterUid(bytes32 key) internal view returns (bytes32 selectorCasterUid) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get selectorCasterUid.
+   */
+  function _getSelectorCasterUid(bytes32 key) internal view returns (bytes32 selectorCasterUid) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set selectorCasterUid.
+   */
+  function setSelectorCasterUid(bytes32 key, bytes32 selectorCasterUid) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((selectorCasterUid)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set selectorCasterUid.
+   */
+  function _setSelectorCasterUid(bytes32 key, bytes32 selectorCasterUid) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((selectorCasterUid)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get selectorAbility.
+   */
+  function getSelectorAbility(bytes32 key) internal view returns (bytes32 selectorAbility) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get selectorAbility.
+   */
+  function _getSelectorAbility(bytes32 key) internal view returns (bytes32 selectorAbility) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set selectorAbility.
+   */
+  function setSelectorAbility(bytes32 key, bytes32 selectorAbility) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((selectorAbility)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set selectorAbility.
+   */
+  function _setSelectorAbility(bytes32 key, bytes32 selectorAbility) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((selectorAbility)), _fieldLayout);
+  }
+
+  /**
    * @notice Get lastPlayed.
    */
   function getLastPlayed(bytes32 key) internal view returns (bytes32 lastPlayed) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -213,7 +303,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -224,7 +314,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((lastPlayed)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((lastPlayed)), _fieldLayout);
   }
 
   /**
@@ -234,7 +324,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((lastPlayed)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((lastPlayed)), _fieldLayout);
   }
 
   /**
@@ -244,7 +334,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -255,7 +345,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -266,7 +356,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((lastTarget)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((lastTarget)), _fieldLayout);
   }
 
   /**
@@ -276,7 +366,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((lastTarget)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((lastTarget)), _fieldLayout);
   }
 
   /**
@@ -286,7 +376,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -297,7 +387,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -308,7 +398,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((lastDestroyed)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((lastDestroyed)), _fieldLayout);
   }
 
   /**
@@ -318,7 +408,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((lastDestroyed)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((lastDestroyed)), _fieldLayout);
   }
 
   /**
@@ -358,11 +448,21 @@ library GamesExtended {
     bytes32 key,
     SelectorType selector,
     bytes32 selectorPlayerId,
+    bytes32 selectorCasterUid,
+    bytes32 selectorAbility,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
   ) internal {
-    bytes memory _staticData = encodeStatic(selector, selectorPlayerId, lastPlayed, lastTarget, lastDestroyed);
+    bytes memory _staticData = encodeStatic(
+      selector,
+      selectorPlayerId,
+      selectorCasterUid,
+      selectorAbility,
+      lastPlayed,
+      lastTarget,
+      lastDestroyed
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -380,11 +480,21 @@ library GamesExtended {
     bytes32 key,
     SelectorType selector,
     bytes32 selectorPlayerId,
+    bytes32 selectorCasterUid,
+    bytes32 selectorAbility,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
   ) internal {
-    bytes memory _staticData = encodeStatic(selector, selectorPlayerId, lastPlayed, lastTarget, lastDestroyed);
+    bytes memory _staticData = encodeStatic(
+      selector,
+      selectorPlayerId,
+      selectorCasterUid,
+      selectorAbility,
+      lastPlayed,
+      lastTarget,
+      lastDestroyed
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -402,6 +512,8 @@ library GamesExtended {
     bytes memory _staticData = encodeStatic(
       _table.selector,
       _table.selectorPlayerId,
+      _table.selectorCasterUid,
+      _table.selectorAbility,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed
@@ -423,6 +535,8 @@ library GamesExtended {
     bytes memory _staticData = encodeStatic(
       _table.selector,
       _table.selectorPlayerId,
+      _table.selectorCasterUid,
+      _table.selectorAbility,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed
@@ -448,6 +562,8 @@ library GamesExtended {
     returns (
       SelectorType selector,
       bytes32 selectorPlayerId,
+      bytes32 selectorCasterUid,
+      bytes32 selectorAbility,
       bytes32 lastPlayed,
       bytes32 lastTarget,
       bytes32 lastDestroyed
@@ -457,11 +573,15 @@ library GamesExtended {
 
     selectorPlayerId = (Bytes.slice32(_blob, 1));
 
-    lastPlayed = (Bytes.slice32(_blob, 33));
+    selectorCasterUid = (Bytes.slice32(_blob, 33));
 
-    lastTarget = (Bytes.slice32(_blob, 65));
+    selectorAbility = (Bytes.slice32(_blob, 65));
 
-    lastDestroyed = (Bytes.slice32(_blob, 97));
+    lastPlayed = (Bytes.slice32(_blob, 97));
+
+    lastTarget = (Bytes.slice32(_blob, 129));
+
+    lastDestroyed = (Bytes.slice32(_blob, 161));
   }
 
   /**
@@ -478,6 +598,8 @@ library GamesExtended {
     (
       _table.selector,
       _table.selectorPlayerId,
+      _table.selectorCasterUid,
+      _table.selectorAbility,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed
@@ -511,11 +633,22 @@ library GamesExtended {
   function encodeStatic(
     SelectorType selector,
     bytes32 selectorPlayerId,
+    bytes32 selectorCasterUid,
+    bytes32 selectorAbility,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(selector, selectorPlayerId, lastPlayed, lastTarget, lastDestroyed);
+    return
+      abi.encodePacked(
+        selector,
+        selectorPlayerId,
+        selectorCasterUid,
+        selectorAbility,
+        lastPlayed,
+        lastTarget,
+        lastDestroyed
+      );
   }
 
   /**
@@ -527,11 +660,21 @@ library GamesExtended {
   function encode(
     SelectorType selector,
     bytes32 selectorPlayerId,
+    bytes32 selectorCasterUid,
+    bytes32 selectorAbility,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(selector, selectorPlayerId, lastPlayed, lastTarget, lastDestroyed);
+    bytes memory _staticData = encodeStatic(
+      selector,
+      selectorPlayerId,
+      selectorCasterUid,
+      selectorAbility,
+      lastPlayed,
+      lastTarget,
+      lastDestroyed
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

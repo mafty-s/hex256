@@ -199,6 +199,8 @@ export default mudConfig({
             valueSchema: {
                 selector: "SelectorType",
                 selectorPlayerId: "bytes32",
+                selectorCasterUid: "bytes32",
+                selectorAbility: "bytes32",
                 lastPlayed: "bytes32",
                 lastTarget: "bytes32",
                 lastDestroyed: "bytes32",
