@@ -1,7 +1,7 @@
 pragma solidity >=0.8.21;
 
 import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards, CardsData, PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
-import {AbilityTrigger, AbilityTarget, PileType, EffectStatType, Status} from "../codegen/common.sol";
+import {AbilityTrigger, AbilityTarget, PileType, EffectStatType, Status, Effect} from "../codegen/common.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {CardLogicLib} from "./CardLogicLib.sol";
 import {PlayerLogicLib} from "./PlayerLogicLib.sol";
@@ -9,9 +9,94 @@ import "./SlotLib.sol";
 
 library EffectLib {
 
-    function DoEffect(bytes4 selector, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
-        (bool success,) = address(this).call(abi.encodeWithSelector(selector, ability_key, caster, target, is_card));
-        return success;
+    function DoEffect(uint8 selector, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+        if (selector == (uint8)(Effect.AddAbilityActivateBurst)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddAbilityDefendDiscard)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddAbilityPlaySacrifice)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddAbilitySufferDamage)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddAttackRoll)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddAttack)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddGrowth)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddHP)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddMana)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AddSpellDamage)) {
+            //todo
+        } else if (selector == (uint8)(Effect.AttackRedirect)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Attack)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ChangeOwnerSelf)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ClearParalyse)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ClearStatusAll)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ClearTaunt)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ClearTemp)) {
+            //todo
+        } else if (selector == (uint8)(Effect.CreateTemp)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Damage)) {
+            EffectDamage(ability_key, caster, target, is_card);
+        } else if (selector == (uint8)(Effect.DestroyEquip)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Destroy)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Discard)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Draw)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Exhaust)) {
+            //todo
+        } else if (selector == (uint8)(Effect.GainMana)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Heal)) {
+            EffectHeal(ability_key, caster, target, is_card);
+        } else if (selector == (uint8)(Effect.PlayCard)) {
+            //todo
+        } else if (selector == (uint8)(Effect.RemoveAbilityAuraHelp)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ResetStats)) {
+            //todo
+        } else if (selector == (uint8)(Effect.RollD6)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SendDeck)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SendHand)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SetAttack)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SetHP)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SetMana)) {
+            //todo
+        } else if (selector == (uint8)(Effect.ShuffleDeck)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SummonEagle)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SummonEgg)) {
+            //todo
+        } else if (selector == (uint8)(Effect.SummonWolf)) {
+            //todo
+        } else if (selector == (uint8)(Effect.TransformFish)) {
+            //todo
+        } else if (selector == (uint8)(Effect.TransformPhoenix)) {
+            //todo
+        } else if (selector == (uint8)(Effect.Unexhaust)) {
+            //todo
+        } else {
+            revert("unknown effect");
+        }
     }
 
     function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
@@ -267,7 +352,7 @@ library EffectLib {
 
     //------------------------------------------------------------------------------------------------------------
 
-    function gain_mana(bytes32 ability_key, bytes32 target) public returns(bool){
+    function gain_mana(bytes32 ability_key, bytes32 target) public returns (bool){
 
         revert("asd");
         return true;
