@@ -18,172 +18,172 @@ contract EffectSystem is System {
     }
 
 
-    function AddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddAbilityPlaySacrifice(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAbilityPlaySacrifice(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddAbilitySufferDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAbilitySufferDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function AttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Attack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function ChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function ClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function ClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function ClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function ClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function CreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Damage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function DestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Destroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Discard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Draw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Exhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function GainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectMana(ability_key, caster, target, is_card);
     }
 
-    function Heal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function PlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function RemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function ResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function RollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
 //        EffectMana(ability_key, caster, target, is_card);
         //todo
     }
 
-    function ShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function SummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function TransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function TransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectTransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
-    function Unexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 

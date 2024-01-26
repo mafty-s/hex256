@@ -10,87 +10,87 @@ pragma solidity >=0.8.21;
 interface IEffectSystem {
   function DoEffect(bytes4 effect, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilityPlaySacrifice(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddAbilityPlaySacrifice(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilitySufferDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddAbilitySufferDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Attack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function CreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Damage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function DestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Destroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Discard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Draw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Exhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function GainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Heal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function PlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function RemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function RollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function TransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function TransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectTransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Unexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }

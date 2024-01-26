@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
-import {Cards,Players,CardOnBoards,Games} from "../codegen/index.sol";
+import {Cards, Players, CardOnBoards, Games} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, CardType, AbilityTrigger, Action} from "../codegen/common.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip, CardOnBoards} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
@@ -17,7 +17,7 @@ import {Slot, SlotLib} from "../libs/SlotLib.sol";
 contract PlayCardSystem is System {
 
 
-    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public returns (int8, int8){
+    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, uint16 slot_encode, bool skip_cost) public returns (int8, int8){
 
         //        uint8 card_mana = CardOnBoards.getMana(card_key);
         //        PlayersData memory player = Players.get(player_key);
@@ -31,6 +31,8 @@ contract PlayCardSystem is System {
         require(CardOnBoards.getId(card_key) != 0, "Card not found");
         require(Players.getOwner(player_key) == _msgSender(), "Not owner");
 
+//        Slot memory slot = SlotLib.NewSlot(x, y, p);
+
         if (!skip_cost) {
             PayMana(player_key, card_key);
         }
@@ -39,17 +41,17 @@ contract PlayCardSystem is System {
 
         if (CardLogicLib.IsBoardCard(card_key)) {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);
-            SlotLib.SetSlot(card_key, slot);
+//            SlotLib.SetSlot(card_key, slot);
             CardOnBoards.setExhausted(card_key, true);
         } else if (CardLogicLib.IsEquipment(card_key)) {
-            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
-            GameLogicLib.EquipCard(bearer, card_key);
+//            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
+//            GameLogicLib.EquipCard(bearer, card_key);
             CardOnBoards.setExhausted(card_key, true);
         } else if (CardLogicLib.IsSecret(card_key)) {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
-            SlotLib.SetSlot(card_key, slot);
+//            SlotLib.SetSlot(card_key, slot);
         }
 
         //使用触发器触发技能
@@ -67,7 +69,7 @@ contract PlayCardSystem is System {
 
         bytes32[] memory players = Games.getPlayers(game_key);
 
-        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+//        uint16 slot_encode = SlotLib.EncodeSlot(slot);
         uint256 len = PlayerActionHistory.length(game_key);
         bytes32 action_key = keccak256(abi.encode(game_key, len));
         PlayerActionHistory.push(game_key, action_key);

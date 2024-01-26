@@ -107,7 +107,7 @@ export function createSystemCalls(
         }
         //0xb618c8ba
         // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
-        const functionName = convertToPascalCase(name) + '(bytes32,bytes32,bytes32,bool)';
+        const functionName = 'Effect' + convertToPascalCase(name) + '(bytes32,bytes32,bytes32,bool)';
         const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
         console.log(functionName, functionSelector)
 
@@ -436,8 +436,14 @@ export function createSystemCalls(
 
         // function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, Slot memory slot, bool skip_cost) public {
 
+        console.log("game_key", game_key);
+        console.log("player_key", player_key);
         console.log("card_key", card_key);
-        const hash = await worldContract.write.PlayCard([game_key, player_key, card_key, slot, skip_cost]);
+        console.log("slot", slot);
+
+        const slot_encode = EncodeSlot(slot);
+
+        const hash = await worldContract.write.PlayCard([game_key, player_key, card_key, slot_encode, skip_cost]);
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
@@ -610,6 +616,10 @@ export function createSystemCalls(
 
     function DecodeSlotP(slot: number) {
         return Math.floor(slot / 100);
+    }
+
+    function EncodeSlot(slot) {
+        return slot.x + (slot.y * 10) + (slot.p * 100);
     }
 
     let index = 0;
