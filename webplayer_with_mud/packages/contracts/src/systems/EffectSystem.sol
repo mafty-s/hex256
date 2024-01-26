@@ -155,6 +155,7 @@ contract EffectSystem is System {
     }
 
     function SetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+//        EffectMana(ability_key, caster, target, is_card);
         //todo
     }
 

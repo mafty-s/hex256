@@ -93,13 +93,31 @@ export function createSystemCalls(
         return arr_bytes32;
     }
 
+    function convertToPascalCase(str) {
+        return str.replace(/_([a-z])/g, function (match, letter) {
+            return letter.toUpperCase();
+        }).replace(/^([a-z])/, function (match, letter) {
+            return letter.toUpperCase();
+        });
+    }
+
     const getEffectSelector = (name) => {
-        const functionName = name + '(bytes32,bytes32,bytes32,bool)';
+        if (name.length === 0) {
+            return null
+        }
+        //0xb618c8ba
+        // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
+        const functionName = convertToPascalCase(name) + '(bytes32,bytes32,bytes32,bool)';
         const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
+        console.log(functionName, functionSelector)
+
         return functionSelector;
     }
 
     const getEffectSelectorFromArrStr = (arrstr: string) => {
+        if (arrstr.length === 0) {
+            return [];
+        }
         const arr = arrstr.split('|');
         const arr_bytes4 = arr.map((item) => {
             return getEffectSelector(item);
@@ -532,7 +550,7 @@ export function createSystemCalls(
         return tx;
     }
 
-    const testCoinCard = async()=>{
+    const testCoinCard = async () => {
         const a = calculateKeccak256Hash("a")
         const tx = await worldContract.write.TestCoinCard([]);
         await waitForTransaction(tx);

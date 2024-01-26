@@ -6,7 +6,6 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {Decks, Users, CardsData, Cards, Ability, CardOnBoards} from "../codegen/index.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
-import {EffectLib} from "../libs/EffectLib.sol";
 
 
 contract DebugSystem is System {
