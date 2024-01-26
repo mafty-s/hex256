@@ -44,7 +44,7 @@ interface IConfigSystem {
     uint8 manaCost,
     uint8 duration,
     bool exhaust,
-    uint8[] memory effects,
+    bytes4[] memory effects,
     bytes32[] memory conditionsTrigger,
     bytes32[] memory filtersTarget,
     bytes32[] memory chainAbilities

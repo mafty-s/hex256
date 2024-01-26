@@ -21,12 +21,10 @@ contract DebugSystem is System {
     }
 
     function TestCoinCard() public returns (address, bool, bytes4){
-//        bytes32 card_config_key = 0x379e857b757fe42b9362aaf0320578c5478aaa53e6f499d323918ccf58e818e8;
-//        CardsData memory card_data = Cards.get(card_config_key);
-//        bytes32 ability_key = card_data.abilities[0];
-//        string memory ability_name = Ability.getId(ability_key);
-//        EffectLib.test(ability_key, card_config_key);
-//        (bool success,) = address(this).call(abi.encodeWithSelector(IDebugSystem.TestPure.selector));
+        bytes32 card_config_key = 0x379e857b757fe42b9362aaf0320578c5478aaa53e6f499d323918ccf58e818e8;
+        CardsData memory card_data = Cards.get(card_config_key);
+        bytes32 ability_key = card_data.abilities[0];
+        string memory ability_name = Ability.getId(ability_key);
 
         bool success = abi.decode(
             SystemSwitch.call(
