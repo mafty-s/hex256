@@ -3,7 +3,8 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Players, Ability} from "../codegen/index.sol";
+import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards} from "../codegen/index.sol";
+import {Action, TraitData, EffectStatType} from "../codegen/common.sol";
 
 
 contract EffectSystem is System {
@@ -55,7 +56,7 @@ contract EffectSystem is System {
     }
 
     function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectAddTrait(ability_key, caster, target, is_card, TraitData.SpellDamage);
     }
 
     function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -115,7 +116,8 @@ contract EffectSystem is System {
     }
 
     function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        EffectMana(ability_key, caster, target, is_card);
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        EffectMana(ability_key, caster, player_key, is_card);
     }
 
     function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -147,7 +149,7 @@ contract EffectSystem is System {
     }
 
     function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -194,5 +196,44 @@ contract EffectSystem is System {
         if (Players.getMana(target) < 0) {
             Players.setMana(target, 0);
         }
+
+        bytes32 game_key = Players.getGame(target);
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
+        ActionHistory.setActionType(action_key, Action.ChangeMana);
+        ActionHistory.setCardId(action_key, caster);
+        ActionHistory.setValue(action_key, curr_mana);
+        //ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
     }
+
+    function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, TraitData trait) internal {
+        //todo
+    }
+
+
+    function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType effect_stat_type) internal {
+
+        int8 value = Ability.getValue(ability_key);
+
+        if (is_card) {
+            if (effect_stat_type == EffectStatType.HP) {
+                CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
+            }
+            if (effect_stat_type == EffectStatType.Mana) {
+                CardOnBoards.setMana(target, value + CardOnBoards.getMana(target));
+            }
+            if (effect_stat_type == EffectStatType.Attack) {
+                CardOnBoards.setAttack(target, value);
+            }
+        } else {
+            if (effect_stat_type == EffectStatType.HP) {
+                Players.setHp(target, value + Players.getHp(target));
+            }
+            if (effect_stat_type == EffectStatType.Mana) {
+                Players.setMana(target, value + Players.getMana(target));
+            }
+        }
+    }
+
 }

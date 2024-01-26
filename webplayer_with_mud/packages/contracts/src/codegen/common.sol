@@ -145,7 +145,8 @@ enum Action {
   SelectSlot,
   SelectChoice,
   CancelSelect,
-  EndTurn
+  EndTurn,
+  ChangeMana
 }
 
 enum PileType {
@@ -168,4 +169,11 @@ enum EffectStatType {
 
 enum ConditionObjType {
   ConditionCardType
+}
+
+enum TraitData {
+  Dragon,
+  Growth,
+  SpellDamage,
+  Wolf
 }

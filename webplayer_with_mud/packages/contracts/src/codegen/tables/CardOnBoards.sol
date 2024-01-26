@@ -26,7 +26,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant CardOnBoardsTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x006a0c0202010101010101010120202000000000000000000000000000000000
+  0x006a0c0302010101010101010120202000000000000000000000000000000000
 );
 
 struct CardOnBoardsData {
@@ -44,6 +44,7 @@ struct CardOnBoardsData {
   bytes32 playerId;
   uint8[] status;
   bytes32[] ability;
+  uint8[] trait;
 }
 
 library CardOnBoards {
@@ -71,7 +72,7 @@ library CardOnBoards {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](14);
+    SchemaType[] memory _valueSchema = new SchemaType[](15);
     _valueSchema[0] = SchemaType.UINT16;
     _valueSchema[1] = SchemaType.INT8;
     _valueSchema[2] = SchemaType.INT8;
@@ -86,6 +87,7 @@ library CardOnBoards {
     _valueSchema[11] = SchemaType.BYTES32;
     _valueSchema[12] = SchemaType.UINT8_ARRAY;
     _valueSchema[13] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[14] = SchemaType.UINT8_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -104,7 +106,7 @@ library CardOnBoards {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](14);
+    fieldNames = new string[](15);
     fieldNames[0] = "slot";
     fieldNames[1] = "hp";
     fieldNames[2] = "hpOngoing";
@@ -119,6 +121,7 @@ library CardOnBoards {
     fieldNames[11] = "playerId";
     fieldNames[12] = "status";
     fieldNames[13] = "ability";
+    fieldNames[14] = "trait";
   }
 
   /**
@@ -964,6 +967,168 @@ library CardOnBoards {
   }
 
   /**
+   * @notice Get trait.
+   */
+  function getTrait(bytes32 key) internal view returns (uint8[] memory trait) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+  }
+
+  /**
+   * @notice Get trait.
+   */
+  function _getTrait(bytes32 key) internal view returns (uint8[] memory trait) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+  }
+
+  /**
+   * @notice Set trait.
+   */
+  function setTrait(bytes32 key, uint8[] memory trait) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((trait)));
+  }
+
+  /**
+   * @notice Set trait.
+   */
+  function _setTrait(bytes32 key, uint8[] memory trait) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((trait)));
+  }
+
+  /**
+   * @notice Get the length of trait.
+   */
+  function lengthTrait(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of trait.
+   */
+  function _lengthTrait(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of trait.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemTrait(bytes32 key, uint256 _index) internal view returns (uint8) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
+      return (uint8(bytes1(_blob)));
+    }
+  }
+
+  /**
+   * @notice Get an item of trait.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemTrait(bytes32 key, uint256 _index) internal view returns (uint8) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
+      return (uint8(bytes1(_blob)));
+    }
+  }
+
+  /**
+   * @notice Push an element to trait.
+   */
+  function pushTrait(bytes32 key, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Push an element to trait.
+   */
+  function _pushTrait(bytes32 key, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Pop an element from trait.
+   */
+  function popTrait(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /**
+   * @notice Pop an element from trait.
+   */
+  function _popTrait(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /**
+   * @notice Update an element of trait at `_index`.
+   */
+  function updateTrait(bytes32 key, uint256 _index, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of trait at `_index`.
+   */
+  function _updateTrait(bytes32 key, uint256 _index, uint8 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (CardOnBoardsData memory _table) {
@@ -1011,7 +1176,8 @@ library CardOnBoards {
     bytes32 id,
     bytes32 playerId,
     uint8[] memory status,
-    bytes32[] memory ability
+    bytes32[] memory ability,
+    uint8[] memory trait
   ) internal {
     bytes memory _staticData = encodeStatic(
       slot,
@@ -1028,8 +1194,8 @@ library CardOnBoards {
       playerId
     );
 
-    PackedCounter _encodedLengths = encodeLengths(status, ability);
-    bytes memory _dynamicData = encodeDynamic(status, ability);
+    PackedCounter _encodedLengths = encodeLengths(status, ability, trait);
+    bytes memory _dynamicData = encodeDynamic(status, ability, trait);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -1055,7 +1221,8 @@ library CardOnBoards {
     bytes32 id,
     bytes32 playerId,
     uint8[] memory status,
-    bytes32[] memory ability
+    bytes32[] memory ability,
+    uint8[] memory trait
   ) internal {
     bytes memory _staticData = encodeStatic(
       slot,
@@ -1072,8 +1239,8 @@ library CardOnBoards {
       playerId
     );
 
-    PackedCounter _encodedLengths = encodeLengths(status, ability);
-    bytes memory _dynamicData = encodeDynamic(status, ability);
+    PackedCounter _encodedLengths = encodeLengths(status, ability, trait);
+    bytes memory _dynamicData = encodeDynamic(status, ability, trait);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -1100,8 +1267,8 @@ library CardOnBoards {
       _table.playerId
     );
 
-    PackedCounter _encodedLengths = encodeLengths(_table.status, _table.ability);
-    bytes memory _dynamicData = encodeDynamic(_table.status, _table.ability);
+    PackedCounter _encodedLengths = encodeLengths(_table.status, _table.ability, _table.trait);
+    bytes memory _dynamicData = encodeDynamic(_table.status, _table.ability, _table.trait);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -1128,8 +1295,8 @@ library CardOnBoards {
       _table.playerId
     );
 
-    PackedCounter _encodedLengths = encodeLengths(_table.status, _table.ability);
-    bytes memory _dynamicData = encodeDynamic(_table.status, _table.ability);
+    PackedCounter _encodedLengths = encodeLengths(_table.status, _table.ability, _table.trait);
+    bytes memory _dynamicData = encodeDynamic(_table.status, _table.ability, _table.trait);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -1191,7 +1358,7 @@ library CardOnBoards {
   function decodeDynamic(
     PackedCounter _encodedLengths,
     bytes memory _blob
-  ) internal pure returns (uint8[] memory status, bytes32[] memory ability) {
+  ) internal pure returns (uint8[] memory status, bytes32[] memory ability, uint8[] memory trait) {
     uint256 _start;
     uint256 _end;
     unchecked {
@@ -1204,6 +1371,12 @@ library CardOnBoards {
       _end += _encodedLengths.atIndex(1);
     }
     ability = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(2);
+    }
+    trait = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint8());
   }
 
   /**
@@ -1232,7 +1405,7 @@ library CardOnBoards {
       _table.playerId
     ) = decodeStatic(_staticData);
 
-    (_table.status, _table.ability) = decodeDynamic(_encodedLengths, _dynamicData);
+    (_table.status, _table.ability, _table.trait) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -1296,11 +1469,12 @@ library CardOnBoards {
    */
   function encodeLengths(
     uint8[] memory status,
-    bytes32[] memory ability
+    bytes32[] memory ability,
+    uint8[] memory trait
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = PackedCounterLib.pack(status.length * 1, ability.length * 32);
+      _encodedLengths = PackedCounterLib.pack(status.length * 1, ability.length * 32, trait.length * 1);
     }
   }
 
@@ -1308,8 +1482,12 @@ library CardOnBoards {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(uint8[] memory status, bytes32[] memory ability) internal pure returns (bytes memory) {
-    return abi.encodePacked(EncodeArray.encode((status)), EncodeArray.encode((ability)));
+  function encodeDynamic(
+    uint8[] memory status,
+    bytes32[] memory ability,
+    uint8[] memory trait
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(EncodeArray.encode((status)), EncodeArray.encode((ability)), EncodeArray.encode((trait)));
   }
 
   /**
@@ -1332,7 +1510,8 @@ library CardOnBoards {
     bytes32 id,
     bytes32 playerId,
     uint8[] memory status,
-    bytes32[] memory ability
+    bytes32[] memory ability,
+    uint8[] memory trait
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(
       slot,
@@ -1349,8 +1528,8 @@ library CardOnBoards {
       playerId
     );
 
-    PackedCounter _encodedLengths = encodeLengths(status, ability);
-    bytes memory _dynamicData = encodeDynamic(status, ability);
+    PackedCounter _encodedLengths = encodeLengths(status, ability, trait);
+    bytes memory _dynamicData = encodeDynamic(status, ability, trait);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

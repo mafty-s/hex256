@@ -26,7 +26,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant PlayersTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x001a070314010101010101000000000000000000000000000000000000000000
+  0x003a080314010101010101200000000000000000000000000000000000000000
 );
 
 struct PlayersData {
@@ -37,6 +37,7 @@ struct PlayersData {
   int8 manaMax;
   bool isAI;
   uint8 dcards;
+  bytes32 game;
   string name;
   string deck;
   uint8[] status;
@@ -67,7 +68,7 @@ library Players {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](10);
+    SchemaType[] memory _valueSchema = new SchemaType[](11);
     _valueSchema[0] = SchemaType.ADDRESS;
     _valueSchema[1] = SchemaType.INT8;
     _valueSchema[2] = SchemaType.INT8;
@@ -75,9 +76,10 @@ library Players {
     _valueSchema[4] = SchemaType.INT8;
     _valueSchema[5] = SchemaType.BOOL;
     _valueSchema[6] = SchemaType.UINT8;
-    _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[7] = SchemaType.BYTES32;
     _valueSchema[8] = SchemaType.STRING;
-    _valueSchema[9] = SchemaType.UINT8_ARRAY;
+    _valueSchema[9] = SchemaType.STRING;
+    _valueSchema[10] = SchemaType.UINT8_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -96,7 +98,7 @@ library Players {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](10);
+    fieldNames = new string[](11);
     fieldNames[0] = "owner";
     fieldNames[1] = "hp";
     fieldNames[2] = "mana";
@@ -104,9 +106,10 @@ library Players {
     fieldNames[4] = "manaMax";
     fieldNames[5] = "isAI";
     fieldNames[6] = "dcards";
-    fieldNames[7] = "name";
-    fieldNames[8] = "deck";
-    fieldNames[9] = "status";
+    fieldNames[7] = "game";
+    fieldNames[8] = "name";
+    fieldNames[9] = "deck";
+    fieldNames[10] = "status";
   }
 
   /**
@@ -415,6 +418,48 @@ library Players {
     _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((dcards)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get game.
+   */
+  function getGame(bytes32 key) internal view returns (bytes32 game) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get game.
+   */
+  function _getGame(bytes32 key) internal view returns (bytes32 game) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set game.
+   */
+  function setGame(bytes32 key, bytes32 game) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((game)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set game.
+   */
+  function _setGame(bytes32 key, bytes32 game) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((game)), _fieldLayout);
   }
 
   /**
@@ -945,11 +990,12 @@ library Players {
     int8 manaMax,
     bool isAI,
     uint8 dcards,
+    bytes32 game,
     string memory name,
     string memory deck,
     uint8[] memory status
   ) internal {
-    bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards);
+    bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards, game);
 
     PackedCounter _encodedLengths = encodeLengths(name, deck, status);
     bytes memory _dynamicData = encodeDynamic(name, deck, status);
@@ -972,11 +1018,12 @@ library Players {
     int8 manaMax,
     bool isAI,
     uint8 dcards,
+    bytes32 game,
     string memory name,
     string memory deck,
     uint8[] memory status
   ) internal {
-    bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards);
+    bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards, game);
 
     PackedCounter _encodedLengths = encodeLengths(name, deck, status);
     bytes memory _dynamicData = encodeDynamic(name, deck, status);
@@ -998,7 +1045,8 @@ library Players {
       _table.hpMax,
       _table.manaMax,
       _table.isAI,
-      _table.dcards
+      _table.dcards,
+      _table.game
     );
 
     PackedCounter _encodedLengths = encodeLengths(_table.name, _table.deck, _table.status);
@@ -1021,7 +1069,8 @@ library Players {
       _table.hpMax,
       _table.manaMax,
       _table.isAI,
-      _table.dcards
+      _table.dcards,
+      _table.game
     );
 
     PackedCounter _encodedLengths = encodeLengths(_table.name, _table.deck, _table.status);
@@ -1038,7 +1087,11 @@ library Players {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (address owner, int8 hp, int8 mana, int8 hpMax, int8 manaMax, bool isAI, uint8 dcards) {
+  )
+    internal
+    pure
+    returns (address owner, int8 hp, int8 mana, int8 hpMax, int8 manaMax, bool isAI, uint8 dcards, bytes32 game)
+  {
     owner = (address(Bytes.slice20(_blob, 0)));
 
     hp = (int8(uint8(Bytes.slice1(_blob, 20))));
@@ -1052,6 +1105,8 @@ library Players {
     isAI = (_toBool(uint8(Bytes.slice1(_blob, 24))));
 
     dcards = (uint8(Bytes.slice1(_blob, 25)));
+
+    game = (Bytes.slice32(_blob, 26));
   }
 
   /**
@@ -1092,9 +1147,16 @@ library Players {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (PlayersData memory _table) {
-    (_table.owner, _table.hp, _table.mana, _table.hpMax, _table.manaMax, _table.isAI, _table.dcards) = decodeStatic(
-      _staticData
-    );
+    (
+      _table.owner,
+      _table.hp,
+      _table.mana,
+      _table.hpMax,
+      _table.manaMax,
+      _table.isAI,
+      _table.dcards,
+      _table.game
+    ) = decodeStatic(_staticData);
 
     (_table.name, _table.deck, _table.status) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -1130,9 +1192,10 @@ library Players {
     int8 hpMax,
     int8 manaMax,
     bool isAI,
-    uint8 dcards
+    uint8 dcards,
+    bytes32 game
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(owner, hp, mana, hpMax, manaMax, isAI, dcards);
+    return abi.encodePacked(owner, hp, mana, hpMax, manaMax, isAI, dcards, game);
   }
 
   /**
@@ -1176,11 +1239,12 @@ library Players {
     int8 manaMax,
     bool isAI,
     uint8 dcards,
+    bytes32 game,
     string memory name,
     string memory deck,
     uint8[] memory status
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards);
+    bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards, game);
 
     PackedCounter _encodedLengths = encodeLengths(name, deck, status);
     bytes memory _dynamicData = encodeDynamic(name, deck, status);

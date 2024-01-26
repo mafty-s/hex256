@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant ActionHistoryTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0044050001202002010000000000000000000000000000000000000000000000
+  0x0045060001202002010100000000000000000000000000000000000000000000
 );
 
 struct ActionHistoryData {
@@ -38,6 +38,7 @@ struct ActionHistoryData {
   bytes32 target;
   uint16 slot;
   uint8 playerId;
+  int8 value;
 }
 
 library ActionHistory {
@@ -65,12 +66,13 @@ library ActionHistory {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](5);
+    SchemaType[] memory _valueSchema = new SchemaType[](6);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.BYTES32;
     _valueSchema[3] = SchemaType.UINT16;
     _valueSchema[4] = SchemaType.UINT8;
+    _valueSchema[5] = SchemaType.INT8;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -89,12 +91,13 @@ library ActionHistory {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](5);
+    fieldNames = new string[](6);
     fieldNames[0] = "actionType";
     fieldNames[1] = "cardId";
     fieldNames[2] = "target";
     fieldNames[3] = "slot";
     fieldNames[4] = "playerId";
+    fieldNames[5] = "value";
   }
 
   /**
@@ -322,6 +325,48 @@ library ActionHistory {
   }
 
   /**
+   * @notice Get value.
+   */
+  function getValue(bytes32 key) internal view returns (int8 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    return (int8(uint8(bytes1(_blob))));
+  }
+
+  /**
+   * @notice Get value.
+   */
+  function _getValue(bytes32 key) internal view returns (int8 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    return (int8(uint8(bytes1(_blob))));
+  }
+
+  /**
+   * @notice Set value.
+   */
+  function setValue(bytes32 key, int8 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((value)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set value.
+   */
+  function _setValue(bytes32 key, int8 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((value)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (ActionHistoryData memory _table) {
@@ -354,8 +399,16 @@ library ActionHistory {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, Action actionType, bytes32 cardId, bytes32 target, uint16 slot, uint8 playerId) internal {
-    bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId);
+  function set(
+    bytes32 key,
+    Action actionType,
+    bytes32 cardId,
+    bytes32 target,
+    uint16 slot,
+    uint8 playerId,
+    int8 value
+  ) internal {
+    bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId, value);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -369,8 +422,16 @@ library ActionHistory {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, Action actionType, bytes32 cardId, bytes32 target, uint16 slot, uint8 playerId) internal {
-    bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId);
+  function _set(
+    bytes32 key,
+    Action actionType,
+    bytes32 cardId,
+    bytes32 target,
+    uint16 slot,
+    uint8 playerId,
+    int8 value
+  ) internal {
+    bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId, value);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -390,7 +451,8 @@ library ActionHistory {
       _table.cardId,
       _table.target,
       _table.slot,
-      _table.playerId
+      _table.playerId,
+      _table.value
     );
 
     PackedCounter _encodedLengths;
@@ -411,7 +473,8 @@ library ActionHistory {
       _table.cardId,
       _table.target,
       _table.slot,
-      _table.playerId
+      _table.playerId,
+      _table.value
     );
 
     PackedCounter _encodedLengths;
@@ -428,7 +491,7 @@ library ActionHistory {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (Action actionType, bytes32 cardId, bytes32 target, uint16 slot, uint8 playerId) {
+  ) internal pure returns (Action actionType, bytes32 cardId, bytes32 target, uint16 slot, uint8 playerId, int8 value) {
     actionType = Action(uint8(Bytes.slice1(_blob, 0)));
 
     cardId = (Bytes.slice32(_blob, 1));
@@ -438,6 +501,8 @@ library ActionHistory {
     slot = (uint16(Bytes.slice2(_blob, 65)));
 
     playerId = (uint8(Bytes.slice1(_blob, 67)));
+
+    value = (int8(uint8(Bytes.slice1(_blob, 68))));
   }
 
   /**
@@ -451,7 +516,9 @@ library ActionHistory {
     PackedCounter,
     bytes memory
   ) internal pure returns (ActionHistoryData memory _table) {
-    (_table.actionType, _table.cardId, _table.target, _table.slot, _table.playerId) = decodeStatic(_staticData);
+    (_table.actionType, _table.cardId, _table.target, _table.slot, _table.playerId, _table.value) = decodeStatic(
+      _staticData
+    );
   }
 
   /**
@@ -483,9 +550,10 @@ library ActionHistory {
     bytes32 cardId,
     bytes32 target,
     uint16 slot,
-    uint8 playerId
+    uint8 playerId,
+    int8 value
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(actionType, cardId, target, slot, playerId);
+    return abi.encodePacked(actionType, cardId, target, slot, playerId, value);
   }
 
   /**
@@ -499,9 +567,10 @@ library ActionHistory {
     bytes32 cardId,
     bytes32 target,
     uint16 slot,
-    uint8 playerId
+    uint8 playerId,
+    int8 value
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId);
+    bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId, value);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
