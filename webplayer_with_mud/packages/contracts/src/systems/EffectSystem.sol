@@ -36,6 +36,8 @@ contract EffectSystem is System {
     }
 
     function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        uint dice = 6;
+
         //todo
     }
 
