@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
-import {Decks, Ability} from "../codegen/index.sol";
+import {Decks, Ability, AbilityExtend} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 import {CardRaritySingleton} from "../codegen/index.sol";
 
@@ -86,9 +86,9 @@ contract ConfigSystem is System {
         Ability.setEffects(key, effects);
         Ability.setTrigger(key, trigger);
         Ability.setTarget(key, target);
-        Ability.setConditionsTrigger(key, conditionsTrigger);
-        Ability.setFiltersTarget(key, filtersTarget);
-        Ability.setChainAbilities(key, chainAbilities);
+        AbilityExtend.setConditionsTrigger(key, conditionsTrigger);
+        AbilityExtend.setFiltersTarget(key, filtersTarget);
+        AbilityExtend.setChainAbilities(key, chainAbilities);
     }
 
 

@@ -13,6 +13,7 @@ import { Users, UsersData, UsersTableId } from "./tables/Users.sol";
 import { UsersExtended, UsersExtendedData, UsersExtendedTableId } from "./tables/UsersExtended.sol";
 import { Cards, CardsData, CardsTableId } from "./tables/Cards.sol";
 import { Ability, AbilityData, AbilityTableId } from "./tables/Ability.sol";
+import { AbilityExtend, AbilityExtendData, AbilityExtendTableId } from "./tables/AbilityExtend.sol";
 import { CardOnBoards, CardOnBoardsData, CardOnBoardsTableId } from "./tables/CardOnBoards.sol";
 import { Decks, DecksData, DecksTableId } from "./tables/Decks.sol";
 import { Games, GamesData, GamesTableId } from "./tables/Games.sol";

@@ -6,8 +6,8 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {Ability, CardOnBoards, Cards} from "../codegen/index.sol";
 import {AbilityTrigger,Status} from "../codegen/common.sol";
-import {CardLogicLib} from "../lib/CardLogicLib.sol";
-import {PlayerLogicLib} from "../lib/PlayerLogicLib.sol";
+import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract AbilitySystem is System {
 

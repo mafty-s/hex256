@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards} from "../codegen/index.sol";
+import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType} from "../codegen/common.sol";
 
 
@@ -166,15 +166,18 @@ contract EffectSystem is System {
     }
 
     function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        bytes32 flame_eagle = 0xeadaa9330dc55ff4f5a4be2783106cf919f0dccf372920ccfd645f6c9dbf8c0d;
+        EffectSummon(ability_key, caster, target, is_card, flame_eagle);
     }
 
     function EffectSummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        bytes32 phoenix_egg = 0xaf3ece100d5f745760efadfedc743cbe6077114f7105f0e642e09d1e8cb38de4;
+        EffectSummon(ability_key, caster, target, is_card, phoenix_egg);
     }
 
     function EffectSummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        bytes32 wolf_baby = 0xc0fd58a3602c8586b2e1583e65cef9c8e3dbc8bc36449e7fe2666856e4a1e554;
+        EffectSummon(ability_key, caster, target, is_card, wolf_baby);
     }
 
     function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -190,6 +193,8 @@ contract EffectSystem is System {
     }
 
     //----------------------------------------------------------------------------------------------------------------
+
+    //mana相关
     function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
         int8 curr_mana = Players.getMana(target) + Ability.getValue(ability_key);
         Players.setMana(target, curr_mana);
@@ -207,47 +212,56 @@ contract EffectSystem is System {
         //ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
     }
 
+    //添加特性
     function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, TraitData trait) internal {
         //todo
     }
 
-
-    function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType effect_stat_type) internal {
+    //设置属性点
+    function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType stat) internal {
 
         int8 value = Ability.getValue(ability_key);
 
         if (is_card) {
-            if (effect_stat_type == EffectStatType.HP) {
+            if (stat == EffectStatType.HP) {
                 CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
             }
-            if (effect_stat_type == EffectStatType.Mana) {
+            if (stat == EffectStatType.Mana) {
                 CardOnBoards.setMana(target, value + CardOnBoards.getMana(target));
             }
-            if (effect_stat_type == EffectStatType.Attack) {
+            if (stat == EffectStatType.Attack) {
                 CardOnBoards.setAttack(target, value);
             }
         } else {
-            if (effect_stat_type == EffectStatType.HP) {
+            if (stat == EffectStatType.HP) {
                 Players.setHp(target, value + Players.getHp(target));
             }
-            if (effect_stat_type == EffectStatType.Mana) {
+            if (stat == EffectStatType.Mana) {
                 Players.setMana(target, value + Players.getMana(target));
             }
         }
     }
 
-    function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+    //属性点加成
+    function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType stat) internal {
         int8 value = Ability.getValue(ability_key);
         if (is_card) {
-            if (effect_stat_type == EffectStatType.HP) {
+            if (stat == EffectStatType.HP) {
                 CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
             }
         } else {
-            if (effect_stat_type == EffectStatType.HP) {
+            if (stat == EffectStatType.HP) {
                 Players.setHp(target, value + Players.getHp(target));
             }
         }
         //todo
+    }
+
+    //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
+    function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
+        //todo 创建一张卡
+        //todo 创建一个随机slot
+        //todo 放到牌区
     }
 
 }
