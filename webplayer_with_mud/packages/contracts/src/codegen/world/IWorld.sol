@@ -5,7 +5,7 @@ pragma solidity >=0.8.21;
 
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
-import { IAblilitySystem } from "./IAblilitySystem.sol";
+import { IAbilitySystem } from "./IAbilitySystem.sol";
 import { IActionSystem } from "./IActionSystem.sol";
 import { IAttackSystem } from "./IAttackSystem.sol";
 import { IConditionSystem } from "./IConditionSystem.sol";
@@ -33,7 +33,7 @@ import { IUsersSystem } from "./IUsersSystem.sol";
  */
 interface IWorld is
   IBaseWorld,
-  IAblilitySystem,
+  IAbilitySystem,
   IActionSystem,
   IAttackSystem,
   IConditionSystem,

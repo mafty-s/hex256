@@ -8,126 +8,89 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IEffectSystem {
-  function DoEffect(
-    bytes4 effect,
-    bytes32 game,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    bool is_card
-  ) external;
+  function DoEffect(bytes4 effect, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilityActivateBurst(
-    bytes32 game,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    bool is_card
-  ) external;
+  function AddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilityDefendDiscard(
-    bytes32 game,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    bool is_card
-  ) external;
+  function AddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilityPlaySacrifice(
-    bytes32 game,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    bool is_card
-  ) external;
+  function AddAbilityPlaySacrifice(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAbilitySufferDamage(
-    bytes32 game,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    bool is_card
-  ) external;
+  function AddAbilitySufferDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAttackRoll(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddAttack(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddGrowth(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddHP(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddMana(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AddSpellDamage(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function AttackRedirect(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function AttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Attack(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Attack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ChangeOwnerSelf(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearParalyse(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearStatusAll(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearTaunt(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ClearTemp(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function CreateTemp(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function CreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Damage(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Damage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function DestroyEquip(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function DestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Destroy(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Destroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Discard(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Discard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Draw(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Draw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Exhaust(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Exhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function GainMana(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function GainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Heal(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Heal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function PlayCard(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function PlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function RemoveAbilityAuraHelp(
-    bytes32 game,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    bool is_card
-  ) external;
+  function RemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ResetStats(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function RollD6(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function RollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SendDeck(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SendHand(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SetAttack(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SetHP(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SetMana(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function ShuffleDeck(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function ShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SummonEagle(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SummonEgg(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function SummonWolf(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function SummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function TransformFish(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function TransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function TransformPhoenix(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function TransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function Unexhaust(bytes32 game, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function Unexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }
