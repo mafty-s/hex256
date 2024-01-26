@@ -12,5 +12,7 @@ interface IDebugSystem {
 
   function IsEquipment(bytes32 key) external view returns (bool);
 
-  function TestCoinCard() external;
+  function TestCoinCard() external returns (address, bool, bytes4);
+
+  function TestPure() external pure returns (bool);
 }

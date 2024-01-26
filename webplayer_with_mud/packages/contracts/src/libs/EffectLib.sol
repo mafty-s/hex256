@@ -1,102 +1,108 @@
 pragma solidity >=0.8.21;
 
-import {Cards, Games, Ability, Players, PlayerCardsBoard, Ability, CardOnBoards, CardsData, PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
+import {Cards, Games, Ability, Players, Ability, CardOnBoards, CardsData, PlayerCardsDeck, PlayerCardsHand} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget, PileType, EffectStatType, Status, Effect} from "../codegen/common.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {CardLogicLib} from "./CardLogicLib.sol";
-import {PlayerLogicLib} from "./PlayerLogicLib.sol";
-import "./SlotLib.sol";
+//import {PlayerLogicLib} from "./PlayerLogicLib.sol";
+import {Slot} from "./SlotLib.sol";
 
 library EffectLib {
 
     function DoEffect(uint8 selector, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+
+
         if (selector == (uint8)(Effect.AddAbilityActivateBurst)) {
             //todo
-        } else if (selector == (uint8)(Effect.AddAbilityDefendDiscard)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddAbilityPlaySacrifice)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddAbilitySufferDamage)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddAttackRoll)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddAttack)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddGrowth)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddHP)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddMana)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AddSpellDamage)) {
-            //todo
-        } else if (selector == (uint8)(Effect.AttackRedirect)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Attack)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ChangeOwnerSelf)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ClearParalyse)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ClearStatusAll)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ClearTaunt)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ClearTemp)) {
-            //todo
-        } else if (selector == (uint8)(Effect.CreateTemp)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Damage)) {
-            EffectDamage(ability_key, caster, target, is_card);
-        } else if (selector == (uint8)(Effect.DestroyEquip)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Destroy)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Discard)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Draw)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Exhaust)) {
-            //todo
-        } else if (selector == (uint8)(Effect.GainMana)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Heal)) {
-            EffectHeal(ability_key, caster, target, is_card);
-        } else if (selector == (uint8)(Effect.PlayCard)) {
-            //todo
-        } else if (selector == (uint8)(Effect.RemoveAbilityAuraHelp)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ResetStats)) {
-            //todo
-        } else if (selector == (uint8)(Effect.RollD6)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SendDeck)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SendHand)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SetAttack)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SetHP)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SetMana)) {
-            //todo
-        } else if (selector == (uint8)(Effect.ShuffleDeck)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SummonEagle)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SummonEgg)) {
-            //todo
-        } else if (selector == (uint8)(Effect.SummonWolf)) {
-            //todo
-        } else if (selector == (uint8)(Effect.TransformFish)) {
-            //todo
-        } else if (selector == (uint8)(Effect.TransformPhoenix)) {
-            //todo
-        } else if (selector == (uint8)(Effect.Unexhaust)) {
-            //todo
-        } else {
-            revert("unknown effect");
         }
+
+//        if (selector == (uint8)(Effect.AddAbilityActivateBurst)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddAbilityDefendDiscard)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddAbilityPlaySacrifice)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddAbilitySufferDamage)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddAttackRoll)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddAttack)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddGrowth)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddHP)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddMana)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AddSpellDamage)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.AttackRedirect)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Attack)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ChangeOwnerSelf)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ClearParalyse)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ClearStatusAll)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ClearTaunt)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ClearTemp)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.CreateTemp)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Damage)) {
+//            EffectDamage(ability_key, caster, target, is_card);
+//        } else if (selector == (uint8)(Effect.DestroyEquip)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Destroy)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Discard)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Draw)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Exhaust)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.GainMana)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Heal)) {
+//            EffectHeal(ability_key, caster, target, is_card);
+//        } else if (selector == (uint8)(Effect.PlayCard)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.RemoveAbilityAuraHelp)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ResetStats)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.RollD6)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SendDeck)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SendHand)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SetAttack)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SetHP)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SetMana)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.ShuffleDeck)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SummonEagle)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SummonEgg)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.SummonWolf)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.TransformFish)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.TransformPhoenix)) {
+//            //todo
+//        } else if (selector == (uint8)(Effect.Unexhaust)) {
+//            //todo
+//        } else {
+//            revert("unknown effect");
+//        }
     }
 
     function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
@@ -226,9 +232,9 @@ library EffectLib {
             }
         } else {
             if (status == Status.NONE) {
-                PlayerLogicLib.ClearStatus(target);
+//                PlayerLogicLib.ClearStatus(target);
             } else {
-                PlayerLogicLib.RemoveStatus(target, status);
+//                PlayerLogicLib.RemoveStatus(target, status);
             }
         }
     }
@@ -237,7 +243,7 @@ library EffectLib {
         //todo
 
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
-        Slot memory slot = PlayerLogicLib.GetRandomEmptySlot(player_key);
+//        Slot memory slot = PlayerLogicLib.GetRandomEmptySlot(player_key);
 
 //        Game game = logic.GetGameData();
 //        Player player = game.GetPlayer(caster.player_id);
@@ -359,9 +365,11 @@ library EffectLib {
     }
 
     function test(bytes32 ability_key, bytes32 card_config_key) internal {
-        bytes4 selector = 0x3f9d84e9;//Ability.getEffects(ability_key)[0];
+        bytes4 selector = 0x39d4d407;//Ability.getEffects(ability_key)[0];
 
         (bool success,) = address(this).call(abi.encodeWithSelector(selector, ability_key, card_config_key));
 //        require(success, "DebugSystem: TestCoinCard failed");
     }
+
+
 }
