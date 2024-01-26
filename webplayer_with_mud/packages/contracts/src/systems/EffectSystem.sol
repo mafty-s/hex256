@@ -40,11 +40,11 @@ contract EffectSystem is System {
     }
 
     function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectAddTrait(ability_key, caster, target, is_card, TraitData.Growth);
     }
 
     function EffectAddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -52,7 +52,7 @@ contract EffectSystem is System {
     }
 
     function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Mana);
     }
 
     function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -249,12 +249,17 @@ contract EffectSystem is System {
             if (stat == EffectStatType.HP) {
                 CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
             }
+            if (stat == EffectStatType.Mana) {
+                //todo
+            }
         } else {
             if (stat == EffectStatType.HP) {
                 Players.setHp(target, value + Players.getHp(target));
             }
+            if (stat == EffectStatType.Mana) {
+                Players.setMana(target, value + Players.getMana(target));
+            }
         }
-        //todo
     }
 
     //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
