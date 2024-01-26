@@ -153,11 +153,11 @@ contract EffectSystem is System {
     }
 
     function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        EffectSetStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
     function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-//        EffectMana(ability_key, caster, target, is_card);
+        EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Mana);
         //todo
     }
 
@@ -181,11 +181,13 @@ contract EffectSystem is System {
     }
 
     function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        bytes32 fish = 0x922d0a331fd751dd3f9f56ab05f7acb5b6a7080eb367ecbe613cc632beee0576;
+        EffectTransform(ability_key, caster, target, is_card, fish);
     }
 
     function EffectTransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        bytes32 phoenix = 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071;
+        EffectTransform(ability_key, caster, target, is_card, phoenix);
     }
 
     function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -269,4 +271,10 @@ contract EffectSystem is System {
         //todo 放到牌区
     }
 
+    //把一张牌变为另一张牌
+    function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
+        if (is_card) {
+            //logic.TransformCard(target, transform_to);
+        }
+    }
 }
