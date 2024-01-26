@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IPlayCardSystem} from "../codegen/world/IPlayCardSystem.sol";
 import {Decks, Users, CardsData, Cards, Ability, CardOnBoards} from "../codegen/index.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 
@@ -37,6 +38,10 @@ contract DebugSystem is System {
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.UseAbility, (ability_key, on_board_card_key, on_board_card_key, false))
         );
+
+
+
+
     }
 
 }
