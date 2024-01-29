@@ -10,16 +10,6 @@ pragma solidity >=0.8.21;
 interface IEffectSystem {
   function DoEffect(bytes4 effect, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectAddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectAddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectAddAbilityPlaySacrifice(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectAddAbilitySufferDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
@@ -81,16 +71,6 @@ interface IEffectSystem {
   function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectSummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectSummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectTransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }

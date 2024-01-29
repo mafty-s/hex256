@@ -227,6 +227,9 @@ export function createSystemCalls(
     const initAbility = async (
         id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str, conditionsTrigger: string, filtersTarget: string, chainAbilities: string) => {
 
+        const key = calculateKeccak256Hash(id);
+        console.log("initAbility", id, key);
+
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget(convertToEnumFormat(target));
 
@@ -250,6 +253,7 @@ export function createSystemCalls(
         ]);
 
         await waitForTransaction(tx);
+
         return tx;
     }
 

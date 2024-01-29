@@ -178,3 +178,10 @@ enum TraitData {
   SpellDamage,
   Wolf
 }
+
+enum EffectAttackerType {
+  Self,
+  AbilityTriggerer,
+  LastPlayed,
+  LastTargeted
+}

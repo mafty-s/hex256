@@ -3,7 +3,7 @@ import {mudConfig} from "@latticexyz/world/register";
 export default mudConfig({
     enums: {
         SelectorType: ["NONE", "SELECT_TARGET", "SELECTOR_CARD", "SELECTOR_CHOICE"],
-        Status: ["NONE","Silenced", "ATTACK_BONUS", "HP_BONUS", "STEALTH", "INVINCIBILITY", "SHELL", "PROTECTION", "PROTECTED", "ARMOR", "SPELL_IMMUNITY", "DEATHTOUCH", "FURY", "INTIMIDATE", "FLYING", "TRAMPLE", "LIFE_STEAL", "SILENCED", "PARALYSED", "POISONED", "SLEEP"],
+        Status: ["NONE", "Silenced", "ATTACK_BONUS", "HP_BONUS", "STEALTH", "INVINCIBILITY", "SHELL", "PROTECTION", "PROTECTED", "ARMOR", "SPELL_IMMUNITY", "DEATHTOUCH", "FURY", "INTIMIDATE", "FLYING", "TRAMPLE", "LIFE_STEAL", "SILENCED", "PARALYSED", "POISONED", "SLEEP"],
         RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
@@ -20,6 +20,7 @@ export default mudConfig({
         EffectStatType: ["None", "Attack", "HP", "Mana"],
         ConditionObjType: ["ConditionCardType"],
         TraitData: ["Dragon", "Growth", "SpellDamage", "Wolf"],
+        EffectAttackerType: ["Self", "AbilityTriggerer", "LastPlayed", "LastTargeted"],
         // Effect: [
         //     "AddAbilityActivateBurst",
         //     "AddAbilityDefendDiscard",
@@ -152,7 +153,7 @@ export default mudConfig({
                 status: "uint8[]",
             },
         },
-        AbilityExtend:{
+        AbilityExtend: {
             valueSchema: {
                 conditionsTrigger: "bytes32[]",
                 filtersTarget: "bytes32[]",
