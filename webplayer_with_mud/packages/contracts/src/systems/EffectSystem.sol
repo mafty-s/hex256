@@ -125,13 +125,7 @@ contract EffectSystem is System {
         //todo
     }
 
-    function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
-    function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
     function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);

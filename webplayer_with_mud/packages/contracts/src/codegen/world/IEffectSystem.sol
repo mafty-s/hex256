@@ -60,10 +60,6 @@ interface IEffectSystem {
 
   function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;

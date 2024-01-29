@@ -3,10 +3,11 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
-import {Action, TraitData, EffectStatType} from "../codegen/common.sol";
+import {Action, PileType} from "../codegen/common.sol";
 import {MathLib} from "../libs/MathLib.sol";
 import {Cards, CardsData, CardOnBoards} from "../codegen/index.sol";
-import {PlayerCardsDeck} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp} from "../codegen/index.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract EffectSystem2 is System {
 
@@ -36,6 +37,14 @@ contract EffectSystem2 is System {
         EffectTransform(ability_key, caster, target, is_card, phoenix);
     }
 
+    function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        EffectSendPile(ability_key, caster, target, is_card, PileType.Deck);
+    }
+
+    function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        EffectSendPile(ability_key, caster, target, is_card, PileType.Hand);
+    }
+
     //----------------------------------------------------------------------------------------------------------------
 
     //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
@@ -60,6 +69,24 @@ contract EffectSystem2 is System {
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
         if (is_card) {
             CardOnBoards.setId(target, card_config_key);
+        }
+    }
+
+    //将卡牌移动到指定区域，手牌区、弃牌区、显示区等
+    function EffectSendPile(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, PileType pile_type) internal {
+        bytes32 player_key = CardOnBoards.getPlayerId(target);
+        if (pile_type == PileType.Deck) {
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+            PlayerCardsDeck.pushValue(player_key, target);
+        } else if (pile_type == PileType.Hand) {
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+            PlayerCardsHand.pushValue(player_key, target);
+        } else if (pile_type == PileType.Discard) {
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+            PlayerCardsDiscard.pushValue(player_key, target);
+        } else if (pile_type == PileType.Temp) {
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+            PlayerCardsTemp.pushValue(player_key, target);
         }
     }
 }
