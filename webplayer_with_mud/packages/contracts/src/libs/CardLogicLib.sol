@@ -78,7 +78,7 @@ library CardLogicLib {
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
             if (card_status[i] == uint8(status)) {
-                CardOnBoards.updateStatus(card_uid, i, uint8(Status.NONE));
+                CardOnBoards.updateStatus(card_uid, i, uint8(Status.None));
             }
         }
     }

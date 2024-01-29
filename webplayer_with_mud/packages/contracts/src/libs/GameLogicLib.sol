@@ -23,23 +23,23 @@ library GameLogicLib {
     }
 
     function DamageCard(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
-        if (CardLogicLib.HasStatus(target, Status.INVINCIBILITY)) {
+        if (CardLogicLib.HasStatus(target, Status.Invicibility)) {
             return;
         }
         bytes32 attack_card_config_key = CardOnBoards.getId(attacker);
-        if (CardLogicLib.HasStatus(target, Status.SPELL_IMMUNITY) && Cards.getCardType(attack_card_config_key) != CardType.CHARACTER) {
+        if (CardLogicLib.HasStatus(target, Status.SpellImmunity) && Cards.getCardType(attack_card_config_key) != CardType.CHARACTER) {
             return;
         }
 
         //Shell
-        bool doublelife = CardLogicLib.HasStatus(target, Status.SHELL);
+        bool doublelife = CardLogicLib.HasStatus(target, Status.Shell);
         if (doublelife && value > 0) {
-            CardLogicLib.RemoveStatus(target, Status.SHELL);
+            CardLogicLib.RemoveStatus(target, Status.Shell);
             return;
         }
 
         //Armor
-        if (!spell_damage && CardLogicLib.HasStatus(target, Status.ARMOR)) {
+        if (!spell_damage && CardLogicLib.HasStatus(target, Status.Armor)) {
             //todo value = Mathf.Max(value - target.GetStatusValue(StatusType.Armor), 0);
         }
 

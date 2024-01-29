@@ -6,6 +6,7 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType, EffectAttackerType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract EffectSystem is System {
 
@@ -62,7 +63,11 @@ contract EffectSystem is System {
     }
 
     function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        if (is_card) {
+            CardLogicLib.ClearStatus(target);
+        } else {
+            PlayerLogicLib.ClearStatus(target);
+        }
     }
 
     function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -75,6 +80,14 @@ contract EffectSystem is System {
     }
 
     function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+//        if (is_card) {
+//            if (CardLogicLib.IsEquipment(target)) {
+//                GameLogicLib.DiscardCard(target);
+//            } else {
+//                bytes32 equipped_uid = CardOnBoards.getEquippedUid(target);
+//                GameLogicLib.DiscardCard(equipped_uid);
+//            }
+//        }
         //todo
     }
 

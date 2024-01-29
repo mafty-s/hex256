@@ -98,7 +98,7 @@ library PlayerLogicLib {
         uint8[] memory player_status = Players.getStatus(player_uid);
         for (uint i = 0; i < player_status.length; i++) {
             if (player_status[i] == uint8(status)) {
-                Players.updateStatus(player_uid, i, uint8(Status.NONE));
+                Players.updateStatus(player_uid, i, uint8(Status.None));
             }
         }
     }

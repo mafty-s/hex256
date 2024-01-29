@@ -131,7 +131,7 @@ library BaseLogicLib {
         if (!CardLogicLib.IsOnBoard(attacker) || !CardLogicLib.IsCharacter(attacker))
             return false;
 
-        if (CardLogicLib.HasStatus(target, Status.PROTECTED) && !CardLogicLib.HasStatus(attacker, Status.FLYING))
+        if (CardLogicLib.HasStatus(target, Status.Protected) && !CardLogicLib.HasStatus(attacker, Status.Flying))
             return false;
 
         return true;

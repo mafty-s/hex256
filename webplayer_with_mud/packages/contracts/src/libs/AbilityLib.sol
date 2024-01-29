@@ -3,8 +3,6 @@ pragma solidity >=0.8.21;
 import "../codegen/common.sol";
 import {Cards, Games, Ability, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
-
-import {EffectLib} from "./EffectLib.sol";
 import {CardLogicLib} from "./CardLogicLib.sol";
 
 library AbilityLib {
@@ -102,11 +100,11 @@ library AbilityLib {
 
     function CanTargetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
 
-        if (CardLogicLib.HasStatus(target, Status.STEALTH)) {
+        if (CardLogicLib.HasStatus(target, Status.Stealth)) {
             return false; //Hidden
         }
 
-        if (CardLogicLib.HasStatus(target, Status.SPELL_IMMUNITY)) {
+        if (CardLogicLib.HasStatus(target, Status.SpellImmunity)) {
             return false; ////Spell immunity
         }
 

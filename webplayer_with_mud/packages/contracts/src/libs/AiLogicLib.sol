@@ -3,8 +3,6 @@ pragma solidity >=0.8.21;
 import "../codegen/common.sol";
 import {Cards, Games, Ability, PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
-
-import {EffectLib} from "./EffectLib.sol";
 import {PlayerLogicLib} from "./PlayerLogicLib.sol";
 import {GameLogicLib} from "./GameLogicLib.sol";
 import {BaseLogicLib} from "./BaseLogicLib.sol";

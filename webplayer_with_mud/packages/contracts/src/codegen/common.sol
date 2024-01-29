@@ -9,30 +9,6 @@ enum SelectorType {
   SELECTOR_CHOICE
 }
 
-enum Status {
-  NONE,
-  Silenced,
-  ATTACK_BONUS,
-  HP_BONUS,
-  STEALTH,
-  INVINCIBILITY,
-  SHELL,
-  PROTECTION,
-  PROTECTED,
-  ARMOR,
-  SPELL_IMMUNITY,
-  DEATHTOUCH,
-  FURY,
-  INTIMIDATE,
-  FLYING,
-  TRAMPLE,
-  LIFE_STEAL,
-  SILENCED,
-  PARALYSED,
-  POISONED,
-  SLEEP
-}
-
 enum RarityType {
   COMMON,
   UNCOMMON,
@@ -184,4 +160,27 @@ enum EffectAttackerType {
   AbilityTriggerer,
   LastPlayed,
   LastTargeted
+}
+
+enum Status {
+  None,
+  Armor,
+  Attack,
+  Deathtouch,
+  Flying,
+  Fury,
+  HP,
+  Intimidate,
+  Invicibility,
+  Lifesteal,
+  Paralysed,
+  Poisoned,
+  Protected,
+  Shell,
+  Silenced,
+  Sleep,
+  SpellImmunity,
+  Stealth,
+  Taunt,
+  Trample
 }
