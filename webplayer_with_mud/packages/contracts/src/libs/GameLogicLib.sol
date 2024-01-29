@@ -55,7 +55,7 @@ library GameLogicLib {
 
     }
 
-    function DamagePlayer(bytes32 player, uint256 value) internal {
+    function DamagePlayer(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
         //        player.hp -= value;
         //        player.hp = Math.clamp(player.hp, 0, player.hp_max);
         //todo

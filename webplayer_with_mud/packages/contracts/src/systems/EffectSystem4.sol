@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Players, Ability, GamesExtended, PlayerActionHistory, ActionHistory, CardOnBoards} from "../codegen/index.sol";
-import {Action, EffectAttackerType} from "../codegen/common.sol";
+import {Action, EffectAttackerType, TraitData} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
@@ -20,6 +20,17 @@ contract EffectSystem4 is System {
 
     function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         RunAttacker(ability_key, caster, target, is_card, EffectAttackerType.Self);
+    }
+
+
+    function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        int8 value = Ability.getValue(ability_key);
+        int8 damage = GetDamage(caster, value, is_card, TraitData.SpellDamage);
+        if (is_card) {
+            GameLogicLib.DamageCard(caster, target, damage, true);
+        } else {
+            GameLogicLib.DamagePlayer(caster, target, damage, true);
+        }
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -50,5 +61,10 @@ contract EffectSystem4 is System {
             return GamesExtended.getLastTarget(game_key);
         }
         return 0x0000000000000000000000000000000000000000000000000000000000000000;
+    }
+
+    function GetDamage(bytes32 caster, int8 value, bool is_card, TraitData bonus_damage) internal returns (int8){
+        int8 damage = value + CardLogicLib.GetTraitValue(caster, bonus_damage);
+        return damage;
     }
 }

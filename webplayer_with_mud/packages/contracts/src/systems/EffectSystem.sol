@@ -77,11 +77,6 @@ contract EffectSystem is System {
         }
     }
 
-
-    function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
-
     function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
 //        if (is_card) {
 //            if (CardLogicLib.IsEquipment(target)) {
