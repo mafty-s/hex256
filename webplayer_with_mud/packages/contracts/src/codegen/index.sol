@@ -20,6 +20,7 @@ import { Games, GamesData, GamesTableId } from "./tables/Games.sol";
 import { GamesExtended, GamesExtendedData, GamesExtendedTableId } from "./tables/GamesExtended.sol";
 import { Matches, MatchesData, MatchesTableId } from "./tables/Matches.sol";
 import { Players, PlayersData, PlayersTableId } from "./tables/Players.sol";
+import { PlayerSlots, PlayerSlotsTableId } from "./tables/PlayerSlots.sol";
 import { PlayerCardsDeck, PlayerCardsDeckTableId } from "./tables/PlayerCardsDeck.sol";
 import { PlayerCardsHand, PlayerCardsHandTableId } from "./tables/PlayerCardsHand.sol";
 import { PlayerCardsBoard, PlayerCardsBoardTableId } from "./tables/PlayerCardsBoard.sol";
