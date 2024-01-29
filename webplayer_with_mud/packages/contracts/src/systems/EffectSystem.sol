@@ -44,6 +44,7 @@ contract EffectSystem is System {
     }
 
     function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+
         //todo
     }
 

@@ -2,10 +2,11 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
+import {Players, Ability, Games, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType} from "../codegen/common.sol";
 import {MathLib} from "../libs/MathLib.sol";
+import {Cards, CardsData, CardOnBoards} from "../codegen/index.sol";
+import {PlayerCardsDeck} from "../codegen/index.sol";
 
 contract EffectSystem2 is System {
 
@@ -39,7 +40,18 @@ contract EffectSystem2 is System {
 
     //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
     function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
-        //todo 创建一张卡
+//        uint len = CardOnBoards.getLength(caster);
+
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        // 创建一张卡
+        CardsData memory card = Cards.get(card_config_key);
+        bytes32 on_board_card_key = keccak256(abi.encodePacked(caster, card.tid));
+        CardOnBoards.setId(on_board_card_key, card_config_key);
+        CardOnBoards.setHp(on_board_card_key, card.hp);
+        CardOnBoards.setAttack(on_board_card_key, card.attack);
+        CardOnBoards.setMana(on_board_card_key, card.mana);
+        CardOnBoards.setPlayerId(on_board_card_key, player_key);
+
         //todo 创建一个随机slot
         //todo 放到牌区
     }
