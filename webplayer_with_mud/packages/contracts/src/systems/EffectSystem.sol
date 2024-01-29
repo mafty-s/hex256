@@ -45,8 +45,6 @@ contract EffectSystem is System {
         EffectAddTrait(ability_key, caster, target, is_card, TraitData.SpellDamage);
     }
 
-
-
     function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
@@ -59,7 +57,6 @@ contract EffectSystem is System {
         }
     }
 
-
     function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (is_card) {
             CardLogicLib.RemoveStatus(target, Status.Taunt);
@@ -68,25 +65,12 @@ contract EffectSystem is System {
         }
     }
 
-
     function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (is_card) {
             CardLogicLib.ClearStatus(target);
         } else {
             PlayerLogicLib.ClearStatus(target);
         }
-    }
-
-    function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-//        if (is_card) {
-//            if (CardLogicLib.IsEquipment(target)) {
-//                GameLogicLib.DiscardCard(target);
-//            } else {
-//                bytes32 equipped_uid = CardOnBoards.getEquippedUid(target);
-//                GameLogicLib.DiscardCard(equipped_uid);
-//            }
-//        }
-        //todo
     }
 
     function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -112,16 +96,14 @@ contract EffectSystem is System {
         EffectMana(ability_key, caster, player_key, is_card);
     }
 
-    function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
     function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
     function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+//        bytes32 auraHelp
+        //todo 这个技能TCG没有实现
     }
 
     function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {

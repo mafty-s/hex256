@@ -28,8 +28,6 @@ interface IEffectSystem {
 
   function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
@@ -37,8 +35,6 @@ interface IEffectSystem {
   function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 

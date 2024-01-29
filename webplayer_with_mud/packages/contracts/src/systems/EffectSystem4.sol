@@ -33,6 +33,32 @@ contract EffectSystem4 is System {
         }
     }
 
+    function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            if (CardLogicLib.IsEquipment(target)) {
+                GameLogicLib.DiscardCard(target);
+            } else {
+                bytes32 equipped_uid = CardOnBoards.getEquippedUid(target);
+                GameLogicLib.DiscardCard(equipped_uid);
+            }
+        }
+    }
+
+
+    function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        int8 value = Ability.getValue(ability_key);
+        if (is_card) {
+            GameLogicLib.HealCard(target, value);
+        } else {
+            int8 hp = Players.getHp(target);
+            int8 hp_max = Players.getHpMax(target);
+            if (hp > hp_max) {
+                hp = hp_max;
+            }
+            Players.setHp(target, hp);
+        }
+    }
+
     //----------------------------------------------------------------------------------------------------------------
     function RunAttacker(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectAttackerType attack_type) internal {
         bytes32 attacker = GetAttacker(caster, attack_type);
