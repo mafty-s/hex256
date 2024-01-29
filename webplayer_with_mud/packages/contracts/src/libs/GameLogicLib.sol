@@ -122,6 +122,10 @@ library GameLogicLib {
         //todo
     }
 
+    function ChangeOwner(bytes32 card_uid, bytes32 player_uid) internal {
+        //todo
+    }
+
     ////Heal a card
     //public virtual void HealCard(Card target, int value)
     //{

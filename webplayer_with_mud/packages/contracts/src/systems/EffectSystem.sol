@@ -43,11 +43,7 @@ contract EffectSystem is System {
 
     function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectAddTrait(ability_key, caster, target, is_card, TraitData.SpellDamage);
-    }
 
-    function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
     function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (is_card) {

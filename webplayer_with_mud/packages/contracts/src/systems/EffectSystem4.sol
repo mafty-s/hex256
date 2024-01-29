@@ -59,7 +59,16 @@ contract EffectSystem4 is System {
         }
     }
 
-    //----------------------------------------------------------------------------------------------------------------
+}
+
+    function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            GameLogicLib.ChangeOwner(target, player_key);
+        }
+    }
+
+//----------------------------------------------------------------------------------------------------------------
     function RunAttacker(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectAttackerType attack_type) internal {
         bytes32 attacker = GetAttacker(caster, attack_type);
         if (attacker != 0x0000000000000000000000000000000000000000000000000000000000000000) {
