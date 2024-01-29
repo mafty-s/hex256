@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} from "../codegen/common.sol";
+import {PlayerCardsBoard} from "../codegen/index.sol";
 
 library CardLogicLib {
 
@@ -42,9 +43,15 @@ library CardLogicLib {
         return Cards.getCardType(card_key) == CardType.SPELL;
     }
 
-    function IsOnBoard(bytes32 card_key) internal pure returns (bool) {
-        return true;
-        //,CardOnBoards.getCardOnBoard(card_key) != 0;
+    function IsOnBoard(bytes32 card_key) internal view returns (bool) {
+        bytes32 player_key = CardOnBoards.getPlayerId(card_key);
+        bytes32[] memory cards = PlayerCardsBoard.getValue(player_key);
+        for (uint i = 0; i < cards.length; i++) {
+            if (cards[i] == card_key) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function IsCharacter(bytes32 card_key) internal view returns (bool) {
@@ -63,7 +70,7 @@ library CardLogicLib {
     }
 
     function AddStatus(bytes32 card_uid, Status status) internal {
-        //todo
+        CardOnBoards.pushStatus(card_uid, uint8(status));
     }
 
     function RemoveStatus(bytes32 card_uid, Status status) internal {
@@ -77,12 +84,8 @@ library CardLogicLib {
     }
 
     function ClearStatus(bytes32 card_uid) internal {
-        //todo
-        //CardOnBoards.setStatus(card_uid,[]);
+        uint8[] memory card_status = new uint8[](0);
+        CardOnBoards.setStatus(card_uid,card_status);
     }
 
-    //    internal bool IsBoardCard()
-    //    {
-    //    return type == CardType.Character || type == CardType.Artifact;
-    //    }
 }

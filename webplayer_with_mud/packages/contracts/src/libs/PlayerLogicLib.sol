@@ -85,16 +85,22 @@ library PlayerLogicLib {
         return slot;
     }
 
-    function AddStatus(bytes32 card_uid, Status status) internal {
-        //todo
+    function AddStatus(bytes32 player_uid, Status status) internal {
+        Players.pushStatus(player_uid, uint8(status));
     }
 
-    function ClearStatus(bytes32 card_uid) internal {
-        //todo
+    function ClearStatus(bytes32 player_uid) internal {
+        uint8[] memory status = new uint8[](0);
+        Players.setStatus(player_uid,status);
     }
 
-    function RemoveStatus(bytes32 card_uid, Status status) internal {
-        //todo
+    function RemoveStatus(bytes32 player_uid, Status status) internal {
+        uint8[] memory player_status = Players.getStatus(player_uid);
+        for (uint i = 0; i < player_status.length; i++) {
+            if (player_status[i] == uint8(status)) {
+                Players.updateStatus(player_uid, i, uint8(Status.NONE));
+            }
+        }
     }
 
 

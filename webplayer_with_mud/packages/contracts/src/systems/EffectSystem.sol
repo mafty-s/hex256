@@ -5,6 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType, EffectAttackerType} from "../codegen/common.sol";
+import {CardLogicLib} from "../libs/CardLogicLib.sol";
 
 contract EffectSystem is System {
 
@@ -85,6 +86,11 @@ contract EffectSystem is System {
     }
 
     function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if(is_card){
+            if(CardLogicLib.IsOnBoard(target)){
+                //todo
+            }
+        }
         //todo
     }
 
