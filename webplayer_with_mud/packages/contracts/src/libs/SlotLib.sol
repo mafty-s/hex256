@@ -20,8 +20,23 @@ library SlotLib {
 
 
     function NewSlot(uint8 x, uint8 y, uint8 p) internal pure returns (Slot memory) {
-        Slot memory slot = Slot({x : x, y : y, p : p});
+        Slot memory slot = Slot({x: x, y: y, p: p});
         return slot;
+    }
+
+    function GetAll(int8 p) internal pure returns (Slot[] memory) {
+        Slot[] memory slots = new Slot[](x_max * y_max * 2);
+        uint8 index = 0;
+        for (uint8 y = y_min; y <= y_max; y++) {
+            for (uint8 x = x_min; x <= x_max; x++) {
+                for (uint8 p = 0; p <= 1; p++) {
+                    Slot memory slot = SlotLib.NewSlot(x, y, p);
+                    slots[index] = slot;
+                    index++;
+                }
+            }
+        }
+        return slots;
     }
 
     function SetSlot(bytes32 card_key, Slot memory slot) internal {
@@ -29,8 +44,8 @@ library SlotLib {
     }
 
     function GetSlotCard(bytes32 game_key, Slot memory slot) internal view returns (bytes32) {
-        //todo
-        //        return CardOnBoards.getSlotCard(game_key, EncodeSlot(slot));
+//todo
+//        return CardOnBoards.getSlotCard(game_key, EncodeSlot(slot));
         return 0;
     }
 
@@ -106,7 +121,7 @@ library SlotLib {
     function GetRandomEmptySlot(bytes32 player_key) internal view returns (Slot memory) {
         Slot[] memory slots = GetEmptySlots(player_key);
         if (slots.length == 0) {
-            Slot memory slot = SlotLib.NewSlot(0,0,0);
+            Slot memory slot = SlotLib.NewSlot(0, 0, 0);
             return slot;
         }
         uint rand = uint(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, slots.length)));
@@ -115,7 +130,7 @@ library SlotLib {
 
     function GetEmptySlots(bytes32 player_key) internal view returns (Slot[] memory) {
         Slot[] memory slots = new Slot[](x_max * y_max * 2);
-        //todo
+//todo
 //        uint8 index = 0;
 //        for (uint8 x = x_min; x <= x_max; x++) {
 //            for (uint8 y = y_min; y <= y_max; y++) {

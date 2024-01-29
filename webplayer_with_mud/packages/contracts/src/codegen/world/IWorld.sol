@@ -22,6 +22,7 @@ import { IMoveSystem } from "./IMoveSystem.sol";
 import { IPacksSystem } from "./IPacksSystem.sol";
 import { IPlayCardSystem } from "./IPlayCardSystem.sol";
 import { ISelectSystem } from "./ISelectSystem.sol";
+import { ISlotSystem } from "./ISlotSystem.sol";
 import { ITasksSystem } from "./ITasksSystem.sol";
 import { IUsersSystem } from "./IUsersSystem.sol";
 
@@ -50,6 +51,7 @@ interface IWorld is
   IPacksSystem,
   IPlayCardSystem,
   ISelectSystem,
+  ISlotSystem,
   ITasksSystem,
   IUsersSystem
 {
