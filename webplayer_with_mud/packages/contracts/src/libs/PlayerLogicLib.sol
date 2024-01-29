@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {Cards, Players} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, Status} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, Status, TraitData} from "../codegen/common.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
 import {BytesArrayTools} from "../utils/BytesArrayTools.sol";
 import "./SlotLib.sol";
@@ -91,7 +91,7 @@ library PlayerLogicLib {
 
     function ClearStatus(bytes32 player_uid) internal {
         uint8[] memory status = new uint8[](0);
-        Players.setStatus(player_uid,status);
+        Players.setStatus(player_uid, status);
     }
 
     function RemoveStatus(bytes32 player_uid, Status status) internal {
