@@ -57,7 +57,7 @@ contract PlayCardSystem is System {
         //使用触发器触发技能
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                AbilityTrigger.ON_PLAY, card_key, 0x0000000100000000000000000000000000000000000000000000000000000000, true))
+                AbilityTrigger.ON_PLAY, card_key, 0x0000000000000000000000000000000000000000000000000000000000000000, true))
         );
 
 

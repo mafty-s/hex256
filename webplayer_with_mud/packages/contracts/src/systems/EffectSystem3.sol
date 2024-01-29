@@ -36,7 +36,7 @@ contract EffectSystem3 is System {
     //----------------------------------------------------------------------------------------------------------------
     //在卡牌上附加一个能力
     function EffectAddAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 ab) internal {
-
+        //todo
     }
 
 }

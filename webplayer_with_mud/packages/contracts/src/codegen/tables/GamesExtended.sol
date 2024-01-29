@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GamesExtendedTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x00c1070001202020202020000000000000000000000000000000000000000000
+  0x00e1080001202020202020200000000000000000000000000000000000000000
 );
 
 struct GamesExtendedData {
@@ -37,6 +37,7 @@ struct GamesExtendedData {
   bytes32 selectorPlayerId;
   bytes32 selectorCasterUid;
   bytes32 selectorAbility;
+  bytes32 abilityTriggerer;
   bytes32 lastPlayed;
   bytes32 lastTarget;
   bytes32 lastDestroyed;
@@ -67,7 +68,7 @@ library GamesExtended {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](7);
+    SchemaType[] memory _valueSchema = new SchemaType[](8);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.BYTES32;
@@ -75,6 +76,7 @@ library GamesExtended {
     _valueSchema[4] = SchemaType.BYTES32;
     _valueSchema[5] = SchemaType.BYTES32;
     _valueSchema[6] = SchemaType.BYTES32;
+    _valueSchema[7] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -93,14 +95,15 @@ library GamesExtended {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](7);
+    fieldNames = new string[](8);
     fieldNames[0] = "selector";
     fieldNames[1] = "selectorPlayerId";
     fieldNames[2] = "selectorCasterUid";
     fieldNames[3] = "selectorAbility";
-    fieldNames[4] = "lastPlayed";
-    fieldNames[5] = "lastTarget";
-    fieldNames[6] = "lastDestroyed";
+    fieldNames[4] = "abilityTriggerer";
+    fieldNames[5] = "lastPlayed";
+    fieldNames[6] = "lastTarget";
+    fieldNames[7] = "lastDestroyed";
   }
 
   /**
@@ -286,13 +289,55 @@ library GamesExtended {
   }
 
   /**
+   * @notice Get abilityTriggerer.
+   */
+  function getAbilityTriggerer(bytes32 key) internal view returns (bytes32 abilityTriggerer) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get abilityTriggerer.
+   */
+  function _getAbilityTriggerer(bytes32 key) internal view returns (bytes32 abilityTriggerer) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set abilityTriggerer.
+   */
+  function setAbilityTriggerer(bytes32 key, bytes32 abilityTriggerer) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((abilityTriggerer)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set abilityTriggerer.
+   */
+  function _setAbilityTriggerer(bytes32 key, bytes32 abilityTriggerer) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((abilityTriggerer)), _fieldLayout);
+  }
+
+  /**
    * @notice Get lastPlayed.
    */
   function getLastPlayed(bytes32 key) internal view returns (bytes32 lastPlayed) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -303,7 +348,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -314,7 +359,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((lastPlayed)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((lastPlayed)), _fieldLayout);
   }
 
   /**
@@ -324,7 +369,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((lastPlayed)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((lastPlayed)), _fieldLayout);
   }
 
   /**
@@ -334,7 +379,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -345,7 +390,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -356,7 +401,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((lastTarget)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((lastTarget)), _fieldLayout);
   }
 
   /**
@@ -366,7 +411,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((lastTarget)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((lastTarget)), _fieldLayout);
   }
 
   /**
@@ -376,7 +421,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -387,7 +432,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -398,7 +443,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((lastDestroyed)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((lastDestroyed)), _fieldLayout);
   }
 
   /**
@@ -408,7 +453,7 @@ library GamesExtended {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((lastDestroyed)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((lastDestroyed)), _fieldLayout);
   }
 
   /**
@@ -450,6 +495,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
@@ -459,6 +505,7 @@ library GamesExtended {
       selectorPlayerId,
       selectorCasterUid,
       selectorAbility,
+      abilityTriggerer,
       lastPlayed,
       lastTarget,
       lastDestroyed
@@ -482,6 +529,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
@@ -491,6 +539,7 @@ library GamesExtended {
       selectorPlayerId,
       selectorCasterUid,
       selectorAbility,
+      abilityTriggerer,
       lastPlayed,
       lastTarget,
       lastDestroyed
@@ -514,6 +563,7 @@ library GamesExtended {
       _table.selectorPlayerId,
       _table.selectorCasterUid,
       _table.selectorAbility,
+      _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed
@@ -537,6 +587,7 @@ library GamesExtended {
       _table.selectorPlayerId,
       _table.selectorCasterUid,
       _table.selectorAbility,
+      _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed
@@ -564,6 +615,7 @@ library GamesExtended {
       bytes32 selectorPlayerId,
       bytes32 selectorCasterUid,
       bytes32 selectorAbility,
+      bytes32 abilityTriggerer,
       bytes32 lastPlayed,
       bytes32 lastTarget,
       bytes32 lastDestroyed
@@ -577,11 +629,13 @@ library GamesExtended {
 
     selectorAbility = (Bytes.slice32(_blob, 65));
 
-    lastPlayed = (Bytes.slice32(_blob, 97));
+    abilityTriggerer = (Bytes.slice32(_blob, 97));
 
-    lastTarget = (Bytes.slice32(_blob, 129));
+    lastPlayed = (Bytes.slice32(_blob, 129));
 
-    lastDestroyed = (Bytes.slice32(_blob, 161));
+    lastTarget = (Bytes.slice32(_blob, 161));
+
+    lastDestroyed = (Bytes.slice32(_blob, 193));
   }
 
   /**
@@ -600,6 +654,7 @@ library GamesExtended {
       _table.selectorPlayerId,
       _table.selectorCasterUid,
       _table.selectorAbility,
+      _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed
@@ -635,6 +690,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
@@ -645,6 +701,7 @@ library GamesExtended {
         selectorPlayerId,
         selectorCasterUid,
         selectorAbility,
+        abilityTriggerer,
         lastPlayed,
         lastTarget,
         lastDestroyed
@@ -662,6 +719,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed
@@ -671,6 +729,7 @@ library GamesExtended {
       selectorPlayerId,
       selectorCasterUid,
       selectorAbility,
+      abilityTriggerer,
       lastPlayed,
       lastTarget,
       lastDestroyed

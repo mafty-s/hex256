@@ -20,17 +20,13 @@ interface IEffectSystem {
 
   function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+
+  function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 

@@ -43,7 +43,7 @@ contract AbilitySystem is System {
 
     //触发指定技能
     function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
-        bytes32 trigger_card = triggerer != 0x0000000100000000000000000000000000000000000000000000000000000000 ? triggerer : caster; //Triggerer is the caster if not set
+        bytes32 trigger_card = triggerer != 0x0000000000000000000000000000000000000000000000000000000000000000 ? triggerer : caster; //Triggerer is the caster if not set
         if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(caster, triggerer)) {
             UseAbility(ability_key, caster, trigger_card, is_card);
         }

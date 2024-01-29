@@ -114,6 +114,14 @@ library GameLogicLib {
         }
     }
 
+    function AttackPlayer(bytes32 attacker, bytes32 target, bool skip_cost) internal {
+        //todo
+    }
+
+    function AttackTarget(bytes32 attacker, bytes32 target, bool skip_cost) internal {
+        //todo
+    }
+
     ////Heal a card
     //public virtual void HealCard(Card target, int value)
     //{

@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
-import {Action, TraitData, EffectStatType, EffectAttackerType} from "../codegen/common.sol";
+import {Action, TraitData, EffectStatType, EffectAttackerType, Status} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
@@ -45,22 +45,29 @@ contract EffectSystem is System {
         EffectAddTrait(ability_key, caster, target, is_card, TraitData.SpellDamage);
     }
 
-    function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
 
-        //todo
-    }
-
-    function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
     function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }
 
     function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        if (is_card) {
+            CardLogicLib.RemoveStatus(target, Status.Paralysed);
+        } else {
+            PlayerLogicLib.RemoveStatus(target, Status.Paralysed);
+        }
     }
+
+
+    function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            CardLogicLib.RemoveStatus(target, Status.Taunt);
+        } else {
+            PlayerLogicLib.RemoveStatus(target, Status.Taunt);
+        }
+    }
+
 
     function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (is_card) {
@@ -68,10 +75,6 @@ contract EffectSystem is System {
         } else {
             PlayerLogicLib.ClearStatus(target);
         }
-    }
-
-    function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
     }
 
 
