@@ -92,4 +92,8 @@ library CardLogicLib {
         //todo
         return 0;
     }
+
+    function AddTrait(bytes32 caster, TraitData trait) internal {
+        //todo
+    }
 }

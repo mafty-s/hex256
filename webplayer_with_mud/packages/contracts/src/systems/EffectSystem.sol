@@ -43,6 +43,7 @@ contract EffectSystem is System {
 
     function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectAddTrait(ability_key, caster, target, is_card, TraitData.SpellDamage);
+    }
 
 
     function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -161,7 +162,11 @@ contract EffectSystem is System {
 
     //添加特性
     function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, TraitData trait) internal {
-        //todo
+        if (is_card){
+            CardLogicLib.AddTrait(target, trait);
+        }else {
+            PlayerLogicLib.AddTrait(target, trait);
+        }
     }
 
     //设置属性点

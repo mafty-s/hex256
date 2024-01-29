@@ -103,5 +103,14 @@ library PlayerLogicLib {
         }
     }
 
+    function GetTraitValue(bytes32 caster, TraitData trait) internal returns (int8){
+        //todo
+        return 0;
+    }
+
+    function AddTrait(bytes32 caster, TraitData trait) internal {
+        //todo
+    }
+
 
 }

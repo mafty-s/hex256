@@ -99,7 +99,11 @@ contract EffectSystem4 is System {
     }
 
     function GetDamage(bytes32 caster, int8 value, bool is_card, TraitData bonus_damage) internal returns (int8){
-        int8 damage = value + CardLogicLib.GetTraitValue(caster, bonus_damage);
-        return damage;
+        if (is_card) {
+            int8 damage = value + CardLogicLib.GetTraitValue(caster, bonus_damage);
+            return damage;
+        } else {
+            int8 damage = value + PlayerLogicLib.GetTraitValue(caster, bonus_damage);
+            return damage;
+        }
     }
-}
