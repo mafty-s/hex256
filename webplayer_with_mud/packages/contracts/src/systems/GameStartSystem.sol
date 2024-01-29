@@ -187,10 +187,6 @@ contract GameStartSystem is System {
         //todo
     }
 
-    function testRevert() public {
-        revert("Can't play card");
-    }
-
     function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board, int8 mana, int8 hp) {
 
         name = Players.getName(player_key);

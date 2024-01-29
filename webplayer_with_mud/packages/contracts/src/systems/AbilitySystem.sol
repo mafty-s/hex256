@@ -5,16 +5,11 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {Ability, CardOnBoards, Cards} from "../codegen/index.sol";
-import {AbilityTrigger,Status} from "../codegen/common.sol";
+import {AbilityTrigger, Status} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract AbilitySystem is System {
-
-    constructor() {
-
-    }
-
     //使用技能
     function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //使用效果
@@ -49,12 +44,13 @@ contract AbilitySystem is System {
     //触发指定技能
     function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
         bytes32 trigger_card = triggerer != 0x0000000100000000000000000000000000000000000000000000000000000000 ? triggerer : caster; //Triggerer is the caster if not set
+        if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(caster, triggerer)) {
+            UseAbility(ability_key, caster, trigger_card, is_card);
+        }
+    }
 
-//        if (!caster.HasStatus(StatusType.Silenced) && iability.AreTriggerConditionsMet(game_data, caster, trigger_card))
-//        {
-        UseAbility(ability_key, caster, trigger_card, is_card);
-//        }
-
+    function AreTriggerConditionsMet(bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+        return true;
     }
 
 

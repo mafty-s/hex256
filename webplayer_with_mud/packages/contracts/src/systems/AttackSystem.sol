@@ -48,8 +48,6 @@ contract AttackSystem is System {
             );
         }
 
-        //todo
-
         bytes32[] memory players =  Games.getPlayers(game_key);
 
         //uint16 slot_encode = SlotLib.EncodeSlot(slot);

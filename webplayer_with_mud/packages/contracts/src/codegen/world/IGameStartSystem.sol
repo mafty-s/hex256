@@ -21,8 +21,6 @@ interface IGameStartSystem {
     bool need_shuffle
   ) external returns (bytes32[] memory);
 
-  function testRevert() external;
-
   function getPlayerCards(
     bytes32 player_key
   )

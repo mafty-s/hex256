@@ -276,7 +276,7 @@ contract EffectSystem is System {
     //把一张牌变为另一张牌
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
         if (is_card) {
-            //logic.TransformCard(target, transform_to);
+            CardOnBoards.setId(target, card_config_key);
         }
     }
 }

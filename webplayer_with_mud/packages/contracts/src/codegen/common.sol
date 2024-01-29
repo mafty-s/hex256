@@ -11,6 +11,7 @@ enum SelectorType {
 
 enum Status {
   NONE,
+  Silenced,
   ATTACK_BONUS,
   HP_BONUS,
   STEALTH,

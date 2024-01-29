@@ -15,4 +15,6 @@ interface IAbilitySystem {
   function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 caster, bytes32 target, bool is_card) external;
 
   function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) external;
+
+  function AreTriggerConditionsMet(bytes32 caster, bytes32 trigger_card) external pure returns (bool);
 }
