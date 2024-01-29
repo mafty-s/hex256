@@ -66,7 +66,5 @@ interface IEffectSystem {
 
   function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }

@@ -140,9 +140,7 @@ contract EffectSystem is System {
         //todo
     }
 
-    function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
+
 
 
     function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {

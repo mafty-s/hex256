@@ -45,7 +45,35 @@ contract EffectSystem2 is System {
         EffectSendPile(ability_key, caster, target, is_card, PileType.Hand);
     }
 
+    function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (!is_card) {
+            bytes32[] memory cards = PlayerCardsDeck.getValue(target);
+            cards = shuffle(cards);
+            PlayerCardsDeck.setValue(target, cards);
+        }
+    }
+
     //----------------------------------------------------------------------------------------------------------------
+
+    function shuffle(bytes32[] memory array) internal view returns (bytes32[] memory) {
+        uint256 arrSize = array.length;
+        bytes32[] memory shuffled = new bytes32[](arrSize);
+
+        // Copy the original deck to the shuffled deck array
+        for (uint256 i = 0; i < arrSize; i++) {
+            shuffled[i] = array[i];
+        }
+
+        // Shuffle the deck using Fisher-Yates algorithm
+        for (uint256 i = arrSize - 1; i > 0; i--) {
+            uint256 j = uint256(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, i))) % (i + 1);
+            bytes32 temp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp;
+        }
+
+        return shuffled;
+    }
 
     //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
     function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
