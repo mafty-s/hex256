@@ -35,8 +35,13 @@ library MathLib {
     }
 
 
-    function RollRandomValue(uint8 min,uint8 max) public pure returns(uint8){
-        uint8 randomValue = uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.difficulty, msg.sender))) % (max - min + 1)) + min;
+    function RollRandomValue(uint8 min, uint8 max) public view returns (uint8){
+        uint8 randomValue = uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.prevrandao, msg.sender))) % (max - min + 1)) + min;
         return randomValue;
+    }
+
+    function RollRandomValueInt8(int8 min, int8 max) public view returns (int8) {
+        uint8 randomValue = uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.prevrandao, msg.sender))) % (uint8(max - min + 1))) + uint8(min);
+        return int8(randomValue);
     }
 }

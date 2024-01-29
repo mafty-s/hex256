@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType} from "../codegen/common.sol";
-
+import {MathLib} from "../libs/MathLib.sol";
 
 contract EffectSystem is System {
 
@@ -20,7 +20,9 @@ contract EffectSystem is System {
 
 
     function EffectAddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        bytes32 burst = 0x0;
+        EffectAddAbility(ability_key, caster, target, is_card, burst);
+        //todo ongoing
     }
 
     function EffectAddAbilityDefendDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -36,9 +38,9 @@ contract EffectSystem is System {
     }
 
     function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        uint dice = 6;
-
-        //todo
+        int8 dice = 6;
+        int8 value = MathLib.RollRandomValueInt8(1, dice);
+        EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -278,5 +280,10 @@ contract EffectSystem is System {
         if (is_card) {
             CardOnBoards.setId(target, card_config_key);
         }
+    }
+
+    //在卡牌上附加一个能力
+    function EffectAddAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 ab) internal {
+
     }
 }
