@@ -32,10 +32,6 @@ interface IEffectSystem {
 
   function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
@@ -45,8 +41,6 @@ interface IEffectSystem {
   function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
-  function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
@@ -65,6 +59,8 @@ interface IEffectSystem {
   function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+
+  function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }

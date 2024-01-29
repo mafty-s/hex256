@@ -69,13 +69,6 @@ contract EffectSystem is System {
         //todo
     }
 
-    function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
-
-    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
     function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
@@ -86,8 +79,8 @@ contract EffectSystem is System {
     }
 
     function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        if(is_card){
-            if(CardLogicLib.IsOnBoard(target)){
+        if (is_card) {
+            if (CardLogicLib.IsOnBoard(target)) {
                 //todo
             }
         }
@@ -102,9 +95,6 @@ contract EffectSystem is System {
         //todo
     }
 
-    function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
 
     function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
@@ -132,7 +122,6 @@ contract EffectSystem is System {
     }
 
 
-
     function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
@@ -146,11 +135,19 @@ contract EffectSystem is System {
         //todo
     }
 
-
-
+    //设置耗尽
+    function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(target);
+            CardOnBoards.setExhausted(player_key, true);
+        }
+    }
 
     function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(target);
+            CardOnBoards.setExhausted(player_key, false);
+        }
     }
 
     //----------------------------------------------------------------------------------------------------------------

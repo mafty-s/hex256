@@ -53,6 +53,14 @@ contract EffectSystem2 is System {
         }
     }
 
+    function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            bytes32[] memory empty = new bytes32[](0);
+            PlayerCardsTemp.set(player_key, empty);
+        }
+    }
+
     //----------------------------------------------------------------------------------------------------------------
 
     function shuffle(bytes32[] memory array) internal view returns (bytes32[] memory) {
