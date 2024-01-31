@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players} from "../codegen/index.sol";
-import {AbilityTrigger, Status, Action} from "../codegen/common.sol";
+import {AbilityTrigger, Status, Action, AbilityTarget} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
@@ -64,5 +64,30 @@ contract AbilitySystem is System {
         return true;
     }
 
+    function ResolveCardAbilitySelector(bytes32 ability_key) internal {
+        AbilityTarget target = Ability.getTarget(ability_key);
+        if (target == AbilityTarget.SelectTarget) {
+            //todo
+        }
+        //todo
+    }
+
+    function IsSelector(AbilityTarget target) internal returns (bool) {
+        return target == AbilityTarget.SelectTarget || target == AbilityTarget.CardSelector || target == AbilityTarget.ChoiceSelector;
+    }
+
+    function CanTargetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+
+        if (CardLogicLib.HasStatus(target, Status.Stealth)) {
+            return false; //Hidden
+        }
+
+        if (CardLogicLib.HasStatus(target, Status.SpellImmunity)) {
+            return false; ////Spell immunity
+        }
+
+        bool condition_match = AreTargetConditionsMetCard(game_uid, caster, target);
+        return condition_match;
+    }
 
 }

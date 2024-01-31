@@ -95,7 +95,7 @@ enum AbilityTarget {
   PLAY_TARGET,
   ABILITY_TRIGGERER,
   EQUIPPED_CARD,
-  SELECT_TARGET,
+  SelectTarget,
   CARD_SELECTOR,
   CHOICE_SELECTOR,
   LAST_PLAYED,
@@ -170,7 +170,7 @@ enum Status {
   Deathtouch,
   Flying,
   Fury,
-  HP,
+  Hp,
   Intimidate,
   Invicibility,
   Lifesteal,
@@ -183,6 +183,5 @@ enum Status {
   SpellImmunity,
   Stealth,
   Taunt,
-  Trample,
-  Hp
+  Trample
 }

@@ -571,6 +571,13 @@ namespace TcgEngine.Client
 
             onCardPlayed?.Invoke(card, slot);
             onRefreshAll?.Invoke();
+
+            AbilityData ability = AbilityData.Get(game_data.selector_ability_id);
+            if (ability.target == AbilityTarget.ChoiceSelector)
+            {
+                
+            }
+
         }
 
         public void AttackTarget(Card card, Card target)
@@ -900,6 +907,14 @@ namespace TcgEngine.Client
                 new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             switch (action.type)
             {
+                case 12:
+                    //todo
+                    Card card_for_add_status = game_data.GetCard(action.card_uid);
+                    if (card_for_add_status!=null)
+                    {
+                        card_for_add_status.AddStatus(StatusData.Get(StatusType.Stealth),0,10000);
+                    }
+                    break;
                 case GameAction.NewTurn:
                     MsgPlayer mdata2 = new MsgPlayer();
                     mdata2.player_id = action.player_id;

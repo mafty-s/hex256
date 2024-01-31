@@ -132,6 +132,46 @@ public class MudManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // export enum Status {
+    //     None,
+    //     Armor,
+    //     Attack,
+    //     Deathtouch,
+    //     Flying,
+    //     Fury,
+    //     Hp,
+    //     Intimidate,
+    //     Invicibility,
+    //     Lifesteal,
+    //     Paralysed,
+    //     Poisoned,
+    //     Protected,
+    //     Shell,
+    //     Silenced,
+    //     Sleep,
+    //     SpellImmunity,
+    //     Stealth,
+    //     Taunt,
+    //     Trample,
+    // }
+
+    
+    public static StatusType GetStatusTypeByInt(int code)
+    {
+        switch (code)
+        {
+            case 0:
+                return StatusType.None;
+            case 1:
+                return StatusType.Armor;
+            // case 2:
+                // return StatusType.Attack;
+            
+        }
+
+        return StatusType.None;
+    }
+    
     public static string GetCommandString(ushort code)
     {
         switch (code)
