@@ -12,7 +12,7 @@ fs.createReadStream('../unity_client/Assets/Export/AbilityData.csv')
 
         for (let i = 0; i < results.length; i++) {
             let ability = results[i];
-            const str = `initAbility('${ability.ID}', '${ability.Trigger}','${ability.Target}',${ability.Value}, ${ability.ManaCost}, ${ability.Duration}, ${ability.Exhaust.toLowerCase()},'${ability.Effects}','${ability.ConditionsTrigger}','${ability.FiltersTarget}','${ability.ChainAbilities}');`;
+            const str = `initAbility('${ability.ID}', '${ability.Trigger}','${ability.Target}',${ability.Value}, ${ability.ManaCost}, ${ability.Duration}, ${ability.Exhaust.toLowerCase()},'${ability.Effects}','${ability.ConditionsTrigger}','${ability.FiltersTarget}','${ability.ChainAbilities}','${ability.Status}');`;
             console.log(str);
         }
 
