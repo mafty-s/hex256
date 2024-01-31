@@ -4,8 +4,8 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
-import {Ability, CardOnBoards, Cards} from "../codegen/index.sol";
-import {AbilityTrigger, Status} from "../codegen/common.sol";
+import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players} from "../codegen/index.sol";
+import {AbilityTrigger, Status, Action} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
@@ -21,11 +21,21 @@ contract AbilitySystem is System {
         }
         //添加状态，如嘲讽等
         uint8[] memory status = Ability.getStatus(ability_key);
-        for (uint i = 0; i < status.length; i++) {
-            if (is_card) {
-                CardLogicLib.AddStatus(target, (Status)(status[i]));
-            } else {
-                PlayerLogicLib.AddStatus(target, (Status)(status[i]));
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        bytes32 game_key = Players.getGame(caster);
+        if (status.length > 0) {
+            for (uint i = 0; i < status.length; i++) {
+                if (is_card) {
+                    CardLogicLib.AddStatus(target, (Status)(status[i]));
+                } else {
+                    PlayerLogicLib.AddStatus(target, (Status)(status[i]));
+                }
+
+                uint256 len = PlayerActionHistory.length(game_key);
+                bytes32 action_key = keccak256(abi.encode(game_key, len));
+                PlayerActionHistory.push(game_key, action_key);
+                ActionHistory.setActionType(action_key, Action.AddStatus);
+                ActionHistory.setCardId(action_key, target);
             }
         }
     }

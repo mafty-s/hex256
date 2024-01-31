@@ -123,7 +123,8 @@ enum Action {
   SelectChoice,
   CancelSelect,
   EndTurn,
-  ChangeMana
+  ChangeMana,
+  AddStatus
 }
 
 enum PileType {

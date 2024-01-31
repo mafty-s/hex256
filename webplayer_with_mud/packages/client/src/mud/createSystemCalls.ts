@@ -696,6 +696,17 @@ export function createSystemCalls(
         }
     }
 
+    const refreshGame = async (game_uid: string) => {
+        const game_key = calculateKeccak256Hash(game_uid);
+        const player_key = await worldContract.read.GetPlayerByGame([game_key]);
+        console.log("player_key", player_key);
+        for (let i = 0; i < player_key.length; i++) {
+            const player = await worldContract.read.getPlayerCards([player_key[i]]);
+            const card_keys = player[1];
+            console.log("player", i, player);
+        }
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -738,6 +749,7 @@ export function createSystemCalls(
         checkMatchmaking,
         checkPlayerSetting,
         checkAction,
+        refreshGame,
     };
 
     window.mud = out;

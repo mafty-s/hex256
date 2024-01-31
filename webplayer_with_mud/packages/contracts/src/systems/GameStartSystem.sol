@@ -178,6 +178,14 @@ contract GameStartSystem is System {
         //todo
     }
 
+    function GetPlayerByGame(bytes32 game_key) public view returns (bytes32[] memory players){
+        return Games.getPlayers(game_key);
+    }
+
+//    function GetCardOnBoard(bytes32 card_key) public view returns (CardOnBoardsData memory){
+//        return CardOnBoards.get(card_key);
+//    }
+
     function getPlayerCards(bytes32 player_key) public view returns (string memory name, bytes32[] memory cards, bytes32[] memory hand, bytes32[] memory deck, bytes32[] memory board, int8 mana, int8 hp) {
 
         name = Players.getName(player_key);
