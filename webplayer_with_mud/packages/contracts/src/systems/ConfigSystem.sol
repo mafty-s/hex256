@@ -74,7 +74,8 @@ contract ConfigSystem is System {
         bytes4[] memory effects,
         bytes32[] memory conditionsTrigger,
         bytes32[] memory filtersTarget,
-        bytes32[] memory chainAbilities
+        bytes32[] memory chainAbilities,
+        uint8[] memory status
     )
     public returns (bytes32 key){
         key = keccak256(abi.encode(id));
@@ -86,6 +87,7 @@ contract ConfigSystem is System {
         Ability.setEffects(key, effects);
         Ability.setTrigger(key, trigger);
         Ability.setTarget(key, target);
+        Ability.setStatus(key, status);
         AbilityExtend.setConditionsTrigger(key, conditionsTrigger);
         AbilityExtend.setFiltersTarget(key, filtersTarget);
         AbilityExtend.setChainAbilities(key, chainAbilities);

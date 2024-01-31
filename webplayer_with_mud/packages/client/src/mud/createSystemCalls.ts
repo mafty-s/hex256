@@ -8,7 +8,7 @@ import {SetupNetworkResult} from "./setupNetwork";
 import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
 import {ethers} from "ethers";
-import {AbilityTarget, AbilityTrigger, RarityType, CardType} from "./common";
+import {AbilityTarget, AbilityTrigger, RarityType, CardType, Status} from "./common";
 
 // import { getTransactionResult } from "";
 
@@ -130,6 +130,12 @@ export function createSystemCalls(
         return abilityTarget;
     }
 
+    const getStatus = (str: string) => {
+        const status: Status = Status[str as keyof typeof Status];
+        return status;
+    }
+
+
     const getAbilityTrigger = (str: string) => {
         const abilityTrigger: AbilityTrigger = AbilityTrigger[str as keyof typeof AbilityTrigger];
         return abilityTrigger;
@@ -225,13 +231,22 @@ export function createSystemCalls(
     }
 
     const initAbility = async (
-        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str, conditionsTrigger: string, filtersTarget: string, chainAbilities: string) => {
+        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
 
         const key = calculateKeccak256Hash(id);
-        console.log("initAbility", id, key);
 
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget(convertToEnumFormat(target));
+        const status_code = [];
+        if (status.length > 0) {
+            status.split("|").map((i) => {
+                let status = getStatus(convertToEnumFormat(i))
+                if (status) {
+                    return status;
+                }
+            });
+        }
+        console.log("initAbility", id, key, status_code);
 
 
         const conditionsTrigger_byes32 = arrStr2Bytes32(conditionsTrigger);
@@ -249,7 +264,8 @@ export function createSystemCalls(
             getEffectSelectorFromArrStr(effect_str),
             conditionsTrigger_byes32,
             filtersTarget_byes32,
-            chainAbilities_byes32
+            chainAbilities_byes32,
+            status_code
         ]);
 
         await waitForTransaction(tx);
@@ -396,7 +412,6 @@ export function createSystemCalls(
         // let intervel = setInterval(async () => {
         //     console.log("1")
         // },1000);
-
 
 
         let res = {
