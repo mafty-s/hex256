@@ -20,7 +20,7 @@ export default mudConfig({
         ConditionObjType: ["ConditionCardType"],
         TraitData: ["Dragon", "Growth", "SpellDamage", "Wolf"],
         EffectAttackerType: ["Self", "AbilityTriggerer", "LastPlayed", "LastTargeted"],
-        Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'HP', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample','Hp'],
+        Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample'],
     },
     tables: {
         AdminSingleton: {

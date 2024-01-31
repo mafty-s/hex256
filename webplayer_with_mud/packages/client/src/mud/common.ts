@@ -166,7 +166,7 @@ export enum Status {
     Deathtouch,
     Flying,
     Fury,
-    HP,
+    Hp,
     Intimidate,
     Invicibility,
     Lifesteal,
@@ -179,5 +179,5 @@ export enum Status {
     SpellImmunity,
     Stealth,
     Taunt,
-    Trample
+    Trample,
 }
