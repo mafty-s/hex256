@@ -355,8 +355,7 @@ export const App = () => {
                 window.MyUnityInstance = unityInstance;
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
-                    unityInstance.SetFullscreen(1);
-                };
+                    unitynstance.SetFullscreen(1);                };
             }).catch((message) => {
                 console.error(message);
             });
