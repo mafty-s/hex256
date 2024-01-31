@@ -7,6 +7,8 @@ import {Action, EffectAttackerType, TraitData} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {SlotLib, Slot} from "../libs/SlotLib.sol";
+import {PlayerCardsHand} from "../codegen/index.sol";
 
 contract EffectSystem4 is System {
 
@@ -64,6 +66,32 @@ contract EffectSystem4 is System {
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             GameLogicLib.ChangeOwner(target, player_key);
+        }
+    }
+
+    function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            GameLogicLib.DiscardCard(target);
+        } else {
+            int8 value = Ability.getValue(ability_key);
+            GameLogicLib.DrawDiscardCard(target, value);
+        }
+    }
+
+    function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            Slot memory slot = PlayerLogicLib.GetRandomEmptySlot(player_key);
+
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+            PlayerCardsHand.pushValue(player_key, target);
+
+
+            if (slot.x == 0 && slot.y == 0) {
+
+            }
+            //todo
+
         }
     }
 

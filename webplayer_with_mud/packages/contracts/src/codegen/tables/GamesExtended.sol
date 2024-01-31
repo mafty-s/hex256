@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GamesExtendedTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x00e1080001202020202020200000000000000000000000000000000000000000
+  0x00e2090001202020202020200100000000000000000000000000000000000000
 );
 
 struct GamesExtendedData {
@@ -41,6 +41,7 @@ struct GamesExtendedData {
   bytes32 lastPlayed;
   bytes32 lastTarget;
   bytes32 lastDestroyed;
+  int8 rolledValue;
 }
 
 library GamesExtended {
@@ -68,7 +69,7 @@ library GamesExtended {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](8);
+    SchemaType[] memory _valueSchema = new SchemaType[](9);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.BYTES32;
@@ -77,6 +78,7 @@ library GamesExtended {
     _valueSchema[5] = SchemaType.BYTES32;
     _valueSchema[6] = SchemaType.BYTES32;
     _valueSchema[7] = SchemaType.BYTES32;
+    _valueSchema[8] = SchemaType.INT8;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -95,7 +97,7 @@ library GamesExtended {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](8);
+    fieldNames = new string[](9);
     fieldNames[0] = "selector";
     fieldNames[1] = "selectorPlayerId";
     fieldNames[2] = "selectorCasterUid";
@@ -104,6 +106,7 @@ library GamesExtended {
     fieldNames[5] = "lastPlayed";
     fieldNames[6] = "lastTarget";
     fieldNames[7] = "lastDestroyed";
+    fieldNames[8] = "rolledValue";
   }
 
   /**
@@ -457,6 +460,48 @@ library GamesExtended {
   }
 
   /**
+   * @notice Get rolledValue.
+   */
+  function getRolledValue(bytes32 key) internal view returns (int8 rolledValue) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 8, _fieldLayout);
+    return (int8(uint8(bytes1(_blob))));
+  }
+
+  /**
+   * @notice Get rolledValue.
+   */
+  function _getRolledValue(bytes32 key) internal view returns (int8 rolledValue) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 8, _fieldLayout);
+    return (int8(uint8(bytes1(_blob))));
+  }
+
+  /**
+   * @notice Set rolledValue.
+   */
+  function setRolledValue(bytes32 key, int8 rolledValue) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 8, abi.encodePacked((rolledValue)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set rolledValue.
+   */
+  function _setRolledValue(bytes32 key, int8 rolledValue) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 8, abi.encodePacked((rolledValue)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (GamesExtendedData memory _table) {
@@ -498,7 +543,8 @@ library GamesExtended {
     bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
-    bytes32 lastDestroyed
+    bytes32 lastDestroyed,
+    int8 rolledValue
   ) internal {
     bytes memory _staticData = encodeStatic(
       selector,
@@ -508,7 +554,8 @@ library GamesExtended {
       abilityTriggerer,
       lastPlayed,
       lastTarget,
-      lastDestroyed
+      lastDestroyed,
+      rolledValue
     );
 
     PackedCounter _encodedLengths;
@@ -532,7 +579,8 @@ library GamesExtended {
     bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
-    bytes32 lastDestroyed
+    bytes32 lastDestroyed,
+    int8 rolledValue
   ) internal {
     bytes memory _staticData = encodeStatic(
       selector,
@@ -542,7 +590,8 @@ library GamesExtended {
       abilityTriggerer,
       lastPlayed,
       lastTarget,
-      lastDestroyed
+      lastDestroyed,
+      rolledValue
     );
 
     PackedCounter _encodedLengths;
@@ -566,7 +615,8 @@ library GamesExtended {
       _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
-      _table.lastDestroyed
+      _table.lastDestroyed,
+      _table.rolledValue
     );
 
     PackedCounter _encodedLengths;
@@ -590,7 +640,8 @@ library GamesExtended {
       _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
-      _table.lastDestroyed
+      _table.lastDestroyed,
+      _table.rolledValue
     );
 
     PackedCounter _encodedLengths;
@@ -618,7 +669,8 @@ library GamesExtended {
       bytes32 abilityTriggerer,
       bytes32 lastPlayed,
       bytes32 lastTarget,
-      bytes32 lastDestroyed
+      bytes32 lastDestroyed,
+      int8 rolledValue
     )
   {
     selector = SelectorType(uint8(Bytes.slice1(_blob, 0)));
@@ -636,6 +688,8 @@ library GamesExtended {
     lastTarget = (Bytes.slice32(_blob, 161));
 
     lastDestroyed = (Bytes.slice32(_blob, 193));
+
+    rolledValue = (int8(uint8(Bytes.slice1(_blob, 225))));
   }
 
   /**
@@ -657,7 +711,8 @@ library GamesExtended {
       _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
-      _table.lastDestroyed
+      _table.lastDestroyed,
+      _table.rolledValue
     ) = decodeStatic(_staticData);
   }
 
@@ -693,7 +748,8 @@ library GamesExtended {
     bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
-    bytes32 lastDestroyed
+    bytes32 lastDestroyed,
+    int8 rolledValue
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
@@ -704,7 +760,8 @@ library GamesExtended {
         abilityTriggerer,
         lastPlayed,
         lastTarget,
-        lastDestroyed
+        lastDestroyed,
+        rolledValue
       );
   }
 
@@ -722,7 +779,8 @@ library GamesExtended {
     bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
-    bytes32 lastDestroyed
+    bytes32 lastDestroyed,
+    int8 rolledValue
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(
       selector,
@@ -732,7 +790,8 @@ library GamesExtended {
       abilityTriggerer,
       lastPlayed,
       lastTarget,
-      lastDestroyed
+      lastDestroyed,
+      rolledValue
     );
 
     PackedCounter _encodedLengths;

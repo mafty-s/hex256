@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
+import {Players, Ability, PlayerActionHistory, ActionHistory, CardOnBoards, Cards, GamesExtended} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType, EffectAttackerType, Status} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
@@ -20,9 +20,7 @@ contract EffectSystem is System {
     }
 
     function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-//        int8 dice = 6;
-//        int8 value = MathLib.RollRandomValueInt8(1, dice);
-//        EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
+        EffectAddStatRoll(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -79,10 +77,6 @@ contract EffectSystem is System {
         //todo
     }
 
-    function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
-
     function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         int8 value = Ability.getValue(ability_key);
         if (is_card) {
@@ -100,10 +94,6 @@ contract EffectSystem is System {
     }
 
 
-    function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
-    }
-
     function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
 //        bytes32 auraHelp
         //todo 这个技能TCG没有实现
@@ -114,7 +104,12 @@ contract EffectSystem is System {
     }
 
     function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        int8 min = 1;
+        int8 max = 6;
+        int8 value = int8(uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.prevrandao, msg.sender))) % (uint8(max - min + 1))) + uint8(min));
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        bytes32 game_key = Players.getGame(player_key);
+        GamesExtended.setRolledValue(game_key, value);
     }
 
 
@@ -128,7 +123,6 @@ contract EffectSystem is System {
 
     function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Mana);
-        //todo
     }
 
     //设置耗尽
@@ -209,6 +203,28 @@ contract EffectSystem is System {
             }
             if (stat == EffectStatType.Mana) {
                 //todo
+            }
+        } else {
+            if (stat == EffectStatType.HP) {
+                Players.setHp(target, value + Players.getHp(target));
+            }
+            if (stat == EffectStatType.Mana) {
+                Players.setMana(target, value + Players.getMana(target));
+            }
+        }
+    }
+
+    //随机属性加成
+    function EffectAddStatRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType stat) internal {
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        bytes32 game_key = Players.getGame(player_key);
+        int8 value = GamesExtended.getRolledValue(game_key);
+        if (is_card) {
+            if (stat == EffectStatType.HP) {
+                CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
+            }
+            if (stat == EffectStatType.Mana) {
+                CardOnBoards.setMana(target, value + CardOnBoards.getMana(target));
             }
         } else {
             if (stat == EffectStatType.HP) {
