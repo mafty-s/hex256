@@ -36,6 +36,7 @@ contract AbilitySystem is System {
                 PlayerActionHistory.push(game_key, action_key);
                 ActionHistory.setActionType(action_key, Action.AddStatus);
                 ActionHistory.setCardId(action_key, target);
+                ActionHistory.setValue(action_key, int8(status[i]));
             }
         }
     }

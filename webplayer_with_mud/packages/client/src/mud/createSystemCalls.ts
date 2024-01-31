@@ -237,16 +237,16 @@ export function createSystemCalls(
 
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget(convertToEnumFormat(target));
-        const status_code = [];
-        if (status.length > 0) {
-            status.split("|").map((i) => {
+        let status_code = [];
+        if (status.length != "") {
+            status_code = status.split("|").map((i) => {
                 let status = getStatus(convertToEnumFormat(i))
                 if (status) {
                     return status;
                 }
             });
         }
-        console.log("initAbility", id, key, status_code);
+        console.log("initAbility", id, key, status, status_code);
 
 
         const conditionsTrigger_byes32 = arrStr2Bytes32(conditionsTrigger);
