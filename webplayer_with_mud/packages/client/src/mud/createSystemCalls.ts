@@ -230,6 +230,15 @@ export function createSystemCalls(
         return formattedStr;
     }
 
+    function convertToCamelCase(str) {
+        var words = str.split('_');
+        for (var i = 1; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+        }
+        str = words.join('');
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     const initAbility = async (
         id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
 
@@ -240,9 +249,12 @@ export function createSystemCalls(
         let status_code = [];
         if (status.length != "") {
             status_code = status.split("|").map((i) => {
-                let status = getStatus(convertToEnumFormat(i))
+                let name = convertToCamelCase(i);
+                let status = getStatus(name);
                 if (status) {
                     return status;
+                } else {
+                    console.error("status not found", name);
                 }
             });
         }
@@ -653,7 +665,6 @@ export function createSystemCalls(
 
         try {
             const record = await worldContract.read.GetAction([game_key, index]);
-
             // public ushort type;
             // public string card_uid;
             // public string target_uid;
@@ -662,13 +673,15 @@ export function createSystemCalls(
             // public int slot_p;
             // public int player_id;
             let res = convertBigIntToInt({
+                len: record[0],
                 type: record[1].actionType,
                 card_uid: record[1].cardId,
                 target_uid: record[1].target,
                 slot_x: DecodeSlotX(record[1].slot),
                 slot_y: DecodeSlotY(record[1].slot),
                 slot_p: DecodeSlotP(record[1].slot),
-                player_id: record[1].playerId
+                player_id: record[1].playerId,
+                value: record[1].value
             });
             if (res.type === 0) {
                 res.type = 1000;

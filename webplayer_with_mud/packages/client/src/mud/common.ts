@@ -5,29 +5,6 @@ export enum SelectorType {
     SELECTOR_CHOICE
 }
 
-export enum Status {
-    NONE,
-    ATTACK_BONUS,
-    HP_BONUS,
-    STEALTH,
-    INVINCIBILITY,
-    SHELL,
-    PROTECTION,
-    PROTECTED,
-    ARMOR,
-    SPELL_IMMUNITY,
-    DEATHTOUCH,
-    FURY,
-    INTIMIDATE,
-    FLYING,
-    TRAMPLE,
-    LIFE_STEAL,
-    SILENCED,
-    PARALYSED,
-    POISONED,
-    SLEEP
-}
-
 export enum RarityType {
     COMMON,
     UNCOMMON,
@@ -49,7 +26,15 @@ export enum TeamType {
 
 export enum GameType {
     SOLO,
-    PVP
+    ADVENTURE,
+    MULTIPLAYER,
+    HOST_P2P,
+    OBSERVER
+}
+
+export enum GameMode {
+    CASUAL,
+    RANKED
 }
 
 export enum GameState {
@@ -113,4 +98,86 @@ export enum AbilityTarget {
     LAST_TARGETED,
     LAST_DESTROYED,
     LAST_SUMMONED
+}
+
+export enum Team {
+    FIRE,
+    FOREST,
+    WATER,
+    NEUTRAL
+}
+
+export enum Action {
+    PlayCard,
+    Attack,
+    AttackPlayer,
+    Move,
+    CastAbility,
+    SelectCard,
+    SelectPlayer,
+    SelectSlot,
+    SelectChoice,
+    CancelSelect,
+    EndTurn,
+    ChangeMana,
+    AddStatus
+}
+
+export enum PileType {
+    None,
+    Board,
+    Hand,
+    Deck,
+    Discard,
+    Secret,
+    Equipped,
+    Temp
+}
+
+export enum EffectStatType {
+    None,
+    Attack,
+    HP,
+    Mana
+}
+
+export enum ConditionObjType {
+    ConditionCardType
+}
+
+export enum TraitData {
+    Dragon,
+    Growth,
+    SpellDamage,
+    Wolf
+}
+
+export enum EffectAttackerType {
+    Self,
+    AbilityTriggerer,
+    LastPlayed,
+    LastTargeted
+}
+
+export enum Status {
+    None,
+    Armor,
+    Attack,
+    Deathtouch,
+    Flying,
+    Fury,
+    HP,
+    Intimidate,
+    Invicibility,
+    Lifesteal,
+    Paralysed,
+    Poisoned,
+    Protected,
+    Shell,
+    Silenced,
+    Sleep,
+    SpellImmunity,
+    Stealth,
+    Taunt,
+    Trample
 }

@@ -15,4 +15,8 @@ contract ActionSystem is System {
         bytes32 key = PlayerActionHistory.getItemValue(game_key, i);
         return (len,ActionHistory.get(key));
     }
+
+    function GetActionLen(bytes32 game_key) public view returns (uint256){
+        return PlayerActionHistory.length(game_key);
+    }
 }

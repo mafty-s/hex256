@@ -11,4 +11,6 @@ import { ActionHistoryData } from "./../index.sol";
  */
 interface IActionSystem {
   function GetAction(bytes32 game_key, uint256 i) external view returns (uint256, ActionHistoryData memory);
+
+  function GetActionLen(bytes32 game_key) external view returns (uint256);
 }

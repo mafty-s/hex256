@@ -21,8 +21,8 @@ contract AbilitySystem is System {
         }
         //添加状态，如嘲讽等
         uint8[] memory status = Ability.getStatus(ability_key);
-        bytes32 player_key = CardOnBoards.getPlayerId(caster);
-        bytes32 game_key = Players.getGame(caster);
+        bytes32 player_key = CardOnBoards.getPlayerId(target);
+        bytes32 game_key = Players.getGame(player_key);
         if (status.length > 0) {
             for (uint i = 0; i < status.length; i++) {
                 if (is_card) {
