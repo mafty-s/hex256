@@ -380,6 +380,9 @@ export function createSystemCalls(
                                  dcards: number, pid: number, shuffle: boolean) => {
         await sleep(200)
 
+        //todo
+        mana = 10;
+
         const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards, shuffle]);
         await waitForTransaction(hash);
 
@@ -393,6 +396,8 @@ export function createSystemCalls(
         // let intervel = setInterval(async () => {
         //     console.log("1")
         // },1000);
+
+
 
         let res = {
             player_name: username,
@@ -531,10 +536,10 @@ export function createSystemCalls(
 
         // return tx;
         return {
-            player_id: player_id == 0 ? 1 : 0,
-            board_card_key: tx_result.result.board_card_key,
-            mana: tx_result.result.mana,
-            mana_max: tx_result.result.mana_max
+            player_id: player_id,
+            board_card_key: tx_result.result[1],
+            mana: tx_result.result[2],
+            mana_max: tx_result.result[3]
         }
     }
 

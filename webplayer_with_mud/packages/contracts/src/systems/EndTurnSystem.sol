@@ -22,7 +22,7 @@ contract EndTurnSystem is System {
 
     }
 
-    function EndTurn(bytes32 game_key, uint8 player_index) public returns (bytes32, bytes32, int8, int8){
+    function EndTurn(bytes32 game_key, uint8 player_index) public returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max){
         Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
         Games.setGamePhase(game_key, GamePhase.END_TURN);
 

@@ -8,5 +8,8 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IEndTurnSystem {
-  function EndTurn(bytes32 game_key, uint8 player_index) external returns (bytes32, bytes32, int8, int8);
+  function EndTurn(
+    bytes32 game_key,
+    uint8 player_index
+  ) external returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max);
 }
