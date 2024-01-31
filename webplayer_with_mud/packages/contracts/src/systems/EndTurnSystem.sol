@@ -13,6 +13,7 @@ import {Games, GamesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
 import {PlayerCardsHand, PlayerCardsDeck, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract EndTurnSystem is System {
 
@@ -42,12 +43,9 @@ contract EndTurnSystem is System {
 
         //抽张卡出来
         bytes32 board_card_key = 0;
-
-        bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
-        if (cards.length > 0) {
-            board_card_key = cards[cards.length - 1];
-            PlayerCardsDeck.popValue(player_key);
-            PlayerCardsHand.pushValue(player_key, board_card_key);
+        bytes32[] memory draw_cards = PlayerLogicLib.DrawCard(player_key, 1);
+        if (draw_cards.length > 0) {
+            board_card_key = draw_cards[0];
         }
 
         //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等

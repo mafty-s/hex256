@@ -110,21 +110,11 @@ contract GameStartSystem is System {
             bytes32 player_key = player_keys[i];
             int8 nb = Players.getDcards(player_key);
             PlayerLogicLib.DrawCard(player_key, nb);
-//            DrawCard(player_key, Players.getDcards(player_key));
         }
 
         //Start state
         StartTurn(match_key);
     }
-
-//    function DrawCard(bytes32 player_key, uint nb) internal {
-//        for (uint i = 0; i < nb; i++) {
-//            bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
-//            bytes32 card_key = cards[cards.length - 1];
-//            PlayerCardsDeck.popValue(player_key);
-//            PlayerCardsHand.pushValue(player_key, card_key);
-//        }
-//    }
 
     function StartTurn(bytes32 match_key) internal {
         if (Games.get(match_key).gameState == GameState.GAME_ENDED) {

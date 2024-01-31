@@ -84,7 +84,13 @@ contract EffectSystem is System {
     }
 
     function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo
+        int8 value = Ability.getValue(ability_key);
+        if (is_card) {
+            bytes32 player_key = CardOnBoards.getPlayerId(target);
+            PlayerLogicLib.DrawCard(player_key, value);
+        } else {
+            PlayerLogicLib.DrawCard(target, value);
+        }
     }
 
 
@@ -162,9 +168,9 @@ contract EffectSystem is System {
 
     //添加特性
     function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, TraitData trait) internal {
-        if (is_card){
+        if (is_card) {
             CardLogicLib.AddTrait(target, trait);
-        }else {
+        } else {
             PlayerLogicLib.AddTrait(target, trait);
         }
     }
