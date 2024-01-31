@@ -73,10 +73,6 @@ library GameLogicLib {
         //todo
     }
 
-    function DrawCard(bytes32 player, int8 card_number) internal {
-        //todo
-    }
-
     function CheckForWinner(bytes32 game_key) internal {
         uint8 count_alive = 0;
         bytes32 alive = 0;

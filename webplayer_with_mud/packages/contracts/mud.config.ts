@@ -185,7 +185,7 @@ export default mudConfig({
                 hpMax: "int8",
                 manaMax: "int8",
                 isAI: "bool",
-                dcards: "uint8",
+                dcards: "int8",
                 game: "bytes32",
                 name: "string",
                 deck: "string",

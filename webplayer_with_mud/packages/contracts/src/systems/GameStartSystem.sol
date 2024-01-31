@@ -8,8 +8,8 @@ import {Games, GamesData} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-
 import {GameType, GameState, GamePhase} from "../codegen/common.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 //    struct PlayerSettingResult {
 //        CardTuple[] cards;
@@ -42,7 +42,7 @@ contract GameStartSystem is System {
         return shuffled;
     }
 
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, uint8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 match_key = keccak256(abi.encode(game_uid));
@@ -108,22 +108,23 @@ contract GameStartSystem is System {
 
         for (uint8 i = 0; i < player_keys.length; i++) {
             bytes32 player_key = player_keys[i];
-            DrawCard(player_key, Players.getDcards(player_key));
+            int8 nb = Players.getDcards(player_key);
+            PlayerLogicLib.DrawCard(player_key, nb);
+//            DrawCard(player_key, Players.getDcards(player_key));
         }
 
         //Start state
         StartTurn(match_key);
     }
 
-
-    function DrawCard(bytes32 player_key, uint nb) internal {
-        for (uint i = 0; i < nb; i++) {
-            bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
-            bytes32 card_key = cards[cards.length - 1];
-            PlayerCardsDeck.popValue(player_key);
-            PlayerCardsHand.pushValue(player_key, card_key);
-        }
-    }
+//    function DrawCard(bytes32 player_key, uint nb) internal {
+//        for (uint i = 0; i < nb; i++) {
+//            bytes32[] memory cards = PlayerCardsDeck.getValue(player_key);
+//            bytes32 card_key = cards[cards.length - 1];
+//            PlayerCardsDeck.popValue(player_key);
+//            PlayerCardsHand.pushValue(player_key, card_key);
+//        }
+//    }
 
     function StartTurn(bytes32 match_key) internal {
         if (Games.get(match_key).gameState == GameState.GAME_ENDED) {

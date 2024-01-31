@@ -17,7 +17,7 @@ interface IGameStartSystem {
     bool is_ai,
     int8 hp,
     int8 mana,
-    uint8 dcards,
+    int8 dcards,
     bool need_shuffle
   ) external returns (bytes32[] memory);
 

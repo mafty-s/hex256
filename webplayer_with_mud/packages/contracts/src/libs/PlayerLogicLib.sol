@@ -112,5 +112,19 @@ library PlayerLogicLib {
         //todo
     }
 
-
+    function DrawCard(bytes32 player_key, int8 card_number) internal returns (bytes32[] memory){
+        require(card_number > 0, "card_number must > 0");
+        bytes32[] memory draw_cards = new bytes32[](uint256(int256(card_number)));
+        for (int8 i = 0; i < card_number; i++) {
+            uint256 len = PlayerCardsDeck.length(player_key);
+            if (len == 0) {
+                break;
+            }
+            bytes32 card_uid = PlayerCardsDeck.getItemValue(player_key, len - 1);
+            draw_cards[uint256(int256(i))] = card_uid;
+            PlayerCardsDeck.popValue(player_key);
+            PlayerCardsHand.pushValue(player_key, card_uid);
+        }
+        return draw_cards;
+    }
 }

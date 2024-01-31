@@ -36,7 +36,7 @@ struct PlayersData {
   int8 hpMax;
   int8 manaMax;
   bool isAI;
-  uint8 dcards;
+  int8 dcards;
   bytes32 game;
   string name;
   string deck;
@@ -75,7 +75,7 @@ library Players {
     _valueSchema[3] = SchemaType.INT8;
     _valueSchema[4] = SchemaType.INT8;
     _valueSchema[5] = SchemaType.BOOL;
-    _valueSchema[6] = SchemaType.UINT8;
+    _valueSchema[6] = SchemaType.INT8;
     _valueSchema[7] = SchemaType.BYTES32;
     _valueSchema[8] = SchemaType.STRING;
     _valueSchema[9] = SchemaType.STRING;
@@ -381,29 +381,29 @@ library Players {
   /**
    * @notice Get dcards.
    */
-  function getDcards(bytes32 key) internal view returns (uint8 dcards) {
+  function getDcards(bytes32 key) internal view returns (int8 dcards) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Get dcards.
    */
-  function _getDcards(bytes32 key) internal view returns (uint8 dcards) {
+  function _getDcards(bytes32 key) internal view returns (int8 dcards) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
-    return (uint8(bytes1(_blob)));
+    return (int8(uint8(bytes1(_blob))));
   }
 
   /**
    * @notice Set dcards.
    */
-  function setDcards(bytes32 key, uint8 dcards) internal {
+  function setDcards(bytes32 key, int8 dcards) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -413,7 +413,7 @@ library Players {
   /**
    * @notice Set dcards.
    */
-  function _setDcards(bytes32 key, uint8 dcards) internal {
+  function _setDcards(bytes32 key, int8 dcards) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -989,7 +989,7 @@ library Players {
     int8 hpMax,
     int8 manaMax,
     bool isAI,
-    uint8 dcards,
+    int8 dcards,
     bytes32 game,
     string memory name,
     string memory deck,
@@ -1017,7 +1017,7 @@ library Players {
     int8 hpMax,
     int8 manaMax,
     bool isAI,
-    uint8 dcards,
+    int8 dcards,
     bytes32 game,
     string memory name,
     string memory deck,
@@ -1090,7 +1090,7 @@ library Players {
   )
     internal
     pure
-    returns (address owner, int8 hp, int8 mana, int8 hpMax, int8 manaMax, bool isAI, uint8 dcards, bytes32 game)
+    returns (address owner, int8 hp, int8 mana, int8 hpMax, int8 manaMax, bool isAI, int8 dcards, bytes32 game)
   {
     owner = (address(Bytes.slice20(_blob, 0)));
 
@@ -1104,7 +1104,7 @@ library Players {
 
     isAI = (_toBool(uint8(Bytes.slice1(_blob, 24))));
 
-    dcards = (uint8(Bytes.slice1(_blob, 25)));
+    dcards = (int8(uint8(Bytes.slice1(_blob, 25))));
 
     game = (Bytes.slice32(_blob, 26));
   }
@@ -1192,7 +1192,7 @@ library Players {
     int8 hpMax,
     int8 manaMax,
     bool isAI,
-    uint8 dcards,
+    int8 dcards,
     bytes32 game
   ) internal pure returns (bytes memory) {
     return abi.encodePacked(owner, hp, mana, hpMax, manaMax, isAI, dcards, game);
@@ -1238,7 +1238,7 @@ library Players {
     int8 hpMax,
     int8 manaMax,
     bool isAI,
-    uint8 dcards,
+    int8 dcards,
     bytes32 game,
     string memory name,
     string memory deck,

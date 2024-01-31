@@ -19,11 +19,11 @@ contract EffectSystem is System {
         SystemSwitch.call(data);
     }
 
-//    function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
 //        int8 dice = 6;
 //        int8 value = MathLib.RollRandomValueInt8(1, dice);
 //        EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
-//    }
+    }
 
     function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
