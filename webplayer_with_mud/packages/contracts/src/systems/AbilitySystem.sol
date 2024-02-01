@@ -11,16 +11,16 @@ import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract AbilitySystem is System {
     //使用技能
-    function UseAbility( bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         bytes32 player_key = CardOnBoards.getPlayerId(target);
         bytes32 game_key = Players.getGame(player_key);
 //        //如果是选择器
         bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
-        if (is_selector){
+        if (is_selector) {
             uint256 len = PlayerActionHistory.length(game_key);
             bytes32 action_key = keccak256(abi.encode(game_key, len));
             PlayerActionHistory.push(game_key, action_key);
-            ActionHistory.setActionType(action_key,Action.SelectChoice);
+            ActionHistory.setActionType(action_key, Action.SelectChoice);
             return; //Wait for player to select
         }
 
