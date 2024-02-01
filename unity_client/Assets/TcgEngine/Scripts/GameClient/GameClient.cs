@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using Unity.Netcode;
 using System.Threading.Tasks;
+using TcgEngine.AI;
+using TcgEngine.Gameplay;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine.Assertions;
@@ -72,6 +74,7 @@ namespace TcgEngine.Client
         private Dictionary<ushort, RefreshEvent> registered_commands = new Dictionary<ushort, RefreshEvent>();
 
         private static GameClient _instance;
+        private AIPlayerRandom ai_player;
 
         protected virtual void Awake()
         {
@@ -169,6 +172,11 @@ namespace TcgEngine.Client
                     MudManager.Get().CheckAction(game_data.GetOpponentPlayer(GetPlayerID()).username,
                         game_data.game_uid);
                 }
+            }
+
+            if (ai_player != null && ai_player.CanPlay())
+            {
+                ai_player.Update();
             }
         }
 
@@ -463,6 +471,13 @@ namespace TcgEngine.Client
                     player.hp = result.hp;
                     player.hp_max = result.hp;
                     Debug.Log("do onPlayerReady:" + player.player_id);
+
+                    if (player.is_ai)
+                    {
+                        ai_player = new AIPlayerRandom(new GameLogic(true), player.player_id,
+                            player.ai_level);
+                    }
+
                     onPlayerReady.Invoke(player.player_id);
                     onRefreshAll?.Invoke();
                 }
@@ -1128,33 +1143,33 @@ namespace TcgEngine.Client
                 yield return new WaitForSeconds(1.5f);
 
 
-                if (player.cards_hand.Count > 0 && game_data.IsPlayerActionTurn(player))
-                {
-                    Card random = player.GetRandomCard(player.cards_hand, rand);
-                    Slot slot = player.GetRandomEmptySlot(rand);
-
-                    if (random != null && random.CardData.IsRequireTargetSpell())
-                        slot = game_data.GetRandomSlot(rand); //Spell can target any slot, not just your side
-
-                    if (random != null && random.CardData.IsEquipment())
-                        slot = player.GetRandomOccupiedSlot(rand);
-
-                    if (random != null)
-                    {
-                        // gameplay.PlayCard(random, slot);
-
-                        MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
-                            slot.x, Slot.y_min, slot.p, false, random.uid);
-                    }
-                    else
-                    {
-                        Debug.Log("ai play card is null");
-                    }
-                }
-                else
-                {
-                    Debug.Log("ai play card not turn or hands 0");
-                }
+                // if (player.cards_hand.Count > 0 && game_data.IsPlayerActionTurn(player))
+                // {
+                //     Card random = player.GetRandomCard(player.cards_hand, rand);
+                //     Slot slot = player.GetRandomEmptySlot(rand);
+                //
+                //     if (random != null && random.CardData.IsRequireTargetSpell())
+                //         slot = game_data.GetRandomSlot(rand); //Spell can target any slot, not just your side
+                //
+                //     if (random != null && random.CardData.IsEquipment())
+                //         slot = player.GetRandomOccupiedSlot(rand);
+                //
+                //     if (random != null)
+                //     {
+                //         // gameplay.PlayCard(random, slot);
+                //
+                //         MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
+                //             slot.x, Slot.y_min, slot.p, false, random.uid);
+                //     }
+                //     else
+                //     {
+                //         Debug.Log("ai play card is null");
+                //     }
+                // }
+                // else
+                // {
+                //     Debug.Log("ai play card not turn or hands 0");
+                // }
 
                 //yield return new WaitForSeconds(1.5f);
 
