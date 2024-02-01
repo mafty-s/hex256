@@ -8,7 +8,7 @@ import {SetupNetworkResult} from "./setupNetwork";
 import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
 import {ethers} from "ethers";
-import {AbilityTarget, AbilityTrigger, RarityType, CardType, Status} from "./common";
+import {AbilityTarget, AbilityTrigger, RarityType, CardType, Status, Action} from "./common";
 
 // import { getTransactionResult } from "";
 
@@ -683,19 +683,28 @@ export function createSystemCalls(
                 player_id: record[1].playerId,
                 value: record[1].value
             });
-            if (res.type === 0) {
+
+            if (res.type == Action.SelectChoice) {
+                const game_extend = await worldContract.read.GetGameExtend([game_key]);
+                console.log('game_extend', game_extend);
+                // window.MyUnityInstance.
+                index++;
+                return;
+            }
+
+            if (res.type === Action.PlayCard) {
                 res.type = 1000;
             }
-            if (res.type === 1) {
+            if (res.type === Action.Attack) {
                 res.type = 1010;
             }
-            if (res.type === 2) {
+            if (res.type === Action.AttackPlayer) {
                 res.type = 1012;
             }
-            if (res.type === 3) {
+            if (res.type === Action.Move) {
                 res.type = 1015;
             }
-            if (res.type === 10) {
+            if (res.type === Action.EndTurn) {
                 res.type = 2015;
             }
 

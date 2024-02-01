@@ -25,7 +25,6 @@ public class MovePlayCard
     public int slot_x;
     public int slot_y;
     public int slot_p;
-
 }
 
 
@@ -44,13 +43,11 @@ public class MudUserData
 }
 
 
-
-    [System.Serializable]
+[System.Serializable]
 public class MudGameSettingResult
 {
     public string game_uid;
 }
-
 
 
 [System.Serializable]
@@ -112,7 +109,6 @@ public class MudActionHistory
 }
 
 
-
 public class MudManager : MonoBehaviour
 {
     public bool useMud = false;
@@ -155,7 +151,7 @@ public class MudManager : MonoBehaviour
     //     Trample,
     // }
 
-    
+
     public static StatusType GetStatusTypeByInt(int code)
     {
         switch (code)
@@ -165,13 +161,12 @@ public class MudManager : MonoBehaviour
             case 1:
                 return StatusType.Armor;
             // case 2:
-                // return StatusType.Attack;
-            
+            // return StatusType.Attack;
         }
 
         return StatusType.None;
     }
-    
+
     public static string GetCommandString(ushort code)
     {
         switch (code)
@@ -337,7 +332,7 @@ public class MudManager : MonoBehaviour
             addTask(msg);
 #endif
     }
-    
+
     void Start()
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
@@ -374,6 +369,7 @@ public class MudManager : MonoBehaviour
 #endif
         return false;
     }
+
     public void OnUser(string msg)
     {
         if (useMud == false)
@@ -402,7 +398,7 @@ public class MudManager : MonoBehaviour
             return null;
         }
 
-        if (this.msg ==  "")
+        if (this.msg == "")
         {
             return null;
         }
@@ -488,7 +484,7 @@ public class MudManager : MonoBehaviour
     }
 
     public void PlayerSetting(string username, string game_uid, string deck_id, bool is_ai, int hp, int mana,
-        int dcards,int pid,bool shuffer)
+        int dcards, int pid, bool shuffer)
     {
         if (useMud == false)
         {
@@ -543,7 +539,7 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void AttackPlayer(string game_uid,string attacker_id,int target_id)
+    public void AttackPlayer(string game_uid, string attacker_id, int target_id)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         attackPlayer(game_uid,attacker_id,target_id);
@@ -554,7 +550,7 @@ public class MudManager : MonoBehaviour
     {
     }
 
-    public void EndTurn(string game_uid, string player_name,int player_id)
+    public void EndTurn(string game_uid, string player_name, int player_id)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
         endTurn(game_uid,player_name,player_id);
@@ -582,7 +578,7 @@ public class MudManager : MonoBehaviour
         startMatchmaking(game_uid,nb_players);
 #endif
     }
-    
+
     public void CheckMatchmaking(int match_id)
     {
         if (useMud == false)
@@ -594,9 +590,9 @@ public class MudManager : MonoBehaviour
 #endif
     }
 
-    public void CheckPlayerSetting(string player_name,string game_uid)
+    public void CheckPlayerSetting(string player_name, string game_uid)
     {
-        Debug.Log("CheckPlayerSetting:"+player_name+","+game_uid);
+        Debug.Log("CheckPlayerSetting:" + player_name + "," + game_uid);
         if (useMud == false)
         {
             return;
@@ -604,7 +600,6 @@ public class MudManager : MonoBehaviour
 #if !UNITY_EDITOR && UNITY_WEBGL
         checkPlayerSetting(player_name,game_uid);
 #endif
-            
     }
 
     public void CheckAction(string player_name, string game_uid)
@@ -617,5 +612,24 @@ public class MudManager : MonoBehaviour
 #if !UNITY_EDITOR && UNITY_WEBGL
             checkAction(player_name,game_uid);
 #endif
+    }
+
+    public void SelectCard(string game_uid, string card_id, string card_key)
+    {
+    }
+    
+    public void SelectPlayer(string game_uid, string player_id)
+    {
+        
+    }
+    
+    public void SelectSlot(string game_uid, int slot_x, int slot_y, int slot_p)
+    {
+        
+    }
+
+    public void SelectChoice(string game_uid, int choice)
+    {
+        
     }
 }

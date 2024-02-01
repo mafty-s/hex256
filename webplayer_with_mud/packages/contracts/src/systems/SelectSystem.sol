@@ -6,6 +6,7 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {GamesExtended, CardOnBoards, PlayerActionHistory, ActionHistory, Ability} from "../codegen/index.sol";
 import {SelectorType, Action, AbilityTarget} from "../codegen/common.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
+import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 
 contract SelectSystem is System {
     function SelectCard(bytes32 game_uid, bytes32 target) public {
@@ -35,10 +36,9 @@ contract SelectSystem is System {
 //            resolve_queue.ResolveAll();
 
             GamesExtended.setSelector(game_uid, SelectorType.None);
-//            SystemSwitch.call(
-//                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (
-//                     card_key, 0x0000000000000000000000000000000000000000000000000000000000000000, true))
-//            );
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, true))
+            );
         }
 
         if (selector == SelectorType.SelectorChoice) {
@@ -50,6 +50,10 @@ contract SelectSystem is System {
 //            ResolveEffectTarget(ability, caster, target);
 //            AfterAbilityResolved(ability, caster);
 //            resolve_queue.ResolveAll();
+
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, true))
+            );
         }
 
         uint256 len = PlayerActionHistory.length(game_uid);
@@ -71,6 +75,11 @@ contract SelectSystem is System {
             return;
 
         if (selector == SelectorType.SelectTarget) {
+
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, false))
+            );
+
             uint256 len = PlayerActionHistory.length(game_uid);
             bytes32 action_key = keccak256(abi.encode(game_uid, len));
             PlayerActionHistory.push(game_uid, action_key);
