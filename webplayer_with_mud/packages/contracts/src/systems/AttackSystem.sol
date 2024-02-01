@@ -104,4 +104,6 @@ contract AttackSystem is System {
         ActionHistory.setTarget(action_key, bytes32(target));
 
     }
+
+
 }

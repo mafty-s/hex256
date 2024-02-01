@@ -52,15 +52,13 @@ contract AbilitySystem is System {
         }
     }
 
-    function TriggerPlayerCardsAbilityType(bytes32 caster,AbilityTrigger trigger ) public {
+    function TriggerPlayerCardsAbilityType(bytes32 caster, AbilityTrigger trigger) public {
         //todo
     }
 
-    function TriggerPlayerSecrets(bytes32 caster,AbilityTrigger trigger ) public {
+    function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) public {
         //todo
     }
-
-
 
     //触发指定技能
     function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
@@ -197,6 +195,39 @@ contract AbilitySystem is System {
         }
 
         return targets;
+    }
+
+
+    function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bool){
+        AbilityTarget target = Ability.getTarget(ability_key);
+        if (target == AbilityTarget.SelectTarget) {
+            //Wait for target
+            GoToSelectTarget(ability_key, caster);
+            return true;
+        } else if (target == AbilityTarget.CardSelector) {
+            GoToSelectorCard(ability_key, caster);
+            return true;
+        } else if (target.target == AbilityTarget.ChoiceSelector) {
+            GoToSelectorChoice(ability_key, caster);
+            return true;
+        }
+        return false;
+    }
+
+    function GoToSelectTarget(bytes32 attacker_key, bytes32 caster) internal {
+//        game_data.selector = SelectorType.SelectTarget;
+//        game_data.selector_player_id = caster.player_id;
+//        game_data.selector_ability_id = iability.id;
+//        game_data.selector_caster_uid = caster.uid;
+        //todo
+    }
+
+    function GoToSelectorCard(bytes32 attacker_key, bytes32 caster) internal {
+        //todo
+    }
+
+    function GoToSelectorChoice(bytes32 attacker_key, bytes32 caster) internal {
+        //todo
     }
 
 //    function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
