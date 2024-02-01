@@ -94,6 +94,12 @@ contract AttackSystem is System {
 
 //            AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key);
 //            AbilityLib.TriggerCardAbilityTypePlayer(AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key);
+
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
+                    AbilityTrigger.ON_BEFORE_ATTACK, attacker_key, target_key, false))
+            );
+
         }
 
         uint256 len = PlayerActionHistory.length(game_key);
@@ -102,6 +108,11 @@ contract AttackSystem is System {
         ActionHistory.setActionType(action_key, Action.AttackPlayer);
         ActionHistory.setCardId(action_key, attacker_key);
         ActionHistory.setTarget(action_key, bytes32(target));
+
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
+                AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, false))
+        );
 
     }
 

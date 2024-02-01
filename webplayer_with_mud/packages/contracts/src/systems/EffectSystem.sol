@@ -150,11 +150,14 @@ contract EffectSystem is System {
 
     //mana相关
     function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
-        int8 curr_mana = Players.getMana(target) + Ability.getValue(ability_key);
-        Players.setMana(target, curr_mana);
-        if (Players.getMana(target) < 0) {
-            Players.setMana(target, 0);
+        int8 value = Ability.getValue(ability_key);
+        int8 curr_mana = Players.getMana(target);
+        int8 mana_max = Players.getManaMax(target);
+        curr_mana = curr_mana + value;
+        if (curr_mana > mana_max) {
+            curr_mana = mana_max;
         }
+        Players.setMana(target, curr_mana);
 
         bytes32 game_key = Players.getGame(target);
         uint256 len = PlayerActionHistory.length(game_key);

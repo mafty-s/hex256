@@ -486,14 +486,15 @@ export function createSystemCalls(
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
+        console.log("tx-result", tx_result)
 
         const result = {
             card_uid: card_key,
             slot_x: slot.x,
             slot_y: 1,//slot.y,
             slot_p: slot.p,
-            mana_cost: tx_result.result.mana_cost,
-            player_mana: tx_result.result.player_mana,
+            mana_cost: tx_result.result[0],
+            player_mana: tx_result.result[1],
         }
         return convertBigIntToInt({hash, tx_result, result});
     }

@@ -959,6 +959,9 @@ namespace TcgEngine.Client
                 new FastBufferWriter(128, Unity.Collections.Allocator.Temp, TcgNetwork.MsgSizeMax);
             switch (action.type)
             {
+                case 11:
+                    game_data.GetPlayer(action.player_id).mana = action.value;
+                    break;
                 case 12:
                     //todo
                     Card card_for_add_status = game_data.GetCard(action.card_uid);

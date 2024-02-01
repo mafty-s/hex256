@@ -125,6 +125,7 @@ public class MudActionHistory
     public int slot_y;
     public int slot_p;
     public int player_id;
+    public int value;
 }
 
 

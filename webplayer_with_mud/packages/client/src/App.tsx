@@ -168,7 +168,7 @@ export const App = () => {
         createDeck('level1_ai', '', 'hell_hound|hell_hound|wolf_furious');
         createDeck('level1_player', '', 'crab_mana|crab_mana|crab_mana|crab_mana|crab_mana');
         createDeck('level2_ai', '', 'imp|imp|spell_stones|fire_chicken|fire_chicken|spell_burn');
-        createDeck('level2_player', '', 'tree_angry|snake_venom|potion_green|raccoon|potion_green|potion_green');
+        createDeck('level2_player', '', 'potion_green|potion_green|potion_green|potion_green|potion_green|potion_green');
         createDeck('level3_ai', '', 'potion_red|hell_hound|hell_hound|hell_hound|spell_burn');
         createDeck('level3_player', '', 'mammoth|snake_venom|spell_stomp|spell_stomp|snake_venom|mammoth');
         createDeck('level4_ai', '', 'ashes_snake|spell_stones|ashes_snake|spell_stones|ashes_snake|phoenix');
