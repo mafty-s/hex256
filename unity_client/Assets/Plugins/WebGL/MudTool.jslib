@@ -212,8 +212,8 @@ mergeInto(LibraryManager.library, {
         }
     },
 
-    selectCard: async function (game_uid, caster) {
-        let result = await mud.selectCard(UTF8ToString(game_uid), UTF8ToString(caster));
+    selectCard: async function (game_uid, card_id,card_uid) {
+        let result = await mud.selectCard(UTF8ToString(game_uid), UTF8ToString(card_id), UTF8ToString(card_uid));
     },
 
     selectPlayer: async function (game_uid, caster) {
@@ -228,7 +228,7 @@ mergeInto(LibraryManager.library, {
         let result = await mud.selectSlot(UTF8ToString(game_uid), choice);
     },
 
-    CancelSelection: async function (game_uid) {
+    cancelSelection: async function (game_uid) {
         let result = await mud.CancelSelection(UTF8ToString(game_uid));
     }
 

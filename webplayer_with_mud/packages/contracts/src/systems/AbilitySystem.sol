@@ -26,10 +26,12 @@ contract AbilitySystem is System {
 
         //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
-        for (uint i = 0; i < effects.length; i++) {
-            SystemSwitch.call(
-                abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card))
-            );
+        if (effects.length > 0) {
+            for (uint i = 0; i < effects.length; i++) {
+                SystemSwitch.call(
+                    abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card))
+                );
+            }
         }
         //添加状态，如嘲讽等
         uint8[] memory status = Ability.getStatus(ability_key);

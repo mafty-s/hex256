@@ -734,9 +734,10 @@ export function createSystemCalls(
         }
     }
 
-    const selectCard = async (game_uid: string, caster: string) => {
+    const selectCard = async (game_uid: string, card_id: string, card_uid) => {
+        console.log("selectCard", game_uid, card_id, card_uid);
         const game_key = calculateKeccak256Hash(game_uid);
-        const tx = await worldContract.write.selectCard([game_key,caster]);
+        const tx = await worldContract.write.SelectCard([game_key, card_uid]);
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);
@@ -745,7 +746,7 @@ export function createSystemCalls(
 
     const selectPlayer = async (game_uid: string, caster: string) => {
         const game_key = calculateKeccak256Hash(game_uid);
-        const tx = await worldContract.write.selectPlayer([game_key,caster]);
+        const tx = await worldContract.write.SelectPlayer([game_key, caster]);
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);
@@ -755,12 +756,21 @@ export function createSystemCalls(
     const selectSlot = async (game_uid: string, slot_x: number, slot_y: number, slot_p: number) => {
         const game_key = calculateKeccak256Hash(game_uid);
         let slot_encode = EncodeSlot({x: slot_x, y: slot_y, p: slot_p});
-        const tx = await worldContract.write.selectSlot([game_key,slot_encode]);
+        const tx = await worldContract.write.SelectSlot([game_key, slot_encode]);
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);
         console.log("tx-result", tx_result)
 
+    }
+
+    const cancelSelection = async (game_uid: string) => {
+        const game_key = calculateKeccak256Hash(game_uid);
+        const tx = await worldContract.write.CancelSelection([game_key]);
+        await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log("tx-result", tx_result)
     }
 
     const out = {
@@ -809,6 +819,7 @@ export function createSystemCalls(
         selectCard,
         selectPlayer,
         selectSlot,
+        cancelSelection,
     };
 
     window.mud = out;
