@@ -23,6 +23,8 @@ interface IGameStartSystem {
 
   function GetPlayerByGame(bytes32 game_key) external view returns (bytes32[] memory players);
 
+  function GetGameExtend(bytes32 game_key) external view returns (uint, bytes32, bytes32, bytes32);
+
   function getPlayerCards(
     bytes32 player_key
   )

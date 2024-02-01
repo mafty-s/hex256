@@ -16,8 +16,13 @@ contract AbilitySystem is System {
         bytes32 game_key = Players.getGame(player_key);
 //        //如果是选择器
         bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
-        if (is_selector)
+        if (is_selector){
+            uint256 len = PlayerActionHistory.length(game_key);
+            bytes32 action_key = keccak256(abi.encode(game_key, len));
+            PlayerActionHistory.push(game_key, action_key);
+            ActionHistory.setActionType(action_key,Action.SelectChoice);
             return; //Wait for player to select
+        }
 
         //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
@@ -222,11 +227,19 @@ contract AbilitySystem is System {
     }
 
     function GoToSelectorCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
-        //todo
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        GamesExtended.setSelector(game_uid, SelectorType.SelectorCard);
+        GamesExtended.setSelectorPlayerId(game_uid, player_key);
+        GamesExtended.setSelectorAbility(game_uid, ability_key);
+        GamesExtended.setSelectorCasterUid(game_uid, caster);
     }
 
     function GoToSelectorChoice(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
-        //todo
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        GamesExtended.setSelector(game_uid, SelectorType.SelectorChoice);
+        GamesExtended.setSelectorPlayerId(game_uid, player_key);
+        GamesExtended.setSelectorAbility(game_uid, ability_key);
+        GamesExtended.setSelectorCasterUid(game_uid, caster);
     }
 
     function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {

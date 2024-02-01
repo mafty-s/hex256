@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {Games, GamesData} from "../codegen/index.sol";
+import {Games, GamesData, GamesExtended} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
@@ -180,6 +180,15 @@ contract GameStartSystem is System {
 
     function GetPlayerByGame(bytes32 game_key) public view returns (bytes32[] memory players){
         return Games.getPlayers(game_key);
+    }
+
+    function GetGameExtend(bytes32 game_key) public view returns (uint, bytes32, bytes32, bytes32){
+        return (
+            uint(GamesExtended.getSelector(game_key)),
+            GamesExtended.getSelectorCasterUid(game_key),
+            GamesExtended.getSelectorPlayerId(game_key),
+            GamesExtended.getSelectorAbility(game_key)
+        );
     }
 
 //    function GetCardOnBoard(bytes32 card_key) public view returns (CardOnBoardsData memory){
