@@ -14,6 +14,10 @@ interface IAbilitySystem {
 
   function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 caster, bytes32 target, bool is_card) external;
 
+  function TriggerPlayerCardsAbilityType(bytes32 caster, AbilityTrigger trigger) external;
+
+  function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) external;
+
   function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) external;
 
   function AreTargetConditionsMetCard(

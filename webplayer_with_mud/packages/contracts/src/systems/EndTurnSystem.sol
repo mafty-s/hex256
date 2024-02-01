@@ -2,17 +2,19 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
+import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {Cards, CardsData} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action} from "../codegen/common.sol";
-
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Games, GamesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
 import {PlayerCardsHand, PlayerCardsDeck, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+
 
 contract EndTurnSystem is System {
 
@@ -63,7 +65,16 @@ contract EndTurnSystem is System {
         ActionHistory.setActionType(action_key, Action.EndTurn);
         ActionHistory.setPlayerId(action_key, player_index);
 
-        return (opponent_player_key, board_card_key, mana, mana_max);
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.START_OF_TURN))
+        );
+
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (player_key, AbilityTrigger.START_OF_TURN))
+        );
+
+
+    return (opponent_player_key, board_card_key, mana, mana_max);
     }
 
 }

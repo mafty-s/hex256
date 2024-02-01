@@ -52,6 +52,16 @@ contract AbilitySystem is System {
         }
     }
 
+    function TriggerPlayerCardsAbilityType(bytes32 caster,AbilityTrigger trigger ) public {
+        //todo
+    }
+
+    function TriggerPlayerSecrets(bytes32 caster,AbilityTrigger trigger ) public {
+        //todo
+    }
+
+
+
     //触发指定技能
     function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
         bytes32 trigger_card = triggerer != 0x0000000000000000000000000000000000000000000000000000000000000000 ? triggerer : caster; //Triggerer is the caster if not set
@@ -62,7 +72,6 @@ contract AbilitySystem is System {
     }
 
     function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
-        //todo
         return true;
     }
 
