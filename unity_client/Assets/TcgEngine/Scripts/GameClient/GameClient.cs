@@ -591,7 +591,7 @@ namespace TcgEngine.Client
 
             game_data.selector = SelectorType.SelectTarget;
             game_data.selector_player_id = card.player_id;
-            game_data.selector_ability_id = "play_set_attack1"; //todo
+            game_data.selector_ability_id = msg.selectorAbility;
             game_data.selector_caster_uid = msg.selectorCasterUid;
         }
 

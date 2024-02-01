@@ -9,6 +9,7 @@ import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
 import {ethers} from "ethers";
 import {AbilityTarget, AbilityTrigger, RarityType, CardType, Status, Action} from "./common";
+import {abilities} from "./abilities";
 
 // import { getTransactionResult } from "";
 
@@ -239,6 +240,7 @@ export function createSystemCalls(
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    // let ablities = [];
     const initAbility = async (
         id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
 
@@ -282,6 +284,7 @@ export function createSystemCalls(
 
         await waitForTransaction(tx);
 
+        // ablities[key.toString()] = id;
         return tx;
     }
 
@@ -691,7 +694,7 @@ export function createSystemCalls(
                     selector: (Number)(game_extend[0]),
                     selectorCasterUid: game_extend[1],
                     selectorPlayerId: game_extend[2],
-                    selectorAbility: game_extend[3],
+                    selectorAbility: abilities[game_extend[3]],
                 }))
                 index++;
                 return;
@@ -820,6 +823,7 @@ export function createSystemCalls(
         selectPlayer,
         selectSlot,
         cancelSelection,
+        // ablities,
     };
 
     window.mud = out;
