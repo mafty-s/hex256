@@ -37,11 +37,13 @@ contract SelectSystem is System {
 
             GamesExtended.setSelector(game_uid, SelectorType.None);
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, true))
+                abi.encodeCall(IAbilitySystem.ResolveEffectTarget, (game_uid, ability_key, caster, target, true))
             );
-        }
-
-        if (selector == SelectorType.SelectorChoice) {
+            uint256 len = PlayerActionHistory.length(game_uid);
+            bytes32 action_key = keccak256(abi.encode(game_uid, len));
+            PlayerActionHistory.push(game_uid, action_key);
+            ActionHistory.setActionType(action_key, Action.SelectCard);
+        } else if (selector == SelectorType.SelectorChoice) {
 //            if (!ability.IsCardSelectionValid(game_data, caster, target, card_array))
 //                return; //Supports conditions and filters
 //
@@ -54,12 +56,9 @@ contract SelectSystem is System {
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, true))
             );
+        } else {
+            revert("SelectCard: selector type not supported");
         }
-
-        uint256 len = PlayerActionHistory.length(game_uid);
-        bytes32 action_key = keccak256(abi.encode(game_uid, len));
-        PlayerActionHistory.push(game_uid, action_key);
-        ActionHistory.setActionType(action_key, Action.SelectCard);
     }
 
     function SelectPlayer(bytes32 game_uid, bytes32 target) public {
@@ -145,4 +144,5 @@ contract SelectSystem is System {
             return;
         }
     }
+
 }

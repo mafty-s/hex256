@@ -253,4 +253,17 @@ contract AbilitySystem is System {
         }
     }
 
+    function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        //使用效果
+        bytes4[] memory effects = Ability.getEffects(ability_key);
+        if (effects.length > 0) {
+            for (uint i = 0; i < effects.length; i++) {
+                SystemSwitch.call(
+                    abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card))
+                );
+            }
+        }
+        GamesExtended.setLastTarget(game_uid, target);
+    }
+
 }
