@@ -55,12 +55,24 @@ contract AbilitySystem is System {
     //触发指定技能
     function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
         bytes32 trigger_card = triggerer != 0x0000000000000000000000000000000000000000000000000000000000000000 ? triggerer : caster; //Triggerer is the caster if not set
-        if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(caster, triggerer)) {
+//    todo    if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMetCard(caster, triggerer)) {
+        if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced)) {
             UseAbility(ability_key, caster, trigger_card, is_card);
         }
     }
 
-    function AreTriggerConditionsMet(bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+    function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+        //todo
+        return true;
+    }
+
+    function AreTargetConditionsMetPlayer(bytes32 game_uid, bytes32 caster, bytes32 trigger_player) public pure returns (bool) {
+        //todo
+        return true;
+    }
+
+    function AreTargetConditionsMetSlot(bytes32 game_uid, bytes32 caster, uint16 slot) public pure returns (bool) {
+        //todo
         return true;
     }
 
@@ -89,5 +101,46 @@ contract AbilitySystem is System {
         bool condition_match = AreTargetConditionsMetCard(game_uid, caster, target);
         return condition_match;
     }
+
+    //Can target check additional restrictions and is usually for SelectTarget or PlayTarget abilities
+    function CanTargetPlayer(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool){
+        return AreTargetConditionsMetPlayer(game_uid, caster, target);
+    }
+
+    function CanTargetSlot(bytes32 game_uid, bytes32 caster, uint16 target) internal returns (bool){
+
+        return AreTargetConditionsMetSlot(game_uid, caster, target); //No additional conditions for slots
+    }
+
+    function CanTarget(bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
+        if (is_card) {
+            return CanTargetCard(game_uid, caster, target);
+        } else {
+            return CanTargetPlayer(game_uid, caster, target);
+        }
+    }
+
+    //Return player targets,  memory_array is used for optimization and avoid allocating new memory
+    function GetPlayerTargets(bytes32 ability_key, bytes32 caster_key) internal returns (bytes32[] memory){
+
+        AbilityTarget target = Ability.getTarget(ability_key);
+        bytes32[] memory targets = new bytes32[](1);
+
+        if (target == AbilityTarget.PlayerSelf) {
+            bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
+            targets[0] = player_key;
+        }
+
+        return targets;
+    }
+
+//    function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
+//        //todo
+//        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
+//        for (uint i = 0; i < targets.length; i++) {
+//            bytes32 target = targets[i];
+//            ResolveEffectTarget(ability_key, caster_key, target);
+//        }
+//    }
 
 }

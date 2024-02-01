@@ -82,26 +82,26 @@ enum AbilityTrigger {
 }
 
 enum AbilityTarget {
-  NONE,
-  SELF,
-  PLAYER_SELF,
-  PLAYER_OPPONENT,
-  ALL_PLAYERS,
-  ALL_CARDS_BOARD,
-  ALL_CARDS_HAND,
-  ALL_CARDS_ALL_PILES,
-  ALL_SLOTS,
-  ALL_CARD_DATA,
-  PLAY_TARGET,
-  ABILITY_TRIGGERER,
-  EQUIPPED_CARD,
+  None,
+  Self,
+  PlayerSelf,
+  PlayerOpponent,
+  AllPlayers,
+  AllCardsBoard,
+  AllCardsHand,
+  AllCardsAllPiles,
+  AllSlots,
+  AllCardData,
+  PlayTarget,
+  AbilityTriggerer,
+  EquippedCard,
   SelectTarget,
-  CARD_SELECTOR,
-  CHOICE_SELECTOR,
-  LAST_PLAYED,
-  LAST_TARGETED,
-  LAST_DESTROYED,
-  LAST_SUMMONED
+  CardSelector,
+  ChoiceSelector,
+  LastPlayed,
+  LastTargeted,
+  LastDestroyed,
+  LastSummoned
 }
 
 enum Team {
