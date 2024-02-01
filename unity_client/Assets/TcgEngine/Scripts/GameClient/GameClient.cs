@@ -575,9 +575,24 @@ namespace TcgEngine.Client
             AbilityData ability = AbilityData.Get(game_data.selector_ability_id);
             if (ability.target == AbilityTarget.ChoiceSelector)
             {
-                
+            }
+        }
+
+        public void OnChangeGameExtendSuccess(string message)
+        {
+            Debug.Log("OnChangeGameExtendSuccess:" + message);
+            MudGameExtend msg = JsonUtility.FromJson<MudGameExtend>(message);
+            Card card = game_data.GetCard(msg.selectorCasterUid);
+            if (card == null)
+            {
+                Debug.Log("OnChangeGameExtendSuccess card is null");
+                return;
             }
 
+            game_data.selector = SelectorType.SelectTarget;
+            game_data.selector_player_id = card.player_id;
+            game_data.selector_ability_id = "play_set_attack1"; //todo
+            game_data.selector_caster_uid = msg.selectorCasterUid;
         }
 
         public void AttackTarget(Card card, Card target)
@@ -614,7 +629,6 @@ namespace TcgEngine.Client
             mdata.card_uid = card.uid;
             mdata.slot = slot;
             SendAction(GameAction.Move, mdata);
-
 
 
             if (MudManager.Get().useMud)
@@ -667,6 +681,10 @@ namespace TcgEngine.Client
             MsgCard mdata = new MsgCard();
             mdata.card_uid = card.uid;
             SendAction(GameAction.SelectCard, mdata);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().SelectCard(game_data.game_uid, card.CardData.id, card.uid);
+            }
         }
 
         public void SelectPlayer(Player player)
@@ -674,11 +692,19 @@ namespace TcgEngine.Client
             MsgPlayer mdata = new MsgPlayer();
             mdata.player_id = player.player_id;
             SendAction(GameAction.SelectPlayer, mdata);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().SelectPlayer(game_data.game_uid, player.username);
+            }
         }
 
         public void SelectSlot(Slot slot)
         {
             SendAction(GameAction.SelectSlot, slot);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().SelectSlot(game_data.game_uid, slot.x, slot.y, slot.p);
+            }
         }
 
         public void SelectChoice(int c)
@@ -686,11 +712,19 @@ namespace TcgEngine.Client
             MsgInt choice = new MsgInt();
             choice.value = c;
             SendAction(GameAction.SelectChoice, choice);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().SelectChoice(game_data.game_uid,c);
+            }
         }
 
         public void CancelSelection()
         {
             SendAction(GameAction.CancelSelect);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().CancelSelection(game_data.game_uid);
+            }
         }
 
         public void SendChatMsg(string msg)
@@ -910,10 +944,11 @@ namespace TcgEngine.Client
                 case 12:
                     //todo
                     Card card_for_add_status = game_data.GetCard(action.card_uid);
-                    if (card_for_add_status!=null)
+                    if (card_for_add_status != null)
                     {
-                        card_for_add_status.AddStatus(StatusData.Get(StatusType.Stealth),0,10000);
+                        card_for_add_status.AddStatus(StatusData.Get(StatusType.Stealth), 0, 10000);
                     }
+
                     break;
                 case GameAction.NewTurn:
                     MsgPlayer mdata2 = new MsgPlayer();

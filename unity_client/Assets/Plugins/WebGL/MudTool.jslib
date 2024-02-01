@@ -222,6 +222,14 @@ mergeInto(LibraryManager.library, {
 
     selectSlot: async function (game_uid, slot_x, slot_y, slot_p) {
         let result = await mud.selectSlot(UTF8ToString(game_uid), slot_x, slot_y, slot_p);
+    },
+
+    selectChoice: async function(game_uid ,choice){
+        let result = await mud.selectSlot(UTF8ToString(game_uid), choice);
+    },
+
+    CancelSelection: async function (game_uid) {
+        let result = await mud.CancelSelection(UTF8ToString(game_uid));
     }
 
 });

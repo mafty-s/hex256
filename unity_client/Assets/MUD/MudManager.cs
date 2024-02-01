@@ -332,6 +332,22 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern string checkAction(string player_name,string game_uid);
+    
+    [DllImport("__Internal")]
+    private static extern string selectCard(string game_uid,string card_id,string card_uid);
+    
+    [DllImport("__Internal")]
+    private static extern string selectPlayer(string game_uid,string player_id);
+    
+    [DllImport("__Internal")]
+    private static extern string selectSlot(string game_uid,int slot_x,int slot_y,int slot_p);
+    
+    [DllImport("__Internal")]
+    private static extern string selectChoice(string game_uid,int choice);
+    
+    [DllImport("__Internal")]
+    private static extern string cancelSelection(string game_uid);
+
 #endif
 
     public static void SendTask(ushort code)
@@ -625,17 +641,36 @@ public class MudManager : MonoBehaviour
 
     public void SelectCard(string game_uid, string card_id, string card_key)
     {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        selectCard(game_uid,card_id,card_key);
+#endif
     }
 
     public void SelectPlayer(string game_uid, string player_id)
     {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        selectPlayer(game_uid,player_id);
+#endif
     }
 
     public void SelectSlot(string game_uid, int slot_x, int slot_y, int slot_p)
     {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        selectSlot(game_uid,slot_x,slot_y,slot_p);
+#endif
     }
 
     public void SelectChoice(string game_uid, int choice)
     {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        selectChoice(game_uid,choice);
+#endif
+    }
+
+    public void CancelSelection(string game_uid)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        cancelSelection(game_uid);
+#endif
     }
 }
