@@ -687,7 +687,12 @@ export function createSystemCalls(
             if (res.type == Action.SelectChoice) {
                 const game_extend = await worldContract.read.GetGameExtend([game_key]);
                 console.log('game_extend', game_extend);
-                // window.MyUnityInstance.
+                window.MyUnityInstance.SendMessage('Client', 'OnChangeGameExtendSuccess', JSON.stringify({
+                    selector: (Number)(game_extend[0]),
+                    selectorCasterUid: game_extend[1],
+                    selectorPlayerId: game_extend[2],
+                    selectorAbility: game_extend[3],
+                }))
                 index++;
                 return;
             }
@@ -727,6 +732,35 @@ export function createSystemCalls(
             const card_keys = player[1];
             console.log("player", i, player);
         }
+    }
+
+    const selectCard = async (game_uid: string, caster: string) => {
+        const game_key = calculateKeccak256Hash(game_uid);
+        const tx = await worldContract.write.selectCard([game_key,caster]);
+        await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log("tx-result", tx_result)
+    }
+
+    const selectPlayer = async (game_uid: string, caster: string) => {
+        const game_key = calculateKeccak256Hash(game_uid);
+        const tx = await worldContract.write.selectPlayer([game_key,caster]);
+        await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log("tx-result", tx_result)
+    }
+
+    const selectSlot = async (game_uid: string, slot_x: number, slot_y: number, slot_p: number) => {
+        const game_key = calculateKeccak256Hash(game_uid);
+        let slot_encode = EncodeSlot({x: slot_x, y: slot_y, p: slot_p});
+        const tx = await worldContract.write.selectSlot([game_key,slot_encode]);
+        await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log("tx-result", tx_result)
+
     }
 
     const out = {
@@ -772,6 +806,9 @@ export function createSystemCalls(
         checkPlayerSetting,
         checkAction,
         refreshGame,
+        selectCard,
+        selectPlayer,
+        selectSlot,
     };
 
     window.mud = out;

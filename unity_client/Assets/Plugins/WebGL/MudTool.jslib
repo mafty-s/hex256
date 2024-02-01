@@ -212,4 +212,16 @@ mergeInto(LibraryManager.library, {
         }
     },
 
+    selectCard: async function (game_uid, caster) {
+        let result = await mud.selectCard(UTF8ToString(game_uid), UTF8ToString(caster));
+    },
+
+    selectPlayer: async function (game_uid, caster) {
+        let result = await mud.selectplayer(UTF8ToString(game_uid), UTF8ToString(caster));
+    },
+
+    selectSlot: async function (game_uid, slot_x, slot_y, slot_p) {
+        let result = await mud.selectSlot(UTF8ToString(game_uid), slot_x, slot_y, slot_p);
+    }
+
 });

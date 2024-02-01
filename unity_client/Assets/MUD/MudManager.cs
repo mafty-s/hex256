@@ -7,6 +7,15 @@ using TcgEngine;
 
 
 [System.Serializable]
+public class MudGameExtend
+{
+    public int selector;
+    public string selectorCasterUid;
+    public string selectorPlayerId;
+    public string selectorAbility;
+}
+
+[System.Serializable]
 public class MudPlayCard
 {
     public string card_uid;
@@ -617,19 +626,16 @@ public class MudManager : MonoBehaviour
     public void SelectCard(string game_uid, string card_id, string card_key)
     {
     }
-    
+
     public void SelectPlayer(string game_uid, string player_id)
     {
-        
     }
-    
+
     public void SelectSlot(string game_uid, int slot_x, int slot_y, int slot_p)
     {
-        
     }
 
     public void SelectChoice(string game_uid, int choice)
     {
-        
     }
 }
