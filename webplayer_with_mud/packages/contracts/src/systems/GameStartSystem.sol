@@ -191,6 +191,15 @@ contract GameStartSystem is System {
         );
     }
 
+    function GetCard(bytes32 card_key) public view returns (int8 hp, int8 mana, int8 attack, int8 damage){
+        return (
+            CardOnBoards.getHp(card_key),
+            CardOnBoards.getMana(card_key),
+            CardOnBoards.getAttack(card_key),
+            CardOnBoards.getDamage(card_key)
+        );
+    }
+
 //    function GetCardOnBoard(bytes32 card_key) public view returns (CardOnBoardsData memory){
 //        return CardOnBoards.get(card_key);
 //    }

@@ -25,6 +25,8 @@ interface IGameStartSystem {
 
   function GetGameExtend(bytes32 game_key) external view returns (uint, bytes32, bytes32, bytes32);
 
+  function GetCard(bytes32 card_key) external view returns (int8 hp, int8 mana, int8 attack, int8 damage);
+
   function getPlayerCards(
     bytes32 player_key
   )

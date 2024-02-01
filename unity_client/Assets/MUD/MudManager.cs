@@ -26,6 +26,16 @@ public class MudPlayCard
     public int player_mana;
 }
 
+[System.Serializable]
+public class MudCard
+{
+    public string card_uid;
+    public int hp;
+    public int mana;
+    public int attack;
+    public int damage;
+}
+
 
 [System.Serializable]
 public class MovePlayCard

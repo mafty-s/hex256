@@ -214,6 +214,11 @@ mergeInto(LibraryManager.library, {
 
     selectCard: async function (game_uid, card_id,card_uid) {
         let result = await mud.selectCard(UTF8ToString(game_uid), UTF8ToString(card_id), UTF8ToString(card_uid));
+        if (result != null) {
+                    let returnStr = JSON.stringify(result);
+            MyUnityInstance.SendMessage("Client", "OnSelectCardSuccess", returnStr);
+        }
+        
     },
 
     selectPlayer: async function (game_uid, caster) {

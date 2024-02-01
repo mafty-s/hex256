@@ -737,14 +737,24 @@ export function createSystemCalls(
         }
     }
 
-    const selectCard = async (game_uid: string, card_id: string, card_uid) => {
+    const selectCard = async (game_uid: string, card_id: string, card_uid:string) => {
         console.log("selectCard", game_uid, card_id, card_uid);
         const game_key = calculateKeccak256Hash(game_uid);
         const tx = await worldContract.write.SelectCard([game_key, card_uid]);
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);
+
+        const target_card = await worldContract.read.GetCard([card_uid]);
         console.log("tx-result", tx_result)
+        console.log("target_card", target_card)
+        return {
+            card_uid: card_uid,
+            hp: (Number)(target_card[0]),
+            mana: (Number)(target_card[1]),
+            attack: (Number)(target_card[2]),
+            damage: (Number)(target_card[3]),
+        }
     }
 
     const selectPlayer = async (game_uid: string, caster: string) => {

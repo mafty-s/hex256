@@ -687,6 +687,24 @@ namespace TcgEngine.Client
             }
         }
 
+        public void OnSelectCardSuccess(string message)
+        {
+            Debug.Log("OnSelectCardSuccess:" + message);
+            MudCard result = JsonUtility.FromJson<MudCard>(message);
+            Card card = game_data.GetCard(result.card_uid);
+            if (card == null)
+            {
+                Debug.Log("card is null");
+                return;
+            }
+
+            game_data.selector = SelectorType.None;
+            card.hp = result.hp;
+            card.mana = result.mana;
+            card.attack = result.attack;
+            card.damage = result.damage;
+        }
+
         public void SelectPlayer(Player player)
         {
             MsgPlayer mdata = new MsgPlayer();
@@ -714,7 +732,7 @@ namespace TcgEngine.Client
             SendAction(GameAction.SelectChoice, choice);
             if (MudManager.Get().useMud)
             {
-                MudManager.Get().SelectChoice(game_data.game_uid,c);
+                MudManager.Get().SelectChoice(game_data.game_uid, c);
             }
         }
 
