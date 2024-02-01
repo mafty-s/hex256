@@ -20,14 +20,14 @@ library BaseLogicLib {
         return player_key != 0
         && Games.getCurrentPlayer(match_key) == player_key
         && Games.getGameState(match_key) == GameState.PLAY
-        && GamesExtended.getSelector(match_key) == SelectorType.NONE;
+        && GamesExtended.getSelector(match_key) == SelectorType.None;
     }
 
     function IsPlayerSelectorTurn(bytes32 match_key, bytes32 player_key) internal view returns (bool) {
         return player_key != 0
         && GamesExtended.getSelectorPlayerId(match_key) == player_key
         && Games.getGameState(match_key) == GameState.PLAY
-        && GamesExtended.getSelector(match_key) != SelectorType.NONE;
+        && GamesExtended.getSelector(match_key) != SelectorType.None;
     }
 
     function CanPlayCard(bytes32 card_key, Slot memory slot, bool skip_cost) internal view returns (bool) {

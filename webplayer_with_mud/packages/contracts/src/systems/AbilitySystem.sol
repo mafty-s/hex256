@@ -5,13 +5,20 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
-import {AbilityTrigger, Status, Action, AbilityTarget} from "../codegen/common.sol";
+import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract AbilitySystem is System {
     //使用技能
-    function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function UseAbility( bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        bytes32 player_key = CardOnBoards.getPlayerId(target);
+        bytes32 game_key = Players.getGame(player_key);
+//        //如果是选择器
+        bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
+        if (is_selector)
+            return; //Wait for player to select
+
         //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
         for (uint i = 0; i < effects.length; i++) {
@@ -21,8 +28,6 @@ contract AbilitySystem is System {
         }
         //添加状态，如嘲讽等
         uint8[] memory status = Ability.getStatus(ability_key);
-        bytes32 player_key = CardOnBoards.getPlayerId(target);
-        bytes32 game_key = Players.getGame(player_key);
         if (status.length > 0) {
             for (uint i = 0; i < status.length; i++) {
                 if (is_card) {
@@ -69,6 +74,7 @@ contract AbilitySystem is System {
         }
     }
 
+
     function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
         return true;
     }
@@ -83,13 +89,6 @@ contract AbilitySystem is System {
         return true;
     }
 
-    function ResolveCardAbilitySelector(bytes32 ability_key) internal {
-        AbilityTarget target = Ability.getTarget(ability_key);
-        if (target == AbilityTarget.SelectTarget) {
-            //todo
-        }
-        //todo
-    }
 
     function IsSelector(AbilityTarget target) internal returns (bool) {
         return target == AbilityTarget.SelectTarget || target == AbilityTarget.CardSelector || target == AbilityTarget.ChoiceSelector;
@@ -207,7 +206,7 @@ contract AbilitySystem is System {
         } else if (target == AbilityTarget.CardSelector) {
             GoToSelectorCard(game_uid, ability_key, caster);
             return true;
-        } else if (target.target == AbilityTarget.ChoiceSelector) {
+        } else if (target == AbilityTarget.ChoiceSelector) {
             GoToSelectorChoice(game_uid, ability_key, caster);
             return true;
         }
@@ -215,11 +214,11 @@ contract AbilitySystem is System {
     }
 
     function GoToSelectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
-//        game_data.selector = SelectorType.SelectTarget;
-//        game_data.selector_player_id = caster.player_id;
-//        game_data.selector_ability_id = iability.id;
-//        game_data.selector_caster_uid = caster.uid;
-        //todo
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        GamesExtended.setSelector(game_uid, SelectorType.SelectTarget);
+        GamesExtended.setSelectorPlayerId(game_uid, player_key);
+        GamesExtended.setSelectorAbility(game_uid, ability_key);
+        GamesExtended.setSelectorCasterUid(game_uid, caster);
     }
 
     function GoToSelectorCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
@@ -230,13 +229,13 @@ contract AbilitySystem is System {
         //todo
     }
 
-//    function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
-//        //todo
-//        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
-//        for (uint i = 0; i < targets.length; i++) {
-//            bytes32 target = targets[i];
+    function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
+        //todo
+        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
+        for (uint i = 0; i < targets.length; i++) {
+            bytes32 target = targets[i];
 //            ResolveEffectTarget(ability_key, caster_key, target);
-//        }
-//    }
+        }
+    }
 
 }

@@ -73,8 +73,7 @@ contract EndTurnSystem is System {
             abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (player_key, AbilityTrigger.START_OF_TURN))
         );
 
-
-    return (opponent_player_key, board_card_key, mana, mana_max);
+        return (opponent_player_key, board_card_key, mana, mana_max);
     }
 
 }

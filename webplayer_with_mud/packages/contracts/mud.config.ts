@@ -2,7 +2,7 @@ import {mudConfig} from "@latticexyz/world/register";
 
 export default mudConfig({
     enums: {
-        SelectorType: ["NONE", "SELECT_TARGET", "SELECTOR_CARD", "SELECTOR_CHOICE"],
+        SelectorType: ["None","SelectTarget","SelectorCard","SelectorChoice"],
         RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
