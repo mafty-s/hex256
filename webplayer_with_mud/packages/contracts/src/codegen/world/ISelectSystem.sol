@@ -10,9 +10,9 @@ pragma solidity >=0.8.21;
 interface ISelectSystem {
   function SelectCard(bytes32 game_uid, bytes32 card_uid) external;
 
-  function SelectPlayer(bytes32 game_uid, bytes32 card_uid) external;
+  function SelectPlayer(bytes32 game_uid, bytes32 target) external;
 
-  function SelectSlot(bytes32 game_uid, uint16 slot) external;
+  function SelectSlot(bytes32 game_uid, uint16 slot_encode) external;
 
   function SelectChoice(bytes32 game_uid, uint8 choice) external;
 

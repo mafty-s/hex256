@@ -65,6 +65,12 @@ library SlotLib {
         return uint8(slot / 100);
     }
 
+    function DecodeSlot(uint16 encode) internal pure returns (Slot memory){
+        uint8 x = DecodeSlotX(encode);
+        uint8 y = DecodeSlotY(encode);
+        uint8 p = DecodeSlotP(encode);
+        return NewSlot(x, y, p);
+    }
 
     function IsInRangeX(Slot memory slot, uint8 range) internal pure returns (bool) {
         return (slot.x >= (x_min + range)) && (slot.x <= (x_max - range));
