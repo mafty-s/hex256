@@ -3,8 +3,8 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {GamesExtended, CardOnBoards, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
-import {SelectorType, Action} from "../codegen/common.sol";
+import {GamesExtended, CardOnBoards, PlayerActionHistory, ActionHistory, Ability} from "../codegen/index.sol";
+import {SelectorType, Action, AbilityTarget} from "../codegen/common.sol";
 
 
 contract SelectSystem is System {
@@ -57,11 +57,12 @@ contract SelectSystem is System {
         if (selector == SelectorType.None) {
             return;
         }
-
-        uint256 len = PlayerActionHistory.length(game_uid);
-        bytes32 action_key = keccak256(abi.encode(game_uid, len));
-        PlayerActionHistory.push(game_uid, action_key);
-        ActionHistory.setActionType(action_key, Action.SelectPlayer);
+        if (selector == SelectorType.SelectTarget) {
+            uint256 len = PlayerActionHistory.length(game_uid);
+            bytes32 action_key = keccak256(abi.encode(game_uid, len));
+            PlayerActionHistory.push(game_uid, action_key);
+            ActionHistory.setActionType(action_key, Action.SelectPlayer);
+        }
     }
 
     function SelectSlot(bytes32 game_uid, uint16 slot) public {
@@ -70,10 +71,12 @@ contract SelectSystem is System {
             return;
         }
 
-        uint256 len = PlayerActionHistory.length(game_uid);
-        bytes32 action_key = keccak256(abi.encode(game_uid, len));
-        PlayerActionHistory.push(game_uid, action_key);
-        ActionHistory.setActionType(action_key, Action.SelectSlot);
+        if (selector == SelectorType.SelectTarget) {
+            uint256 len = PlayerActionHistory.length(game_uid);
+            bytes32 action_key = keccak256(abi.encode(game_uid, len));
+            PlayerActionHistory.push(game_uid, action_key);
+            ActionHistory.setActionType(action_key, Action.SelectSlot);
+        }
     }
 
     function SelectChoice(bytes32 game_uid, uint8 choice) public {
@@ -82,10 +85,21 @@ contract SelectSystem is System {
             return;
         }
 
-        uint256 len = PlayerActionHistory.length(game_uid);
-        bytes32 action_key = keccak256(abi.encode(game_uid, len));
-        PlayerActionHistory.push(game_uid, action_key);
-        ActionHistory.setActionType(action_key, Action.SelectChoice);
+        bytes32 caster = GamesExtended.getSelectorCasterUid(game_uid);
+        bytes32 ability_key = GamesExtended.getSelectorAbility(game_uid);
+
+        if (caster == 0 || ability_key == 0 || choice < 0) {
+            return;
+        }
+
+        AbilityTarget ability_target = Ability.getTarget(ability_key);
+        if (selector == SelectorType.SelectorChoice && ability_target == AbilityTarget.ChoiceSelector)
+        {
+            uint256 len = PlayerActionHistory.length(game_uid);
+            bytes32 action_key = keccak256(abi.encode(game_uid, len));
+            PlayerActionHistory.push(game_uid, action_key);
+            ActionHistory.setActionType(action_key, Action.SelectChoice);
+        }
     }
 
     function CancelSelection(bytes32 game_uid) public {

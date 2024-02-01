@@ -115,7 +115,7 @@ contract EffectSystem4 is System {
         if (attacker_type == EffectAttackerType.Self)
             return caster;
         if (attacker_type == EffectAttackerType.AbilityTriggerer) {
-            return GamesExtended.getAbilityTriggerer(game_key);
+            return GamesExtended.getAbilityTrigger(game_key);
         }
         if (attacker_type == EffectAttackerType.LastPlayed) {
             return GamesExtended.getLastPlayed(game_key);

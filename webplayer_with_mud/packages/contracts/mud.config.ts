@@ -163,7 +163,7 @@ export default mudConfig({
                 selectorPlayerId: "bytes32",
                 selectorCasterUid: "bytes32",
                 selectorAbility: "bytes32",
-                abilityTriggerer: "bytes32",
+                abilityTrigger: "bytes32",
                 lastPlayed: "bytes32",
                 lastTarget: "bytes32",
                 lastDestroyed: "bytes32",
