@@ -202,19 +202,19 @@ contract AbilitySystem is System {
         AbilityTarget target = Ability.getTarget(ability_key);
         if (target == AbilityTarget.SelectTarget) {
             //Wait for target
-            GoToSelectTarget(ability_key, caster);
+            GoToSelectTarget(game_uid, ability_key, caster);
             return true;
         } else if (target == AbilityTarget.CardSelector) {
-            GoToSelectorCard(ability_key, caster);
+            GoToSelectorCard(game_uid, ability_key, caster);
             return true;
         } else if (target.target == AbilityTarget.ChoiceSelector) {
-            GoToSelectorChoice(ability_key, caster);
+            GoToSelectorChoice(game_uid, ability_key, caster);
             return true;
         }
         return false;
     }
 
-    function GoToSelectTarget(bytes32 attacker_key, bytes32 caster) internal {
+    function GoToSelectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
 //        game_data.selector = SelectorType.SelectTarget;
 //        game_data.selector_player_id = caster.player_id;
 //        game_data.selector_ability_id = iability.id;
@@ -222,11 +222,11 @@ contract AbilitySystem is System {
         //todo
     }
 
-    function GoToSelectorCard(bytes32 attacker_key, bytes32 caster) internal {
+    function GoToSelectorCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
         //todo
     }
 
-    function GoToSelectorChoice(bytes32 attacker_key, bytes32 caster) internal {
+    function GoToSelectorChoice(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
         //todo
     }
 
