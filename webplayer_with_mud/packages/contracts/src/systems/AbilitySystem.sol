@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
-import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players} from "../codegen/index.sol";
+import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
 import {AbilityTrigger, Status, Action, AbilityTarget} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
@@ -125,10 +125,66 @@ contract AbilitySystem is System {
 
         AbilityTarget target = Ability.getTarget(ability_key);
         bytes32[] memory targets = new bytes32[](1);
-
+        //todo
         if (target == AbilityTarget.PlayerSelf) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
             targets[0] = player_key;
+        }
+
+        return targets;
+    }
+
+    //Return cards targets,  memory_array is used for optimization and avoid allocating new memory
+    function GetCardTargets(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bytes32[] memory){
+        AbilityTarget target = Ability.getTarget(ability_key);
+        uint numTargets = 0;
+        bytes32[] memory players = Games.getPlayers(game_uid);
+//        bytes32[] memory card_a = Players.
+//        bytes32[] memory card_b = CardLogicLib.GetCardsOnBoard(players[1]);
+        bytes32[] memory targets = new bytes32[](1);
+
+
+        if (target == AbilityTarget.Self) {
+            if (AreTargetConditionsMetCard(game_uid, caster, caster)) {
+                targets[numTargets] = caster;
+                numTargets++;
+            }
+        }
+
+        if (target == AbilityTarget.AllCardsBoard || target == AbilityTarget.SelectTarget)
+        {
+
+//            for (uint i = 0; i < card_a.length; i++) {
+//                if (AreTargetConditionsMetCard(game_uid, caster, card_a[i])) {
+//                    targets[numTargets] = card_a[i];
+//                    numTargets++;
+//                }
+//            }
+        }
+
+        if (target == AbilityTarget.AllCardsHand)
+        {
+
+        }
+
+        if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.CardSelector)
+        {
+
+        }
+
+        if (target == AbilityTarget.LastPlayed)
+        {
+
+        }
+
+        if (target == AbilityTarget.LastDestroyed)
+        {
+
+        }
+
+        if (target == AbilityTarget.LastTargeted)
+        {
+
         }
 
         return targets;

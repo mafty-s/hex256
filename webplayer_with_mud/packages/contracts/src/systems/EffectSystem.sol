@@ -19,6 +19,12 @@ contract EffectSystem is System {
         SystemSwitch.call(data);
     }
 
+    function DoOngoingEffects(bytes4 effect_ongoing, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    {
+        bytes memory data = abi.encodeWithSelector(effect_ongoing, ability_key, caster, target, is_card);
+        SystemSwitch.call(data);
+    }
+
     function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectAddStatRoll(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
