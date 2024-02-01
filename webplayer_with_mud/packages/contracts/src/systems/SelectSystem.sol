@@ -9,11 +9,13 @@ import {SelectorType, Action} from "../codegen/common.sol";
 
 contract SelectSystem is System {
     function SelectCard(bytes32 game_uid, bytes32 card_uid) public {
-        if (GamesExtended.getSelector(game_uid) == SelectorType.None) {
+        SelectorType selector = GamesExtended.getSelector(game_uid);
+
+        if (selector == SelectorType.None) {
             return;
         }
 
-        if (GamesExtended.getSelector(game_uid) == SelectorType.SelectTarget) {
+        if (selector == SelectorType.SelectTarget) {
 //            if (!ability.CanTarget(game_data, caster, target))
 //                return; //Can't target that target
 //
@@ -33,7 +35,7 @@ contract SelectSystem is System {
 //            );
         }
 
-        if (GamesExtended.getSelector(game_uid) == SelectorType.SelectorChoice) {
+        if (selector == SelectorType.SelectorChoice) {
 //            if (!ability.IsCardSelectionValid(game_data, caster, target, card_array))
 //                return; //Supports conditions and filters
 //
