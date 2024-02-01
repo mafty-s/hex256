@@ -8,7 +8,7 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ISelectSystem {
-  function SelectCard(bytes32 game_uid, bytes32 card_uid) external;
+  function SelectCard(bytes32 game_uid, bytes32 target) external;
 
   function SelectPlayer(bytes32 game_uid, bytes32 target) external;
 

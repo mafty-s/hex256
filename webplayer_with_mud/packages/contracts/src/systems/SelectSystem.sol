@@ -8,7 +8,7 @@ import {SelectorType, Action, AbilityTarget} from "../codegen/common.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 contract SelectSystem is System {
-    function SelectCard(bytes32 game_uid, bytes32 card_uid) public {
+    function SelectCard(bytes32 game_uid, bytes32 target) public {
         SelectorType selector = GamesExtended.getSelector(game_uid);
 
         if (selector == SelectorType.None) {
