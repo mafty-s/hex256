@@ -7,7 +7,7 @@ pragma solidity >=0.8.21;
         uint8 p;
     }
 
-import {CardOnBoards} from "../codegen/index.sol";
+import {CardOnBoards, PlayerSlots} from "../codegen/index.sol";
 
 library SlotLib {
     uint8 constant x_min = 1; // Don't change this, should start at 1 (0,0,0 represent invalid slot)
@@ -135,21 +135,63 @@ library SlotLib {
     }
 
     function GetEmptySlots(bytes32 player_key) internal view returns (Slot[] memory) {
-        Slot[] memory slots = new Slot[](x_max * y_max * 2);
-//todo
-//        uint8 index = 0;
-//        for (uint8 x = x_min; x <= x_max; x++) {
-//            for (uint8 y = y_min; y <= y_max; y++) {
-//                for (uint8 p = 0; p <= 1; p++) {
-//                    Slot memory slot = SlotLib.NewSlot(x, y, p);
-//                    if (CardOnBoards.getSlotCard(player_key, EncodeSlot(slot)) == 0) {
-//                        slots[index] = slot;
-//                        index++;
-//                    }
-//                }
-//            }
-//        }
-        return slots;
+        uint num = 0;
+        if (PlayerSlots.getA(player_key) == 0) {
+            num++;
+        }
+        if (PlayerSlots.getB(player_key) == 0) {
+            num++;
+        }
+        if (PlayerSlots.getC(player_key) == 0) {
+            num++;
+        }
+        if (PlayerSlots.getD(player_key) == 0) {
+            num++;
+        }
+        if (PlayerSlots.getE(player_key) == 0) {
+            num++;
+        }
+        Slot[] memory slots = new Slot[](num);
 
+        //todo
+        return slots;
+    }
+
+    function SetCardOnSlot(bytes32 player_key, bytes32 card_key, uint x) internal {
+        if (x == 1) {
+            PlayerSlots.setA(player_key, card_key);
+        }
+        if (x == 2) {
+            PlayerSlots.setB(player_key, card_key);
+        }
+        if (x == 3) {
+            PlayerSlots.setC(player_key, card_key);
+        }
+        if (x == 4) {
+            PlayerSlots.setD(player_key, card_key);
+        }
+        if (x == 5) {
+            PlayerSlots.setE(player_key, card_key);
+        }
+        revert("SetCardOnSlot Invalid slot");
+    }
+
+    function GetCardOnSlot(bytes32 player_key, uint x) internal view returns (bytes32) {
+        if (x == 1) {
+            return PlayerSlots.getA(player_key);
+        }
+        if (x == 2) {
+            return PlayerSlots.getB(player_key);
+        }
+        if (x == 3) {
+            return PlayerSlots.getC(player_key);
+        }
+        if (x == 4) {
+            return PlayerSlots.getD(player_key);
+        }
+        if (x == 5) {
+            return PlayerSlots.getE(player_key);
+        }
+        revert("GetCardOnSlot Invalid slot");
     }
 }

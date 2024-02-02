@@ -7,7 +7,7 @@ import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {Cards, Players, CardOnBoards, Games} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, CardType, AbilityTrigger, Action} from "../codegen/common.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip, CardOnBoards} from "../codegen/index.sol";
-import {PlayerActionHistory, ActionHistory, ActionHistoryData, PlayerSlots} from "../codegen/index.sol";
+import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
@@ -44,9 +44,7 @@ contract PlayCardSystem is System {
 //            SlotLib.SetSlot(card_key, slot);
             CardOnBoards.setExhausted(card_key, true);
 
-            bytes32[] memory cards_on_slot = PlayerSlots.getValue(player_key);
-            cards_on_slot[slot.x] = card_key;
-            PlayerSlots.setValue(player_key, cards_on_slot);
+            SlotLib.SetCardOnSlot(player_key, card_key, slot.x);
 
             //使用触发器触发技能
             SystemSwitch.call(
@@ -62,10 +60,7 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
-//            PlayerSlots.setItemValue(player_key, 0, slot.x);
-            bytes32[] memory cards_on_slot = PlayerSlots.getValue(player_key);
-            cards_on_slot[slot.x] = 0;
-            PlayerSlots.setValue(player_key, cards_on_slot);
+            SlotLib.SetCardOnSlot(player_key, 0, slot.x);
         }
 
 

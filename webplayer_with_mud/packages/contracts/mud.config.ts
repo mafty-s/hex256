@@ -2,7 +2,7 @@ import {mudConfig} from "@latticexyz/world/register";
 
 export default mudConfig({
     enums: {
-        SelectorType: ["None","SelectTarget","SelectorCard","SelectorChoice"],
+        SelectorType: ["None", "SelectTarget", "SelectorCard", "SelectorChoice"],
         RarityType: ["COMMON", "UNCOMMON", "RARE", "MYTHIC"],
         PackType: ["FIXED", "RANDOM"],
         TeamType: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
@@ -193,7 +193,15 @@ export default mudConfig({
                 status: "uint8[]",
             }
         },
-        PlayerSlots: "bytes32[]",
+        PlayerSlots: {
+            valueSchema: {
+                a: "bytes32",
+                b: "bytes32",
+                c: "bytes32",
+                d: "bytes32",
+                e: "bytes32",
+            }
+        },
         PlayerCardsDeck: "bytes32[]",
         PlayerCardsHand: "bytes32[]",
         PlayerCardsBoard: "bytes32[]",
