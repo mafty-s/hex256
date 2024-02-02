@@ -193,7 +193,7 @@ export default mudConfig({
                 status: "uint8[]",
             }
         },
-        PlayerSlots: "uint8[]",
+        PlayerSlots: "bytes32[]",
         PlayerCardsDeck: "bytes32[]",
         PlayerCardsHand: "bytes32[]",
         PlayerCardsBoard: "bytes32[]",

@@ -1034,7 +1034,15 @@ namespace TcgEngine.Client
                     Debug.Log("playername:" + player.username);
 
                     player.RemoveCardFromAllGroups(card);
-                    player.cards_board.Add(card);
+                    if (card.CardData.IsCharacter())
+                    {
+                        player.cards_board.Add(card);
+                    }
+                    else
+                    {
+                        player.cards_discard.Add(card);
+                    }
+
                     break;
                 case GameAction.Move:
                     MsgPlayCard mdata3 = new MsgPlayCard();
