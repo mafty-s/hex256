@@ -155,7 +155,7 @@ library SlotLib {
 
         uint8 i = 0;
         uint8 y = 1;
-        uint p = 0;
+        uint8 p = 0;
         if (PlayerSlots.getA(player_key) == 0) {
             slots[i] = NewSlot(1, y, p);
             i++;
