@@ -210,14 +210,29 @@ contract EffectSystem is System {
                 CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
             }
             if (stat == EffectStatType.Mana) {
-                //todo
+                CardOnBoards.setMana(target, value + CardOnBoards.getMana(target));
+            }
+            if (stat == EffectStatType.Attack) {
+                CardOnBoards.setAttack(target, value + CardOnBoards.getAttack(target));
             }
         } else {
             if (stat == EffectStatType.HP) {
-                Players.setHp(target, value + Players.getHp(target));
+                int8 hp = Players.getHp(target);
+                int8 hp_max = Players.getHpMax(target);
+                if (hp + value > hp_max) {
+                    Players.setHp(target, hp_max);
+                } else {
+                    Players.setHp(target, hp + value);
+                }
             }
             if (stat == EffectStatType.Mana) {
-                Players.setMana(target, value + Players.getMana(target));
+                int8 mana = Players.getMana(target);
+                int8 mana_max = Players.getManaMax(target);
+                if (mana + value > mana_max) {
+                    Players.setMana(target, mana_max);
+                } else {
+                    Players.setMana(target, mana + value);
+                }
             }
         }
     }
