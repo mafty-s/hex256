@@ -551,13 +551,14 @@ export function createSystemCalls(
     }
 
 
-    const endTurn = async (game_uid: string, player_name:string,player_key:string) => {
+    const endTurn = async (game_uid: string, player_name:string,player_id:string) => {
         console.log("game_uid", game_uid);
         console.log("player_name", player_name);
-        console.log("player_key", player_key);
+        console.log("player_id", player_id);
 
 
         const game_key = calculateKeccak256Hash(game_uid);
+        const player_key = calculateKeccak256HashTwoString(game_uid, player_name);
         const tx = await worldContract.write.EndTurn([game_key, player_key]);
         await waitForTransaction(tx);
 
@@ -566,6 +567,7 @@ export function createSystemCalls(
 
         // return tx;
         return {
+            operator_player_key:player_key,
             opponent_player_key:tx_result.result[0],
             board_card_key: tx_result.result[1],
             mana: tx_result.result[2],

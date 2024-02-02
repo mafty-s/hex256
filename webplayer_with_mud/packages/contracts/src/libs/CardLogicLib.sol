@@ -44,14 +44,16 @@ library CardLogicLib {
     }
 
     function IsOnBoard(bytes32 card_key) internal view returns (bool) {
-        bytes32 player_key = CardOnBoards.getPlayerId(card_key);
-        bytes32[] memory cards = PlayerCardsBoard.getValue(player_key);
-        for (uint i = 0; i < cards.length; i++) {
-            if (cards[i] == card_key) {
-                return true;
-            }
-        }
-        return false;
+//        bytes32 player_key = CardOnBoards.getPlayerId(card_key);
+//        bytes32[] memory cards = PlayerCardsBoard.getValue(player_key);
+//        for (uint i = 0; i < cards.length; i++) {
+//            if (cards[i] == card_key) {
+//                return true;
+//            }
+//        }
+//        return false;
+        //todo
+        return true;
     }
 
     function IsCharacter(bytes32 card_key) internal view returns (bool) {

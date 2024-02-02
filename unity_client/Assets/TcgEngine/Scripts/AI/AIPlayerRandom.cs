@@ -89,9 +89,9 @@ namespace TcgEngine.AI
 
             yield return new WaitForSeconds(0.5f);
 
-            AttackPlayer();
-
-            yield return new WaitForSeconds(0.5f);
+            // AttackPlayer();
+            //
+            // yield return new WaitForSeconds(0.5f);
 
             EndTurn();
 
@@ -173,12 +173,16 @@ namespace TcgEngine.AI
 
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
+            Player opponent = game_data.GetPlayer(player_id == 0 ? 1 : 0);
             if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
             {
                 Card random = player.GetRandomCard(player.cards_board, rand);
-                Card rtarget = game_data.GetRandomBoardCard(rand);
+                Card rtarget = opponent.GetRandomCard(opponent.cards_board, rand);
                 if (random != null && rtarget != null)
-                    gameplay.AttackTarget(random, rtarget);
+                {
+                    // gameplay.AttackTarget(random, rtarget);
+                    MudManager.Get().AttackCard(game_data.game_uid, player.username, random.uid, rtarget.uid);
+                }
             }
         }
 

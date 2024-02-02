@@ -174,7 +174,7 @@ namespace TcgEngine.Client
                 }
             }
 
-            if (ai_player != null )
+            if (ai_player != null)
             {
                 ai_player.Update();
             }
@@ -898,8 +898,8 @@ namespace TcgEngine.Client
 
         public void OnEndTurnSuccess(string message)
         {
-            Debug.Log("Starting Coroutine...");
-            StartCoroutine(OnEndTurnSuccessLogic(message));
+            //Debug.Log("Starting Coroutine...");
+            //StartCoroutine(OnEndTurnSuccessLogic(message));
         }
 
         public void OnStartMatchmakingSuccess(string message)
@@ -991,7 +991,7 @@ namespace TcgEngine.Client
                     writer1.WriteValueSafe(GameAction.NewTurn);
                     writer1.WriteNetworkSerializable(mdata2);
                     OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
-                    game_data.current_player = action.player_id;
+                    game_data.current_player = game_data.current_player == 0 ? 1 : 0;
                     game_data.turn_timer = GameplayData.Get().turn_duration;
                     break;
                 case GameAction.PlayCard:

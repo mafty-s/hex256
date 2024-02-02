@@ -119,20 +119,35 @@ library BaseLogicLib {
 
     function CanAttackTarget(bytes32 attacker, bytes32 target, bool skip_cost) internal view returns (bool) {
 
-        if (attacker == 0 || target == 0)
+        if (attacker == 0 || target == 0){
+            revert("attacker == 0 || target == 0");
             return false;
+        }
 
-        if (!PlayerLogicLib.CanAttack(skip_cost))
+        if (!PlayerLogicLib.CanAttack(skip_cost)){
             return false;
+        }
 
-        if (attacker == target)
+        if (attacker == target){
+            revert("attacker == target");
             return false;
+        }
 
-        if (!CardLogicLib.IsOnBoard(attacker) || !CardLogicLib.IsCharacter(attacker))
+        if (!CardLogicLib.IsOnBoard(attacker)){
+            revert("IsOnBoard");
             return false;
+        }
 
-        if (CardLogicLib.HasStatus(target, Status.Protected) && !CardLogicLib.HasStatus(attacker, Status.Flying))
+        bytes32 attacker_config_key = CardOnBoards.getId(attacker);
+        if( !CardLogicLib.IsCharacter(attacker_config_key)){
+            revert("IsCharacter");
             return false;
+        }
+
+        if (CardLogicLib.HasStatus(target, Status.Protected) && !CardLogicLib.HasStatus(attacker, Status.Flying)){
+            revert("Status.Protected");
+            return false;
+        }
 
         return true;
     }

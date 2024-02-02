@@ -86,7 +86,8 @@ public class MudPlayerSettingResult
 [System.Serializable]
 public class MudEndTurnResult
 {
-    public int player_id;
+    public string operator_player_key;
+    public string opponent_player_key;
     public string board_card_key;
     public int mana;
     public int mana_max;

@@ -10,6 +10,7 @@ import "./SlotLib.sol";
 library PlayerLogicLib {
 
     function CanAttack(bool skip_cost) internal pure returns (bool) {
+        //todo
         return true;
     }
 
