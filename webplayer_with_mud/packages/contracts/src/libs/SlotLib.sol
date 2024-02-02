@@ -153,7 +153,29 @@ library SlotLib {
         }
         Slot[] memory slots = new Slot[](num);
 
-        //todo
+        uint8 i = 0;
+        uint8 y = 1;
+        uint p = 0;
+        if (PlayerSlots.getA(player_key) == 0) {
+            slots[i] = NewSlot(1, y, p);
+            i++;
+        }
+        if (PlayerSlots.getB(player_key) == 0) {
+            slots[i] = NewSlot(2, y, p);
+            i++;
+        }
+        if (PlayerSlots.getC(player_key) == 0) {
+            slots[i] = NewSlot(3, y, p);
+            i++;
+        }
+        if (PlayerSlots.getD(player_key) == 0) {
+            slots[i] = NewSlot(4, y, p);
+            i++;
+        }
+        if (PlayerSlots.getE(player_key) == 0) {
+            slots[i] = NewSlot(5, y, p);
+            i++;
+        }
         return slots;
     }
 
