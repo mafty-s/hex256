@@ -551,7 +551,7 @@ export function createSystemCalls(
     }
 
 
-    const endTurn = async (game_uid: string, player_name:string,player_id:string) => {
+    const endTurn = async (game_uid: string, player_name: string, player_id: string) => {
         console.log("game_uid", game_uid);
         console.log("player_name", player_name);
         console.log("player_id", player_id);
@@ -567,8 +567,8 @@ export function createSystemCalls(
 
         // return tx;
         return {
-            operator_player_key:player_key,
-            opponent_player_key:tx_result.result[0],
+            operator_player_key: player_key,
+            opponent_player_key: tx_result.result[0],
             board_card_key: tx_result.result[1],
             mana: tx_result.result[2],
             mana_max: tx_result.result[3]
@@ -739,7 +739,7 @@ export function createSystemCalls(
         }
     }
 
-    const selectCard = async (game_uid: string, card_id: string, card_uid:string) => {
+    const selectCard = async (game_uid: string, card_id: string, card_uid: string) => {
         console.log("selectCard", game_uid, card_id, card_uid);
         const game_key = calculateKeccak256Hash(game_uid);
         const tx = await worldContract.write.SelectCard([game_key, card_uid]);
@@ -788,11 +788,16 @@ export function createSystemCalls(
         console.log("tx-result", tx_result)
     }
 
-    const getRandomEmptySlot = async(game_uid:string,player:string)=>{
+    const getRandomEmptySlot = async (game_uid: string, player: string) => {
         const game_key = calculateKeccak256Hash(game_uid);
-        const player_key = calculateKeccak256HashTwoString(game_uid,player);
+        const player_key = calculateKeccak256HashTwoString(game_uid, player);
         const slot = await worldContract.read.GetRandomEmptySlot([player_key]);
         return slot;
+    }
+
+    const getAllSlot = async (p: number) => {
+        const slots = await worldContract.read.GetAllSlot([p]);
+        return slots;
     }
 
     const out = {
@@ -843,6 +848,7 @@ export function createSystemCalls(
         selectSlot,
         cancelSelection,
         getRandomEmptySlot,
+        getAllSlot
         // ablities,
     };
 

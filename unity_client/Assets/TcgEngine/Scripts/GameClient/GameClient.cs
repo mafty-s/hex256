@@ -308,25 +308,25 @@ namespace TcgEngine.Client
 
         public void OnAttackCardSuccess(string message)
         {
-            Debug.Log("OnAttackCardSuccess:" + message);
-            MudAttackCardResult result = JsonUtility.FromJson<MudAttackCardResult>(message);
-
-            Card attacker = game_data.GetCard(result.attacker_uid);
-            Card target = game_data.GetCard(result.target_uid);
-
-            if (attacker == null || target == null)
-            {
-                Debug.Log("OnAttackCardSuccess attacker or defender is null");
-                return;
-            }
+            // Debug.Log("OnAttackCardSuccess:" + message);
+            // MudAttackCardResult result = JsonUtility.FromJson<MudAttackCardResult>(message);
             //
-            // attacker.hp = result.attacker_hp;
-            // defender.hp = result.defender_hp;
-
-            onAttackStart?.Invoke(attacker, target);
-            target.hp = 0;
-            onAttackEnd?.Invoke(attacker, target);
-            onRefreshAll?.Invoke();
+            // Card attacker = game_data.GetCard(result.attacker_uid);
+            // Card target = game_data.GetCard(result.target_uid);
+            //
+            // if (attacker == null || target == null)
+            // {
+            //     Debug.Log("OnAttackCardSuccess attacker or defender is null");
+            //     return;
+            // }
+            // //
+            // // attacker.hp = result.attacker_hp;
+            // // defender.hp = result.defender_hp;
+            //
+            // onAttackStart?.Invoke(attacker, target);
+            // target.hp = 0;
+            // onAttackEnd?.Invoke(attacker, target);
+            // onRefreshAll?.Invoke();
         }
 
         public void OnAttackPlayerSuccess(string message)
@@ -1081,7 +1081,13 @@ namespace TcgEngine.Client
                     // defender.hp = result.defender_hp;
 
                     onAttackStart?.Invoke(attacker, target);
-                    target.hp = 0;
+                    target.hp = target.hp - attacker.attack;
+                    if (target.hp <= 0)
+                    {
+                        Player attack_target_player = game_data.GetPlayer(target.player_id);
+                        attack_target_player.RemoveCardFromAllGroups(target);
+                    }
+
                     onAttackEnd?.Invoke(attacker, target);
                     onRefreshAll?.Invoke();
                     break;
