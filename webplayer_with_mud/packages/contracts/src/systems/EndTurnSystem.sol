@@ -23,15 +23,10 @@ contract EndTurnSystem is System {
 
     }
 
-    function EndTurn(bytes32 game_key, uint8 player_index) public returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max){
+    function EndTurn(bytes32 game_key, bytes32 player_key) public returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max){
         Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
         Games.setGamePhase(game_key, GamePhase.END_TURN);
 
-        bytes32 player_key = Games.getPlayers(game_key)[player_index];
-        uint8 opponent_index = player_index == 0 ? 1 : 0;
-        bytes32 opponent_player_key = Games.getPlayers(game_key)[opponent_index];
-
-        //todo 恢复mana
         int8 mana = Players.getMana(player_key);
         int8 mana_max = Players.getManaMax(player_key);
         mana += 1;
@@ -63,7 +58,7 @@ contract EndTurnSystem is System {
         bytes32 action_key = keccak256(abi.encode(game_key, len));
         PlayerActionHistory.push(game_key, action_key);
         ActionHistory.setActionType(action_key, Action.EndTurn);
-        ActionHistory.setPlayerId(action_key, player_index);
+//        ActionHistory.setPlayerId(action_key, player_index);
 
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.START_OF_TURN))
@@ -73,7 +68,21 @@ contract EndTurnSystem is System {
             abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (player_key, AbilityTrigger.START_OF_TURN))
         );
 
+        bytes32 opponent_player_key = getOpponentPlayer(game_key, player_key);
         return (opponent_player_key, board_card_key, mana, mana_max);
+    }
+
+    function getOpponentPlayer(bytes32 game_key, bytes32 player_key) public view returns (bytes32 opponent_player_key) {
+        bytes32[] memory players = Games.getPlayers(game_key);
+        require(players.length == 2, "player count must be 2");
+        require(players[0] != 0 && players[1] != 0, "player key must not be 0");
+        require(players[0] != players[1], "player key must not be same");
+        require(players[0] == player_key || players[1] == player_key, "player key must be in game");
+        if (players[0] == player_key) {
+            return players[1];
+        } else {
+            return players[0];
+        }
     }
 
 }

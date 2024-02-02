@@ -10,6 +10,8 @@ pragma solidity >=0.8.21;
 interface IEndTurnSystem {
   function EndTurn(
     bytes32 game_key,
-    uint8 player_index
+    bytes32 player_key
   ) external returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max);
+
+  function getOpponentPlayer(bytes32 game_key, bytes32 player_key) external view returns (bytes32 opponent_player_key);
 }

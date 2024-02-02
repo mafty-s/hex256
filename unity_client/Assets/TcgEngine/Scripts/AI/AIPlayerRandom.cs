@@ -140,6 +140,7 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
+            Debug.Log("AI PlayCard");
 
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
@@ -155,7 +156,11 @@ namespace TcgEngine.AI
                     slot = player.GetRandomOccupiedSlot(rand);
 
                 if (random != null)
-                    gameplay.PlayCard(random, slot);
+                {
+                    //gameplay.PlayCard(random, slot);
+                    MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
+                    slot.x, Slot.y_min, slot.p, false, random.uid);
+                }
             }
         }
 
@@ -163,6 +168,8 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
+            
+            Debug.Log("AI Attack");
 
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
@@ -180,6 +187,7 @@ namespace TcgEngine.AI
             if (!CanPlay())
                 return;
 
+            Debug.Log("AI AttackPlayer");
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
             Player oplayer = game_data.GetRandomPlayer(rand);
@@ -195,6 +203,8 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
+            
+            Debug.Log("AI SelectCard");
 
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
@@ -215,6 +225,8 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
+            
+            Debug.Log("SelectTarget");
 
             Game game_data = gameplay.GetGameData();
             if (game_data.selector != SelectorType.None)
@@ -238,6 +250,8 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
+            
+            Debug.Log("AI SelectChoice");
 
             Game game_data = gameplay.GetGameData();
             if (game_data.selector != SelectorType.None)
@@ -255,6 +269,7 @@ namespace TcgEngine.AI
         {
             if (CanPlay())
             {
+                Debug.Log("AI CancelSelect");
                 gameplay.CancelSelection();
             }
         }
@@ -263,7 +278,9 @@ namespace TcgEngine.AI
         {
             if (CanPlay())
             {
-                gameplay.EndTurn();
+                Debug.Log("AI EndTurn");
+                MudManager.Get().EndTurn(gameplay.GetGameData().game_uid, "AI", this.player_id);
+                //gameplay.EndTurn();
             }
         }
     }

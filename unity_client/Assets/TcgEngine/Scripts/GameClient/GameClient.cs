@@ -174,7 +174,7 @@ namespace TcgEngine.Client
                 }
             }
 
-            if (ai_player != null && ai_player.CanPlay())
+            if (ai_player != null )
             {
                 ai_player.Update();
             }
@@ -474,8 +474,7 @@ namespace TcgEngine.Client
 
                     if (player.is_ai)
                     {
-                        ai_player = new AIPlayerRandom(new GameLogic(true), player.player_id,
-                            player.ai_level);
+                        ai_player = new AIPlayerRandom(new GameLogic(game_data), player.player_id, player.ai_level);
                     }
 
                     onPlayerReady.Invoke(player.player_id);
@@ -1132,16 +1131,17 @@ namespace TcgEngine.Client
 
             Debug.Log("callermana:" + caller.mana);
             onRefreshAll?.Invoke();
-            onNewTurn?.Invoke(result.player_id);
+            onNewTurn?.Invoke(caller.player_id);
 
             Player player = game_data.GetPlayer(game_data.current_player);
-
+            Debug.Log("cuurent player" + player.username);
             if (player.is_ai)
             {
                 Debug.Log("is-ai");
                 System.Random rand = new System.Random();
                 yield return new WaitForSeconds(1.5f);
 
+                //ai_player.PlayCard();
 
                 // if (player.cards_hand.Count > 0 && game_data.IsPlayerActionTurn(player))
                 // {
@@ -1200,7 +1200,7 @@ namespace TcgEngine.Client
                 // }
                 //
 
-                MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
+                // MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
             }
         }
 

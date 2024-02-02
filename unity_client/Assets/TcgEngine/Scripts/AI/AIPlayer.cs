@@ -8,8 +8,7 @@ namespace TcgEngine.AI
     /// <summary>
     /// AI player base class, other AI inherit from this
     /// </summary>
-
-    public abstract class AIPlayer 
+    public abstract class AIPlayer
     {
         public int player_id;
         public int ai_level = 3;
@@ -27,7 +26,9 @@ namespace TcgEngine.AI
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
             bool can_play = game_data.IsPlayerTurn(player);
-            return can_play && !gameplay.IsResolving();
+            bool can = can_play && !gameplay.IsResolving();
+            //Debug.Log("CanPlay" + can);
+            return can;
         }
 
         public static AIPlayer Create(AIType type, GameLogic gameplay, int id, int level = 0)
@@ -42,7 +43,7 @@ namespace TcgEngine.AI
 
     public enum AIType
     {
-        Random = 0,      //Dumb AI that just do random moves, useful for testing cards without getting destroyed
-        MiniMax = 10,    //Stronger AI using Minimax algo with alpha-beta pruning
+        Random = 0, //Dumb AI that just do random moves, useful for testing cards without getting destroyed
+        MiniMax = 10, //Stronger AI using Minimax algo with alpha-beta pruning
     }
 }
