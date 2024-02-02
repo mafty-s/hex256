@@ -10,6 +10,14 @@ pragma solidity >=0.8.21;
 interface IEffectSystem {
   function DoEffect(bytes4 effect, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
+  function DoOngoingEffects(
+    bytes4 effect_ongoing,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    bool is_card
+  ) external;
+
   function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;

@@ -12,6 +12,14 @@ import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 contract AbilitySystem is System {
     //使用技能
     function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+
+        //Pay cost
+//        if (iability.trigger == AbilityTrigger.Activate)
+//        {
+//            player.mana -= iability.mana_cost;
+//            caster.exhausted = caster.exhausted || iability.exhaust;
+//        }
+
         bytes32 player_key = CardOnBoards.getPlayerId(target);
         bytes32 game_key = Players.getGame(player_key);
 //        //如果是选择器
@@ -74,7 +82,7 @@ contract AbilitySystem is System {
 
     //触发指定技能
     function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
-        bytes32 trigger_card = triggerer != 0x0000000000000000000000000000000000000000000000000000000000000000 ? triggerer : caster; //Triggerer is the caster if not set
+        bytes32 trigger_card = triggerer != 0 ? triggerer : caster; //Triggerer is the caster if not set
 //    todo    if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMetCard(caster, triggerer)) {
         if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced)) {
             UseAbility(ability_key, caster, trigger_card, is_card);

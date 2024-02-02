@@ -6,7 +6,7 @@ import {Players, Ability, Games, PlayerActionHistory, ActionHistory} from "../co
 import {Action, PileType} from "../codegen/common.sol";
 import {MathLib} from "../libs/MathLib.sol";
 import {Cards, CardsData, CardOnBoards} from "../codegen/index.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp, PlayerCardsBoard} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 

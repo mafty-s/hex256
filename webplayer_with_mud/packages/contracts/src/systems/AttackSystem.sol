@@ -39,8 +39,7 @@ contract AttackSystem is System {
             target_hp = 0;
             GameLogicLib.KillCard(game_key, target_key);
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                    AbilityTrigger.ON_DEATH, target_key, target_key, true))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, target_key, target_key, true))
             );
         }
 
