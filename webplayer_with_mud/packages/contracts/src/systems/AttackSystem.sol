@@ -27,8 +27,10 @@ contract AttackSystem is System {
 
         //使用触发器触发技能
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, true))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, true))
+        );
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_BEFORE_DEFEND, target_key, attacker_key, true))
         );
 
         int8 attacker_attack = CardOnBoards.getAttack(attacker_key);
@@ -38,7 +40,7 @@ contract AttackSystem is System {
             GameLogicLib.KillCard(game_key, target_key);
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                    AbilityTrigger.ON_DEATH, attacker_key, target_key, true))
+                    AbilityTrigger.ON_DEATH, target_key, target_key, true))
             );
         }
 
@@ -58,8 +60,10 @@ contract AttackSystem is System {
 
         //使用触发器触发技能
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, true))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, true))
+        );
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_DEFEND, target_key, attacker_key, true))
         );
 
         return (

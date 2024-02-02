@@ -155,7 +155,7 @@ namespace TcgEngine.AI
                 if(random != null && random.CardData.IsEquipment())
                     slot = player.GetRandomOccupiedSlot(rand);
 
-                if (random != null)
+                if (random != null && random.CardData.mana <= player.mana )
                 {
                     //gameplay.PlayCard(random, slot);
                     MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
