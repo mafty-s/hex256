@@ -160,20 +160,17 @@ library SlotLib {
     function SetCardOnSlot(bytes32 player_key, bytes32 card_key, uint x) internal {
         if (x == 1) {
             PlayerSlots.setA(player_key, card_key);
-        }
-        if (x == 2) {
+        } else if (x == 2) {
             PlayerSlots.setB(player_key, card_key);
-        }
-        if (x == 3) {
+        } else if (x == 3) {
             PlayerSlots.setC(player_key, card_key);
-        }
-        if (x == 4) {
+        } else if (x == 4) {
             PlayerSlots.setD(player_key, card_key);
-        }
-        if (x == 5) {
+        } else if (x == 5) {
             PlayerSlots.setE(player_key, card_key);
+        } else {
+            revert("SetCardOnSlot Invalid slot");
         }
-        revert("SetCardOnSlot Invalid slot");
     }
 
     function GetCardOnSlot(bytes32 player_key, uint x) internal view returns (bytes32) {
