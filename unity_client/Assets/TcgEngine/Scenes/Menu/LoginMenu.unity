@@ -2120,7 +2120,7 @@ MonoBehaviour:
   m_LineType: 0
   m_HideMobileInput: 0
   m_CharacterValidation: 3
-  m_CharacterLimit: 20
+  m_CharacterLimit: 256
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []

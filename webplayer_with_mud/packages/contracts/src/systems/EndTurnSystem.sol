@@ -58,6 +58,7 @@ contract EndTurnSystem is System {
         bytes32 action_key = keccak256(abi.encode(game_key, len));
         PlayerActionHistory.push(game_key, action_key);
         ActionHistory.setActionType(action_key, Action.EndTurn);
+        ActionHistory.setTarget(action_key, board_card_key);
 //        ActionHistory.setPlayerId(action_key, player_index);
 
         SystemSwitch.call(

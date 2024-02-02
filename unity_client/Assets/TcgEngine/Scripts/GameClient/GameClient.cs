@@ -991,8 +991,24 @@ namespace TcgEngine.Client
                     writer1.WriteValueSafe(GameAction.NewTurn);
                     writer1.WriteNetworkSerializable(mdata2);
                     OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
+                    
+                    Card new_board_card = game_data.GetCard(action.target_uid);
+                    if (new_board_card != null)
+                    {
+                        Player new_board_card_player = game_data.GetPlayer(new_board_card.player_id);
+                        Debug.Log("board_card:" + new_board_card.CardData.id);
+                        new_board_card_player.RemoveCardFromAllGroups(new_board_card);
+                        new_board_card_player.cards_hand.Add(new_board_card);
+                        // caller.cards_hand.Remove(board_card_key);
+                        onCardDraw?.Invoke(1);
+                        onRefreshAll?.Invoke();
+                        Debug.Log("cards_deck" + new_board_card_player.cards_deck.Count);
+                        Debug.Log("cards_hand" + new_board_card_player.cards_hand.Count);
+                    }
+                    
                     game_data.current_player = game_data.current_player == 0 ? 1 : 0;
                     game_data.turn_timer = GameplayData.Get().turn_duration;
+                    
                     break;
                 case GameAction.PlayCard:
                     MsgPlayCard mdata_playcard = new MsgPlayCard();
