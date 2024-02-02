@@ -11,4 +11,6 @@ import { Slot } from "./../../libs/SlotLib.sol";
  */
 interface ISlotSystem {
   function GetAllSlot(int8 p) external pure returns (Slot[] memory);
+
+  function GetRandomEmptySlot(bytes32 player_key) external view returns (Slot memory);
 }

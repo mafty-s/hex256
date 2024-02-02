@@ -8,6 +8,7 @@ import {MathLib} from "../libs/MathLib.sol";
 import {Cards, CardsData, CardOnBoards} from "../codegen/index.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 contract EffectSystem2 is System {
 
@@ -96,6 +97,8 @@ contract EffectSystem2 is System {
         CardOnBoards.setAttack(on_board_card_key, card.attack);
         CardOnBoards.setMana(on_board_card_key, card.mana);
         CardOnBoards.setPlayerId(on_board_card_key, player_key);
+
+        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key);
 
         //todo 创建一个随机slot
         //todo 放到牌区

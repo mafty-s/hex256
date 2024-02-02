@@ -788,6 +788,13 @@ export function createSystemCalls(
         console.log("tx-result", tx_result)
     }
 
+    const getRandomEmptySlot = async(game_uid:string,player:string)=>{
+        const game_key = calculateKeccak256Hash(game_uid);
+        const player_key = calculateKeccak256HashTwoString(game_uid,player);
+        const slot = await worldContract.read.GetRandomEmptySlot([player_key]);
+        return slot;
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -835,6 +842,7 @@ export function createSystemCalls(
         selectPlayer,
         selectSlot,
         cancelSelection,
+        getRandomEmptySlot,
         // ablities,
     };
 
