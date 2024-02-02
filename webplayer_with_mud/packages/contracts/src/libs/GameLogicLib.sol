@@ -135,4 +135,41 @@ library GameLogicLib {
     //target.damage = Mathf.Max(target.damage, 0);
     //}
 
+    function CanPlayCard(bytes32 player_key, bytes32 card_key, bool skip_cost) internal view returns (bool) {
+
+        if (card_key == 0)
+            return false;
+        //todo
+
+//        if (!skip_cost && !player.CanPayMana(card))
+//            return false; //Cant pay mana
+//        if (!player.HasCard(player.cards_hand, card))
+//            return false; // Card not in hand
+//
+//        if (card.CardData.IsBoardCard())
+//        {
+//            if (!slot.IsValid() || IsCardOnSlot(slot))
+//                return false;   //Slot already occupied
+//            if (Slot.GetP(card.player_id) != slot.p)
+//                return false; //Cant play on opponent side
+//            return true;
+//        }
+//        if (card.CardData.IsEquipment())
+//        {
+//            if (!slot.IsValid())
+//                return false;
+//
+//            Card target = GetSlotCard(slot);
+//            if (target == null || target.CardData.type != CardType.Character || target.player_id != card.player_id)
+//        return false; //Target must be an allied character
+//
+//        return true;
+//        }
+//        if (card.CardData.IsRequireTargetSpell())
+//        {
+//            return IsPlayTargetValid(card, slot); //Check play target on slot
+//        }
+        return true;
+    }
+
 }

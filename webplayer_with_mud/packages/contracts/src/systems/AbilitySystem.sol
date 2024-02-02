@@ -22,7 +22,7 @@ contract AbilitySystem is System {
 
         bytes32 player_key = CardOnBoards.getPlayerId(target);
         bytes32 game_key = Players.getGame(player_key);
-//        //如果是选择器
+        //如果是选择器
         bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
         if (is_selector) {
             uint256 len = PlayerActionHistory.length(game_key);

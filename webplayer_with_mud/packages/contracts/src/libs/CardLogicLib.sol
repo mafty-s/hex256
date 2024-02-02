@@ -2,9 +2,10 @@
 pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {Cards, CardsData} from "../codegen/index.sol";
+import {Cards, CardsData, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
 import {PlayerCardsBoard} from "../codegen/index.sol";
+import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 library CardLogicLib {
 
@@ -58,6 +59,22 @@ library CardLogicLib {
 
     function IsCharacter(bytes32 card_key) internal view returns (bool) {
         return Cards.getCardType(card_key) == CardType.CHARACTER;
+    }
+
+    function IsRequireTargetSpell(bytes32 card_key) internal view returns (bool) {
+        return Cards.getCardType(card_key) == CardType.SPELL && HasAbility(card_key, AbilityTrigger.ON_PLAY, AbilityTarget.PlayTarget);
+    }
+
+    function HasAbility(bytes32 card_key, AbilityTrigger trigger, AbilityTarget target) internal view returns (bool) {
+        bytes32[] memory abilities = Cards.getAbilities(card_key);
+        for(uint i=0;i<abilities.length;i++){
+            AbilityTrigger i_trigger = Ability.getTrigger(abilities[i]);
+            AbilityTarget i_target = Ability.getTarget(abilities[i]);
+            if(i_trigger == trigger && i_target == target){
+                return true;
+            }
+        }
+        return false;
     }
 
     function HasStatus(bytes32 card_uid, Status status) internal view returns (bool) {
