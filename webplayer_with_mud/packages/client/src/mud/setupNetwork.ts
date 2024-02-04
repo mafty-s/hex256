@@ -32,8 +32,8 @@ export async function setupNetwork() {
    */
   const clientOptions = {
     chain: networkConfig.chain,
-    transport: transportObserver(fallback([webSocket("ws://127.0.0.1:8545"), http("http://127.0.0.1:8545")])),
-    // transport: transportObserver(fallback([webSocket("ws://3.29.249.78:8546"), http("http://3.29.248.79:8546")])),
+    // transport: transportObserver(fallback([webSocket("ws://127.0.0.1:3000/ws"), http("http://127.0.0.1:3000/api")])),
+    transport: transportObserver(fallback([webSocket("ws://172.16.51.188:3000/ws"), http("http://172.16.51.188:3000/api")])),
     pollingInterval: 1000,
   } as const satisfies ClientConfig;
 
