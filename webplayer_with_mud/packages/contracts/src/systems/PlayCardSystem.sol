@@ -39,7 +39,9 @@ contract PlayCardSystem is System {
 
         PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
 
-        if (CardLogicLib.IsBoardCard(card_key)) {
+        bytes32 card_config_key = CardOnBoards.getId(card_key);
+
+        if (CardLogicLib.IsBoardCard(card_config_key)) {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);
 //            SlotLib.SetSlot(card_key, slot);
             CardOnBoards.setExhausted(card_key, true);
@@ -52,12 +54,22 @@ contract PlayCardSystem is System {
                     AbilityTrigger.ON_PLAY, card_key, 0, true))
             );
 
-        } else if (CardLogicLib.IsEquipment(card_key)) {
+        } else if (CardLogicLib.IsEquipment(card_config_key)) {
 //            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
 //            GameLogicLib.EquipCard(bearer, card_key);
             CardOnBoards.setExhausted(card_key, true);
-        } else if (CardLogicLib.IsSecret(card_key)) {
+        } else if (CardLogicLib.IsSecret(card_config_key)) {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
+        } else if (CardLogicLib.IsSpell(card_config_key)) {
+            bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
+            if (card_on_slot == 0) {
+                revert("Slot is empty");
+            }
+            //使用触发器触发技能
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
+                    AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
+            );
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
             SlotLib.SetCardOnSlot(player_key, 0, slot.x);

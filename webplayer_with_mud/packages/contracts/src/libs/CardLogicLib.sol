@@ -26,13 +26,7 @@ library CardLogicLib {
     }
 
     function IsBoardCard(bytes32 card_key) internal view returns (bool) {
-
-        bytes32 card_config_key = CardOnBoards.getId(card_key);
-        if (card_config_key != 0) {
-            return Cards.getCardType(card_config_key) == CardType.CHARACTER || Cards.getCardType(card_config_key) == CardType.ARTIFACT;
-        } else {
-            return Cards.getCardType(card_key) == CardType.CHARACTER || Cards.getCardType(card_key) == CardType.ARTIFACT;
-        }
+        return Cards.getCardType(card_key) == CardType.CHARACTER || Cards.getCardType(card_key) == CardType.ARTIFACT;
     }
 
 
@@ -41,6 +35,10 @@ library CardLogicLib {
     }
 
     function IsSecret(bytes32 card_key) internal view returns (bool) {
+        return Cards.getCardType(card_key) == CardType.SECRET;
+    }
+
+    function IsSpell(bytes32 card_key) internal view returns (bool) {
         return Cards.getCardType(card_key) == CardType.SPELL;
     }
 
@@ -67,10 +65,10 @@ library CardLogicLib {
 
     function HasAbility(bytes32 card_key, AbilityTrigger trigger, AbilityTarget target) internal view returns (bool) {
         bytes32[] memory abilities = Cards.getAbilities(card_key);
-        for(uint i=0;i<abilities.length;i++){
+        for (uint i = 0; i < abilities.length; i++) {
             AbilityTrigger i_trigger = Ability.getTrigger(abilities[i]);
             AbilityTarget i_target = Ability.getTarget(abilities[i]);
-            if(i_trigger == trigger && i_target == target){
+            if (i_trigger == trigger && i_target == target) {
                 return true;
             }
         }
