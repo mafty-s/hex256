@@ -65,6 +65,10 @@ contract PlayCardSystem is System {
             if (card_on_slot == 0) {
                 revert("Slot is empty");
             }
+
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, player_key);
+            PlayerLogicLib.AddCardToDiscard(card_key, player_key);
+
             bytes32[] memory abilities = Cards.getAbilities(card_config_key);
             //使用触发器触发技能
 //            SystemSwitch.call(

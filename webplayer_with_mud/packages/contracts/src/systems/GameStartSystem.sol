@@ -6,9 +6,9 @@ import {Cards, CardsData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {Games, GamesData, GamesExtended} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret,PlayerCardsTemp} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {GameType, GameState, GamePhase} from "../codegen/common.sol";
+import {GameType, GameState, GamePhase, SelectorType} from "../codegen/common.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 //    struct PlayerSettingResult {
@@ -45,12 +45,12 @@ contract GameStartSystem is System {
     function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
-        bytes32 match_key = keccak256(abi.encode(game_uid));
+        bytes32 game_key = keccak256(abi.encode(game_uid));
         bytes32 player_key = keccak256(abi.encode(game_uid, username));
 
         //        DecksData memory deck = Decks.get(desk_key);
 
-        Games.pushPlayers(match_key, player_key);
+        Games.pushPlayers(game_key, player_key);
 //        Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
         Players.setOwner(player_key, _msgSender());
         Players.setDcards(player_key, dcards);
@@ -61,7 +61,7 @@ contract GameStartSystem is System {
         Players.setName(player_key, username);
         Players.setDeck(player_key, desk_id);
         Players.setIsAI(player_key, is_ai);
-        Players.setGame(player_key, match_key);
+        Players.setGame(player_key, game_key);
 
         bytes32[] memory cards = Decks.getCards(desk_key);
         if (need_shuffle) {
@@ -81,9 +81,14 @@ contract GameStartSystem is System {
         }
 
 
-        if (Games.getPlayers(match_key).length == 2) {
+        if (Games.getPlayers(game_key).length == 2) {
             StartGame(game_uid);
         }
+
+        PlayerCardsDiscard.setValue(player_key, new bytes32[](0));
+        PlayerCardsEquip.setValue(player_key, new bytes32[](0));
+        PlayerCardsSecret.setValue(player_key, new bytes32[](0));
+        PlayerCardsTemp.setValue(player_key, new bytes32[](0));
 
         return PlayerCardsDeck.getValue(player_key);
 
@@ -91,18 +96,19 @@ contract GameStartSystem is System {
 
     function StartGame(string memory game_uid) internal {
 
-        bytes32 match_key = keccak256(abi.encode(game_uid));
-        if (Games.get(match_key).gameState == GameState.GAME_ENDED) {
+        bytes32 game_key = keccak256(abi.encode(game_uid));
+        if (Games.get(game_key).gameState == GameState.GAME_ENDED) {
             revert("Game already ended");
         }
 
-        bytes32[] memory player_keys = Games.getPlayers(match_key);
+        bytes32[] memory player_keys = Games.getPlayers(game_key);
 
         //Choose first player
-        Games.setGameState(match_key, GameState.PLAY);
-        Games.setFirstPlayer(match_key, player_keys[uint8(block.prevrandao % 2)]);
-        Games.setCurrentPlayer(match_key, Games.getFirstPlayer(match_key));
-        Games.setTurnCount(match_key, 1);
+        Games.setGameState(game_key, GameState.PLAY);
+        Games.setFirstPlayer(game_key, player_keys[uint8(block.prevrandao % 2)]);
+        Games.setCurrentPlayer(game_key, Games.getFirstPlayer(game_key));
+        Games.setTurnCount(game_key, 1);
+        GamesExtended.setSelector(game_key, SelectorType.None);
 
         //Init each players
 
@@ -113,15 +119,15 @@ contract GameStartSystem is System {
         }
 
         //Start state
-        StartTurn(match_key);
+        StartTurn(game_key);
     }
 
-    function StartTurn(bytes32 match_key) internal {
-        if (Games.get(match_key).gameState == GameState.GAME_ENDED) {
+    function StartTurn(bytes32 game_key) internal {
+        if (Games.get(game_key).gameState == GameState.GAME_ENDED) {
             revert("Game already ended");
         }
         ClearTurnData();
-        Games.setGamePhase(match_key, GamePhase.START_TURN);
+        Games.setGamePhase(game_key, GamePhase.START_TURN);
 
         //todo
 
@@ -198,6 +204,13 @@ contract GameStartSystem is System {
             CardOnBoards.getAttack(card_key),
             CardOnBoards.getDamage(card_key)
         );
+    }
+
+    function setMana(bytes32 game_key) public {
+        bytes32[] memory players = Games.getPlayers(game_key);
+        for (uint8 i = 0; i < players.length; i++) {
+            Players.setMana(players[i], 10);
+        }
     }
 
 //    function GetCardOnBoard(bytes32 card_key) public view returns (CardOnBoardsData memory){

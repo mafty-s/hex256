@@ -27,6 +27,8 @@ interface IGameStartSystem {
 
   function GetCard(bytes32 card_key) external view returns (int8 hp, int8 mana, int8 attack, int8 damage);
 
+  function setMana(bytes32 game_key) external;
+
   function getPlayerCards(
     bytes32 player_key
   )

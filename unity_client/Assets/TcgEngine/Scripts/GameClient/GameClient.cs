@@ -331,6 +331,7 @@ namespace TcgEngine.Client
 
         public void OnAttackPlayerSuccess(string message)
         {
+            return;
             Debug.Log("OnAttackPlayerSuccess:" + message);
             MudAttackPlayerResult result = JsonUtility.FromJson<MudAttackPlayerResult>(message);
 
@@ -963,6 +964,15 @@ namespace TcgEngine.Client
             MudManager.Get().CheckPlayerSetting(op, game_settings.game_uid);
         }
 
+        public void RefreshGame(string message)
+        {
+            Debug.Log("RefreshGame:" + message);
+            MudGame gameinfo = MudGame.FromJson(message);
+            Debug.Log("players:" + gameinfo.player_objs.Length);
+            MudRefresh.RefreshGame(gameinfo, game_data);
+            onRefreshAll?.Invoke();
+        }
+
         public void OnActionHistorySuccess(string message)
         {
             Debug.Log("OnActionHistorySuccess:" + message);
@@ -991,7 +1001,7 @@ namespace TcgEngine.Client
                     writer1.WriteValueSafe(GameAction.NewTurn);
                     writer1.WriteNetworkSerializable(mdata2);
                     OnReceiveRefresh(0, new FastBufferReader(writer1, Allocator.Temp));
-                    
+
                     Card new_board_card = game_data.GetCard(action.target_uid);
                     if (new_board_card != null)
                     {
@@ -1005,10 +1015,10 @@ namespace TcgEngine.Client
                         Debug.Log("cards_deck" + new_board_card_player.cards_deck.Count);
                         Debug.Log("cards_hand" + new_board_card_player.cards_hand.Count);
                     }
-                    
+
                     game_data.current_player = game_data.current_player == 0 ? 1 : 0;
                     game_data.turn_timer = GameplayData.Get().turn_duration;
-                    
+
                     break;
                 case GameAction.PlayCard:
                     MsgPlayCard mdata_playcard = new MsgPlayCard();

@@ -351,7 +351,9 @@ export function createSystemCalls(
         return convertBigIntToInt({hash, tx_result});
     };
 
+    let now_game_uid = null;
     const gameSetting = async (game_uid: string) => {
+        now_game_uid = game_uid;
         const tx = await worldContract.write.GameSetting([game_uid]);
         await waitForTransaction(tx);
         let result = {
@@ -728,17 +730,6 @@ export function createSystemCalls(
         }
     }
 
-    const refreshGame = async (game_uid: string) => {
-        const game_key = calculateKeccak256Hash(game_uid);
-        const player_key = await worldContract.read.GetPlayerByGame([game_key]);
-        console.log("player_key", player_key);
-        for (let i = 0; i < player_key.length; i++) {
-            const player = await worldContract.read.getPlayerCards([player_key[i]]);
-            const card_keys = player[1];
-            console.log("player", i, player);
-        }
-    }
-
     const selectCard = async (game_uid: string, card_id: string, card_uid: string) => {
         console.log("selectCard", game_uid, card_id, card_uid);
         const game_key = calculateKeccak256Hash(game_uid);
@@ -800,34 +791,55 @@ export function createSystemCalls(
         return slots;
     }
 
-    const getGame = (uid) => {
-        const key = calculateKeccak256Hash(uid);
+    const getGame = () => {
+        const key = calculateKeccak256Hash(now_game_uid);
         let game = useStore.getState().getValue(tables.Games, {key});
+        let game_extend = useStore.getState().getValue(tables.GamesExtended, {key});
+        console.log(game_extend)
+        game = {...game, ...game_extend};
         game.player_objs = [];
         let cards = [];
 
         for (const player_key of game.players) {
             const player = useStore.getState().getValue(tables.Players, {player_key});
             player.deck = useStore.getState().getValue(tables.PlayerCardsDeck, {player_key})?.value;
-            player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key}).value;
+            player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key})?.value;
+            player.discard = useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key})?.value;
             player.slot = useStore.getState().getValue(tables.PlayerSlots, {player_key});
-            // board: useStore.getState().getValue(tables.PlayerCardsBoard, {player_key}),
-            // equip: useStore.getState().getValue(tables.PlayerCardsEquip, {player_key}),
-            // discard: useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key}),
-            // secret: useStore.getState().getValue(tables.PlayerCardsSecret, {player_key}),
-            // temp: useStore.getState().getValue(tables.PlayerCardsTemp, {player_key}),
             game.player_objs.push(player);
         }
 
         for (const player of game.player_objs) {
-            for(const card of player.deck){
-                cards[card] = useStore.getState().getValue(tables.CardOnBoards, {card});
+            for (const card_key of player.deck) {
+                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+            for (const card_key of player.hand) {
+                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+            for (const card_key of player.discard) {
+                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
             }
         }
 
         game.cards = cards;
         console.log(JSON.stringify(game));
         return game;
+    }
+
+    const refreshGame = () => {
+        const game_info = getGame();
+        window.MyUnityInstance.SendMessage('Client', 'RefreshGame', JSON.stringify(game_info));
+    }
+
+    const setMana = async () => {
+        const key = calculateKeccak256Hash(now_game_uid);
+        await worldContract.write.setMana([key]);
     }
 
     const out = {
@@ -879,8 +891,8 @@ export function createSystemCalls(
         cancelSelection,
         getRandomEmptySlot,
         getAllSlot,
-        tables,
-        getGame
+        getGame,
+        setMana,
         // ablities,
     };
 
