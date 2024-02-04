@@ -10,6 +10,7 @@ using LitJson;
 [System.Serializable]
 public class MudCardInfo
 {
+    public string key;
     public int slot;
     public int hp;
     public int hpOngoing;
@@ -63,7 +64,6 @@ public class MudGame
     {
         return JsonHelper.FromJson<MudGame>(str) as MudGame;
     }
-
 }
 
 public static class JsonHelper
@@ -76,10 +76,11 @@ public static class JsonHelper
         {
             return t;
         }
+
         iS.EndInit();
         return t;
     }
-    
+
     public static object FromJson(Type type, string str)
     {
         object t = JsonMapper.ToObject<Type>(str);
@@ -88,6 +89,7 @@ public static class JsonHelper
         {
             return t;
         }
+
         iS.EndInit();
         return t;
     }
@@ -95,21 +97,18 @@ public static class JsonHelper
 
 public class MudRefresh
 {
-
- 
-    
     public static void RefreshGame(MudGame mud_game, TcgEngine.Game gamedata)
     {
         gamedata.turn_count = mud_game.turnCount;
         foreach (var card in mud_game.cards)
         {
-            RefreshCard(card, gamedata.GetCard(card.id));
+            RefreshCard(card, gamedata.GetCard(card.key));
         }
 
         foreach (var player in mud_game.player_objs)
         {
             int id = getPlayerIdFromName(player.name, gamedata);
-            Debug.Log("find player"+player.name+":"+id);
+            Debug.Log("find player" + player.name + ":" + id);
             if (id != -1)
             {
                 RefreshPlayer(player, gamedata.GetPlayer(id), gamedata);
@@ -156,6 +155,7 @@ public class MudRefresh
 
     public static void RefreshCard(MudCardInfo mud_card, TcgEngine.Card card)
     {
+        Debug.Log("RefreshCard" + mud_card.key);
         card.hp = mud_card.hp;
         card.hp_ongoing = mud_card.hpOngoing;
         card.attack = mud_card.attack;

@@ -805,6 +805,7 @@ export function createSystemCalls(
             player.deck = useStore.getState().getValue(tables.PlayerCardsDeck, {player_key})?.value;
             player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key})?.value;
             player.discard = useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key})?.value;
+            player.board = useStore.getState().getValue(tables.PlayerCardsBoard, {player_key})?.value;
             player.slot = useStore.getState().getValue(tables.PlayerSlots, {player_key});
             game.player_objs.push(player);
         }
@@ -821,6 +822,11 @@ export function createSystemCalls(
                 cards.push(card);
             }
             for (const card_key of player.discard) {
+                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+            for (const card_key of player.board) {
                 let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
                 card.key = card_key
                 cards.push(card);
