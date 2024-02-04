@@ -6,10 +6,11 @@ import {Cards, CardsData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {Games, GamesData, GamesExtended} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret,PlayerCardsTemp} from "../codegen/index.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret, PlayerCardsTemp} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, SelectorType} from "../codegen/common.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 //    struct PlayerSettingResult {
 //        CardTuple[] cards;
@@ -68,6 +69,13 @@ contract GameStartSystem is System {
             cards = shuffle(cards);
         }
 
+        PlayerCardsDiscard.setValue(player_key, new bytes32[](0));
+        PlayerCardsEquip.setValue(player_key, new bytes32[](0));
+        PlayerCardsSecret.setValue(player_key, new bytes32[](0));
+        PlayerCardsTemp.setValue(player_key, new bytes32[](0));
+        PlayerCardsBoard.setValue(player_key, new bytes32[](0));
+        PlayerCardsDeck.setValue(player_key, new bytes32[](0));
+
         for (uint i = 0; i < cards.length; i++) {
             bytes32 on_board_card_key = keccak256(abi.encode(cards[i], player_key, i));
             CardsData memory card = Cards.get(cards[i]);
@@ -85,10 +93,7 @@ contract GameStartSystem is System {
             StartGame(game_uid);
         }
 
-        PlayerCardsDiscard.setValue(player_key, new bytes32[](0));
-        PlayerCardsEquip.setValue(player_key, new bytes32[](0));
-        PlayerCardsSecret.setValue(player_key, new bytes32[](0));
-        PlayerCardsTemp.setValue(player_key, new bytes32[](0));
+
 
         return PlayerCardsDeck.getValue(player_key);
 

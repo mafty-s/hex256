@@ -498,6 +498,8 @@ export function createSystemCalls(
             mana_cost: tx_result.result[0],
             player_mana: tx_result.result[1],
         }
+
+        refreshGame();
         return convertBigIntToInt({hash, tx_result, result});
     }
 
@@ -795,7 +797,6 @@ export function createSystemCalls(
         const key = calculateKeccak256Hash(now_game_uid);
         let game = useStore.getState().getValue(tables.Games, {key});
         let game_extend = useStore.getState().getValue(tables.GamesExtended, {key});
-        console.log(game_extend)
         game = {...game, ...game_extend};
         game.player_objs = [];
         let cards = [];
@@ -811,6 +812,7 @@ export function createSystemCalls(
         }
 
         for (const player of game.player_objs) {
+
             for (const card_key of player.deck) {
                 let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
                 card.key = card_key
