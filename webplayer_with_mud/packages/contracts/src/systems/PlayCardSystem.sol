@@ -65,10 +65,10 @@ contract PlayCardSystem is System {
             if (card_on_slot == 0) {
                 revert("Slot is empty");
             }
+            bytes32[] memory abilities = Cards.getAbilities(card_config_key);
             //使用触发器触发技能
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                    AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
             );
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
