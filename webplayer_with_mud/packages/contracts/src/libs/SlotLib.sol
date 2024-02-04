@@ -154,8 +154,8 @@ library SlotLib {
         Slot[] memory slots = new Slot[](num);
 
         uint8 i = 0;
-        uint8 y = 1;
-        uint8 p = 0;
+        uint8 y = 1;//todo
+        uint8 p = 0;//todo
         if (PlayerSlots.getA(player_key) == 0) {
             slots[i] = NewSlot(1, y, p);
             i++;
@@ -212,5 +212,23 @@ library SlotLib {
             return PlayerSlots.getE(player_key);
         }
         revert("GetCardOnSlot Invalid slot");
+    }
+
+    function ClearCardFromSlot(bytes32 player_key,bytes32 card_key) internal {
+        if(PlayerSlots.getA(player_key) == card_key){
+            PlayerSlots.setA(player_key, 0);
+        }
+        if(PlayerSlots.getB(player_key) == card_key){
+            PlayerSlots.setB(player_key, 0);
+        }
+        if(PlayerSlots.getC(player_key) == card_key){
+            PlayerSlots.setC(player_key, 0);
+        }
+        if(PlayerSlots.getD(player_key) == card_key){
+            PlayerSlots.setD(player_key, 0);
+        }
+        if(PlayerSlots.getE(player_key) == card_key){
+            PlayerSlots.setE(player_key, 0);
+        }
     }
 }

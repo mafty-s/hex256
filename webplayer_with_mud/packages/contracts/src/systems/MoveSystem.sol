@@ -38,6 +38,14 @@ contract MoveSystem is System {
             GameLogicLib.UpdateOngoing();
         }
 
+        SlotLib.ClearCardFromSlot(player_key, card_key);
+        bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
+        if (card_on_slot != 0) {
+            revert("Slot is already occupied");
+        }
+        SlotLib.SetCardOnSlot(player_key, card_key, slot.x);
+
+
         bytes32[] memory players = Games.getPlayers(game_key);
         uint16 slot_encode = SlotLib.EncodeSlot(slot);
         uint256 len = PlayerActionHistory.length(game_key);
