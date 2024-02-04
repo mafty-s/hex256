@@ -800,6 +800,36 @@ export function createSystemCalls(
         return slots;
     }
 
+    const getGame = (uid) => {
+        const key = calculateKeccak256Hash(uid);
+        let game = useStore.getState().getValue(tables.Games, {key});
+        game.player_objs = [];
+        let cards = [];
+
+        for (const player_key of game.players) {
+            const player = useStore.getState().getValue(tables.Players, {player_key});
+            player.deck = useStore.getState().getValue(tables.PlayerCardsDeck, {player_key})?.value;
+            player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key}).value;
+            player.slot = useStore.getState().getValue(tables.PlayerSlots, {player_key});
+            // board: useStore.getState().getValue(tables.PlayerCardsBoard, {player_key}),
+            // equip: useStore.getState().getValue(tables.PlayerCardsEquip, {player_key}),
+            // discard: useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key}),
+            // secret: useStore.getState().getValue(tables.PlayerCardsSecret, {player_key}),
+            // temp: useStore.getState().getValue(tables.PlayerCardsTemp, {player_key}),
+            game.player_objs.push(player);
+        }
+
+        for (const player of game.player_objs) {
+            for(const card of player.deck){
+                cards[card] = useStore.getState().getValue(tables.CardOnBoards, {card});
+            }
+        }
+
+        game.cards = cards;
+        console.log(JSON.stringify(game));
+        return game;
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -848,7 +878,9 @@ export function createSystemCalls(
         selectSlot,
         cancelSelection,
         getRandomEmptySlot,
-        getAllSlot
+        getAllSlot,
+        tables,
+        getGame
         // ablities,
     };
 

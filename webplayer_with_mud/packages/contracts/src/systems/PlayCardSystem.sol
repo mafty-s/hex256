@@ -67,9 +67,14 @@ contract PlayCardSystem is System {
             }
             bytes32[] memory abilities = Cards.getAbilities(card_config_key);
             //使用触发器触发技能
-            SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
-            );
+//            SystemSwitch.call(
+//                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
+//            );
+            bytes32 ability_key = 0xd74a4cc73f596bb8617ee6dbf1618769622038ccb004cd10081a7a45acbfcf95;
+            bytes4 effect = 0x6b1ac047;
+            bytes memory data = abi.encodeWithSelector(effect, ability_key, card_key, card_on_slot, true);
+            SystemSwitch.call(data);
+
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
             SlotLib.SetCardOnSlot(player_key, 0, slot.x);

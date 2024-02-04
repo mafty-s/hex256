@@ -215,6 +215,13 @@ contract EffectSystem is System {
             if (stat == EffectStatType.Attack) {
                 CardOnBoards.setAttack(target, value + CardOnBoards.getAttack(target));
             }
+
+            bytes32 game_key = Players.getGame(target);
+            uint256 len = PlayerActionHistory.length(game_key);
+            bytes32 action_key = keccak256(abi.encode(game_key, len));
+            PlayerActionHistory.push(game_key, action_key);
+            ActionHistory.setActionType(action_key, Action.ChangeCard);
+            ActionHistory.setPayload(ability_key, abi.encodePacked(caster,value));
         } else {
             if (stat == EffectStatType.HP) {
                 int8 hp = Players.getHp(target);

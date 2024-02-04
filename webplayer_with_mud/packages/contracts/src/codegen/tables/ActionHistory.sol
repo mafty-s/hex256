@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant ActionHistoryTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0046070001202002010101000000000000000000000000000000000000000000
+  0x0046070101202002010101000000000000000000000000000000000000000000
 );
 
 struct ActionHistoryData {
@@ -40,6 +40,7 @@ struct ActionHistoryData {
   uint8 playerId;
   int8 value;
   uint8 valueU8;
+  bytes payload;
 }
 
 library ActionHistory {
@@ -67,7 +68,7 @@ library ActionHistory {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](7);
+    SchemaType[] memory _valueSchema = new SchemaType[](8);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.BYTES32;
@@ -75,6 +76,7 @@ library ActionHistory {
     _valueSchema[4] = SchemaType.UINT8;
     _valueSchema[5] = SchemaType.INT8;
     _valueSchema[6] = SchemaType.UINT8;
+    _valueSchema[7] = SchemaType.BYTES;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -93,7 +95,7 @@ library ActionHistory {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](7);
+    fieldNames = new string[](8);
     fieldNames[0] = "actionType";
     fieldNames[1] = "cardId";
     fieldNames[2] = "target";
@@ -101,6 +103,7 @@ library ActionHistory {
     fieldNames[4] = "playerId";
     fieldNames[5] = "value";
     fieldNames[6] = "valueU8";
+    fieldNames[7] = "payload";
   }
 
   /**
@@ -412,6 +415,168 @@ library ActionHistory {
   }
 
   /**
+   * @notice Get payload.
+   */
+  function getPayload(bytes32 key) internal view returns (bytes memory payload) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (bytes(_blob));
+  }
+
+  /**
+   * @notice Get payload.
+   */
+  function _getPayload(bytes32 key) internal view returns (bytes memory payload) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (bytes(_blob));
+  }
+
+  /**
+   * @notice Set payload.
+   */
+  function setPayload(bytes32 key, bytes memory payload) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((payload)));
+  }
+
+  /**
+   * @notice Set payload.
+   */
+  function _setPayload(bytes32 key, bytes memory payload) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((payload)));
+  }
+
+  /**
+   * @notice Get the length of payload.
+   */
+  function lengthPayload(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of payload.
+   */
+  function _lengthPayload(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of payload.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemPayload(bytes32 key, uint256 _index) internal view returns (bytes memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (bytes(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of payload.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemPayload(bytes32 key, uint256 _index) internal view returns (bytes memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (bytes(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to payload.
+   */
+  function pushPayload(bytes32 key, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to payload.
+   */
+  function _pushPayload(bytes32 key, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from payload.
+   */
+  function popPayload(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Pop a slice from payload.
+   */
+  function _popPayload(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Update a slice of payload at `_index`.
+   */
+  function updatePayload(bytes32 key, uint256 _index, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of payload at `_index`.
+   */
+  function _updatePayload(bytes32 key, uint256 _index, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (ActionHistoryData memory _table) {
@@ -452,12 +617,13 @@ library ActionHistory {
     uint16 slot,
     uint8 playerId,
     int8 value,
-    uint8 valueU8
+    uint8 valueU8,
+    bytes memory payload
   ) internal {
     bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId, value, valueU8);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(payload);
+    bytes memory _dynamicData = encodeDynamic(payload);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -476,12 +642,13 @@ library ActionHistory {
     uint16 slot,
     uint8 playerId,
     int8 value,
-    uint8 valueU8
+    uint8 valueU8,
+    bytes memory payload
   ) internal {
     bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId, value, valueU8);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(payload);
+    bytes memory _dynamicData = encodeDynamic(payload);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -503,8 +670,8 @@ library ActionHistory {
       _table.valueU8
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.payload);
+    bytes memory _dynamicData = encodeDynamic(_table.payload);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -526,8 +693,8 @@ library ActionHistory {
       _table.valueU8
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.payload);
+    bytes memory _dynamicData = encodeDynamic(_table.payload);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -561,15 +728,30 @@ library ActionHistory {
   }
 
   /**
+   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
+   */
+  function decodeDynamic(
+    PackedCounter _encodedLengths,
+    bytes memory _blob
+  ) internal pure returns (bytes memory payload) {
+    uint256 _start;
+    uint256 _end;
+    unchecked {
+      _end = _encodedLengths.atIndex(0);
+    }
+    payload = (bytes(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+  }
+
+  /**
    * @notice Decode the tightly packed blobs using this table's field layout.
    * @param _staticData Tightly packed static fields.
-   *
-   *
+   * @param _encodedLengths Encoded lengths of dynamic fields.
+   * @param _dynamicData Tightly packed dynamic fields.
    */
   function decode(
     bytes memory _staticData,
-    PackedCounter,
-    bytes memory
+    PackedCounter _encodedLengths,
+    bytes memory _dynamicData
   ) internal pure returns (ActionHistoryData memory _table) {
     (
       _table.actionType,
@@ -580,6 +762,8 @@ library ActionHistory {
       _table.value,
       _table.valueU8
     ) = decodeStatic(_staticData);
+
+    (_table.payload) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -619,6 +803,25 @@ library ActionHistory {
   }
 
   /**
+   * @notice Tightly pack dynamic data lengths using this table's schema.
+   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
+   */
+  function encodeLengths(bytes memory payload) internal pure returns (PackedCounter _encodedLengths) {
+    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
+    unchecked {
+      _encodedLengths = PackedCounterLib.pack(bytes(payload).length);
+    }
+  }
+
+  /**
+   * @notice Tightly pack dynamic (variable length) data using this table's schema.
+   * @return The dynamic data, encoded into a sequence of bytes.
+   */
+  function encodeDynamic(bytes memory payload) internal pure returns (bytes memory) {
+    return abi.encodePacked(bytes((payload)));
+  }
+
+  /**
    * @notice Encode all of a record's fields.
    * @return The static (fixed length) data, encoded into a sequence of bytes.
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
@@ -631,12 +834,13 @@ library ActionHistory {
     uint16 slot,
     uint8 playerId,
     int8 value,
-    uint8 valueU8
+    uint8 valueU8,
+    bytes memory payload
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(actionType, cardId, target, slot, playerId, value, valueU8);
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(payload);
+    bytes memory _dynamicData = encodeDynamic(payload);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

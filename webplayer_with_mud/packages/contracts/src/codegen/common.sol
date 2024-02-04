@@ -124,7 +124,8 @@ enum Action {
   CancelSelect,
   EndTurn,
   ChangeMana,
-  AddStatus
+  AddStatus,
+  ChangeCard
 }
 
 enum PileType {
