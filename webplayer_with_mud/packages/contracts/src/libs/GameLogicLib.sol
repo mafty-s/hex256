@@ -22,6 +22,7 @@ library GameLogicLib {
         CardOnBoards.setAttack(card_uid, card.attack);
         CardOnBoards.setMana(card_uid, card.mana);
         CardOnBoards.setPlayerId(card_uid, player_key);
+        CardOnBoards.setName(card_uid,card.tid);
         Players.setNcards(player_key, i + 1);
 
         return card_uid;

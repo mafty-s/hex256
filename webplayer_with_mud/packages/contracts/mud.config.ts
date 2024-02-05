@@ -132,7 +132,8 @@ export default mudConfig({
                 playerId: "bytes32",
                 status: "uint8[]",
                 ability: "bytes32[]",
-                trait: "uint8[]"
+                trait: "uint8[]",
+                name:"string",
             }
         },
         Decks: {
