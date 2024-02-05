@@ -6,7 +6,7 @@ import {Cards, CardsData, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
 import {PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
-import {MathLib} from "./MathLib.sol";
+import {UintLib} from "./UintLib.sol";
 
 library CardLogicLib {
 
@@ -80,7 +80,7 @@ library CardLogicLib {
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
-            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = MathLib.splitUint32(card_status[i]);
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = UintLib.splitUint32(card_status[i]);
             if (status_id == uint8(status)) {
                 return true;
             }
@@ -96,7 +96,7 @@ library CardLogicLib {
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
-            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = MathLib.splitUint32(card_status[i]);
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = UintLib.splitUint32(card_status[i]);
             if (status_id == uint8(status)) {
                 CardOnBoards.updateStatus(card_uid, i, uint8(Status.None));
             }
