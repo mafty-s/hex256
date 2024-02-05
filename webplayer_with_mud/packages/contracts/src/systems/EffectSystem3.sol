@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
 import {Action, TraitData, EffectStatType} from "../codegen/common.sol";
 import {MathLib} from "../libs/MathLib.sol";
