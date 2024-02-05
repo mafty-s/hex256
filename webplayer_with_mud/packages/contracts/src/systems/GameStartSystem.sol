@@ -43,6 +43,12 @@ contract GameStartSystem is System {
         return shuffled;
     }
 
+    function AddCard(string memory game_uid, string memory card_name) public returns (bytes32) {
+        bytes32 card_config_key = keccak256(abi.encode(card_name));
+        bytes32 player_key = keccak256(abi.encode(game_uid, _msgSender()));
+        return GameLogicLib.AddCard(player_key, card_config_key);
+    }
+
     function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
@@ -77,14 +83,7 @@ contract GameStartSystem is System {
         PlayerCardsDeck.setValue(player_key, new bytes32[](0));
 
         for (uint i = 0; i < cards.length; i++) {
-            bytes32 on_board_card_key = keccak256(abi.encode(cards[i], player_key, i));
-            CardsData memory card = Cards.get(cards[i]);
-            CardOnBoards.setId(on_board_card_key, cards[i]);
-            CardOnBoards.setHp(on_board_card_key, card.hp);
-            CardOnBoards.setAttack(on_board_card_key, card.attack);
-            CardOnBoards.setMana(on_board_card_key, card.mana);
-            CardOnBoards.setPlayerId(on_board_card_key, player_key);
-
+            bytes32 on_board_card_key = GameLogicLib.AddCard(player_key, cards[i]);
             PlayerCardsDeck.pushValue(player_key, on_board_card_key);
         }
 
@@ -92,7 +91,6 @@ contract GameStartSystem is System {
         if (Games.getPlayers(game_key).length == 2) {
             StartGame(game_uid);
         }
-
 
 
         return PlayerCardsDeck.getValue(player_key);
@@ -210,6 +208,7 @@ contract GameStartSystem is System {
             CardOnBoards.getDamage(card_key)
         );
     }
+
 
     function setMana(bytes32 game_key) public {
         bytes32[] memory players = Games.getPlayers(game_key);

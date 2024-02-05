@@ -850,6 +850,11 @@ export function createSystemCalls(
         await worldContract.write.setMana([key]);
     }
 
+    const addCard = async(card_name:string)=>{
+        await worldContract.write.addCard(now_game_uid,card_name);
+        refreshGame();
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -901,6 +906,7 @@ export function createSystemCalls(
         getAllSlot,
         getGame,
         setMana,
+        addCard
         // ablities,
     };
 

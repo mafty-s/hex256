@@ -2,13 +2,30 @@
 pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {Games, Cards, CardsData} from "../codegen/index.sol";
+import {Games, Cards, CardsData, Players} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {MathLib} from "./MathLib.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} from "../codegen/common.sol";
 
 library GameLogicLib {
+
+
+    function AddCard(bytes32 player_key, bytes32 card_config_key) internal returns (bytes32){
+        uint8 i = Players.getNcards(player_key);
+        bytes32 card_uid = keccak256(abi.encode(player_key, i));
+
+        CardsData memory card = Cards.get(card_config_key);
+
+        CardOnBoards.setId(card_uid, card_config_key);
+        CardOnBoards.setHp(card_uid, card.hp);
+        CardOnBoards.setAttack(card_uid, card.attack);
+        CardOnBoards.setMana(card_uid, card.mana);
+        CardOnBoards.setPlayerId(card_uid, player_key);
+        Players.setNcards(player_key, i + 1);
+
+        return card_uid;
+    }
 
     function KillCard(bytes32 caster, bytes32 target) internal {
         //todo
