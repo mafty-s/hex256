@@ -813,6 +813,10 @@ export function createSystemCalls(
             player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key})?.value;
             player.discard = useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key})?.value;
             player.board = useStore.getState().getValue(tables.PlayerCardsBoard, {player_key})?.value;
+            player.secret = useStore.getState().getValue(tables.PlayerCardsSecret, {player_key})?.value;
+            player.equip = useStore.getState().getValue(tables.PlayerCardsEquip, {player_key})?.value;
+            player.board = useStore.getState().getValue(tables.PlayerCardsBoard, {player_key})?.value;
+            player.temp = useStore.getState().getValue(tables.PlayerCardsTemp, {player_key})?.value;
             player.slot = useStore.getState().getValue(tables.PlayerSlots, {player_key});
             game.player_objs.push(player);
         }

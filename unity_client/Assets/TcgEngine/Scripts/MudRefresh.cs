@@ -46,6 +46,9 @@ public class MudPlayerInfo
     public string[] hand;
     public string[] board;
     public string[] discard;
+    public string[] equip;
+    public string[] secret;
+    public string[] temp;
 }
 
 [System.Serializable]
@@ -180,6 +183,36 @@ public class MudRefresh
         foreach (var card in mud_player.hand)
         {
             player.cards_hand.Add(gamedata.GetCard(card));
+        }
+        
+        player.cards_discard.Clear();
+        foreach (var card in mud_player.discard)
+        {
+            player.cards_discard.Add(gamedata.GetCard(card));
+        }
+        
+        player.cards_equip.Clear();
+        foreach (var card in mud_player.equip)
+        {
+            player.cards_equip.Add(gamedata.GetCard(card));
+        }
+        
+        player.cards_secret.Clear();
+        foreach (var card in mud_player.secret)
+        {
+            player.cards_secret.Add(gamedata.GetCard(card));
+        }
+        
+        player.cards_temp.Clear();
+        foreach (var card in mud_player.temp)
+        {
+            player.cards_temp.Add(gamedata.GetCard(card));
+        }
+        
+        player.cards_board.Clear();
+        foreach (var card in mud_player.board)
+        {
+            player.cards_board.Add(gamedata.GetCard(card));
         }
     }
 

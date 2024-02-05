@@ -75,11 +75,10 @@ contract EffectSystem is System {
 
     function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (is_card) {
-            if (CardLogicLib.IsOnBoard(target)) {
-                //todo
-            }
+            bytes32 player_key = CardOnBoards.getPlayerId(target);
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+            PlayerLogicLib.AddCardToDiscard(player_key, target);
         }
-        //todo
     }
 
     function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
