@@ -6,6 +6,7 @@ import {Cards, CardsData, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
 import {PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
+import {MathLib} from "./MathLib.sol";
 
 library CardLogicLib {
 
@@ -76,32 +77,34 @@ library CardLogicLib {
     }
 
     function HasStatus(bytes32 card_uid, Status status) internal view returns (bool) {
-        uint8[] memory card_status = CardOnBoards.getStatus(card_uid);
+        uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
-            if (card_status[i] == uint8(status)) {
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = MathLib.splitUint32(card_status[i]);
+            if (status_id == uint8(status)) {
                 return true;
             }
         }
         return false;
     }
 
-    function AddStatus(bytes32 card_uid, Status status) internal {
+    function AddStatus(bytes32 card_uid, Status status,uint8 duration,uint8 value) internal {
         CardOnBoards.pushStatus(card_uid, uint8(status));
     }
 
     function RemoveStatus(bytes32 card_uid, Status status) internal {
-        uint8[] memory card_status = CardOnBoards.getStatus(card_uid);
+        uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
-            if (card_status[i] == uint8(status)) {
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = MathLib.splitUint32(card_status[i]);
+            if (status_id == uint8(status)) {
                 CardOnBoards.updateStatus(card_uid, i, uint8(Status.None));
             }
         }
     }
 
     function ClearStatus(bytes32 card_uid) internal {
-        uint8[] memory card_status = new uint8[](0);
+        uint32[] memory card_status = new uint32[](0);
         CardOnBoards.setStatus(card_uid, card_status);
     }
 

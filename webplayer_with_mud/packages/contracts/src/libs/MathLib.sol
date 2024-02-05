@@ -44,4 +44,17 @@ library MathLib {
         uint8 randomValue = uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.prevrandao, msg.sender))) % (uint8(max - min + 1))) + uint8(min);
         return int8(randomValue);
     }
+
+    function combineUint32(uint8 a, uint8 b, uint8 c, uint8 d) public pure returns (uint32) {
+        uint32 result = (uint32(a) << 24) | (uint32(b) << 16) | (uint32(c) << 8) | uint32(d);
+        return result;
+    }
+
+    function splitUint32(uint32 value) public pure returns (uint8, uint8, uint8, uint8) {
+        uint8 a = uint8((value >> 24) & 0xFF);
+        uint8 b = uint8((value >> 16) & 0xFF);
+        uint8 c = uint8((value >> 8) & 0xFF);
+        uint8 d = uint8(value & 0xFF);
+        return (a, b, c, d);
+    }
 }

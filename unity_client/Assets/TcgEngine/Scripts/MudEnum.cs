@@ -211,9 +211,9 @@ namespace Mud
     }
 }
 
-class MudEnum
+static class MudEnum
 {
-    public TcgEngine.StatusType CoverStatus(Mud.Status status)
+    public static TcgEngine.StatusType CoverStatus(Mud.Status status)
     {
         switch (status)
         {

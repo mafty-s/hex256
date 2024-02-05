@@ -130,7 +130,7 @@ export default mudConfig({
                 equippedUid: "bytes32",
                 id: "bytes32",
                 playerId: "bytes32",
-                status: "uint8[]",
+                status: "uint32[]",
                 ability: "bytes32[]",
                 trait: "uint8[]",
                 name:"string",

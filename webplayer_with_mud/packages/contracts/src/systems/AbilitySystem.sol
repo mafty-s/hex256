@@ -44,19 +44,21 @@ contract AbilitySystem is System {
         //添加状态，如嘲讽等
         uint8[] memory status = Ability.getStatus(ability_key);
         if (status.length > 0) {
+            uint8 duration = Ability.getDuration(ability_key);
+            uint8 value = uint8(Ability.getValue(ability_key));
             for (uint i = 0; i < status.length; i++) {
                 if (is_card) {
-                    CardLogicLib.AddStatus(target, (Status)(status[i]));
+                    CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
                 } else {
                     PlayerLogicLib.AddStatus(target, (Status)(status[i]));
                 }
 
-                uint256 len = PlayerActionHistory.length(game_key);
-                bytes32 action_key = keccak256(abi.encode(game_key, len));
-                PlayerActionHistory.push(game_key, action_key);
-                ActionHistory.setActionType(action_key, Action.AddStatus);
-                ActionHistory.setCardId(action_key, target);
-                ActionHistory.setValue(action_key, int8(status[i]));
+//                uint256 len = PlayerActionHistory.length(game_key);
+//                bytes32 action_key = keccak256(abi.encode(game_key, len));
+//                PlayerActionHistory.push(game_key, action_key);
+//                ActionHistory.setActionType(action_key, Action.AddStatus);
+//                ActionHistory.setCardId(action_key, target);
+//                ActionHistory.setValue(action_key, int8(status[i]));
             }
         }
     }

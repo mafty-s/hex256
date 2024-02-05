@@ -24,7 +24,7 @@ public class MudCardInfo
     public string equippedUid;
     public string id;
     public string playerId;
-    public string[] status;
+    public int[] status;
     public string[] ability;
     public string[] trait;
 }
@@ -184,31 +184,31 @@ public class MudRefresh
         {
             player.cards_hand.Add(gamedata.GetCard(card));
         }
-        
+
         player.cards_discard.Clear();
         foreach (var card in mud_player.discard)
         {
             player.cards_discard.Add(gamedata.GetCard(card));
         }
-        
+
         player.cards_equip.Clear();
         foreach (var card in mud_player.equip)
         {
             player.cards_equip.Add(gamedata.GetCard(card));
         }
-        
+
         player.cards_secret.Clear();
         foreach (var card in mud_player.secret)
         {
             player.cards_secret.Add(gamedata.GetCard(card));
         }
-        
+
         player.cards_temp.Clear();
         foreach (var card in mud_player.temp)
         {
             player.cards_temp.Add(gamedata.GetCard(card));
         }
-        
+
         player.cards_board.Clear();
         foreach (var card in mud_player.board)
         {
@@ -236,6 +236,18 @@ public class MudRefresh
             if (mud_card.equippedUid != "0x0000000000000000000000000000000000000000000000000000000000000000")
             {
                 Card equiped = gamedata.GetCard(mud_card.equippedUid);
+            }
+
+            if (mud_card.status.Length > 0)
+            {
+                foreach (var status in mud_card.status)
+                {
+                    StatusType s = MudEnum.CoverStatus((Mud.Status)status);
+                    if (s != StatusType.None)
+                    {
+                        card.AddStatus(s, 1, 1);
+                    }
+                }
             }
         }
         else
