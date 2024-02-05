@@ -10,7 +10,11 @@ pragma solidity >=0.8.21;
 interface IGameStartSystem {
   function GameSetting(string memory game_uid) external;
 
-  function AddCard(string memory game_uid, string memory card_name) external returns (bytes32);
+  function AddCard(
+    string memory game_uid,
+    string memory player_name,
+    string memory card_name
+  ) external returns (bytes32);
 
   function PlayerSetting(
     string memory username,

@@ -409,8 +409,13 @@ export function createSystemCalls(
 
     }
 
+    let player_name = null;
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
                                  dcards: number, pid: number, shuffle: boolean) => {
+        if(!is_ai){
+            player_name = username;
+        }
+
         await sleep(200)
 
         //todo
@@ -850,8 +855,9 @@ export function createSystemCalls(
         await worldContract.write.setMana([key]);
     }
 
-    const addCard = async(card_name:string)=>{
-        await worldContract.write.addCard(now_game_uid,card_name);
+    const addCard = async (card_name: string) => {
+        // const key = calculateKeccak256Hash(now_game_uid);
+        await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
         refreshGame();
     }
 

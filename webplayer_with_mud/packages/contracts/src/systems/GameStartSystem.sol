@@ -43,10 +43,12 @@ contract GameStartSystem is System {
         return shuffled;
     }
 
-    function AddCard(string memory game_uid, string memory card_name) public returns (bytes32) {
+    function AddCard(string memory game_uid, string memory player_name, string memory card_name) public returns (bytes32) {
         bytes32 card_config_key = keccak256(abi.encode(card_name));
-        bytes32 player_key = keccak256(abi.encode(game_uid, _msgSender()));
-        return GameLogicLib.AddCard(player_key, card_config_key);
+        bytes32 player_key = keccak256(abi.encode(game_uid, player_name));
+        bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
+        PlayerCardsHand.pushValue(player_key,card_uid);
+        return card_uid;
     }
 
     function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
