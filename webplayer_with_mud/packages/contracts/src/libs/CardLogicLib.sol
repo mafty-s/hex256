@@ -6,7 +6,7 @@ import {Cards, CardsData, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
 import {PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
-import {UintLib} from "./UintLib.sol";
+//import {UintLib} from "./UintLib.sol";
 
 library CardLogicLib {
 
@@ -80,7 +80,7 @@ library CardLogicLib {
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
-            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = UintLib.splitUint32(card_status[i]);
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(card_status[i]);
             if (status_id == uint8(status)) {
                 return true;
             }
@@ -88,15 +88,16 @@ library CardLogicLib {
         return false;
     }
 
-    function AddStatus(bytes32 card_uid, Status status,uint8 duration,uint8 value) internal {
-        CardOnBoards.pushStatus(card_uid, uint8(status));
+    function AddStatus(bytes32 card_uid, Status status, uint8 duration, uint8 value) internal {
+        uint32 payload = combineUint32(uint8(status), duration, value, 0);
+        CardOnBoards.pushStatus(card_uid, payload);
     }
 
     function RemoveStatus(bytes32 card_uid, Status status) internal {
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
         for (uint i = 0; i < len; i++) {
-            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = UintLib.splitUint32(card_status[i]);
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(card_status[i]);
             if (status_id == uint8(status)) {
                 CardOnBoards.updateStatus(card_uid, i, uint8(Status.None));
             }
@@ -115,5 +116,18 @@ library CardLogicLib {
 
     function AddTrait(bytes32 caster, TraitData trait) internal {
         //todo
+    }
+
+    function combineUint32(uint8 a, uint8 b, uint8 c, uint8 d) internal pure returns (uint32) {
+        uint32 result = (uint32(a) << 24) | (uint32(b) << 16) | (uint32(c) << 8) | uint32(d);
+        return result;
+    }
+
+    function splitUint32(uint32 value) internal pure returns (uint8, uint8, uint8, uint8) {
+        uint8 a = uint8((value >> 24) & 0xFF);
+        uint8 b = uint8((value >> 16) & 0xFF);
+        uint8 c = uint8((value >> 8) & 0xFF);
+        uint8 d = uint8(value & 0xFF);
+        return (a, b, c, d);
     }
 }
