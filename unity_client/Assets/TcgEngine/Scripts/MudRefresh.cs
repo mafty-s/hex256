@@ -244,6 +244,7 @@ public class MudRefresh
                 foreach (var status in mud_card.status)
                 {
                     (uint status_id, uint duration, uint value, uint unuse) = MudEnum.SplitUint32(status);
+                    Debug.Log("status:" + status_id + " duration:" + duration + " value" + value + " card_key: " + mud_card.key + " name:" + mud_card.name);
                     StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {

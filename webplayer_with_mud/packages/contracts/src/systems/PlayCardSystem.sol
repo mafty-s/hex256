@@ -48,6 +48,7 @@ contract PlayCardSystem is System {
         PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
 
         bytes32 card_config_key = CardOnBoards.getId(card_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
 
         if (CardLogicLib.IsBoardCard(card_config_key)) {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);
@@ -83,7 +84,8 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToDiscard(player_key, card_key);
 
             if (slot.x != 0) {
-                bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
+                bytes32 slot_player = slot.p ==0 ? players[0]:players[1];
+                bytes32 card_on_slot = SlotLib.GetCardOnSlot(slot_player, slot.x);
 //                bytes32[] memory abilities = Cards.getAbilities(card_config_key);
 //                //使用触发器触发技能
 ////
@@ -107,7 +109,6 @@ contract PlayCardSystem is System {
         }
 
 
-        bytes32[] memory players = Games.getPlayers(game_key);
 
 //        uint16 slot_encode = SlotLib.EncodeSlot(slot);
         uint256 len = PlayerActionHistory.length(game_key);
