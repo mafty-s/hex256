@@ -24,7 +24,7 @@ public class MudCardInfo
     public string equippedUid;
     public string id;
     public string playerId;
-    public int[] status;
+    public uint[] status;
     public string[] ability;
     public string[] trait;
 }
@@ -240,12 +240,14 @@ public class MudRefresh
 
             if (mud_card.status.Length > 0)
             {
+                card.status.Clear();
                 foreach (var status in mud_card.status)
                 {
-                    StatusType s = MudEnum.CoverStatus((Mud.Status)status);
+                    (uint status_id, uint duration, uint value, uint unuse) = MudEnum.SplitUint32(status);
+                    StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {
-                        card.AddStatus(s, 1, 1);
+                        card.AddStatus(s, (int)value, (int)duration);
                     }
                 }
             }

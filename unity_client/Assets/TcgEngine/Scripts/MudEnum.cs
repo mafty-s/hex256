@@ -213,6 +213,22 @@ namespace Mud
 
 static class MudEnum
 {
+    
+    public static uint CombineUint32(uint a, uint b, uint c, uint d)
+    {
+        uint result = ((uint)a << 24) | ((uint)b << 16) | ((uint)c << 8) | (uint)d;
+        return result;
+    }
+
+    public static (uint, uint, uint, uint) SplitUint32(uint value)
+    {
+        uint a = (uint)((value >> 24) & 0xFF);
+        uint b = (uint)((value >> 16) & 0xFF);
+        uint c = (uint)((value >> 8) & 0xFF);
+        uint d = (uint)(value & 0xFF);
+        return (a, b, c, d);
+    }
+    
     public static TcgEngine.StatusType CoverStatus(Mud.Status status)
     {
         switch (status)
