@@ -10,6 +10,7 @@ using LitJson;
 [System.Serializable]
 public class MudCardInfo
 {
+    public string name;
     public string key;
     public int slot;
     public int hp;
@@ -42,6 +43,7 @@ public class MudPlayerInfo
     public string[] deck;
     public string[] status;
     public string[] hand;
+    public string[] board;
 }
 
 [System.Serializable]
@@ -102,7 +104,7 @@ public class MudRefresh
         gamedata.turn_count = mud_game.turnCount;
         foreach (var card in mud_game.cards)
         {
-            RefreshCard(card, gamedata.GetCard(card.key));
+            RefreshCard(card, gamedata.GetCard(card.key), gamedata);
         }
 
         foreach (var player in mud_game.player_objs)
@@ -153,18 +155,50 @@ public class MudRefresh
         }
     }
 
-    public static void RefreshCard(MudCardInfo mud_card, TcgEngine.Card card)
+    public static void RefreshCard(MudCardInfo mud_card, TcgEngine.Card card, TcgEngine.Game gamedata)
     {
         Debug.Log("RefreshCard" + mud_card.key);
-        card.hp = mud_card.hp;
-        card.hp_ongoing = mud_card.hpOngoing;
-        card.attack = mud_card.attack;
-        card.attack_ongoing = mud_card.attackOngoing;
-        card.mana = mud_card.mana;
-        card.mana_ongoing = mud_card.manaOngoing;
-        card.damage = mud_card.damage;
-        card.exhausted = mud_card.exhausted;
-        card.equipped_uid = mud_card.equippedUid;
-        //card.player_id = mud_card.playerId;
+        if (card != null)
+        {
+            Debug.Log("find card:" + mud_card.key + "=>" + mud_card.name);
+            card.hp = mud_card.hp;
+            card.hp_ongoing = mud_card.hpOngoing;
+            card.attack = mud_card.attack;
+            card.attack_ongoing = mud_card.attackOngoing;
+            card.mana = mud_card.mana;
+            card.mana_ongoing = mud_card.manaOngoing;
+            card.damage = mud_card.damage;
+            card.exhausted = mud_card.exhausted;
+            card.equipped_uid = mud_card.equippedUid;
+            //card.player_id = mud_card.playerId;
+        }
+        else
+        {
+            int player_id = getPlayerIdFromName(mud_card.playerId, gamedata);
+            Player owner = gamedata.GetPlayer(player_id);
+            CardData config = CardData.Get(mud_card.name);
+            if (config == null)
+            {
+                Debug.Log("card config not found:" + mud_card.name);
+                return;
+            }
+
+            VariantData variant = VariantData.GetDefault();
+            card = Card.Create(config, variant, owner, mud_card.key);
+
+
+            card.hp = mud_card.hp;
+            card.hp_ongoing = mud_card.hpOngoing;
+            card.attack = mud_card.attack;
+            card.attack_ongoing = mud_card.attackOngoing;
+            card.mana = mud_card.mana;
+            card.mana_ongoing = mud_card.manaOngoing;
+            card.damage = mud_card.damage;
+            card.exhausted = mud_card.exhausted;
+            card.equipped_uid = mud_card.equippedUid;
+
+            Debug.Log("create card:" + mud_card.key + "=>" + mud_card.name);
+            owner.AddCard(owner.cards_hand, card); //todo
+        }
     }
 }
