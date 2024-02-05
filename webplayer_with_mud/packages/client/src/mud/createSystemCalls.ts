@@ -808,6 +808,7 @@ export function createSystemCalls(
 
         for (const player_key of game.players) {
             const player = useStore.getState().getValue(tables.Players, {player_key});
+            player.key = player_key;
             player.deck = useStore.getState().getValue(tables.PlayerCardsDeck, {player_key})?.value;
             player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key})?.value;
             player.discard = useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key})?.value;

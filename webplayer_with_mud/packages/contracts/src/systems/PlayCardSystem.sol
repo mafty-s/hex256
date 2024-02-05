@@ -33,8 +33,16 @@ contract PlayCardSystem is System {
 
         Slot memory slot = SlotLib.DecodeSlot(slot_encode);
 
+        int8 mana_cost = 0;
+        int8 player_mana = 0;
         if (!skip_cost) {
-            PayMana(player_key, card_key);
+//            PayMana(player_key, card_key);
+
+            mana_cost = CardOnBoards.getMana(card_key);
+            player_mana = Players.getMana(player_key);
+            require(player_mana >= mana_cost, "not enough mana");
+            player_mana -= mana_cost;
+            Players.setMana(player_key, player_mana);
         }
 
         PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
@@ -57,39 +65,43 @@ contract PlayCardSystem is System {
         } else if (CardLogicLib.IsEquipment(card_config_key)) {
 //            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
 //            GameLogicLib.EquipCard(bearer, card_key);
+            bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
+            if (card_on_slot == 0) {
+                revert("slot is empty");
+            }
             CardOnBoards.setExhausted(card_key, true);
+            CardOnBoards.setEquippedUid(card_on_slot, card_key);
+
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
+            PlayerLogicLib.AddCardToEquipment(card_key, player_key);
+
         } else if (CardLogicLib.IsSecret(card_config_key)) {
             PlayerLogicLib.AddCardToSecret(card_key, player_key);
         } else if (CardLogicLib.IsSpell(card_config_key)) {
-            bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
-            if (card_on_slot == 0) {
-                revert("Slot is empty");
-            }
 
-            PlayerLogicLib.RemoveCardFromAllGroups(player_key, player_key);
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
 
-            bytes32[] memory abilities = Cards.getAbilities(card_config_key);
-            //使用触发器触发技能
-//            SystemSwitch.call(
-//                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
-//            );
-            bytes32 ability_key = 0xd74a4cc73f596bb8617ee6dbf1618769622038ccb004cd10081a7a45acbfcf95;
-            bytes4 effect = 0x6b1ac047;
-            bytes memory data = abi.encodeWithSelector(effect, ability_key, card_key, card_on_slot, true);
-            SystemSwitch.call(data);
+            if (slot.x != 0) {
+                bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
+                bytes32[] memory abilities = Cards.getAbilities(card_config_key);
+                //使用触发器触发技能
+//
+                bytes32 ability_key = 0xd74a4cc73f596bb8617ee6dbf1618769622038ccb004cd10081a7a45acbfcf95;
+                bytes4 effect = 0x6b1ac047;
+                bytes memory data = abi.encodeWithSelector(effect, ability_key, card_key, card_on_slot, true);
+                SystemSwitch.call(data);
+            } else {
+                SystemSwitch.call(
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, 0, true))
+                );
+            }
 
         } else {
             PlayerLogicLib.AddCardToDiscard(card_key, player_key);
             SlotLib.SetCardOnSlot(player_key, 0, slot.x);
         }
 
-
-        int8 mana_cost = CardOnBoards.getMana(card_key);
-        int8 player_mana = Players.getMana(player_key);
-        require(player_mana >= mana_cost, "not enough mana");
-        player_mana -= mana_cost;
-        Players.setMana(player_key, player_mana);
 
         bytes32[] memory players = Games.getPlayers(game_key);
 
