@@ -270,8 +270,8 @@ namespace TcgEngine.Client
             {
                 //Solo mode, send both your settings and AI settings
                 SendGameplaySettings(game_settings);
-                SendPlayerSettingsAI(ai_settings);
                 SendPlayerSettings(player_settings);
+                SendPlayerSettingsAI(ai_settings);
             }
             else
             {

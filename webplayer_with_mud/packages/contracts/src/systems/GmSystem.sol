@@ -31,7 +31,7 @@ contract GmSystem is System {
         bytes32 player_key = keccak256(abi.encode(game_uid, player_name));
         bytes32 game_key = Players.getGame(player_key);
         bytes32[] memory players = Games.getPlayers(game_key);
-        uint8 p = 0;//players[0] == player_key ? 0 : 1;
+        uint8 p = players[0] == player_key ? 0 : 1;
 
         Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
         uint16 slot_encode = SlotLib.EncodeSlot(slot);
