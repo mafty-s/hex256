@@ -10,7 +10,7 @@ import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp, P
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
-contract EffectSystem2 is System {
+contract Effect2System is System {
 
 
     function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {

@@ -13,6 +13,12 @@ import { IConfigSystem } from "./IConfigSystem.sol";
 import { ICounterSystem } from "./ICounterSystem.sol";
 import { IDebugSystem } from "./IDebugSystem.sol";
 import { IDeckSystem } from "./IDeckSystem.sol";
+import { IEffect1System } from "./IEffect1System.sol";
+import { IEffect2System } from "./IEffect2System.sol";
+import { IEffect3System } from "./IEffect3System.sol";
+import { IEffect4System } from "./IEffect4System.sol";
+import { IEffect5System } from "./IEffect5System.sol";
+import { IEffect6System } from "./IEffect6System.sol";
 import { IEffectSystem } from "./IEffectSystem.sol";
 import { IEndTurnSystem } from "./IEndTurnSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
@@ -43,6 +49,12 @@ interface IWorld is
   ICounterSystem,
   IDebugSystem,
   IDeckSystem,
+  IEffect1System,
+  IEffect2System,
+  IEffect3System,
+  IEffect4System,
+  IEffect5System,
+  IEffect6System,
   IEffectSystem,
   IEndTurnSystem,
   IGameStartSystem,

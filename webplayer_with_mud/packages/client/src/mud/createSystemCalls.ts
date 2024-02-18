@@ -869,6 +869,7 @@ export function createSystemCalls(
     const addCard = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
+        await sleep(500);
         refreshGame();
     }
 
@@ -881,6 +882,10 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_uid);
         const player_key = calculateKeccak256HashTwoString(game_uid, player);
         return worldContract.read.GetEmptySlots([player_key]);
+    }
+
+    const triggerCardAbilityType = async(caster)=>{
+        await worldContract.write.TriggerCardAbilityType([AbilityTrigger.ON_PLAY,caster,caster,true]);
     }
 
     const out = {
@@ -937,7 +942,8 @@ export function createSystemCalls(
         addCard,
         getSlotCard,
         getEmptySlots,
-        addCardOnEmptySlots
+        addCardOnEmptySlots,
+        triggerCardAbilityType,
         // ablities,
     };
 

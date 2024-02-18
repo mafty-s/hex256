@@ -7,7 +7,7 @@ import {Action, TraitData, EffectStatType, EffectAttackerType, Status} from "../
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
-contract EffectSystem1 is System {
+contract Effect1System is System {
 
     constructor() {
 
