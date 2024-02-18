@@ -244,7 +244,8 @@ public class MudRefresh
                 foreach (var status in mud_card.status)
                 {
                     (uint status_id, uint duration, uint value, uint unuse) = MudEnum.SplitUint32(status);
-                    Debug.Log("status:" + status_id + " duration:" + duration + " value" + value + " card_key: " + mud_card.key + " name:" + mud_card.name);
+                    Debug.Log("status:" + status_id + " duration:" + duration + " value" + value + " card_key: " +
+                              mud_card.key + " name:" + mud_card.name);
                     StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {
@@ -290,11 +291,42 @@ public class MudRefresh
             new_card.mana_ongoing = mud_card.manaOngoing;
             new_card.damage = mud_card.damage;
             new_card.exhausted = mud_card.exhausted;
+            if (mud_card.slot != 0)
+            {
+                int x = SlotEncoderDecoder.DecodeSlotX(mud_card.slot);
+                int y = SlotEncoderDecoder.DecodeSlotY(mud_card.slot);
+                int p = SlotEncoderDecoder.DecodeSlotP(mud_card.slot);
+
+                new_card.slot = new Slot(x, y, p);
+            }
             // new_card.equipped_uid = mud_card.equippedUid;
 
             Debug.Log("create card:" + mud_card.key + "=>" + mud_card.name + " player:" + player_id);
             // Debug.Log("当前手牌数量："+owner.cards_hand.Count);
             // owner.cards_hand.Add(new_card);
         }
+    }
+}
+
+public class SlotEncoderDecoder
+{
+    // public static ushort EncodeSlot(Slot slot)
+    // {
+    //     return (ushort)(slot.x + (slot.y * 10) + (slot.p * 100));
+    // }
+
+    public static int DecodeSlotX(int slot)
+    {
+        return (slot % 10);
+    }
+
+    public static int DecodeSlotY(int slot)
+    {
+        return ((slot / 10) % 10);
+    }
+
+    public static int DecodeSlotP(int slot)
+    {
+        return (slot / 10);
     }
 }

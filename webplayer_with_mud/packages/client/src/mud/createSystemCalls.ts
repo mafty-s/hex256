@@ -860,6 +860,12 @@ export function createSystemCalls(
         await worldContract.write.setMana([key]);
     }
 
+    const addCardOnEmptySlots = async (card_name: string) => {
+        // const key = calculateKeccak256Hash(now_game_uid);
+        await worldContract.write.AddCardOnEmptySlots([now_game_uid, player_name, card_name]);
+        refreshGame();
+    }
+
     const addCard = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
@@ -931,6 +937,7 @@ export function createSystemCalls(
         addCard,
         getSlotCard,
         getEmptySlots,
+        addCardOnEmptySlots
         // ablities,
     };
 
