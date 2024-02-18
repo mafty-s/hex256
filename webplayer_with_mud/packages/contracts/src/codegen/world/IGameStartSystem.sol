@@ -10,18 +10,6 @@ pragma solidity >=0.8.21;
 interface IGameStartSystem {
   function GameSetting(string memory game_uid) external;
 
-  function AddCard(
-    string memory game_uid,
-    string memory player_name,
-    string memory card_name
-  ) external returns (bytes32);
-
-  function AddCardOnEmptySlots(
-    string memory game_uid,
-    string memory player_name,
-    string memory card_name
-  ) external returns (bytes32);
-
   function PlayerSetting(
     string memory username,
     string memory game_uid,
@@ -38,8 +26,6 @@ interface IGameStartSystem {
   function GetGameExtend(bytes32 game_key) external view returns (uint, bytes32, bytes32, bytes32);
 
   function GetCard(bytes32 card_key) external view returns (int8 hp, int8 mana, int8 attack, int8 damage);
-
-  function setMana(bytes32 game_key) external;
 
   function getPlayerCards(
     bytes32 player_key
