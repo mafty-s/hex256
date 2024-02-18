@@ -3,12 +3,14 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Cards, CardOnBoards, Games} from "../codegen/index.sol";
+import {Cards, CardOnBoards, Games, PlayerCardsDiscard} from "../codegen/index.sol";
+import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, Action} from "../codegen/common.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
-import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {SlotLib} from "../libs/SlotLib.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract AttackSystem is System {
 
@@ -39,6 +41,7 @@ contract AttackSystem is System {
         if (target_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
             target_hp = 0;//
         }
+
         if (attacker_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
             target_hp = 1;//
         }
@@ -49,7 +52,10 @@ contract AttackSystem is System {
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, target_key, target_key, true))
             );
-
+            bytes32 target_player = CardOnBoards.getPlayerId(target_key);
+            PlayerLogicLib.RemoveCardFromAllGroups(target_player, target_key);
+            SlotLib.ClearCardFromSlot(target_player, target_key);
+            PlayerCardsDiscard.pushValue(target_player,target_key);
         }
 
         CardOnBoards.setHp(target_key, target_hp);

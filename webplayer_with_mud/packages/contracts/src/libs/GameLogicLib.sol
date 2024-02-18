@@ -30,6 +30,7 @@ library GameLogicLib {
 
     function KillCard(bytes32 caster, bytes32 target) internal {
         //todo
+
     }
 
     function DiscardCard(bytes32 target) internal {
