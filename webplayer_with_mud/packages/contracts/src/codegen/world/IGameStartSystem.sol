@@ -16,6 +16,12 @@ interface IGameStartSystem {
     string memory card_name
   ) external returns (bytes32);
 
+  function AddCardOnEmptySlots(
+    string memory game_uid,
+    string memory player_name,
+    string memory card_name
+  ) external returns (bytes32);
+
   function PlayerSetting(
     string memory username,
     string memory game_uid,

@@ -11,6 +11,7 @@ import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, SelectorType} from "../codegen/common.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {SlotLib,Slot} from "../libs/SlotLib.sol";
 
 //    struct PlayerSettingResult {
 //        CardTuple[] cards;
@@ -47,9 +48,24 @@ contract GameStartSystem is System {
         bytes32 card_config_key = keccak256(abi.encode(card_name));
         bytes32 player_key = keccak256(abi.encode(game_uid, player_name));
         bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
-        PlayerCardsHand.pushValue(player_key,card_uid);
+        PlayerCardsHand.pushValue(player_key, card_uid);
         return card_uid;
     }
+
+    function AddCardOnEmptySlots(string memory game_uid, string memory player_name, string memory card_name) public returns (bytes32) {
+        bytes32 card_config_key = keccak256(abi.encode(card_name));
+        bytes32 player_key = keccak256(abi.encode(game_uid, player_name));
+        bytes32 game_key = Players.getGame(player_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
+        uint8 p = players[0] == player_key ? 0 : 1;
+
+        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key,p);
+
+        bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
+        PlayerCardsHand.pushValue(player_key, card_uid);
+        return card_uid;
+    }
+
 
     function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
 

@@ -871,6 +871,12 @@ export function createSystemCalls(
         return worldContract.read.GetSlotCards([game_key,{x:slot_x,y:slot_y,p:slot_p}]);
     }
 
+    const getEmptySlots =  async (game_uid: string, player: string) => {
+        const game_key = calculateKeccak256Hash(game_uid);
+        const player_key = calculateKeccak256HashTwoString(game_uid, player);
+        return worldContract.read.GetEmptySlots([player_key]);
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -924,6 +930,7 @@ export function createSystemCalls(
         setMana,
         addCard,
         getSlotCard,
+        getEmptySlots,
         // ablities,
     };
 

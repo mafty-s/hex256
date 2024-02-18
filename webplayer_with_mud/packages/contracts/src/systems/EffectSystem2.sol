@@ -98,7 +98,7 @@ contract EffectSystem2 is System {
         CardOnBoards.setMana(on_board_card_key, card.mana);
         CardOnBoards.setPlayerId(on_board_card_key, player_key);
 
-        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key);
+//        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key);
         revert("EffectSummon not implemented");
         //todo 放到牌区
         PlayerCardsBoard.push(on_board_card_key, on_board_card_key);

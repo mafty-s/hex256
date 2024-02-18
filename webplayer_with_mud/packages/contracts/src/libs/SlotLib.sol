@@ -124,8 +124,8 @@ library SlotLib {
         return (dx - dx2) + (dy - dy2) + (dp - dp2);
     }
 
-    function GetRandomEmptySlot(bytes32 player_key) internal view returns (Slot memory) {
-        Slot[] memory slots = GetEmptySlots(player_key);
+    function GetRandomEmptySlot(bytes32 player_key, uint8 p) internal view returns (Slot memory) {
+        Slot[] memory slots = GetEmptySlots(player_key, p);
         if (slots.length == 0) {
             Slot memory slot = SlotLib.NewSlot(0, 0, 0);
             return slot;
@@ -134,7 +134,7 @@ library SlotLib {
         return slots[rand % slots.length];
     }
 
-    function GetEmptySlots(bytes32 player_key) internal view returns (Slot[] memory) {
+    function GetEmptySlots(bytes32 player_key, uint8 p) internal view returns (Slot[] memory) {
         uint num = 0;
         if (PlayerSlots.getA(player_key) == 0) {
             num++;
@@ -155,7 +155,6 @@ library SlotLib {
 
         uint8 i = 0;
         uint8 y = 1;//todo
-        uint8 p = 0;//todo
         if (PlayerSlots.getA(player_key) == 0) {
             slots[i] = NewSlot(1, y, p);
             i++;
@@ -214,20 +213,20 @@ library SlotLib {
         revert("GetCardOnSlot Invalid slot");
     }
 
-    function ClearCardFromSlot(bytes32 player_key,bytes32 card_key) internal {
-        if(PlayerSlots.getA(player_key) == card_key){
+    function ClearCardFromSlot(bytes32 player_key, bytes32 card_key) internal {
+        if (PlayerSlots.getA(player_key) == card_key) {
             PlayerSlots.setA(player_key, 0);
         }
-        if(PlayerSlots.getB(player_key) == card_key){
+        if (PlayerSlots.getB(player_key) == card_key) {
             PlayerSlots.setB(player_key, 0);
         }
-        if(PlayerSlots.getC(player_key) == card_key){
+        if (PlayerSlots.getC(player_key) == card_key) {
             PlayerSlots.setC(player_key, 0);
         }
-        if(PlayerSlots.getD(player_key) == card_key){
+        if (PlayerSlots.getD(player_key) == card_key) {
             PlayerSlots.setD(player_key, 0);
         }
-        if(PlayerSlots.getE(player_key) == card_key){
+        if (PlayerSlots.getE(player_key) == card_key) {
             PlayerSlots.setE(player_key, 0);
         }
     }
