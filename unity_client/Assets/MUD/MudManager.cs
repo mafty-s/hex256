@@ -415,7 +415,7 @@ public class MudManager : MonoBehaviour
         }
 
         this.msg = msg;
-        Debug.Log("user from MudManager onUser :" + msg);
+        // Debug.Log("user from MudManager onUser :" + msg);
     }
 
     public void PrintUser()
@@ -443,13 +443,13 @@ public class MudManager : MonoBehaviour
         MudUserData playerData = JsonUtility.FromJson<MudUserData>(this.msg);
 
         // Access the decoded data
-        Debug.Log("Owner: " + playerData.owner);
-        Debug.Log("Coins: " + playerData.coin);
-        Debug.Log("XP: " + playerData.xp);
-        Debug.Log("Created At: " + playerData.createdAt);
-        Debug.Log("ID: " + playerData.id);
-        Debug.Log("Avatar: " + playerData.avatar);
-        Debug.Log("Cardback: " + playerData.cardback);
+        // Debug.Log("Owner: " + playerData.owner);
+        // Debug.Log("Coins: " + playerData.coin);
+        // Debug.Log("XP: " + playerData.xp);
+        // Debug.Log("Created At: " + playerData.createdAt);
+        // Debug.Log("ID: " + playerData.id);
+        // Debug.Log("Avatar: " + playerData.avatar);
+        // Debug.Log("Cardback: " + playerData.cardback);
 
         return playerData;
     }

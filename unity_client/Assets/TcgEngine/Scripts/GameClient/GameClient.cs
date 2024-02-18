@@ -578,19 +578,22 @@ namespace TcgEngine.Client
             card.slot = slot;
 
             var player = game_data.GetPlayer(card.player_id);
-            Debug.Log("playername:" + player.username);
+            if (player != null)
+            {
+                Debug.Log("playername:" + player.username);
 
-            player.RemoveCardFromAllGroups(card);
-            player.cards_board.Add(card);
-            player.mana = msg.player_mana;
+                player.RemoveCardFromAllGroups(card);
+                player.cards_board.Add(card);
+                player.mana = msg.player_mana;
+            }
 
             onCardPlayed?.Invoke(card, slot);
             onRefreshAll?.Invoke();
 
-            AbilityData ability = AbilityData.Get(game_data.selector_ability_id);
-            if (ability.target == AbilityTarget.ChoiceSelector)
-            {
-            }
+            // AbilityData ability = AbilityData.Get(game_data.selector_ability_id);
+            // if (ability.target == AbilityTarget.ChoiceSelector)
+            // {
+            // }
         }
 
         public void OnChangeGameExtendSuccess(string message)
