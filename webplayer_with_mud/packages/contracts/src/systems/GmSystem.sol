@@ -10,7 +10,7 @@ import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, SelectorType} from "../codegen/common.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
-import {SlotLib,Slot} from "../libs/SlotLib.sol";
+import {SlotLib, Slot} from "../libs/SlotLib.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard} from "../codegen/index.sol";
 
 //    struct PlayerSettingResult {
@@ -33,13 +33,16 @@ contract GmSystem is System {
         bytes32[] memory players = Games.getPlayers(game_key);
         uint8 p = players[0] == player_key ? 0 : 1;
 
-        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key,p);
+        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
         uint16 slot_encode = SlotLib.EncodeSlot(slot);
 
         bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
-        CardOnBoards.setSlot(card_uid,slot_encode);
+        CardOnBoards.setSlot(card_uid, slot_encode);
 
         PlayerCardsBoard.pushValue(player_key, card_uid);
+
+        SlotLib.SetCardOnSlot(player_key, card_uid, slot.x);
+
         return card_uid;
     }
 

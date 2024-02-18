@@ -98,10 +98,13 @@ contract EffectSystem2 is System {
         CardOnBoards.setMana(on_board_card_key, card.mana);
         CardOnBoards.setPlayerId(on_board_card_key, player_key);
 
-//        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key);
-        revert("EffectSummon not implemented");
-        //todo 放到牌区
-        PlayerCardsBoard.push(on_board_card_key, on_board_card_key);
+        bytes32 game_key = Players.getGame(player_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
+        uint8 p = players[0] == player_key ? 0 : 1;
+        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
+//        revert("EffectSummon not implemented");
+        SlotLib.SetCardOnSlot(player_key, on_board_card_key, slot.x);
+        PlayerCardsBoard.pushValue(player_key, on_board_card_key);
     }
 
     //把一张牌变为另一张牌
