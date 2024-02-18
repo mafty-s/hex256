@@ -15,7 +15,7 @@ contract SlotSystem is System {
         return SlotLib.GetRandomEmptySlot(player_key);
     }
 
-    function GetSlotCards(bytes32 game_key, Slot memory slot) public view returns (bytes32){
+    function GetSlotCard(bytes32 game_key, Slot memory slot) public view returns (bytes32){
         bytes32[] memory players = Games.getPlayers(game_key);
         bytes32 slot_player = slot.p == 0 ? players[0] : players[1];
         bytes32 card_on_slot = SlotLib.GetCardOnSlot(slot_player, slot.x);
