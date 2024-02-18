@@ -5,10 +5,11 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Players, Ability, Games, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
 import {Action, PileType} from "../codegen/common.sol";
 import {MathLib} from "../libs/MathLib.sol";
-import {Cards, CardsData, CardOnBoards} from "../codegen/index.sol";
+import {Cards, CardOnBoards} from "../codegen/index.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp, PlayerCardsBoard} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
+import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract Effect2System is System {
 
@@ -90,21 +91,19 @@ contract Effect2System is System {
 
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         // 创建一张卡
-        CardsData memory card = Cards.get(card_config_key);
-        bytes32 on_board_card_key = keccak256(abi.encodePacked(caster, card.tid));
-        CardOnBoards.setId(on_board_card_key, card_config_key);
-        CardOnBoards.setHp(on_board_card_key, card.hp);
-        CardOnBoards.setAttack(on_board_card_key, card.attack);
-        CardOnBoards.setMana(on_board_card_key, card.mana);
-        CardOnBoards.setPlayerId(on_board_card_key, player_key);
 
         bytes32 game_key = Players.getGame(player_key);
         bytes32[] memory players = Games.getPlayers(game_key);
         uint8 p = players[0] == player_key ? 0 : 1;
+
         Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
-//        revert("EffectSummon not implemented");
-        SlotLib.SetCardOnSlot(player_key, on_board_card_key, slot.x);
-        PlayerCardsBoard.pushValue(player_key, on_board_card_key);
+        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+
+        bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
+        CardOnBoards.setSlot(card_uid, slot_encode);
+
+        SlotLib.SetCardOnSlot(player_key, card_uid, slot.x);
+        PlayerCardsBoard.pushValue(player_key, card_uid);
     }
 
     //把一张牌变为另一张牌

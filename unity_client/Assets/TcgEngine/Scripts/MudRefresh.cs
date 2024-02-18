@@ -297,6 +297,7 @@ public class MudRefresh
                 int y = SlotEncoderDecoder.DecodeSlotY(mud_card.slot);
                 int p = SlotEncoderDecoder.DecodeSlotP(mud_card.slot);
 
+                Debug.Log("x=" + x + " y=" + y + " p=" + p);
                 new_card.slot = new Slot(x, y, p);
             }
             // new_card.equipped_uid = mud_card.equippedUid;
@@ -327,6 +328,6 @@ public class SlotEncoderDecoder
 
     public static int DecodeSlotP(int slot)
     {
-        return (slot / 10);
+        return (slot / 100);
     }
 }
