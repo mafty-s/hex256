@@ -100,7 +100,7 @@ contract Effect6System is System {
         }
     }
 
-    function GetAttacker(bytes32 caster, EffectAttackerType attacker_type) internal returns (bytes32)
+    function GetAttacker(bytes32 caster, EffectAttackerType attacker_type) internal view returns (bytes32)
     {
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         bytes32 game_key = Players.getGame(player_key);

@@ -44,8 +44,7 @@ contract GameStartSystem is System {
     }
 
 
-
-    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle) public returns (bytes32[] memory) {
+    function PlayerSetting(string memory username, string memory game_uid, string memory desk_id, bool is_ai, int8 hp, int8 mana, int8 dcards, bool need_shuffle, uint pid) public returns (bytes32[] memory) {
 
         bytes32 desk_key = keccak256(abi.encode(desk_id));
         bytes32 game_key = keccak256(abi.encode(game_uid));
@@ -53,8 +52,14 @@ contract GameStartSystem is System {
 
         //        DecksData memory deck = Decks.get(desk_key);
 
+        bytes32[] memory players = Games.getPlayers(game_key);
+        if (players.length == 0) {
+            players = new bytes32[](2);
+        }
+        players[pid] = player_key;
+        Games.setPlayers(game_key, players);
 
-        Games.pushPlayers(game_key, player_key);
+//        Games.pushPlayers(game_key, player_key);
 
 //        Players.set(player_key, PlayersData({owner: _msgSender(), dcards: dcards, hp: hp, mana: mana, hpMax: hp, manaMax: mana, name: username, deck: desk_id, isAI: is_ai}));
         Players.setOwner(player_key, _msgSender());
@@ -86,7 +91,7 @@ contract GameStartSystem is System {
         }
 
 
-        if (Games.getPlayers(game_key).length == 2) {
+        if (players[0] != 0 && players[1] != 0) {
             StartGame(game_uid);
         }
 
@@ -106,8 +111,8 @@ contract GameStartSystem is System {
 
         //Choose first player
         Games.setGameState(game_key, GameState.PLAY);
-        Games.setFirstPlayer(game_key, player_keys[uint8(block.prevrandao % 2)]);
-        Games.setCurrentPlayer(game_key, Games.getFirstPlayer(game_key));
+        Games.setFirstPlayer(game_key, player_keys[0]);
+        Games.setCurrentPlayer(game_key, player_keys[0]);
         Games.setTurnCount(game_key, 1);
         GamesExtended.setSelector(game_key, SelectorType.None);
 
@@ -206,8 +211,6 @@ contract GameStartSystem is System {
             CardOnBoards.getDamage(card_key)
         );
     }
-
-
 
 //    function GetCardOnBoard(bytes32 card_key) public view returns (CardOnBoardsData memory){
 //        return CardOnBoards.get(card_key);

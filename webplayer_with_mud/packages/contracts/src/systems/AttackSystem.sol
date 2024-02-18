@@ -49,6 +49,7 @@ contract AttackSystem is System {
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, target_key, target_key, true))
             );
+
         }
 
         CardOnBoards.setHp(target_key, target_hp);

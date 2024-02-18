@@ -412,16 +412,19 @@ export function createSystemCalls(
     let player_name = null;
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
                                  dcards: number, pid: number, shuffle: boolean) => {
-        if(!is_ai){
+        if (!is_ai) {
             player_name = username;
+        }else{
+            pid=1;
         }
 
+        console.log("pid",pid);
         await sleep(200)
 
         //todo
         mana = 10;
 
-        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards, shuffle]);
+        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards, shuffle, pid]);
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);
@@ -873,19 +876,19 @@ export function createSystemCalls(
         refreshGame();
     }
 
-    const getSlotCard = async (slot_x,slot_y,slot_p)=>{
+    const getSlotCard = async (slot_x, slot_y, slot_p) => {
         const game_key = calculateKeccak256Hash(now_game_uid);
-        return worldContract.read.GetSlotCards([game_key,{x:slot_x,y:slot_y,p:slot_p}]);
+        return worldContract.read.GetSlotCards([game_key, {x: slot_x, y: slot_y, p: slot_p}]);
     }
 
-    const getEmptySlots =  async (game_uid: string, player: string) => {
+    const getEmptySlots = async (game_uid: string, player: string) => {
         const game_key = calculateKeccak256Hash(game_uid);
         const player_key = calculateKeccak256HashTwoString(game_uid, player);
         return worldContract.read.GetEmptySlots([player_key]);
     }
 
-    const triggerCardAbilityType = async(caster)=>{
-        await worldContract.write.TriggerCardAbilityType([AbilityTrigger.ON_PLAY,caster,caster,true]);
+    const triggerCardAbilityType = async (caster) => {
+        await worldContract.write.TriggerCardAbilityType([AbilityTrigger.ON_PLAY, caster, caster, true]);
     }
 
     const out = {

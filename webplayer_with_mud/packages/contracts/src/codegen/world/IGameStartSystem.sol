@@ -18,7 +18,8 @@ interface IGameStartSystem {
     int8 hp,
     int8 mana,
     int8 dcards,
-    bool need_shuffle
+    bool need_shuffle,
+    uint pid
   ) external returns (bytes32[] memory);
 
   function GetPlayerByGame(bytes32 game_key) external view returns (bytes32[] memory players);

@@ -524,7 +524,7 @@ namespace TcgEngine.Client
             {
                 bool shuffer = pdeck != null ? !pdeck.dont_shuffle_deck : false;
                 MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
-                    hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
+                    hp_max, mana_max, dcards, 1, shuffer);
             }
 
             SendAction(GameAction.PlayerSettingsAI, psettings, NetworkDelivery.ReliableFragmentedSequenced);
