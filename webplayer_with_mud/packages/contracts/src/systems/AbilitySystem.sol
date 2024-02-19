@@ -8,7 +8,7 @@ import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Player
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
-import {PlayerCardsBoard} from "../codegen/index.sol";
+import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip} from "../codegen/index.sol";
 
 contract AbilitySystem is System {
     //使用技能
@@ -307,7 +307,7 @@ contract AbilitySystem is System {
                 if (is_card) {
                     CardLogicLib.AddOngoingStatus(target, (Status)(status[i]), duration, value);
                 } else {
-                    PlayerLogicLib.AddOngoingStatus(target, (Status)(status[i]));
+                    PlayerLogicLib.AddOngoingStatus(target, (Status)(status[i]), value);
                 }
 
 //                uint256 len = PlayerActionHistory.length(game_key);
@@ -329,21 +329,63 @@ contract AbilitySystem is System {
             bytes32 player_key = players[i];
 
             bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
-            if (cards_board.length > 0) {
-                for (uint c = 0; i < cards_board.length; c++) {
-                    CardLogicLib.ClearOngoing(cards_board[c]);
-                }
+            for (uint c = 0; c < cards_board.length; c++) {
+                CardLogicLib.ClearOngoing(cards_board[c]);
+            }
+
+            bytes32[] memory cards_equip = PlayerCardsEquip.getValue(player_key);
+            for (uint c = 0; c < cards_equip.length; c++) {
+                CardLogicLib.ClearOngoing(cards_equip[c]);
+            }
+
+            bytes32[] memory cards_hand = PlayerCardsHand.getValue(player_key);
+            for (uint c = 0; c < cards_hand.length; c++) {
+                CardLogicLib.ClearOngoing(cards_hand[c]);
             }
 
         }
         //调用UpdateOngoingAbilities
-//        for (uint i = 0; i < players.length; i++) {
-//            bytes32 player_key = players[i];
-//            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
-//            for (uint c = 0; i < cards_board.length; c++) {
-//                UpdateOngoingAbilities(player_key, cards_board[c]);
-//            }
-//        }
+        for (uint i = 0; i < players.length; i++) {
+            bytes32 player_key = players[i];
+
+            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+            for (uint c = 0; c < cards_board.length; c++) {
+                UpdateOngoingAbilities(player_key, cards_board[c]);
+            }
+
+            bytes32[] memory cards_equip = PlayerCardsEquip.getValue(player_key);
+            for (uint c = 0; c < cards_equip.length; c++) {
+                UpdateOngoingAbilities(player_key, cards_equip[c]);
+            }
+
+            bytes32[] memory cards_hand = PlayerCardsHand.getValue(player_key);
+            for (uint c = 0; c < cards_hand.length; c++) {
+                UpdateOngoingAbilities(player_key, cards_hand[c]);
+            }
+        }
+        //Stats bonus 状态奖励
+        for (uint i = 0; i < players.length; i++) {
+            bytes32 player_key = players[i];
+            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+            for (uint c = 0; c < cards_board.length; c++) {
+                //Taunt effect
+                if (CardLogicLib.HasStatus(cards_board[c], Status.Protection) && !CardLogicLib.HasStatus(cards_board[c], Status.Stealth))
+                {
+                    PlayerLogicLib.AddOngoingStatus(player_key, Status.Protected, 0);
+                }
+            }
+        }
+
+    }
+
+
+    function AddOngoingStatusBonus(bytes32 card_key, Status status, int8 value) internal {
+        if (status == Status.Attack) {
+            CardOnBoards.setAttackOngoing(card_key, CardOnBoards.getAttackOngoing(card_key) + value);
+        }
+        if (status == Status.Hp) {
+            CardOnBoards.setHpOngoing(card_key, CardOnBoards.getHpOngoing(card_key) + value);
+        }
     }
 
     function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key) public {

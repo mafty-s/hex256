@@ -90,9 +90,11 @@ library PlayerLogicLib {
         return slot;
     }
 
-    function AddOngoingStatus(bytes32 player_uid, Status status) internal {
+    function AddOngoingStatus(bytes32 player_uid, Status status, uint8 value) internal {
+        //todo value
         Players.pushOngoingStatus(player_uid, uint8(status));
     }
+
     function AddStatus(bytes32 player_uid, Status status) internal {
         Players.pushStatus(player_uid, uint8(status));
     }

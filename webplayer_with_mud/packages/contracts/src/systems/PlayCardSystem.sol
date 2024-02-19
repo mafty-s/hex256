@@ -120,6 +120,10 @@ contract PlayCardSystem is System {
         ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
 
 
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.UpdateOngoing, (game_key))
+        );
+
         return (mana_cost, player_mana);
     }
 

@@ -184,5 +184,6 @@ enum Status {
   SpellImmunity,
   Stealth,
   Taunt,
-  Trample
+  Trample,
+  Protection
 }

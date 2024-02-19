@@ -14,13 +14,13 @@ export default mudConfig({
         AbilityTrigger: ["NONE", "ONGOING", "ACTIVATE", "ON_PLAY", "ON_PLAY_OTHER", "START_OF_TURN", "END_OF_TURN", "ON_BEFORE_ATTACK", "ON_AFTER_ATTACK", "ON_BEFORE_DEFEND", "ON_AFTER_DEFEND", "ON_KILL", "ON_DEATH", "ON_DEATH_OTHER"],
         AbilityTarget: ["None", "Self", "PlayerSelf", "PlayerOpponent", "AllPlayers", "AllCardsBoard", "AllCardsHand", "AllCardsAllPiles", "AllSlots", "AllCardData", "PlayTarget", "AbilityTriggerer", "EquippedCard", "SelectTarget", "CardSelector", "ChoiceSelector", "LastPlayed", "LastTargeted", "LastDestroyed", "LastSummoned"],
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
-        Action: ["PlayCard", "Attack", "AttackPlayer", "Move", "CastAbility", "SelectCard", "SelectPlayer", "SelectSlot", "SelectChoice", "CancelSelect", "EndTurn", "ChangeMana", 'AddStatus','ChangeCard'],
+        Action: ["PlayCard", "Attack", "AttackPlayer", "Move", "CastAbility", "SelectCard", "SelectPlayer", "SelectSlot", "SelectChoice", "CancelSelect", "EndTurn", "ChangeMana", 'AddStatus', 'ChangeCard'],
         PileType: ["None", "Board", "Hand", "Deck", "Discard", "Secret", "Equipped", "Temp"],
         EffectStatType: ["None", "Attack", "HP", "Mana"],
         ConditionObjType: ["ConditionCardType"],
         TraitData: ["Dragon", "Growth", "SpellDamage", "Wolf"],
         EffectAttackerType: ["Self", "AbilityTriggerer", "LastPlayed", "LastTargeted"],
-        Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample'],
+        Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample', 'Protection'],
     },
     tables: {
         AdminSingleton: {
@@ -134,7 +134,7 @@ export default mudConfig({
                 ongoingStatus: "uint32[]",
                 ability: "bytes32[]",
                 trait: "uint8[]",
-                name:"string",
+                name: "string",
             }
         },
         Decks: {
@@ -189,7 +189,7 @@ export default mudConfig({
                 manaMax: "int8",
                 isAI: "bool",
                 dcards: "int8",
-                ncards:"uint8",
+                ncards: "uint8",
                 game: "bytes32",
                 name: "string",
                 deck: "string",
@@ -223,7 +223,7 @@ export default mudConfig({
                 playerId: "uint8",
                 value: "int8",
                 valueU8: "uint8",
-                payload:"bytes"
+                payload: "bytes"
             }
         },
         Tasks: {

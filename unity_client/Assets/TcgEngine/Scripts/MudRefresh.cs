@@ -25,6 +25,7 @@ public class MudCardInfo
     public string id;
     public string playerId;
     public uint[] status;
+    public uint[] ongoingStatus;
     public string[] ability;
     public string[] trait;
 }
@@ -252,6 +253,24 @@ public class MudRefresh
                         Debug.Log("status:" + status_id + " duration:" + (int)duration + " value" + (int)value + " card_key: " +
                                   mud_card.key + " name:" + mud_card.name);
                         card.AddStatus(s, (int)value, (int)duration);
+                    }
+                }
+            }
+            
+            if (mud_card.ongoingStatus.Length > 0)
+            {
+                card.ongoing_status.Clear();
+                foreach (var status in mud_card.ongoingStatus)
+                {
+                    (uint status_id, uint duration, uint value, uint unuse) = MudEnum.SplitUint32(status);
+                
+                    StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
+                    if (s != StatusType.None)
+                    {
+                        value = 10000;
+                        Debug.Log("ongoing status:" + status_id + " value" + (int)value + " card_key: " +
+                                  mud_card.key + " name:" + mud_card.name);
+                        card.AddOngoingStatus(s, (int)value);
                     }
                 }
             }
