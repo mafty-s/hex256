@@ -194,6 +194,7 @@ export default mudConfig({
                 name: "string",
                 deck: "string",
                 status: "uint8[]",
+                ongoingStatus: "uint32[]",
             }
         },
         PlayerSlots: {

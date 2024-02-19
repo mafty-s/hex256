@@ -91,6 +91,12 @@ library CardLogicLib {
         CardOnBoards.pushStatus(card_uid, payload);
     }
 
+
+    function AddOngoingStatus(bytes32 card_uid, Status status, uint8 duration, uint8 value) internal {
+        uint32 payload = combineUint32(uint8(status), duration, value, 0);
+        CardOnBoards.pushOngoingStatus(card_uid, payload);
+    }
+
     function RemoveStatus(bytes32 card_uid, Status status) internal {
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
