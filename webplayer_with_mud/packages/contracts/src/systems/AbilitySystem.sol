@@ -8,6 +8,7 @@ import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Player
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {PlayerCardsBoard} from "../codegen/index.sol";
 
 contract AbilitySystem is System {
     //使用技能
@@ -315,6 +316,30 @@ contract AbilitySystem is System {
 //                ActionHistory.setActionType(action_key, Action.AddStatus);
 //                ActionHistory.setCardId(action_key, target);
 //                ActionHistory.setValue(action_key, int8(status[i]));
+            }
+        }
+    }
+
+
+    function UpdateOngoing(bytes32 game_key) public {
+        bytes32[] memory players = Games.getPlayers(game_key);
+        //清除之前的状态
+        for (uint i = 0; i < players.length; i++) {
+
+            bytes32 player_key = players[i];
+
+            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+            for (uint c = 0; i < cards_board.length; c++) {
+                CardLogicLib.ClearOngoing(cards_board[c]);
+            }
+
+        }
+        //调用UpdateOngoingAbilities
+        for (uint i = 0; i < players.length; i++) {
+            bytes32 player_key = players[i];
+            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+            for (uint c = 0; i < cards_board.length; c++) {
+                UpdateOngoingAbilities(player_key, cards_board[c]);
             }
         }
     }

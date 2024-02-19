@@ -97,6 +97,11 @@ library CardLogicLib {
         CardOnBoards.pushOngoingStatus(card_uid, payload);
     }
 
+    function ClearOngoing(bytes32 card_uid) internal {
+        uint32[] memory card_status = new uint32[](0);
+        CardOnBoards.setOngoingStatus(card_uid, card_status);
+    }
+
     function RemoveStatus(bytes32 card_uid, Status status) internal {
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         uint len = CardOnBoards.lengthStatus(card_uid);
