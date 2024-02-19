@@ -134,4 +134,10 @@ library CardLogicLib {
         uint8 d = uint8(value & 0xFF);
         return (a, b, c, d);
     }
+
+    function CanDoAbilities(bytes32 card_uid) internal view returns (bool){
+        if (HasStatus(card_uid, Status.Silenced))
+            return false;
+        return true;
+    }
 }

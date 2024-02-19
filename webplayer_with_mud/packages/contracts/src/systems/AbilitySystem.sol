@@ -278,4 +278,13 @@ contract AbilitySystem is System {
         GamesExtended.setLastTarget(game_uid, target);
     }
 
+    function UpdateOngoingAbilities(bytes32 player_key,bytes32 card_key) public{
+
+        if (card_key == 0 || !CardLogicLib.CanDoAbilities(card_key))
+            return;
+
+        //todo
+
+    }
+
 }
