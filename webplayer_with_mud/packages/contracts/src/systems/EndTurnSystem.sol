@@ -70,6 +70,11 @@ contract EndTurnSystem is System {
         );
 
         bytes32 opponent_player_key = getOpponentPlayer(game_key, player_key);
+
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.UpdateOngoing, (game_key))
+        );
+
         return (opponent_player_key, board_card_key, mana, mana_max);
     }
 
