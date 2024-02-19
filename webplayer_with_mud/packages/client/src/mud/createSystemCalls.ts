@@ -507,7 +507,10 @@ export function createSystemCalls(
             player_mana: tx_result.result[1],
         }
 
-        refreshGame();
+        setTimeout(()=>{
+            refreshGame();
+        },1000)
+
         return convertBigIntToInt({hash, tx_result, result});
     }
 
@@ -871,14 +874,17 @@ export function createSystemCalls(
     const addCardOnEmptySlots = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCardOnEmptySlots([now_game_uid, player_name, card_name]);
-        refreshGame();
+        setTimeout(()=>{
+            refreshGame();
+        },1000)
     }
 
     const addCard = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
-        await sleep(500);
-        refreshGame();
+        setTimeout(()=>{
+            refreshGame();
+        },1500)
     }
 
     const getSlotCard = async (slot_x, slot_y, slot_p) => {

@@ -239,6 +239,44 @@ static class MudEnum
                 return TcgEngine.StatusType.Armor;
             case Status.Paralysed:
                 return TcgEngine.StatusType.Paralysed;
+            case Status.Deathtouch:
+                return TcgEngine.StatusType.Deathtouch;
+            case Status.Flying:
+                return TcgEngine.StatusType.Flying;
+            case Status.Fury:
+                return TcgEngine.StatusType.Fury;
+            case Status.Shell:
+                return TcgEngine.StatusType.Shell;
+            case Status.Sleep:
+                return TcgEngine.StatusType.Sleep;
+            case Status.Stealth:
+                return TcgEngine.StatusType.Stealth;
+            case Status.Attack:
+                return TcgEngine.StatusType.AttackBonus;
+            case Status.Hp:
+                return TcgEngine.StatusType.HPBonus;
+            case Status.Intimidate:
+                return TcgEngine.StatusType.Intimidate;
+            case Status.Invicibility:
+                return TcgEngine.StatusType.Invincibility;
+            case Status.Lifesteal:
+                return TcgEngine.StatusType.LifeSteal;
+            case Status.Poisoned:
+                return TcgEngine.StatusType.Poisoned;
+            case Status.Protected:
+                return TcgEngine.StatusType.Protected;
+            case Status.Silenced:
+                return TcgEngine.StatusType.Silenced;
+            case Status.SpellImmunity:
+                return TcgEngine.StatusType.SpellImmunity;
+            case Status.Taunt:
+                return TcgEngine.StatusType.Protection;
+            case Status.Trample:
+                return TcgEngine.StatusType.Trample;
+        
+            
+            //todo
+
         }
 
         return TcgEngine.StatusType.None;
