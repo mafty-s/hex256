@@ -538,6 +538,11 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_id);
         const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, false]);
         await waitForTransaction(tx);
+
+        setTimeout(()=>{
+            refreshGame()
+        },1000);
+
         return {
             attacker_uid: attacker_key,
             target_uid: target_key,

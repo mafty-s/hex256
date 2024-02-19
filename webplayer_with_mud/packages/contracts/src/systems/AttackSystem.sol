@@ -11,6 +11,7 @@ import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {SlotLib} from "../libs/SlotLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {CardLogicLib} from "../libs/CardLogicLib.sol";
 
 contract AttackSystem is System {
 
@@ -27,6 +28,10 @@ contract AttackSystem is System {
             revert("Can not attack target");
         }
 
+        if(!CardLogicLib.IsOnBoard(target_key)){
+            revert("target is not on board");
+        }
+
         //使用触发器触发技能
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, true))
@@ -38,13 +43,13 @@ contract AttackSystem is System {
         int8 attacker_attack = CardOnBoards.getAttack(attacker_key);
         target_hp = target_hp - attacker_attack;
 
-        if (target_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
-            target_hp = 0;//
-        }
-
-        if (attacker_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
-            target_hp = 1;//
-        }
+//        if (target_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
+//            target_hp = 0;//
+//        }
+//
+//        if (attacker_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
+//            target_hp = 1;//
+//        }
 
         if (target_hp <= 0) {
             target_hp = 0;
