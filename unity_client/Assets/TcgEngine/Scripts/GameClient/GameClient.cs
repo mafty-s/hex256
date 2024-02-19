@@ -1056,6 +1056,13 @@ namespace TcgEngine.Client
                         player.cards_discard.Add(card);
                     }
 
+                    ActionHistory order = new ActionHistory();
+                    order.card_uid = action.card_uid;
+                    order.slot = mdata_playcard.slot;
+                    order.type = GameAction.PlayCard;
+                    order.card_id = card.card_id;
+                    order.target_id = 0;
+                    player.history_list.Add(order);
                     break;
                 case GameAction.Move:
                     MsgPlayCard mdata3 = new MsgPlayCard();
