@@ -137,4 +137,19 @@ library PlayerLogicLib {
         }
         return draw_cards;
     }
+
+    function GetBearerCard(bytes32 player_key, bytes32 equipment) internal returns (bytes32){
+
+        return 0;
+    }
+
+//public Card GetBearerCard(Card equipment)
+//{
+//foreach (Card card in cards_board)
+//{
+//if (card != null && card.equipped_uid == equipment.uid)
+//return card;
+//}
+//return null;
+//}
 }

@@ -44,5 +44,5 @@ interface IAbilitySystem {
 
   function UpdateOngoing(bytes32 game_key) external;
 
-  function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key) external;
+  function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key, bytes32[] memory players) external;
 }

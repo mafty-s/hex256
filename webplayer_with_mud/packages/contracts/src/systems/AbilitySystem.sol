@@ -350,17 +350,17 @@ contract AbilitySystem is System {
 
             bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
             for (uint c = 0; c < cards_board.length; c++) {
-                UpdateOngoingAbilities(player_key, cards_board[c]);
+                UpdateOngoingAbilities(player_key, cards_board[c], players);
             }
 
             bytes32[] memory cards_equip = PlayerCardsEquip.getValue(player_key);
             for (uint c = 0; c < cards_equip.length; c++) {
-                UpdateOngoingAbilities(player_key, cards_equip[c]);
+                UpdateOngoingAbilities(player_key, cards_equip[c], players);
             }
 
             bytes32[] memory cards_hand = PlayerCardsHand.getValue(player_key);
             for (uint c = 0; c < cards_hand.length; c++) {
-                UpdateOngoingAbilities(player_key, cards_hand[c]);
+                UpdateOngoingAbilities(player_key, cards_hand[c], players);
             }
         }
         //Stats bonus 状态奖励
@@ -388,7 +388,7 @@ contract AbilitySystem is System {
         }
     }
 
-    function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key) public {
+    function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key, bytes32[] memory players) public {
 
         if (card_key == 0 || !CardLogicLib.CanDoAbilities(card_key))
             return;
@@ -410,7 +410,7 @@ contract AbilitySystem is System {
 
                     if (target == AbilityTarget.PlayerSelf)
                     {
-                        //todo
+                        DoOngoingEffects(ability_key, card_key, player_key, false);
                     }
 
                     if (target == AbilityTarget.AllPlayers || target == AbilityTarget.PlayerOpponent)
@@ -420,12 +420,45 @@ contract AbilitySystem is System {
 
                     if (target == AbilityTarget.EquippedCard)
                     {
-                        //todo
+                        bytes32 equipped_uid = CardOnBoards.getEquippedUid(card_key);
+                        if (CardLogicLib.IsEquipment(card_config_id)) {
+                            //Get bearer of the equipment
+                            bytes32 target = PlayerLogicLib.GetBearerCard(player_key, card_key);
+                            if (target != 0) {
+                                DoOngoingEffects(ability_key, card_key, target, true);
+                            }
+                        } else if (equipped_uid != 0) {
+                            //Get equipped card
+                            DoOngoingEffects(ability_key, card_key, equipped_uid, true);
+                        }
                     }
 
                     if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.AllCardsHand || target == AbilityTarget.AllCardsBoard)
                     {
-                        //todo
+                        for (uint tp = 0; tp < players.length; tp++)
+                        {
+                            //Hand Cards
+                            if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.AllCardsHand)
+                            {
+                                bytes32[] memory cards_board = PlayerCardsBoard.getValue(players[tp]);
+                                for (uint tc = 0; tc < cards_board.length; tc++) {
+                                    DoOngoingEffects(ability_key, card_key, cards_board[tc], true);
+                                }
+
+                                //todo
+                            }
+                            //Board Cards
+                            if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.AllCardsBoard)
+                            {
+                                //todo
+                            }
+                            //Equip Cards
+                            if (ability.target == AbilityTarget.AllCardsAllPiles)
+                            {
+                                //todo
+                            }
+                        }
+
                     }
 
                 }

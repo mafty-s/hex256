@@ -215,6 +215,9 @@ public class MudRefresh
         {
             player.cards_board.Add(gamedata.GetCard(card));
         }
+        
+        // player.history_list.Clear();
+
     }
 
     public static void RefreshCard(MudCardInfo mud_card, TcgEngine.Card card, TcgEngine.Game gamedata, MudGame gameinfo)
