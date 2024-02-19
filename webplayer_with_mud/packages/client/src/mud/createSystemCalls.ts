@@ -414,11 +414,11 @@ export function createSystemCalls(
                                  dcards: number, pid: number, shuffle: boolean) => {
         if (!is_ai) {
             player_name = username;
-        }else{
-            pid=1;
+        } else {
+            pid = 1;
         }
 
-        console.log("pid",pid);
+        console.log("pid", pid);
         await sleep(200)
 
         //todo
@@ -507,9 +507,9 @@ export function createSystemCalls(
             player_mana: tx_result.result[1],
         }
 
-        setTimeout(()=>{
+        setTimeout(() => {
             refreshGame();
-        },1000)
+        }, 1000)
 
         return convertBigIntToInt({hash, tx_result, result});
     }
@@ -542,9 +542,9 @@ export function createSystemCalls(
         const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, false]);
         await waitForTransaction(tx);
 
-        setTimeout(()=>{
+        setTimeout(() => {
             refreshGame()
-        },1000);
+        }, 1000);
 
         return {
             attacker_uid: attacker_key,
@@ -813,8 +813,19 @@ export function createSystemCalls(
         const key = calculateKeccak256Hash(now_game_uid);
         let game = useStore.getState().getValue(tables.Games, {key});
         let game_extend = useStore.getState().getValue(tables.GamesExtended, {key});
+        let player_action_history = useStore.getState().getValue(tables.PlayerActionHistory, {key});
+        let action_historys = [];
+        // console.log(player_action_history);
+        for (let i = 0; i < player_action_history.value.length; i++) {
+            let action_key = player_action_history.value[i];
+            let action_history = useStore.getState().getValue(tables.ActionHistory, {action_key});
+            console.log(action_history);
+            action_historys.push(action_history);
+        }
+
         game = {...game, ...game_extend};
         game.player_objs = [];
+        game.action_history = action_historys;
         let cards = [];
 
         for (const player_key of game.players) {
@@ -874,17 +885,17 @@ export function createSystemCalls(
     const addCardOnEmptySlots = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCardOnEmptySlots([now_game_uid, player_name, card_name]);
-        setTimeout(()=>{
+        setTimeout(() => {
             refreshGame();
-        },1000)
+        }, 1000)
     }
 
     const addCard = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
-        setTimeout(()=>{
+        setTimeout(() => {
             refreshGame();
-        },1500)
+        }, 1500)
     }
 
     const getSlotCard = async (slot_x, slot_y, slot_p) => {
