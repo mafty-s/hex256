@@ -329,19 +329,21 @@ contract AbilitySystem is System {
             bytes32 player_key = players[i];
 
             bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
-            for (uint c = 0; i < cards_board.length; c++) {
-                CardLogicLib.ClearOngoing(cards_board[c]);
+            if (cards_board.length > 0) {
+                for (uint c = 0; i < cards_board.length; c++) {
+                    CardLogicLib.ClearOngoing(cards_board[c]);
+                }
             }
 
         }
         //调用UpdateOngoingAbilities
-        for (uint i = 0; i < players.length; i++) {
-            bytes32 player_key = players[i];
-            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
-            for (uint c = 0; i < cards_board.length; c++) {
-                UpdateOngoingAbilities(player_key, cards_board[c]);
-            }
-        }
+//        for (uint i = 0; i < players.length; i++) {
+//            bytes32 player_key = players[i];
+//            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+//            for (uint c = 0; i < cards_board.length; c++) {
+//                UpdateOngoingAbilities(player_key, cards_board[c]);
+//            }
+//        }
     }
 
     function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key) public {
