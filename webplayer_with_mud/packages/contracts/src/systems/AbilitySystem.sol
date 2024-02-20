@@ -4,7 +4,8 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
-import {Ability, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
+import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
+import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
@@ -231,8 +232,8 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.CardSelector)
         {
-            revert("");
-
+            //todo
+            revert("not implemented");
         }
 
         if (target == AbilityTarget.LastPlayed)
@@ -267,6 +268,18 @@ contract AbilitySystem is System {
             }
             return targets;
         }
+
+        bytes32[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
+
+//        //Filter targets
+//        if (filters_target != null && targets.Count > 0)
+//        {
+//            foreach (FilterData filter in filters_target)
+//            {
+//            if (filter != null)
+//            targets = filter.FilterTargets(data, this, caster, targets, memory_array.GetOther(targets));
+//            }
+//            }
 
         revert("unsupported target type");
     }

@@ -22,11 +22,11 @@ contract ConditionSystem is System {
         Condition.setObjType(key, ConditionObjType.ConditionCardType);
     }
 
-    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32) {
+    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.HP, ability, caster, source);
     }
 
-    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32) {
+    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.Attack, ability, caster, source);
     }
 
@@ -74,19 +74,19 @@ contract ConditionSystem is System {
     }
 
     //找到属性最低的牌
-    function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32){
-        bytes32 result = 0;
+    function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
+        bytes32[] memory result = new bytes32[](1);
         for (uint i = 0; i < source.length; i++) {
             if (result == 0) {
-                result = source[i];
+                result[0] = source[i];
             } else {
                 if (GetCardStat(source[i], stat_type) < GetCardStat(result, stat_type)) {
-                    result = source[i];
+                    result[0] = source[i];
                 }
             }
         }
 
-        return result;
+        return result[0];
     }
 
     function GetCardStat(bytes32 card, ConditionStatType stat_type) internal returns (int8) {
