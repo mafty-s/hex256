@@ -68,7 +68,7 @@ contract PlayCardSystem is System {
 //            GameLogicLib.EquipCard(bearer, card_key);
             bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
             if (card_on_slot == 0) {
-                revert("slot is empty");
+                revert("try equipment buf slot is empty");
             }
             CardOnBoards.setExhausted(card_key, true);
             CardOnBoards.setEquippedUid(card_on_slot, card_key);
