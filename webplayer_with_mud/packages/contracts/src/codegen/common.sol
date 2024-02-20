@@ -55,13 +55,20 @@ enum GamePhase {
 }
 
 enum CardType {
-  NONE,
-  HERO,
-  CHARACTER,
-  SPELL,
-  ARTIFACT,
-  SECRET,
-  EQUIPMENT
+  None,
+  Hero,
+  Character,
+  Spell,
+  Artifact,
+  Secret,
+  Equipment
+}
+
+enum CardTeam {
+  None,
+  Green,
+  Red,
+  Blue
 }
 
 enum AbilityTrigger {
@@ -193,4 +200,10 @@ enum ConditionStatType {
   Attack,
   HP,
   Mana
+}
+
+enum ConditionPlayerType {
+  Self,
+  Opponent,
+  Both
 }

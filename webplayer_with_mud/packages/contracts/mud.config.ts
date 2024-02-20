@@ -10,7 +10,8 @@ export default mudConfig({
         GameMode: ["CASUAL", "RANKED"],
         GameState: ["INIT", "PLAY", "GAME_ENDED"],
         GamePhase: ["NONE", "START_TURN", "MAIN", "END_TURN"],
-        CardType: ["NONE", "HERO", "CHARACTER", "SPELL", "ARTIFACT", "SECRET", "EQUIPMENT"],
+        CardType: ["None", "Hero", "Character", "Spell", "Artifact", "Secret", "Equipment"],
+        CardTeam: ["None", 'Green', 'Red', 'Blue'],
         AbilityTrigger: ["NONE", "ONGOING", "ACTIVATE", "ON_PLAY", "ON_PLAY_OTHER", "START_OF_TURN", "END_OF_TURN", "ON_BEFORE_ATTACK", "ON_AFTER_ATTACK", "ON_BEFORE_DEFEND", "ON_AFTER_DEFEND", "ON_KILL", "ON_DEATH", "ON_DEATH_OTHER"],
         AbilityTarget: ["None", "Self", "PlayerSelf", "PlayerOpponent", "AllPlayers", "AllCardsBoard", "AllCardsHand", "AllCardsAllPiles", "AllSlots", "AllCardData", "PlayTarget", "AbilityTriggerer", "EquippedCard", "SelectTarget", "CardSelector", "ChoiceSelector", "LastPlayed", "LastTargeted", "LastDestroyed", "LastSummoned"],
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
@@ -22,6 +23,7 @@ export default mudConfig({
         EffectAttackerType: ["Self", "AbilityTriggerer", "LastPlayed", "LastTargeted"],
         Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample', 'Protection'],
         ConditionStatType: ["None", 'Attack', 'HP', 'Mana'],
+        ConditionPlayerType: ['Self', 'Opponent', 'Both'],
     },
     tables: {
         AdminSingleton: {

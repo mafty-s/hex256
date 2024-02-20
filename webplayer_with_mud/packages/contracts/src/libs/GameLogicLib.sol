@@ -46,7 +46,7 @@ library GameLogicLib {
             return;
         }
         bytes32 attack_card_config_key = CardOnBoards.getId(attacker);
-        if (CardLogicLib.HasStatus(target, Status.SpellImmunity) && Cards.getCardType(attack_card_config_key) != CardType.CHARACTER) {
+        if (CardLogicLib.HasStatus(target, Status.SpellImmunity) && Cards.getCardType(attack_card_config_key) != CardType.Character) {
             return;
         }
 

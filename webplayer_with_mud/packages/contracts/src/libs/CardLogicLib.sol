@@ -27,20 +27,20 @@ library CardLogicLib {
     }
 
     function IsBoardCard(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.CHARACTER || Cards.getCardType(card_key) == CardType.ARTIFACT;
+        return Cards.getCardType(card_key) == CardType.Character || Cards.getCardType(card_key) == CardType.Artifact;
     }
 
 
     function IsEquipment(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.EQUIPMENT;
+        return Cards.getCardType(card_key) == CardType.Equipment;
     }
 
     function IsSecret(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.SECRET;
+        return Cards.getCardType(card_key) == CardType.Secret;
     }
 
     function IsSpell(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.SPELL;
+        return Cards.getCardType(card_key) == CardType.Spell;
     }
 
     function IsOnBoard(bytes32 card_key) internal view returns (bool) {
@@ -55,11 +55,11 @@ library CardLogicLib {
     }
 
     function IsCharacter(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.CHARACTER;
+        return Cards.getCardType(card_key) == CardType.Character;
     }
 
     function IsRequireTargetSpell(bytes32 card_key) internal view returns (bool) {
-        return Cards.getCardType(card_key) == CardType.SPELL && HasAbility(card_key, AbilityTrigger.ON_PLAY, AbilityTarget.PlayTarget);
+        return Cards.getCardType(card_key) == CardType.Spell && HasAbility(card_key, AbilityTrigger.ON_PLAY, AbilityTarget.PlayTarget);
     }
 
     function HasAbility(bytes32 card_key, AbilityTrigger trigger, AbilityTarget target) internal view returns (bool) {

@@ -8,13 +8,6 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IConditionSystem {
-  function SetConditionCardTypeConfig(
-    string memory name,
-    string memory team,
-    string memory has_type,
-    string memory has_trait
-  ) external;
-
   function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
 
   function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
@@ -36,6 +29,42 @@ interface IConditionSystem {
   function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
 
   function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function IsAlly() external;
+
+  function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSpell(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsCharacter(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlot() external;
+
+  function IsSlotX1() external;
+
+  function IsSlotSameP() external;
+
+  function IsSlotNextTo() external;
+
+  function IsSlotInRange() external;
+
+  function IsSlotEmpty() external;
+
+  function IsPlayer() external;
+
+  function IsAI() external;
+
+  function IsWolf() external;
+
+  function IsGreen(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsRed(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function FilterFirst(
     uint8 amount,
