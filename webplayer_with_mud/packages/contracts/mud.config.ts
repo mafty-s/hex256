@@ -98,6 +98,7 @@ export default mudConfig({
                 hp: "int8",
                 cost: "uint32",
                 cardType: "CardType",
+                deckbuilding: "bool",
                 tid: "string",
                 team: "string",
                 abilities: "bytes32[]",

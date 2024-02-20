@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant CardsTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0009060301010101040100000000000000000000000000000000000000000000
+  0x000a070301010101040101000000000000000000000000000000000000000000
 );
 
 struct CardsData {
@@ -39,6 +39,7 @@ struct CardsData {
   int8 hp;
   uint32 cost;
   CardType cardType;
+  bool deckbuilding;
   string tid;
   string team;
   bytes32[] abilities;
@@ -69,16 +70,17 @@ library Cards {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](9);
+    SchemaType[] memory _valueSchema = new SchemaType[](10);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.INT8;
     _valueSchema[2] = SchemaType.INT8;
     _valueSchema[3] = SchemaType.INT8;
     _valueSchema[4] = SchemaType.UINT32;
     _valueSchema[5] = SchemaType.UINT8;
-    _valueSchema[6] = SchemaType.STRING;
+    _valueSchema[6] = SchemaType.BOOL;
     _valueSchema[7] = SchemaType.STRING;
-    _valueSchema[8] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[8] = SchemaType.STRING;
+    _valueSchema[9] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -97,16 +99,17 @@ library Cards {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](9);
+    fieldNames = new string[](10);
     fieldNames[0] = "rarity";
     fieldNames[1] = "mana";
     fieldNames[2] = "attack";
     fieldNames[3] = "hp";
     fieldNames[4] = "cost";
     fieldNames[5] = "cardType";
-    fieldNames[6] = "tid";
-    fieldNames[7] = "team";
-    fieldNames[8] = "abilities";
+    fieldNames[6] = "deckbuilding";
+    fieldNames[7] = "tid";
+    fieldNames[8] = "team";
+    fieldNames[9] = "abilities";
   }
 
   /**
@@ -373,6 +376,48 @@ library Cards {
     _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(cardType)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get deckbuilding.
+   */
+  function getDeckbuilding(bytes32 key) internal view returns (bool deckbuilding) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (_toBool(uint8(bytes1(_blob))));
+  }
+
+  /**
+   * @notice Get deckbuilding.
+   */
+  function _getDeckbuilding(bytes32 key) internal view returns (bool deckbuilding) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (_toBool(uint8(bytes1(_blob))));
+  }
+
+  /**
+   * @notice Set deckbuilding.
+   */
+  function setDeckbuilding(bytes32 key, bool deckbuilding) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((deckbuilding)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set deckbuilding.
+   */
+  function _setDeckbuilding(bytes32 key, bool deckbuilding) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((deckbuilding)), _fieldLayout);
   }
 
   /**
@@ -902,11 +947,12 @@ library Cards {
     int8 hp,
     uint32 cost,
     CardType cardType,
+    bool deckbuilding,
     string memory tid,
     string memory team,
     bytes32[] memory abilities
   ) internal {
-    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType);
+    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, team, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, team, abilities);
@@ -928,11 +974,12 @@ library Cards {
     int8 hp,
     uint32 cost,
     CardType cardType,
+    bool deckbuilding,
     string memory tid,
     string memory team,
     bytes32[] memory abilities
   ) internal {
-    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType);
+    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, team, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, team, abilities);
@@ -953,7 +1000,8 @@ library Cards {
       _table.attack,
       _table.hp,
       _table.cost,
-      _table.cardType
+      _table.cardType,
+      _table.deckbuilding
     );
 
     PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.team, _table.abilities);
@@ -975,7 +1023,8 @@ library Cards {
       _table.attack,
       _table.hp,
       _table.cost,
-      _table.cardType
+      _table.cardType,
+      _table.deckbuilding
     );
 
     PackedCounter _encodedLengths = encodeLengths(_table.tid, _table.team, _table.abilities);
@@ -992,7 +1041,11 @@ library Cards {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (RarityType rarity, int8 mana, int8 attack, int8 hp, uint32 cost, CardType cardType) {
+  )
+    internal
+    pure
+    returns (RarityType rarity, int8 mana, int8 attack, int8 hp, uint32 cost, CardType cardType, bool deckbuilding)
+  {
     rarity = RarityType(uint8(Bytes.slice1(_blob, 0)));
 
     mana = (int8(uint8(Bytes.slice1(_blob, 1))));
@@ -1004,6 +1057,8 @@ library Cards {
     cost = (uint32(Bytes.slice4(_blob, 4)));
 
     cardType = CardType(uint8(Bytes.slice1(_blob, 8)));
+
+    deckbuilding = (_toBool(uint8(Bytes.slice1(_blob, 9))));
   }
 
   /**
@@ -1044,7 +1099,15 @@ library Cards {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (CardsData memory _table) {
-    (_table.rarity, _table.mana, _table.attack, _table.hp, _table.cost, _table.cardType) = decodeStatic(_staticData);
+    (
+      _table.rarity,
+      _table.mana,
+      _table.attack,
+      _table.hp,
+      _table.cost,
+      _table.cardType,
+      _table.deckbuilding
+    ) = decodeStatic(_staticData);
 
     (_table.tid, _table.team, _table.abilities) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -1079,9 +1142,10 @@ library Cards {
     int8 attack,
     int8 hp,
     uint32 cost,
-    CardType cardType
+    CardType cardType,
+    bool deckbuilding
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(rarity, mana, attack, hp, cost, cardType);
+    return abi.encodePacked(rarity, mana, attack, hp, cost, cardType, deckbuilding);
   }
 
   /**
@@ -1124,11 +1188,12 @@ library Cards {
     int8 hp,
     uint32 cost,
     CardType cardType,
+    bool deckbuilding,
     string memory tid,
     string memory team,
     bytes32[] memory abilities
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType);
+    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, team, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, team, abilities);
@@ -1144,5 +1209,17 @@ library Cards {
     _keyTuple[0] = key;
 
     return _keyTuple;
+  }
+}
+
+/**
+ * @notice Cast a value to a bool.
+ * @dev Boolean values are encoded as uint8 (1 = true, 0 = false), but Solidity doesn't allow casting between uint8 and bool.
+ * @param value The uint8 value to convert.
+ * @return result The boolean value.
+ */
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

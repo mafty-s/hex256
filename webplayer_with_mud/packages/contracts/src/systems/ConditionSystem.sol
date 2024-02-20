@@ -2,8 +2,9 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Condition, ConditionCardType, CardOnBoards} from "../codegen/index.sol";
-import {ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
+import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
+import {Condition, ConditionCardType, CardOnBoards, Games} from "../codegen/index.sol";
+import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 
 contract ConditionSystem is System {
@@ -11,6 +12,28 @@ contract ConditionSystem is System {
     constructor() {
 
     }
+
+    function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster)
+    {
+
+    }
+
+    function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target)
+    {
+
+    }
+
+    function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target)
+    {
+
+    }
+
+    function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target)
+    {
+
+    }
+
+////=========================
 
 //
 //    function SetConditionCardTypeConfig(string memory name, string memory team, string memory has_type, string memory has_trait) public {
@@ -181,23 +204,72 @@ contract ConditionSystem is System {
         return (is_type && is_team && is_trait);
     }
 
-    function ConditionCount(ConditionPlayerType target, PileType pile, CardType has_type, CardTeam has_team) public
+    function ConditionCount(ConditionPlayerType target, PileType pile, ConditionOperatorInt oper, CardType has_type, CardTeam has_team, int8 value) internal returns (bool)
     {
+        int8 count = 0;
+
+        if (target == ConditionPlayerType.Self || target == ConditionPlayerType.Both)
+        {
+//            Player player =  data.GetPlayer(caster.player_id);
+//            count += CountPile(player, pile);
+        }
+        if (target == ConditionPlayerType.Opponent || target == ConditionPlayerType.Both)
+        {
+//            Player player = data.GetOpponentPlayer(caster.player_id);
+//            count += CountPile(player, pile);
+        }
+        return CompareInt(count, oper, value);
+
+    }
+
+    function ConditionDeckbuilding() internal {
+        //todo
+
+    }
+
+    function ConditionExhaust(ConditionOperatorBool oper) internal {
+        //todo
+
+    }
+
+    function ConditionOnce() internal {
+        //todo
+
+    }
+
+    function ConditionOwner() internal {
+        //todo
 
     }
 
     function ConditionSlotDist(uint8 distance, bool diagonals) public {
+        //todo
 
     }
 
-    function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal  returns (bool){
+    function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
 //        bool yourturn = caster.player_id == data.current_player;
 //        return CompareBool(yourturn, oper);
         //todo
         return false;
     }
 
-    function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal  returns (bool){
+    function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+//        bool hstatus = target.HasStatus(has_status) && target.GetStatusValue(has_status) >= value;
+
+        //todo
+        return false;
+    }
+
+    function ConditionOwnerAI() internal {
+
+    }
+
+    function ConditionPlayerStat() internal {
+
+    }
+
+    function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         if (target == 0) {
             return false;
         }
@@ -301,7 +373,7 @@ contract ConditionSystem is System {
         return result;
     }
 
-    //找到属性最低的牌
+//找到属性最低的牌
     function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
