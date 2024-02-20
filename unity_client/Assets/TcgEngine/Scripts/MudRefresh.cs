@@ -240,6 +240,11 @@ public class MudRefresh
             if (mud_card.equippedUid != "0x0000000000000000000000000000000000000000000000000000000000000000")
             {
                 Card equiped = gamedata.GetCard(mud_card.equippedUid);
+                card.equipped_uid = mud_card.equippedUid;
+            }
+            else
+            {
+                card.equipped_uid = null;
             }
 
             if (mud_card.status.Length > 0)
