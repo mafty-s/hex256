@@ -373,7 +373,19 @@ contract AbilitySystem is System {
                 {
                     PlayerLogicLib.AddOngoingStatus(player_key, Status.Protected, 0);
                 }
+
+                //Status bonus
+                bytes32[] memory status_list = CardOnBoards.getStatus(cards_board[c]);
+                for (uint cs = 0; cs < status_list.length; cs++) {
+                    AddOngoingStatusBonus(cards_board[c], status_list[cs], 0);
+                }
+//            foreach (CardStatus status in card.status)
+//        AddOngoingStatusBonus(card, status);
+//            foreach (CardStatus status in card.ongoing_status)
+//        AddOngoingStatusBonus(card, status);
             }
+
+
         }
 
     }
