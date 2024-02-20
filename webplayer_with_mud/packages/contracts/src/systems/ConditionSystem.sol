@@ -22,6 +22,11 @@ contract ConditionSystem is System {
         Condition.setObjType(key, ConditionObjType.ConditionCardType);
     }
 
+    function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+        //todo
+        return source;
+    }
+
     function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.HP, ability, caster, source);
     }

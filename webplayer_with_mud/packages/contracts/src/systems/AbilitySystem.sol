@@ -160,15 +160,25 @@ contract AbilitySystem is System {
     }
 
     //Return player targets,  memory_array is used for optimization and avoid allocating new memory
-    function GetPlayerTargets(bytes32 ability_key, bytes32 caster_key) internal returns (bytes32[] memory){
-
-        AbilityTarget target = Ability.getTarget(ability_key);
-        bytes32[] memory targets = new bytes32[](1);
-        //todo
+    function GetPlayerTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster_key) internal returns (bytes32[] memory){
+        bytes32[] memory players = Games.getPlayers(game_uid);
+        bytes32[] memory targets;
         if (target == AbilityTarget.PlayerSelf) {
+            targets = new bytes32[](1);
             bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
             targets[0] = player_key;
+        } else if (target == AbilityTarget.PlayerOpponent) {
+            targets = new bytes32[](1);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
+            bytes32 opponent_key = player_key == players[0] ? players[1] : players[0];
+            targets[0] = opponent_key;
+        } else if (target == AbilityTarget.AllPlayers) {
+            targets = players;
         }
+
+        //Filter targets
+        //todo
+
 
         return targets;
     }
@@ -177,14 +187,14 @@ contract AbilitySystem is System {
     function GetCardTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
         uint numTargets = 0;
         bytes32[] memory players = Games.getPlayers(game_uid);
+        bytes32[] memory targets;
 
         if (target == AbilityTarget.Self) {
-            bytes32[] memory targets = new bytes32[](1);
+            targets = new bytes32[](1);
             if (AreTargetConditionsMetCard(game_uid, caster, caster)) {
                 targets[numTargets] = caster;
                 numTargets++;
             }
-            return targets;
         }
 
         if (target == AbilityTarget.AllCardsBoard || target == AbilityTarget.SelectTarget)
@@ -193,7 +203,7 @@ contract AbilitySystem is System {
             bytes32[] memory cards_board_a = PlayerCardsBoard.getValue(players[0]);
             bytes32[] memory cards_board_b = PlayerCardsBoard.getValue(players[1]);
 
-            bytes32[] memory targets = new bytes32[](cards_board_a.length + cards_board_b.length);
+            targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
                 if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
                     targets[numTargets] = cards_board_a[i];
@@ -206,7 +216,6 @@ contract AbilitySystem is System {
                     numTargets++;
                 }
             }
-            return targets;
         }
 
         if (target == AbilityTarget.AllCardsHand)
@@ -214,7 +223,7 @@ contract AbilitySystem is System {
             bytes32[] memory cards_board_a = PlayerCardsHand.getValue(players[0]);
             bytes32[] memory cards_board_b = PlayerCardsHand.getValue(players[1]);
 
-            bytes32[] memory targets = new bytes32[](cards_board_a.length + cards_board_b.length);
+            targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
                 if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
                     targets[numTargets] = cards_board_a[i];
@@ -227,7 +236,6 @@ contract AbilitySystem is System {
                     numTargets++;
                 }
             }
-            return targets;
         }
 
         if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.CardSelector)
@@ -238,50 +246,52 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.LastPlayed)
         {
-            bytes32[] memory targets = new bytes32[](1);
+            targets = new bytes32[](1);
             bytes32 last_played = GamesExtended.getLastPlayed(game_uid);
             if (last_played != 0 && AreTargetConditionsMetCard(game_uid, caster, last_played)) {
                 targets[numTargets] = last_played;
                 numTargets++;
             }
-            return targets;
         }
 
         if (target == AbilityTarget.LastDestroyed)
         {
-            bytes32[] memory targets = new bytes32[](1);
+            targets = new bytes32[](1);
             bytes32 last_destroyed = GamesExtended.getLastDestroyed(game_uid);
             if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, caster, last_destroyed)) {
                 targets[numTargets] = last_destroyed;
                 numTargets++;
             }
-            return targets;
         }
 
         if (target == AbilityTarget.LastTargeted)
         {
-            bytes32[] memory targets = new bytes32[](1);
+            targets = new bytes32[](1);
             bytes32 last_target = GamesExtended.getLastTarget(game_uid);
             if (last_target != 0 && AreTargetConditionsMetCard(game_uid, caster, last_target)) {
                 targets[numTargets] = last_target;
                 numTargets++;
             }
-            return targets;
         }
 
-        bytes32[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
+        bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
+        if (filters_target.length > 0 && targets.length > 0) {
+            for (uint i = 0; i < filters_target.length; i++) {
+                bytes32 filter = filters_target[i];
+                if (filter != 0) {
+                    //todo
+//                    uint32 returnValue = abi.decode(
+//                        SystemSwitch.call(
+//                            abi.encodeCall(IIncrementSystem.increment, ())
+//                        ),
+//                        (uint32)
+//                    );
+//                    IConditionSystem.FilterFirst(1, ability_key, caster, target);
+                }
+            }
+        }
 
-//        //Filter targets
-//        if (filters_target != null && targets.Count > 0)
-//        {
-//            foreach (FilterData filter in filters_target)
-//            {
-//            if (filter != null)
-//            targets = filter.FilterTargets(data, this, caster, targets, memory_array.GetOther(targets));
-//            }
-//            }
-
-        revert("unsupported target type");
+        return targets;
     }
 
 
@@ -327,11 +337,11 @@ contract AbilitySystem is System {
 
     function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
         //todo
-        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
-        for (uint i = 0; i < targets.length; i++) {
-            bytes32 target = targets[i];
-//            ResolveEffectTarget(ability_key, caster_key, target);
-        }
+//        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
+//        for (uint i = 0; i < targets.length; i++) {
+//            bytes32 target = targets[i];
+////            ResolveEffectTarget(ability_key, caster_key, target);
+//        }
     }
 
     function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -457,9 +467,9 @@ contract AbilitySystem is System {
         }
 
         //Kill stuff with 0 hp
-
+        //todo
         //Clear cards
-
+        //todo
     }
 
 

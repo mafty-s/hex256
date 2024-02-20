@@ -15,6 +15,8 @@ interface IConditionSystem {
     string memory has_trait
   ) external;
 
+  function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
   function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
 
   function FilterLowestAttack(

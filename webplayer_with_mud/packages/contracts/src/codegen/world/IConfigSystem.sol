@@ -46,7 +46,7 @@ interface IConfigSystem {
     bool exhaust,
     bytes4[] memory effects,
     bytes32[] memory conditionsTrigger,
-    bytes32[] memory filtersTarget,
+    bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities,
     uint8[] memory status
   ) external returns (bytes32 key);

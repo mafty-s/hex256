@@ -113,7 +113,7 @@ export default mudConfig({
         AbilityExtend: {
             valueSchema: {
                 conditionsTrigger: "bytes32[]",
-                filtersTarget: "bytes32[]",
+                filtersTarget: "bytes4[]",
                 chainAbilities: "bytes32[]",
             },
         },
