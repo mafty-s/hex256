@@ -75,18 +75,20 @@ contract ConditionSystem is System {
 
     //找到属性最低的牌
     function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
-        bytes32[] memory result = new bytes32[](1);
+        bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
             if (result == 0) {
-                result[0] = source[i];
+                result = source[i];
             } else {
                 if (GetCardStat(source[i], stat_type) < GetCardStat(result, stat_type)) {
-                    result[0] = source[i];
+                    result = source[i];
                 }
             }
         }
 
-        return result[0];
+        bytes32[] memory dist = new bytes32[](1);
+        dist[0] = result;
+        return dist;
     }
 
     function GetCardStat(bytes32 card, ConditionStatType stat_type) internal returns (int8) {
