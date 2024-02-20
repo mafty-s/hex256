@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Condition, ConditionCardType, CardOnBoards} from "../codegen/index.sol";
-import {ConditionObjType, ConditionStatType, CardType, CardTeam} from "../codegen/common.sol";
+import {ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt} from "../codegen/common.sol";
 
 
 contract ConditionSystem is System {
@@ -68,93 +68,170 @@ contract ConditionSystem is System {
 //bool is_trait = target.HasTrait(has_trait) || has_trait == null;
 //return (is_type && is_team && is_trait);
 
+    function HasBoardCardEnemy() public {
+        //todo
+    }
+
+    function HasBoardCardSelf() public {
+        //todo
+    }
+
+    function HasBoardCharacters2() public {
+        //todo
+    }
+
+    function HasDiscardSpell() public {
+        //todo
+    }
+
     function IsAlly() public {
         //todo
     }
 
     function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.Artifact, CardTeam.None, ability_key, caster, target);
+        return ConditionCardType(CardType.Artifact, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
     function IsSpell(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.Spell, CardTeam.None, ability_key, caster, target);
+        return ConditionCardType(CardType.Spell, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
     function IsEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.Equipment, CardTeam.None, ability_key, caster, target);
+        return ConditionCardType(CardType.Equipment, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
     function IsCharacter(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.Character, CardTeam.None, ability_key, caster, target);
+        return ConditionCardType(CardType.Character, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
     function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.Hero, CardTeam.None, ability_key, caster, target);
+        return ConditionCardType(CardType.Hero, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsSlot() public{
+    function IsSlot() public {
         //todo
     }
 
-    function IsSlotX1() public{
-        //todo
-
-    }
-
-    function IsSlotSameP() public{
+    function IsSlotX1() public {
         //todo
 
     }
 
-    function IsSlotNextTo() public{
+    function IsSlotSameP() public {
         //todo
 
     }
 
-    function IsSlotInRange() public{
+    function IsSlotNextTo() public {
         //todo
 
     }
 
-    function IsSlotEmpty() public{
+    function IsSlotInRange() public {
         //todo
 
     }
 
-    function IsPlayer() public{
+    function IsSlotEmpty() public {
         //todo
 
     }
 
-    function IsAI() public{
+    function IsPlayer() public {
         //todo
 
     }
 
-    function IsWolf() public{
+    function IsAI() public {
         //todo
+
+    }
+
+    function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardType(CardType.None, CardTeam.None, CardTrait.Wolf, ability_key, caster, target);
+    }
+
+    function IsDragon(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardType(CardType.None, CardTeam.None, CardTrait.Dragon, ability_key, caster, target);
     }
 
     function IsGreen(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.None, CardTeam.Green, ability_key, caster, target);
+        return ConditionCardType(CardType.None, CardTeam.Green, CardTrait.None, ability_key, caster, target);
     }
 
     function IsRed(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.None, CardTeam.Red, ability_key, caster, target);
+        return ConditionCardType(CardType.None, CardTeam.Red, CardTrait.None, ability_key, caster, target);
     }
 
     function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardType(CardType.None, CardTeam.Blue, ability_key, caster, target);
+        return ConditionCardType(CardType.None, CardTeam.Blue, CardTrait.None, ability_key, caster, target);
     }
 
-    function ConditionCardType(CardType has_type, CardTeam has_team, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionCardType(CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         bytes32 card_config_id = CardOnBoards.getId(target);
         bool is_type = has_type == CardType.None;
         bool is_team = has_team == CardTeam.None;
+        bool is_trait = has_trait == CardTrait.None;
+        return (is_type && is_team && is_trait);
+    }
 
+    function ConditionCount(ConditionPlayerType target, PileType pile, CardType has_type, CardTeam has_team) public
+    {
+
+    }
+
+    function ConditionSlotDist(uint8 distance, bool diagonals) public {
+
+    }
+
+    function ConditionStat(ConditionStatType stat_type, ConditionOperatorInt oper, int8 value, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool) {
+        if (stat_type == ConditionStatType.Attack)
+        {
+            return CompareInt(CardOnBoards.getAttack(target), oper, value);
+        }
+
+        if (stat_type == ConditionStatType.HP)
+        {
+            return CompareInt(CardOnBoards.getHp(target), oper, value);
+        }
+
+        if (stat_type == ConditionStatType.Mana)
+        {
+            return CompareInt(CardOnBoards.getMana(target), oper, value);
+        }
 
         return false;
     }
+
+
+    function CompareInt(int8 ival1, ConditionOperatorInt oper, int8 ival2) public returns (bool){
+        if (oper == ConditionOperatorInt.Equal)
+        {
+            return ival1 == ival2;
+        }
+        if (oper == ConditionOperatorInt.NotEqual)
+        {
+            return ival1 != ival2;
+        }
+        if (oper == ConditionOperatorInt.GreaterEqual)
+        {
+            return ival1 >= ival2;
+        }
+        if (oper == ConditionOperatorInt.LessEqual)
+        {
+            return ival1 <= ival2;
+        }
+        if (oper == ConditionOperatorInt.Greater)
+        {
+            return ival1 > ival2;
+        }
+        if (oper == ConditionOperatorInt.Less)
+        {
+            return ival1 < ival2;
+        }
+        return false;
+    }
+
 
     function FilterFirst(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory){
         bytes32[] memory result = new bytes32[](amount);
@@ -173,7 +250,7 @@ contract ConditionSystem is System {
         return result;
     }
 
-    //找到属性最低的牌
+//找到属性最低的牌
     function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
@@ -209,12 +286,12 @@ contract ConditionSystem is System {
         uint256 arrSize = array.length;
         bytes32[] memory shuffled = new bytes32[](arrSize);
 
-        // Copy the original deck to the shuffled deck array
+// Copy the original deck to the shuffled deck array
         for (uint256 i = 0; i < arrSize; i++) {
             shuffled[i] = array[i];
         }
 
-        // Shuffle the deck using Fisher-Yates algorithm
+// Shuffle the deck using Fisher-Yates algorithm
         for (uint256 i = arrSize - 1; i > 0; i--) {
             uint256 j = uint256(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, i))) % (i + 1);
             bytes32 temp = shuffled[i];
@@ -224,7 +301,6 @@ contract ConditionSystem is System {
 
         return shuffled;
     }
-
 
 
 }

@@ -71,6 +71,12 @@ enum CardTeam {
   Blue
 }
 
+enum CardTrait {
+  None,
+  Wolf,
+  Dragon
+}
+
 enum AbilityTrigger {
   NONE,
   ONGOING,
@@ -206,4 +212,13 @@ enum ConditionPlayerType {
   Self,
   Opponent,
   Both
+}
+
+enum ConditionOperatorInt {
+  Equal,
+  NotEqual,
+  GreaterEqual,
+  LessEqual,
+  Greater,
+  Less
 }

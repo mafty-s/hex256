@@ -12,6 +12,7 @@ export default mudConfig({
         GamePhase: ["NONE", "START_TURN", "MAIN", "END_TURN"],
         CardType: ["None", "Hero", "Character", "Spell", "Artifact", "Secret", "Equipment"],
         CardTeam: ["None", 'Green', 'Red', 'Blue'],
+        CardTrait: ["None", "Wolf", "Dragon"],
         AbilityTrigger: ["NONE", "ONGOING", "ACTIVATE", "ON_PLAY", "ON_PLAY_OTHER", "START_OF_TURN", "END_OF_TURN", "ON_BEFORE_ATTACK", "ON_AFTER_ATTACK", "ON_BEFORE_DEFEND", "ON_AFTER_DEFEND", "ON_KILL", "ON_DEATH", "ON_DEATH_OTHER"],
         AbilityTarget: ["None", "Self", "PlayerSelf", "PlayerOpponent", "AllPlayers", "AllCardsBoard", "AllCardsHand", "AllCardsAllPiles", "AllSlots", "AllCardData", "PlayTarget", "AbilityTriggerer", "EquippedCard", "SelectTarget", "CardSelector", "ChoiceSelector", "LastPlayed", "LastTargeted", "LastDestroyed", "LastSummoned"],
         Team: ["FIRE", "FOREST", "WATER", "NEUTRAL"],
@@ -24,6 +25,7 @@ export default mudConfig({
         Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample', 'Protection'],
         ConditionStatType: ["None", 'Attack', 'HP', 'Mana'],
         ConditionPlayerType: ['Self', 'Opponent', 'Both'],
+        ConditionOperatorInt: ['Equal', 'NotEqual', 'GreaterEqual', 'LessEqual', 'Greater', 'Less'],
     },
     tables: {
         AdminSingleton: {
