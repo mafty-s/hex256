@@ -222,3 +222,8 @@ enum ConditionOperatorInt {
   Greater,
   Less
 }
+
+enum ConditionOperatorBool {
+  IsTrue,
+  IsFalse
+}

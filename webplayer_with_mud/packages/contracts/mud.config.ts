@@ -26,6 +26,7 @@ export default mudConfig({
         ConditionStatType: ["None", 'Attack', 'HP', 'Mana'],
         ConditionPlayerType: ['Self', 'Opponent', 'Both'],
         ConditionOperatorInt: ['Equal', 'NotEqual', 'GreaterEqual', 'LessEqual', 'Greater', 'Less'],
+        ConditionOperatorBool: ['IsTrue', 'IsFalse'],
     },
     tables: {
         AdminSingleton: {

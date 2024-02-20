@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Condition, ConditionCardType, CardOnBoards} from "../codegen/index.sol";
-import {ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt} from "../codegen/common.sol";
+import {ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool} from "../codegen/common.sol";
 
 
 contract ConditionSystem is System {
@@ -167,6 +167,12 @@ contract ConditionSystem is System {
         return ConditionCardType(CardType.None, CardTeam.Blue, CardTrait.None, ability_key, caster, target);
     }
 
+    function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionStat(ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4, ability_key, caster, target);
+    }
+
+    //=======================================//=======================================//=======================================
+
     function ConditionCardType(CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         bytes32 card_config_id = CardOnBoards.getId(target);
         bool is_type = has_type == CardType.None;
@@ -201,6 +207,13 @@ contract ConditionSystem is System {
         }
 
         return false;
+    }
+
+    function CompareBool(bool condition, ConditionOperatorBool oper) public returns (bool)
+    {
+        if (oper == ConditionOperatorBool.IsFalse)
+            return !condition;
+        return condition;
     }
 
 
@@ -250,7 +263,7 @@ contract ConditionSystem is System {
         return result;
     }
 
-//找到属性最低的牌
+    //找到属性最低的牌
     function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
@@ -258,6 +271,23 @@ contract ConditionSystem is System {
                 result = source[i];
             } else {
                 if (GetCardStat(source[i], stat_type) < GetCardStat(result, stat_type)) {
+                    result = source[i];
+                }
+            }
+        }
+
+        bytes32[] memory dist = new bytes32[](1);
+        dist[0] = result;
+        return dist;
+    }
+
+    function FilterHighestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
+        bytes32 result = 0;
+        for (uint i = 0; i < source.length; i++) {
+            if (result == 0) {
+                result = source[i];
+            } else {
+                if (GetCardStat(source[i], stat_type) > GetCardStat(result, stat_type)) {
                     result = source[i];
                 }
             }
