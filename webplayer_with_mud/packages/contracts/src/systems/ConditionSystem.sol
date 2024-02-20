@@ -3,8 +3,8 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Condition, ConditionCardType, CardOnBoards} from "../codegen/index.sol";
-import {ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool} from "../codegen/common.sol";
-
+import {ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
+import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 
 contract ConditionSystem is System {
 
@@ -188,6 +188,44 @@ contract ConditionSystem is System {
 
     function ConditionSlotDist(uint8 distance, bool diagonals) public {
 
+    }
+
+    function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal  returns (bool){
+//        bool yourturn = caster.player_id == data.current_player;
+//        return CompareBool(yourturn, oper);
+        //todo
+        return false;
+    }
+
+    function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal  returns (bool){
+        if (target == 0) {
+            return false;
+        }
+        if (pile_type == PileType.Hand) {
+            return CompareBool(CardPosLogicLib.IsInHand(target), oper);
+        }
+
+        if (pile_type == PileType.Board) {
+            return CompareBool(CardPosLogicLib.IsOnBoard(target), oper);
+        }
+
+        if (pile_type == PileType.Deck) {
+            return CompareBool(CardPosLogicLib.IsInDeck(target), oper);
+        }
+
+        if (pile_type == PileType.Discard) {
+            return CompareBool(CardPosLogicLib.IsInDiscard(target), oper);
+        }
+
+        if (pile_type == PileType.Secret) {
+            return CompareBool(CardPosLogicLib.IsInSecret(target), oper);
+        }
+
+        if (pile_type == PileType.Temp) {
+            return CompareBool(CardPosLogicLib.IsInTemp(target), oper);
+        }
+
+        return false;
     }
 
     function ConditionStat(ConditionStatType stat_type, ConditionOperatorInt oper, int8 value, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool) {

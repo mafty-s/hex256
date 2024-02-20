@@ -27,6 +27,7 @@ export default mudConfig({
         ConditionPlayerType: ['Self', 'Opponent', 'Both'],
         ConditionOperatorInt: ['Equal', 'NotEqual', 'GreaterEqual', 'LessEqual', 'Greater', 'Less'],
         ConditionOperatorBool: ['IsTrue', 'IsFalse'],
+        ConditionTargetType: ["None", "Card", "Player", "Slot"],
     },
     tables: {
         AdminSingleton: {

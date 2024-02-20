@@ -2,9 +2,8 @@
 pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {Cards, CardsData, Ability} from "../codegen/index.sol";
+import {Cards, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
-import {PlayerCardsBoard} from "../codegen/index.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 //import {UintLib} from "./UintLib.sol";
 
@@ -43,16 +42,6 @@ library CardLogicLib {
         return Cards.getCardType(card_key) == CardType.Spell;
     }
 
-    function IsOnBoard(bytes32 card_key) internal view returns (bool) {
-        bytes32 player_key = CardOnBoards.getPlayerId(card_key);
-        bytes32[] memory cards = PlayerCardsBoard.getValue(player_key);
-        for (uint i = 0; i < cards.length; i++) {
-            if (cards[i] == card_key) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     function IsCharacter(bytes32 card_key) internal view returns (bool) {
         return Cards.getCardType(card_key) == CardType.Character;
@@ -98,7 +87,7 @@ library CardLogicLib {
     }
 
     function ClearOngoing(bytes32 card_uid) internal {
-        if(card_uid==0){
+        if (card_uid == 0) {
             return;
         }
         uint32[] memory card_status = new uint32[](0);

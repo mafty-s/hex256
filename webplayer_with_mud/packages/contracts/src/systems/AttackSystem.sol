@@ -28,9 +28,9 @@ contract AttackSystem is System {
             revert("Can not attack target");
         }
 
-        if(!CardLogicLib.IsOnBoard(target_key)){
-            revert("target is not on board");
-        }
+//        if(!CardLogicLib.IsOnBoard(target_key)){
+//            revert("target is not on board");
+//        }
 
         //使用触发器触发技能
         SystemSwitch.call(

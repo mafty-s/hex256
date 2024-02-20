@@ -227,3 +227,10 @@ enum ConditionOperatorBool {
   IsTrue,
   IsFalse
 }
+
+enum ConditionTargetType {
+  None,
+  Card,
+  Player,
+  Slot
+}

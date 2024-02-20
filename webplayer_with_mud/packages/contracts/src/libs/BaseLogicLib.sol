@@ -133,10 +133,10 @@ library BaseLogicLib {
             return false;
         }
 
-        if (!CardLogicLib.IsOnBoard(attacker)){
-            revert("IsOnBoard");
-            return false;
-        }
+//        if (!CardLogicLib.IsOnBoard(attacker)){
+//            revert("IsOnBoard");
+//            return false;
+//        }
 
         bytes32 attacker_config_key = CardOnBoards.getId(attacker);
         if( !CardLogicLib.IsCharacter(attacker_config_key)){
