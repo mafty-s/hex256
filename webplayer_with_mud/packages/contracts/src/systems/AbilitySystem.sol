@@ -205,28 +205,28 @@ contract AbilitySystem is System {
                     numTargets++;
                 }
             }
-
-//            for (uint p = 0; p < players.length; p++) {
-//                bytes32[] memory cards_board = PlayerCardsBoard.getValue(players[p]);
-//                for (uint c = 0; c < cards_board.length; c++) {
-//                    if (AreTargetConditionsMetCard(game_uid, caster, cards_board[c])) {
-//                        targets[numTargets] = cards_board[c];
-//                        numTargets++;
-//                    }
-//                }
-//            }
             return targets;
-//            for (uint i = 0; i < card_a.length; i++) {
-//                if (AreTargetConditionsMetCard(game_uid, caster, card_a[i])) {
-//                    targets[numTargets] = card_a[i];
-//                    numTargets++;
-//                }
-//            }
         }
 
         if (target == AbilityTarget.AllCardsHand)
         {
-            revert("");
+            bytes32[] memory cards_board_a = PlayerCardsHand.getValue(players[0]);
+            bytes32[] memory cards_board_b = PlayerCardsHand.getValue(players[1]);
+
+            bytes32[] memory targets = new bytes32[](cards_board_a.length + cards_board_b.length);
+            for (uint i = 0; i < cards_board_a.length; i++) {
+                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                    targets[numTargets] = cards_board_a[i];
+                    numTargets++;
+                }
+            }
+            for (uint i = 0; i < cards_board_b.length; i++) {
+                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                    targets[numTargets] = cards_board_b[i];
+                    numTargets++;
+                }
+            }
+            return targets;
         }
 
         if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.CardSelector)
@@ -237,21 +237,38 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.LastPlayed)
         {
-            revert("");
-
+            bytes32[] memory targets = new bytes32[](1);
+            bytes32 last_played = GamesExtended.getLastPlayed(game_uid);
+            if (last_played != 0 && AreTargetConditionsMetCard(game_uid, caster, last_played)) {
+                targets[numTargets] = last_played;
+                numTargets++;
+            }
+            return targets;
         }
 
         if (target == AbilityTarget.LastDestroyed)
         {
-            revert("");
+            bytes32[] memory targets = new bytes32[](1);
+            bytes32 last_destroyed = GamesExtended.getLastDestroyed(game_uid);
+            if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, caster, last_destroyed)) {
+                targets[numTargets] = last_destroyed;
+                numTargets++;
+            }
+            return targets;
         }
 
         if (target == AbilityTarget.LastTargeted)
         {
-            revert("");
+            bytes32[] memory targets = new bytes32[](1);
+            bytes32 last_destroyed = GamesExtended.getLastTarget(game_uid);
+            if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, caster, last_destroyed)) {
+                targets[numTargets] = last_target;
+                numTargets++;
+            }
+            return targets;
         }
 
-        revert("");
+        revert("unsupported target type");
     }
 
 
