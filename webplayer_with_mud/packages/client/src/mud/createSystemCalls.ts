@@ -816,11 +816,13 @@ export function createSystemCalls(
         let player_action_history = useStore.getState().getValue(tables.PlayerActionHistory, {key});
         let action_historys = [];
         // console.log(player_action_history);
-        for (let i = 0; i < player_action_history.value.length; i++) {
-            let action_key = player_action_history.value[i];
-            let action_history = useStore.getState().getValue(tables.ActionHistory, {action_key});
-            console.log(action_history);
-            action_historys.push(action_history);
+        if(player_action_history!=undefined) {
+            for (let i = 0; i < player_action_history.value.length; i++) {
+                let action_key = player_action_history.value[i];
+                let action_history = useStore.getState().getValue(tables.ActionHistory, {action_key});
+                console.log(action_history);
+                action_historys.push(action_history);
+            }
         }
 
         game = {...game, ...game_extend};
