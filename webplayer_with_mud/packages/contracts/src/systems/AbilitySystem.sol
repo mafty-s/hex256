@@ -33,8 +33,16 @@ contract AbilitySystem is System {
             return; //Wait for player to select
         }
 
+        AbilityTarget target_type = Ability.getTarget(ability_key);
+
         //目标
-        bytes32[] memory targets = GetCardTargets(game_key, ability_key, caster);
+        bytes32[] memory targets;
+        if (target_type == AbilityTarget.PlayTarget) {
+            targets = new bytes32[](1);
+            targets[0] = 0;
+        } else {
+            targets = GetCardTargets(game_key, ability_key, target_type, caster);
+        }
 
         //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
@@ -165,8 +173,7 @@ contract AbilitySystem is System {
     }
 
     //Return cards targets,  memory_array is used for optimization and avoid allocating new memory
-    function GetCardTargets(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bytes32[] memory){
-        AbilityTarget target = Ability.getTarget(ability_key);
+    function GetCardTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
         uint numTargets = 0;
         bytes32[] memory players = Games.getPlayers(game_uid);
 
