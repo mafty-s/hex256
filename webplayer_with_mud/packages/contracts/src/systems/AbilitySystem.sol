@@ -39,7 +39,7 @@ contract AbilitySystem is System {
         bytes32[] memory targets;
         if (target_type == AbilityTarget.PlayTarget) {
             targets = new bytes32[](1);
-            targets[0] = 0;
+            targets[0] = target;
         } else {
             targets = GetCardTargets(game_key, ability_key, target_type, caster);
         }
