@@ -260,8 +260,8 @@ contract AbilitySystem is System {
         if (target == AbilityTarget.LastTargeted)
         {
             bytes32[] memory targets = new bytes32[](1);
-            bytes32 last_destroyed = GamesExtended.getLastTarget(game_uid);
-            if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, caster, last_destroyed)) {
+            bytes32 last_target = GamesExtended.getLastTarget(game_uid);
+            if (last_target != 0 && AreTargetConditionsMetCard(game_uid, caster, last_target)) {
                 targets[numTargets] = last_target;
                 numTargets++;
             }
