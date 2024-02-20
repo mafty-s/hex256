@@ -34,7 +34,7 @@ contract AbilitySystem is System {
         }
 
         //目标
-        bytes[] memory targets = GetCardTargets(game_key, ability_key, caster);
+        bytes32[] memory targets = GetCardTargets(game_key, ability_key, caster);
 
         //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
