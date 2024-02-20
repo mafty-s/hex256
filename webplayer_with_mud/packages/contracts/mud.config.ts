@@ -21,6 +21,7 @@ export default mudConfig({
         TraitData: ["Dragon", "Growth", "SpellDamage", "Wolf"],
         EffectAttackerType: ["Self", "AbilityTriggerer", "LastPlayed", "LastTargeted"],
         Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample', 'Protection'],
+        ConditionStatType: ["None", 'Attack', 'HP', 'Mana'],
     },
     tables: {
         AdminSingleton: {

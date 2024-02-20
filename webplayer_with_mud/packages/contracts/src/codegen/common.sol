@@ -187,3 +187,10 @@ enum Status {
   Trample,
   Protection
 }
+
+enum ConditionStatType {
+  None,
+  Attack,
+  HP,
+  Mana
+}

@@ -14,4 +14,34 @@ interface IConditionSystem {
     string memory has_type,
     string memory has_trait
   ) external;
+
+  function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32);
+
+  function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32);
+
+  function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function FilterRandom2(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function FilterRandom3(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function FilterFirst1(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+
+  function FilterFirst(
+    uint8 amount,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external returns (bytes32[] memory);
+
+  function FilterRandom(
+    uint8 amount,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external returns (bytes32[] memory);
 }
