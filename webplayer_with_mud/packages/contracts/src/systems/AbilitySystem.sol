@@ -33,13 +33,18 @@ contract AbilitySystem is System {
             return; //Wait for player to select
         }
 
+        //目标
+        bytes[] memory targets = GetCardTargets(game_key, ability_key, caster);
+
         //使用效果
         bytes4[] memory effects = Ability.getEffects(ability_key);
         if (effects.length > 0 && ability_key != 0 && caster != 0 && target != 0) {
             for (uint i = 0; i < effects.length; i++) {
 //                SystemSwitch.call(abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card)));
-                bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, target, is_card);
-                SystemSwitch.call(data);
+                for (uint t = 0; t < targets.length; t++) {
+                    bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, targets[t], is_card);
+                    SystemSwitch.call(data);
+                }
             }
         }
         //添加状态，如嘲讽等
@@ -94,6 +99,7 @@ contract AbilitySystem is System {
 
 
     function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+        //todo
         return true;
     }
 
@@ -163,21 +169,46 @@ contract AbilitySystem is System {
         AbilityTarget target = Ability.getTarget(ability_key);
         uint numTargets = 0;
         bytes32[] memory players = Games.getPlayers(game_uid);
-//        bytes32[] memory card_a = Players.
-//        bytes32[] memory card_b = CardLogicLib.GetCardsOnBoard(players[1]);
-        bytes32[] memory targets = new bytes32[](1);
-
 
         if (target == AbilityTarget.Self) {
+            bytes32[] memory targets = new bytes32[](1);
             if (AreTargetConditionsMetCard(game_uid, caster, caster)) {
                 targets[numTargets] = caster;
                 numTargets++;
             }
+            return targets;
         }
 
         if (target == AbilityTarget.AllCardsBoard || target == AbilityTarget.SelectTarget)
         {
 
+            bytes32[] memory cards_board_a = PlayerCardsBoard.getValue(players[0]);
+            bytes32[] memory cards_board_b = PlayerCardsBoard.getValue(players[1]);
+
+            bytes32[] memory targets = new bytes32[](cards_board_a.length + cards_board_b.length);
+            for (uint i = 0; i < cards_board_a.length; i++) {
+                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                    targets[numTargets] = cards_board_a[i];
+                    numTargets++;
+                }
+            }
+            for (uint i = 0; i < cards_board_b.length; i++) {
+                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                    targets[numTargets] = cards_board_b[i];
+                    numTargets++;
+                }
+            }
+
+//            for (uint p = 0; p < players.length; p++) {
+//                bytes32[] memory cards_board = PlayerCardsBoard.getValue(players[p]);
+//                for (uint c = 0; c < cards_board.length; c++) {
+//                    if (AreTargetConditionsMetCard(game_uid, caster, cards_board[c])) {
+//                        targets[numTargets] = cards_board[c];
+//                        numTargets++;
+//                    }
+//                }
+//            }
+            return targets;
 //            for (uint i = 0; i < card_a.length; i++) {
 //                if (AreTargetConditionsMetCard(game_uid, caster, card_a[i])) {
 //                    targets[numTargets] = card_a[i];
@@ -188,30 +219,32 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.AllCardsHand)
         {
-
+            revert("");
         }
 
         if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.CardSelector)
         {
+            revert("");
 
         }
 
         if (target == AbilityTarget.LastPlayed)
         {
+            revert("");
 
         }
 
         if (target == AbilityTarget.LastDestroyed)
         {
-
+            revert("");
         }
 
         if (target == AbilityTarget.LastTargeted)
         {
-
+            revert("");
         }
 
-        return targets;
+        revert("");
     }
 
 
@@ -375,18 +408,20 @@ contract AbilitySystem is System {
                 }
 
                 //Status bonus
-                bytes32[] memory status_list = CardOnBoards.getStatus(cards_board[c]);
+                uint32[] memory status_list = CardOnBoards.getStatus(cards_board[c]);
                 for (uint cs = 0; cs < status_list.length; cs++) {
-                    AddOngoingStatusBonus(cards_board[c], status_list[cs], 0);
+                    AddOngoingStatusBonus(cards_board[c], (Status)(status_list[cs]), 0);
                 }
-//            foreach (CardStatus status in card.status)
-//        AddOngoingStatusBonus(card, status);
-//            foreach (CardStatus status in card.ongoing_status)
-//        AddOngoingStatusBonus(card, status);
+                uint32[] memory status_ongoing_list = CardOnBoards.getOngoingStatus(cards_board[c]);
+                for (uint csg = 0; csg < status_ongoing_list.length; csg++) {
+                    AddOngoingStatusBonus(cards_board[c], (Status)(status_ongoing_list[csg]), 0);
+                }
             }
-
-
         }
+
+        //Kill stuff with 0 hp
+
+        //Clear cards
 
     }
 
@@ -465,7 +500,7 @@ contract AbilitySystem is System {
                                 //todo
                             }
                             //Equip Cards
-                            if (ability.target == AbilityTarget.AllCardsAllPiles)
+                            if (target == AbilityTarget.AllCardsAllPiles)
                             {
                                 //todo
                             }
