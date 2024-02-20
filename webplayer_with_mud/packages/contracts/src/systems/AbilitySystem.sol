@@ -294,6 +294,22 @@ contract AbilitySystem is System {
         return targets;
     }
 
+    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target) internal {
+        if (target == AbilityTarget.AllSlots)
+        {
+            //todo
+        }
+        //Filter targets
+        //todo
+    }
+
+    function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target) internal {
+        if (target == AbilityTarget.AllCardData){
+            //todo
+        }
+        //Filter targets
+        //todo
+    }
 
     function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bool){
         AbilityTarget target = Ability.getTarget(ability_key);
