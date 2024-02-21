@@ -10,6 +10,8 @@ import { ConditionOperatorBool, ConditionOperatorInt } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IConditionSystem {
+  function IsConditionFunctionExist(bytes4 selector) external returns (bool);
+
   function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) external;
 
   function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) external;

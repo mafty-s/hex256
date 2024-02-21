@@ -3,6 +3,8 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
+import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
+import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
 import {Condition, ConditionCardType, CardOnBoards, Games} from "../codegen/index.sol";
 import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
@@ -12,6 +14,15 @@ contract ConditionSystem is System {
     constructor() {
 
     }
+
+    function IsConditionFunctionExist(bytes4 selector) public returns (bool){
+        (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(selector);
+        if (ResourceId.unwrap(systemId) == 0) {
+            return false;
+        }
+        return true;
+    }
+
 
     function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) public
     {
@@ -180,7 +191,7 @@ contract ConditionSystem is System {
     }
 
     function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionCardPile(PileType.Equipment, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
@@ -214,8 +225,7 @@ contract ConditionSystem is System {
     }
 
     function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        //todo
-        return false;
+        return ConditionSlotEmpty(ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
     function IsPlayer() public {
@@ -306,10 +316,16 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionSlotDist(uint8 distance, bool diagonals, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-//todo
+    function ConditionSlotDist(bytes32 ability_key, bytes32 caster, bytes32 target, uint8 distance, bool diagonals) internal returns (bool){
+        //todo
         return false;
     }
+
+    function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
+        //todo
+        return false;
+    }
+
 
     function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         bool yourturn = CardOnBoards.getPlayerId(caster) == Games.getCurrentPlayer(game_uid);
