@@ -91,21 +91,24 @@ contract ConditionSystem is System {
 //bool is_trait = target.HasTrait(has_trait) || has_trait == null;
 //return (is_type && is_team && is_trait);
 
-    function HasBoardCardEnemy() public {
-
-        //todo
+    function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCount(ability_key, caster, target, ConditionPlayerType.Opponent, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
-    function HasBoardCardSelf() public {
-        //todo
+    function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
-    function HasBoardCharacters2() public {
-        //todo
+    function HasDiscardCharacters(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Discard, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
-    function HasDiscardSpell() public {
-        //todo
+    function HasBoardCharacters2(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 2);
+    }
+
+    function HasDiscardSpell(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Discard, ConditionOperatorInt.GreaterEqual, CardType.Spell, CardTeam.None, 1);
     }
 
     function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
@@ -113,11 +116,15 @@ contract ConditionSystem is System {
     }
 
     function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionOwnerAI(ability_key, caster, target, ConditionOperatorBool.IsTure);
+        return ConditionOwnerAI(ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsAlly() public {
-        //todo
+    function IsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionOwner(ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    }
+
+    function IsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionOwner(ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
     function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
@@ -217,17 +224,19 @@ contract ConditionSystem is System {
         return CompareBool(target_type == ConditionTargetType.Card, oper); //Is Card
     }
 
-    function ConditionCount(ConditionPlayerType target, PileType pile, ConditionOperatorInt oper, CardType has_type, CardTeam has_team, int8 value) internal returns (bool)
+    function ConditionCount(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionPlayerType player_type, PileType pile, ConditionOperatorInt oper, CardType has_type, CardTeam has_team, int8 value) internal returns (bool)
     {
         int8 count = 0;
 
-        if (target == ConditionPlayerType.Self || target == ConditionPlayerType.Both)
+        if (player_type == ConditionPlayerType.Self || player_type == ConditionPlayerType.Both)
         {
+            //todo
 //            Player player =  data.GetPlayer(caster.player_id);
 //            count += CountPile(player, pile);
         }
-        if (target == ConditionPlayerType.Opponent || target == ConditionPlayerType.Both)
+        if (player_type == ConditionPlayerType.Opponent || player_type == ConditionPlayerType.Both)
         {
+            //todo
 //            Player player = data.GetOpponentPlayer(caster.player_id);
 //            count += CountPile(player, pile);
         }
@@ -249,14 +258,14 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionOwner(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionOwner(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
         bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(target);
         return CompareBool(same_owner, oper);
         return false;
     }
 
     function ConditionSlotDist(uint8 distance, bool diagonals, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        //todo
+//todo
         return false;
     }
 
@@ -268,17 +277,17 @@ contract ConditionSystem is System {
     function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
 //        bool hstatus = target.HasStatus(has_status) && target.GetStatusValue(has_status) >= value;
 
-        //todo
+//todo
         return false;
     }
 
     function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
-        //todo
+//todo
         return false;
     }
 
     function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        //todo
+//todo
         return false;
     }
 

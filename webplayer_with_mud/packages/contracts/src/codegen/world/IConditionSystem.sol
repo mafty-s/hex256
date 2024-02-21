@@ -40,19 +40,23 @@ interface IConditionSystem {
 
   function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
 
-  function HasBoardCardEnemy() external;
+  function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function HasBoardCardSelf() external;
+  function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function HasBoardCharacters2() external;
+  function HasDiscardCharacters(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function HasDiscardSpell() external;
+  function HasBoardCharacters2(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function HasDiscardSpell(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsAlly() external;
+  function IsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
