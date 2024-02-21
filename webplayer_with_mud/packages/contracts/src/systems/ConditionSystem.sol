@@ -189,11 +189,11 @@ contract ConditionSystem is System {
     }
 
     function IsPlayer(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionTarget(condition_type, condition_type, ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionTarget(condition_type, ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsWolf(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardType(condition_type, condition_type, CardType.None, CardTeam.None, CardTrait.Wolf, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        return ConditionCardType(condition_type, CardType.None, CardTeam.None, CardTrait.Wolf, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
     function IsDragon(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
