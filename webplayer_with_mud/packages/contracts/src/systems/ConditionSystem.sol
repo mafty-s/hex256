@@ -314,7 +314,7 @@ contract ConditionSystem is System {
         return true;
     }
 
-    function ConditionOnce(ConditionTargetType condition_type, bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) internal view returns (bool){
+    function ConditionOnce(ConditionTargetType condition_type, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         if (condition_type != ConditionTargetType.Card) {
             return true;
         }
