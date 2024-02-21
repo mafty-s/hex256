@@ -915,6 +915,10 @@ export function createSystemCalls(
         await worldContract.write.TriggerCardAbilityType([AbilityTrigger.ON_PLAY, caster, caster, true]);
     }
 
+    const isConditionFunctionExist = async(selector:string) => {
+        return await worldContract.read.IsConditionFunctionExist([selector]);
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -971,6 +975,7 @@ export function createSystemCalls(
         getEmptySlots,
         addCardOnEmptySlots,
         triggerCardAbilityType,
+        isConditionFunctionExist,
         // ablities,
     };
 
