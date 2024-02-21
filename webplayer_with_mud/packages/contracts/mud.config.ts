@@ -97,7 +97,7 @@ export default mudConfig({
                 hp: "int8",
                 cardType: "CardType",
                 team: "CardTeam",
-                traits: "CardTrait",
+                trait: "CardTrait",
                 deckbuilding: "bool",
                 tid: "string",
                 abilities: "bytes32[]",

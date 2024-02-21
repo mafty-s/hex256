@@ -6,6 +6,7 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
 import {Condition, ConditionCardType, CardOnBoards, Cards, Games} from "../codegen/index.sol";
+import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsEquip, PlayerCardsDeck, PlayerCardsTemp, PlayerCardsDiscard, PlayerCardsSecret} from "../codegen/index.sol";
 import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 
@@ -254,10 +255,10 @@ contract ConditionSystem is System {
     //=======================================//=======================================//=======================================
 
     function ConditionCardType(CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        bytes32 card_config_id = CardOnBoards.getId(target);
-        bool is_type = has_type == CardType.None;
-        bool is_team = has_team == CardTeam.None;
-        bool is_trait = has_trait == CardTrait.None;
+        bytes32 card_config_key = CardOnBoards.getId(target);
+        bool is_type = has_type == CardType.None || Cards.getCardType(card_config_key) == has_type;
+        bool is_team = has_team == CardTeam.None || Cards.getTeam(card_config_key) == has_team;
+        bool is_trait = has_trait == CardTrait.None || Cards.getTrait(card_config_key) == has_trait;
         return (is_type && is_team && is_trait);
     }
 
@@ -526,26 +527,55 @@ contract ConditionSystem is System {
         return shuffled;
     }
 
-    function CountPile(bytes32 player_key, PileType pile) internal returns (int8){
+    function CountPile(bytes32 player_key, PileType pile, CardType has_type, CardTeam has_team, CardTrait has_trait) internal returns (int8){
 
-        //todo
-        return 0;
+        int8 count = 0;
+        bytes32[] memory card_pile;
+
+        if (pile == PileType.Hand) {
+            card_pile = PlayerCardsHand.getValue(player_key);
+        }
+
+        if (pile == PileType.Board) {
+            card_pile = PlayerCardsBoard.getValue(player_key);
+        }
+
+        if (pile == PileType.Equipped) {
+            card_pile = PlayerCardsEquip.getValue(player_key);
+        }
+
+        if (pile == PileType.Deck) {
+            card_pile = PlayerCardsDeck.getValue(player_key);
+        }
+
+        if (pile == PileType.Discard) {
+            card_pile = PlayerCardsDiscard.getValue(player_key);
+        }
+
+        if (pile == PileType.Secret) {
+            card_pile = PlayerCardsSecret.getValue(player_key);
+        }
+
+        if (pile == PileType.Temp) {
+            card_pile = PlayerCardsTemp.getValue(player_key);
+        }
+
+        if (card_pile.length > 0) {
+            for (uint i = 0; i < card_pile.length; i++) {
+                if (IsTrait(card_pile[i], has_type, has_team, has_trait)) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     function IsTrait(bytes32 card_key, CardType has_type, CardTeam has_team, CardTrait has_trait) internal returns (bool){
         bytes32 card_config_key = CardOnBoards.getId(card_key);
         bool is_type = has_type == CardType.None || Cards.getCardType(card_config_key) == has_type;
-        bool is_team = has_team == CardTeam.None;
-        bool is_trait = has_trait == CardTrait.None;
+        bool is_team = has_team == CardTeam.None || Cards.getTeam(card_config_key) == has_team;
+        bool is_trait = has_trait == CardTrait.None || Cards.getTrait(card_config_key) == has_trait;
         return (is_type && is_team && is_trait);
     }
-//private bool IsTrait(Card card)
-//{
-//bool is_type = card.CardData.type == has_type || has_type == CardType.None;
-//bool is_team = card.CardData.team == has_team || has_team == null;
-//bool is_trait = card.HasTrait(has_trait) || has_trait == null;
-//return (is_type && is_team && is_trait);
-//}
-
 
 }

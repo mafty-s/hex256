@@ -38,7 +38,7 @@ struct CardsData {
   int8 hp;
   CardType cardType;
   CardTeam team;
-  CardTrait traits;
+  CardTrait trait;
   bool deckbuilding;
   string tid;
   bytes32[] abilities;
@@ -103,7 +103,7 @@ library Cards {
     fieldNames[2] = "hp";
     fieldNames[3] = "cardType";
     fieldNames[4] = "team";
-    fieldNames[5] = "traits";
+    fieldNames[5] = "trait";
     fieldNames[6] = "deckbuilding";
     fieldNames[7] = "tid";
     fieldNames[8] = "abilities";
@@ -334,9 +334,9 @@ library Cards {
   }
 
   /**
-   * @notice Get traits.
+   * @notice Get trait.
    */
-  function getTraits(bytes32 key) internal view returns (CardTrait traits) {
+  function getTrait(bytes32 key) internal view returns (CardTrait trait) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -345,9 +345,9 @@ library Cards {
   }
 
   /**
-   * @notice Get traits.
+   * @notice Get trait.
    */
-  function _getTraits(bytes32 key) internal view returns (CardTrait traits) {
+  function _getTrait(bytes32 key) internal view returns (CardTrait trait) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -356,23 +356,23 @@ library Cards {
   }
 
   /**
-   * @notice Set traits.
+   * @notice Set trait.
    */
-  function setTraits(bytes32 key, CardTrait traits) internal {
+  function setTrait(bytes32 key, CardTrait trait) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(traits)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(trait)), _fieldLayout);
   }
 
   /**
-   * @notice Set traits.
+   * @notice Set trait.
    */
-  function _setTraits(bytes32 key, CardTrait traits) internal {
+  function _setTrait(bytes32 key, CardTrait trait) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(traits)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(trait)), _fieldLayout);
   }
 
   /**
@@ -781,12 +781,12 @@ library Cards {
     int8 hp,
     CardType cardType,
     CardTeam team,
-    CardTrait traits,
+    CardTrait trait,
     bool deckbuilding,
     string memory tid,
     bytes32[] memory abilities
   ) internal {
-    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, traits, deckbuilding);
+    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, trait, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, abilities);
@@ -807,12 +807,12 @@ library Cards {
     int8 hp,
     CardType cardType,
     CardTeam team,
-    CardTrait traits,
+    CardTrait trait,
     bool deckbuilding,
     string memory tid,
     bytes32[] memory abilities
   ) internal {
-    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, traits, deckbuilding);
+    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, trait, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, abilities);
@@ -833,7 +833,7 @@ library Cards {
       _table.hp,
       _table.cardType,
       _table.team,
-      _table.traits,
+      _table.trait,
       _table.deckbuilding
     );
 
@@ -856,7 +856,7 @@ library Cards {
       _table.hp,
       _table.cardType,
       _table.team,
-      _table.traits,
+      _table.trait,
       _table.deckbuilding
     );
 
@@ -877,7 +877,7 @@ library Cards {
   )
     internal
     pure
-    returns (int8 mana, int8 attack, int8 hp, CardType cardType, CardTeam team, CardTrait traits, bool deckbuilding)
+    returns (int8 mana, int8 attack, int8 hp, CardType cardType, CardTeam team, CardTrait trait, bool deckbuilding)
   {
     mana = (int8(uint8(Bytes.slice1(_blob, 0))));
 
@@ -889,7 +889,7 @@ library Cards {
 
     team = CardTeam(uint8(Bytes.slice1(_blob, 4)));
 
-    traits = CardTrait(uint8(Bytes.slice1(_blob, 5)));
+    trait = CardTrait(uint8(Bytes.slice1(_blob, 5)));
 
     deckbuilding = (_toBool(uint8(Bytes.slice1(_blob, 6))));
   }
@@ -932,7 +932,7 @@ library Cards {
       _table.hp,
       _table.cardType,
       _table.team,
-      _table.traits,
+      _table.trait,
       _table.deckbuilding
     ) = decodeStatic(_staticData);
 
@@ -969,10 +969,10 @@ library Cards {
     int8 hp,
     CardType cardType,
     CardTeam team,
-    CardTrait traits,
+    CardTrait trait,
     bool deckbuilding
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(mana, attack, hp, cardType, team, traits, deckbuilding);
+    return abi.encodePacked(mana, attack, hp, cardType, team, trait, deckbuilding);
   }
 
   /**
@@ -1009,12 +1009,12 @@ library Cards {
     int8 hp,
     CardType cardType,
     CardTeam team,
-    CardTrait traits,
+    CardTrait trait,
     bool deckbuilding,
     string memory tid,
     bytes32[] memory abilities
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, traits, deckbuilding);
+    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, trait, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, abilities);
