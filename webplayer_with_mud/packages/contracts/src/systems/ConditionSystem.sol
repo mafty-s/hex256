@@ -169,31 +169,31 @@ contract ConditionSystem is System {
     }
 
     function IsSlotX1(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotValue(ability_key, caster, target, ConditionOperatorInt.Equal, 1, ConditionOperatorInt.GreaterEqual, 0);
+        return ConditionSlotValue(condition_type, ability_key, caster, target, ConditionOperatorInt.Equal, 1, ConditionOperatorInt.GreaterEqual, 0);
     }
 
     function IsSlotSameP(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotRange(ability_key, caster, target, 99, 99, 0);
+        return ConditionSlotRange(condition_type, ability_key, caster, target, 99, 99, 0);
     }
 
     function IsSlotNextTo(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotRange(ability_key, caster, target, 1, 1, 0);
+        return ConditionSlotRange(condition_type, ability_key, caster, target, 1, 1, 0);
     }
 
     function IsSlotInRange(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotRange(ability_key, caster, target, 1, 1, 1);
+        return ConditionSlotRange(condition_type, ability_key, caster, target, 1, 1, 1);
     }
 
     function IsSlotEmpty(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotEmpty(ability_key, caster, target, ConditionOperatorBool.IsFalse);
+        return ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
     function IsPlayer(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionTarget(condition_type, ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionTarget(condition_type, condition_type, ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsWolf(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardType(condition_type, CardType.None, CardTeam.None, CardTrait.Wolf, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        return ConditionCardType(condition_type, condition_type, CardType.None, CardTeam.None, CardTrait.Wolf, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
     function IsDragon(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -314,7 +314,11 @@ contract ConditionSystem is System {
         return true;
     }
 
-    function ConditionOnce(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) internal view returns (bool){
+    function ConditionOnce(ConditionTargetType condition_type, bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) internal view returns (bool){
+        if (condition_type != ConditionTargetType.Card) {
+            return true;
+        }
+
         bytes32[] memory ability_played = GamesExtended.getAbilityPlayed(game_uid);
         for (uint i = 0; i < ability_played.length; i++) {
             if (ability_played[i] == ability_key) {
@@ -325,57 +329,83 @@ contract ConditionSystem is System {
     }
 
     function ConditionOwner(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
-        bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(target);
-        return CompareBool(same_owner, oper);
-        return false;
-    }
-
-    function ConditionSlotDist(bytes32 ability_key, bytes32 caster, bytes32 target, uint8 distance, bool diagonals) internal view returns (bool){
-
-        uint16 slot_encode = bytes32ToUint16(target);
-        Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
-
-        uint16 cslot_encode = CardOnBoards.getSlot(caster);
-        Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
-
-        if (diagonals) {
-            return SlotLib.IsInDistance(cslot, target_slot, distance);
+        if (condition_type == ConditionTargetType.Card) {
+            bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(target);
+            return CompareBool(same_owner, oper);
         }
 
-        return SlotLib.IsInDistanceStraight(cslot, target_slot, distance);
+        if (condition_type == ConditionTargetType.Player) {
+            bool same_owner = CardOnBoards.getPlayerId(caster) == target;
+            return CompareBool(same_owner, oper);
+        }
+
+        if (condition_type == ConditionTargetType.Slot) {
+            //todo
+//            bool same_owner = Slot.GetP(caster.player_id) == target.p;
+//            return CompareBool(same_owner, oper);
+        }
+        return true;
     }
 
-    function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
-        uint16 slot_encode = bytes32ToUint16(target);
-        Slot memory slot = SlotLib.DecodeSlot(slot_encode);
-        bytes32 player_key = CardOnBoards.getPlayerId(caster);
-        bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
+    function ConditionSlotDist(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, uint8 distance, bool diagonals) internal view returns (bool){
 
-        return CompareBool(slot_card == 0, oper);
+        if (condition_type == ConditionTargetType.Slot) {
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+
+            uint16 cslot_encode = CardOnBoards.getSlot(caster);
+            Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+
+            if (diagonals) {
+                return SlotLib.IsInDistance(cslot, target_slot, distance);
+            }
+
+            return SlotLib.IsInDistanceStraight(cslot, target_slot, distance);
+        }
+        return true;
     }
 
-    function ConditionSlotValue(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal view returns (bool){
+    function ConditionSlotEmpty(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Slot) {
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
 
-        uint16 slot_encode = bytes32ToUint16(target);
-        Slot memory slot = SlotLib.DecodeSlot(slot_encode);
-
-        bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
-        bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
-        return valid_x && valid_y;
+            return CompareBool(slot_card == 0, oper);
+        }
+        return true;
     }
 
-    function ConditionSlotRange(bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal view returns (bool){
-        uint16 slot_encode = bytes32ToUint16(target);
-        Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+    function ConditionSlotValue(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Slot) {
 
-        uint16 cslot_encode = CardOnBoards.getSlot(caster);
-        Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
 
-        uint8 dist_x = uint8(cslot.x - target_slot.x);
-        uint8 dist_y = uint8(cslot.y - target_slot.y);
-        uint8 dist_p = uint8(cslot.p - target_slot.p);
+            bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
+            bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
+            return valid_x && valid_y;
+        }
+        return true;
+    }
 
-        return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
+    function ConditionSlotRange(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Slot) {
+
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+
+            uint16 cslot_encode = CardOnBoards.getSlot(caster);
+            Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+
+            uint8 dist_x = uint8(cslot.x - target_slot.x);
+            uint8 dist_y = uint8(cslot.y - target_slot.y);
+            uint8 dist_p = uint8(cslot.p - target_slot.p);
+
+            return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
+        }
+        return true;
     }
 
 
