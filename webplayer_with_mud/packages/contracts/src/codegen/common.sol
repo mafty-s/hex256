@@ -74,7 +74,9 @@ enum CardTeam {
 enum CardTrait {
   None,
   Wolf,
-  Dragon
+  Dragon,
+  Growth,
+  SpellDamage
 }
 
 enum AbilityTrigger {

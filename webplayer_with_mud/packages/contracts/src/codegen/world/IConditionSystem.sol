@@ -72,17 +72,33 @@ interface IConditionSystem {
 
   function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsSlot() external;
+  function IsGrowth3(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsSlotX1() external;
+  function IsInTemp(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsSlotSameP() external;
+  function IsInHand(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsSlotNextTo() external;
+  function IsInDiscard(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsSlotInRange() external;
+  function IsInDeck(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsSlotEmpty() external;
+  function IsInSecret(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function IsPlayer() external;
 

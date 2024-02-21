@@ -155,33 +155,67 @@ contract ConditionSystem is System {
         return ConditionDeckbuilding(ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsSlot() public {
-        //todo
+    function IsGrowth3(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionStatCustom(ability_key, caster, target, CardTrait.Growth, ConditionOperatorInt.GreaterEqual, 3);
     }
 
-    function IsSlotX1() public {
-        //todo
-
+    function IsInTemp(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Temp, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsSlotSameP() public {
-        //todo
-
+    function IsInHand(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Hand, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsSlotNextTo() public {
-        //todo
-
+    function IsInDiscard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Discard, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsSlotInRange() public {
-        //todo
-
+    function IsInDeck(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsSlotEmpty() public {
-        //todo
+    function IsInSecret(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Secret, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
 
+    function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Equipment, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionCardPile(PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+
+    function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        //todo
+        return false;
+    }
+
+    function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        //todo
+        return false;
+    }
+
+    function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        //todo
+        return false;
+    }
+
+    function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        //todo
+        return false;
+    }
+
+    function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        //todo
+        return false;
+    }
+
+    function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        //todo
+        return false;
     }
 
     function IsPlayer() public {
@@ -349,8 +383,9 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionStatCustom() internal {
-
+    function ConditionStatCustom(bytes32 ability_key, bytes32 caster, bytes32 target, CardTrait has_trait, ConditionOperatorInt oper, int8 value) internal returns (bool){
+        //todo
+        return false;
     }
 
     function CompareBool(bool condition, ConditionOperatorBool oper) public returns (bool)
