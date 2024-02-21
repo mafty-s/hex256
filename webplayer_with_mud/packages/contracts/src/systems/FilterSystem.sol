@@ -6,16 +6,26 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
 import {Condition, ConditionCardType, CardOnBoards, Cards, Games, GamesExtended, Players} from "../codegen/index.sol";
-import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsEquip, PlayerCardsDeck, PlayerCardsTemp, PlayerCardsDiscard, PlayerCardsSecret} from "../codegen/index.sol";
-import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
-import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
-import {Slot, SlotLib} from "../libs/SlotLib.sol";
-import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {Status, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
+import {IFilterSystem} from "../codegen/world/IFilterSystem.sol";
 
 contract FilterSystem is System {
 
     constructor() {
 
+    }
+    function IsFilterFunctionExist(bytes4 selector) public view returns (bool){
+        (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(selector);
+        if (ResourceId.unwrap(systemId) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    function FilterTargets(bytes4 filter, bytes32 game_uid, bytes32 ability_key, bytes32 caster, ConditionTargetType condition_type) public view returns (bytes32[] memory)
+    {
+        bytes32[] memory result = new bytes32[](0);
+        return result;
     }
 
     ////=========================
