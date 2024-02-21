@@ -10,6 +10,7 @@ import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsEquip, P
 import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
+import {CardLogicLib} from "../libs/CardLogicLib.sol";
 
 contract ConditionSystem is System {
 
@@ -17,7 +18,7 @@ contract ConditionSystem is System {
 
     }
 
-    function IsConditionFunctionExist(bytes4 selector) public returns (bool){
+    function IsConditionFunctionExist(bytes4 selector) public view returns (bool){
         (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(selector);
         if (ResourceId.unwrap(systemId) == 0) {
             return false;
@@ -26,22 +27,22 @@ contract ConditionSystem is System {
     }
 
 
-    function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) public
+    function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) public view
     {
         //todo
     }
 
-    function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public
+    function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view
     {
         //todo
     }
 
-    function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public
+    function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view
     {
         //todo
     }
 
-    function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public
+    function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public view
     {
         //todo
     }
@@ -318,7 +319,7 @@ contract ConditionSystem is System {
             return SlotLib.IsInDistance(cslot, target_slot, distance);
         }
 
-        return  SlotLib.IsInDistanceStraight(cslot, target_slot, distance);
+        return SlotLib.IsInDistanceStraight(cslot, target_slot, distance);
     }
 
     function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
@@ -361,10 +362,8 @@ contract ConditionSystem is System {
     }
 
     function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        //        bool hstatus = target.HasStatus(has_status) && target.GetStatusValue(has_status) >= value;
-
-        //todo
-        return false;
+        (Status card_status,uint8 status_duration, uint8 status_value) = CardLogicLib.GetStatus(target, has_status);
+        return card_status != Status.None && status_value >= (uint8)(value);
     }
 
     function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
@@ -442,7 +441,7 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function CompareBool(bool condition, ConditionOperatorBool oper) public returns (bool)
+    function CompareBool(bool condition, ConditionOperatorBool oper) internal pure returns (bool)
     {
         if (oper == ConditionOperatorBool.IsFalse)
             return !condition;
@@ -450,7 +449,7 @@ contract ConditionSystem is System {
     }
 
 
-    function CompareInt(int8 ival1, ConditionOperatorInt oper, int8 ival2) public returns (bool){
+    function CompareInt(int8 ival1, ConditionOperatorInt oper, int8 ival2) internal pure returns (bool){
         if (oper == ConditionOperatorInt.Equal)
         {
             return ival1 == ival2;
@@ -497,7 +496,7 @@ contract ConditionSystem is System {
     }
 
 //找到属性最低的牌
-    function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
+    function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
             if (result == 0) {
@@ -531,7 +530,7 @@ contract ConditionSystem is System {
         return dist;
     }
 
-    function GetCardStat(bytes32 card, ConditionStatType stat_type) internal returns (int8) {
+    function GetCardStat(bytes32 card, ConditionStatType stat_type) internal view returns (int8) {
         if (stat_type == ConditionStatType.HP) {
             return CardOnBoards.getHp(card);
         }
@@ -608,7 +607,7 @@ contract ConditionSystem is System {
         return count;
     }
 
-    function IsTrait(bytes32 card_key, CardType has_type, CardTeam has_team, CardTrait has_trait) internal returns (bool){
+    function IsTrait(bytes32 card_key, CardType has_type, CardTeam has_team, CardTrait has_trait) internal view returns (bool){
         bytes32 card_config_key = CardOnBoards.getId(card_key);
         bool is_type = has_type == CardType.None || Cards.getCardType(card_config_key) == has_type;
         bool is_team = has_team == CardTeam.None || Cards.getTeam(card_config_key) == has_team;
