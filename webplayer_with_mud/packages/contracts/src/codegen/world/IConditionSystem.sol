@@ -348,4 +348,20 @@ interface IConditionSystem {
     bytes32 caster,
     bytes32 target
   ) external view returns (bool);
+
+  function OncePerTurn(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsNotYourTurn(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
 }

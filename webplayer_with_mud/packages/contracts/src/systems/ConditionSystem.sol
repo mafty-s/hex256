@@ -229,6 +229,14 @@ contract ConditionSystem is System {
         return ConditionRolled(game_uid, ConditionOperatorInt.GreaterEqual, 4);
     }
 
+    function OncePerTurn(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionOnce(condition_type, game_uid, ability_key, caster, target);
+    }
+
+    function IsNotYourTurn(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionTurn(condition_type, game_uid, ability_key, caster, target, ConditionOperatorBool.IsFalse);
+    }
+
 //=======================================//=======================================//=======================================
 
     function ConditionCardType(ConditionTargetType condition_type, CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
