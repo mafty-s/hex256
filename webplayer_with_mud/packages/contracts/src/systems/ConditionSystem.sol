@@ -59,40 +59,40 @@ contract ConditionSystem is System {
 //        Condition.setObjType(key, ConditionObjType.ConditionCardType);
 //    }
 
-    function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         //todo
         return source;
     }
 
-    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.HP, ability, caster, source);
     }
 
-    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.Attack, ability, caster, source);
     }
 
-    function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterRandom(1, ability, caster, source);
     }
 
-    function FilterRandom2(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterRandom2(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterRandom(2, ability, caster, source);
     }
 
-    function FilterRandom3(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterRandom3(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterRandom(2, ability, caster, source);
     }
 
-    function FilterFirst1(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterFirst1(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterFirst(1, ability, caster, source);
     }
 
-    function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterFirst(6, ability, caster, source);
     }
 
-    function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory) {
+    function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterFirst(7, ability, caster, source);
     }
 
@@ -105,158 +105,158 @@ contract ConditionSystem is System {
 //bool is_trait = target.HasTrait(has_trait) || has_trait == null;
 //return (is_type && is_team && is_trait);
 
-    function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCount(ability_key, caster, target, ConditionPlayerType.Opponent, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
-    function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
-    function HasDiscardCharacters(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function HasDiscardCharacters(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Discard, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
-    function HasBoardCharacters2(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function HasBoardCharacters2(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 2);
     }
 
-    function HasDiscardSpell(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function HasDiscardSpell(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCount(ability_key, caster, target, ConditionPlayerType.Self, PileType.Discard, ConditionOperatorInt.GreaterEqual, CardType.Spell, CardTeam.None, 1);
     }
 
-    function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionOwnerAI(ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
-    function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionOwnerAI(ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionOwner(ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionOwner(ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
-    function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.Artifact, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsSpell(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSpell(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.Spell, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.Equipment, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsCharacter(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsCharacter(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.Character, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.Hero, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsCard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsCard(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionTarget(ConditionTargetType.Card, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionDeckbuilding(ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsGrowth3(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsGrowth3(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionStatCustom(ability_key, caster, target, CardTrait.Growth, ConditionOperatorInt.GreaterEqual, 3);
     }
 
-    function IsInTemp(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInTemp(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Temp, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInHand(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInHand(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Hand, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInDiscard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInDiscard(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Discard, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInDeck(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInDeck(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInSecret(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInSecret(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Secret, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
 
-    function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionTarget(ConditionTargetType.Slot, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotValue(ability_key, caster, target, ConditionOperatorInt.Equal, 1, ConditionOperatorInt.GreaterEqual, 0);
     }
 
-    function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotRange(ability_key, caster, target, 99, 99, 0);
     }
 
-    function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotRange(ability_key, caster, target, 1, 1, 0);
     }
 
-    function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotRange(ability_key, caster, target, 1, 1, 1);
     }
 
-    function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotEmpty(ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
-    function IsPlayer(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsPlayer(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionTarget(ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.None, CardTeam.None, CardTrait.Wolf, ability_key, caster, target);
     }
 
-    function IsDragon(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsDragon(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.None, CardTeam.None, CardTrait.Dragon, ability_key, caster, target);
     }
 
-    function IsGreen(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsGreen(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.None, CardTeam.Green, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsRed(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsRed(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.None, CardTeam.Red, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardType(CardType.None, CardTeam.Blue, CardTrait.None, ability_key, caster, target);
     }
 
-    function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+    function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionStat(ability_key, caster, target, ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4);
     }
 
     //=======================================//=======================================//=======================================
 
-    function ConditionCardType(CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionCardType(CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         bytes32 card_config_key = CardOnBoards.getId(target);
         bool is_type = has_type == CardType.None || Cards.getCardType(card_config_key) == has_type;
         bool is_team = has_team == CardTeam.None || Cards.getTeam(card_config_key) == has_team;
@@ -264,11 +264,13 @@ contract ConditionSystem is System {
         return (is_type && is_team && is_trait);
     }
 
-    function ConditionTarget(ConditionTargetType target_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionTarget(ConditionTargetType target_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         return CompareBool(target_type == ConditionTargetType.Card, oper); //Is Card
     }
 
-    function ConditionCount(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionPlayerType player_type, PileType pile, ConditionOperatorInt oper, CardType has_type, CardTeam has_team, int8 value) internal returns (bool)
+    function ConditionCount
+    (bytes32 ability_key, bytes32 caster, bytes32 target, ConditionPlayerType player_type, PileType pile, ConditionOperatorInt oper, CardType has_type, CardTeam has_team, int8 value)
+    internal view returns (bool)
     {
         int8 count = 0;
 
@@ -287,27 +289,27 @@ contract ConditionSystem is System {
 
     }
 
-    function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
+    function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         bytes32 card_config_key = CardOnBoards.getId(target);
         return CompareBool(Cards.getDeckbuilding(card_config_key), oper);
     }
 
-    function ConditionExhaust(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionExhaust(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         return CompareBool(CardOnBoards.getExhausted(target), oper);
     }
 
-    function ConditionOnce(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionOnce(bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         //todo
         return false;
     }
 
-    function ConditionOwner(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
+    function ConditionOwner(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(target);
         return CompareBool(same_owner, oper);
         return false;
     }
 
-    function ConditionSlotDist(bytes32 ability_key, bytes32 caster, bytes32 target, uint8 distance, bool diagonals) internal returns (bool){
+    function ConditionSlotDist(bytes32 ability_key, bytes32 caster, bytes32 target, uint8 distance, bool diagonals) internal view returns (bool){
 
         uint16 slot_encode = bytes32ToUint16(target);
         Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
@@ -322,7 +324,7 @@ contract ConditionSystem is System {
         return SlotLib.IsInDistanceStraight(cslot, target_slot, distance);
     }
 
-    function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
+    function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         uint16 slot_encode = bytes32ToUint16(target);
         Slot memory slot = SlotLib.DecodeSlot(slot_encode);
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
@@ -331,7 +333,7 @@ contract ConditionSystem is System {
         return CompareBool(slot_card == 0, oper);
     }
 
-    function ConditionSlotValue(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal returns (bool){
+    function ConditionSlotValue(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal view returns (bool){
 
         uint16 slot_encode = bytes32ToUint16(target);
         Slot memory slot = SlotLib.DecodeSlot(slot_encode);
@@ -341,7 +343,7 @@ contract ConditionSystem is System {
         return valid_x && valid_y;
     }
 
-    function ConditionSlotRange(bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal returns (bool){
+    function ConditionSlotRange(bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal view returns (bool){
         uint16 slot_encode = bytes32ToUint16(target);
         Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
 
@@ -356,23 +358,23 @@ contract ConditionSystem is System {
     }
 
 
-    function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         bool yourturn = CardOnBoards.getPlayerId(caster) == Games.getCurrentPlayer(game_uid);
         return CompareBool(yourturn, oper);
     }
 
-    function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         (Status card_status,uint8 status_duration, uint8 status_value) = CardLogicLib.GetStatus(target, has_status);
         return card_status != Status.None && status_value >= (uint8)(value);
     }
 
-    function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
+    function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         //todo
         return false;
     }
 
 
-    function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
         if (target == 0) {
             return false;
         }
@@ -403,7 +405,7 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal returns (bool) {
+    function ConditionStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal view returns (bool) {
         if (stat_type == ConditionStatType.Attack)
         {
             return CompareInt(CardOnBoards.getAttack(target), oper, value);
@@ -422,7 +424,7 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal returns (bool){
+    function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal view returns (bool){
         if (stat_type == ConditionStatType.HP)
         {
             return CompareInt(Players.getHp(target), oper, value);
@@ -436,7 +438,7 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionStatCustom(bytes32 ability_key, bytes32 caster, bytes32 target, CardTrait has_trait, ConditionOperatorInt oper, int8 value) internal returns (bool){
+    function ConditionStatCustom(bytes32 ability_key, bytes32 caster, bytes32 target, CardTrait has_trait, ConditionOperatorInt oper, int8 value) internal view returns (bool){
 //todo
         return false;
     }
@@ -478,7 +480,7 @@ contract ConditionSystem is System {
     }
 
 
-    function FilterFirst(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory){
+    function FilterFirst(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
         bytes32[] memory result = new bytes32[](amount);
         for (uint i = 0; i < amount; i++) {
             result[i] = source[i];
@@ -486,7 +488,7 @@ contract ConditionSystem is System {
         return result;
     }
 
-    function FilterRandom(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) public returns (bytes32[] memory){
+    function FilterRandom(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
         source = shuffle(source);
         bytes32[] memory result = new bytes32[](amount);
         for (uint i = 0; i < amount; i++) {
@@ -513,7 +515,7 @@ contract ConditionSystem is System {
         return dist;
     }
 
-    function FilterHighestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal returns (bytes32[] memory){
+    function FilterHighestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
             if (result == 0) {
@@ -564,7 +566,7 @@ contract ConditionSystem is System {
         return shuffled;
     }
 
-    function CountPile(bytes32 player_key, PileType pile, CardType has_type, CardTeam has_team, CardTrait has_trait) internal returns (int8){
+    function CountPile(bytes32 player_key, PileType pile, CardType has_type, CardTeam has_team, CardTrait has_trait) internal view returns (int8){
 
         int8 count = 0;
         bytes32[] memory card_pile;

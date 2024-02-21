@@ -18,113 +18,131 @@ interface IConditionSystem {
 
   function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) external view;
 
-  function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+  function FilterTargets(
+    bytes32 ability,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external view returns (bytes32[] memory);
 
-  function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
+  function FilterLowestHp(
+    bytes32 ability,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external view returns (bytes32[] memory);
 
   function FilterLowestAttack(
     bytes32 ability,
     bytes32 caster,
     bytes32[] memory source
-  ) external returns (bytes32[] memory);
+  ) external view returns (bytes32[] memory);
 
-  function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
-
-  function FilterRandom2(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
-
-  function FilterRandom3(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
-
-  function FilterFirst1(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
-
-  function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
-
-  function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
-
-  function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function HasDiscardCharacters(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function HasBoardCharacters2(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function HasDiscardSpell(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSpell(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsCharacter(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsCard(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsGrowth3(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInTemp(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInHand(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInDiscard(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInDeck(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInSecret(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsPlayer(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsDragon(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsGreen(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsRed(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function FilterFirst(
-    uint8 amount,
-    bytes32 ability_key,
+  function FilterRandom1(
+    bytes32 ability,
     bytes32 caster,
     bytes32[] memory source
-  ) external returns (bytes32[] memory);
+  ) external view returns (bytes32[] memory);
 
-  function FilterRandom(
-    uint8 amount,
-    bytes32 ability_key,
+  function FilterRandom2(
+    bytes32 ability,
     bytes32 caster,
     bytes32[] memory source
-  ) external returns (bytes32[] memory);
+  ) external view returns (bytes32[] memory);
+
+  function FilterRandom3(
+    bytes32 ability,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external view returns (bytes32[] memory);
+
+  function FilterFirst1(
+    bytes32 ability,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external view returns (bytes32[] memory);
+
+  function FilterFirst6(
+    bytes32 ability,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external view returns (bytes32[] memory);
+
+  function FilterFirst7(
+    bytes32 ability,
+    bytes32 caster,
+    bytes32[] memory source
+  ) external view returns (bytes32[] memory);
+
+  function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function HasDiscardCharacters(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function HasBoardCharacters2(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function HasDiscardSpell(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsArtifact(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSpell(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsCharacter(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsCard(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsGrowth3(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInTemp(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInHand(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInDiscard(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInDeck(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInSecret(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInEquipment(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsInBoard(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsPlayer(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsDragon(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsGreen(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsRed(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
+
+  function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
 }
