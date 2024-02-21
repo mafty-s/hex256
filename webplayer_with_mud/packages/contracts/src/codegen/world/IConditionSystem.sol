@@ -29,54 +29,6 @@ interface IConditionSystem {
     ConditionTargetType condition_type
   ) external view returns (bool);
 
-  function FilterLowestHp(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterLowestAttack(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterRandom1(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterRandom2(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterRandom3(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterFirst1(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterFirst6(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
-  function FilterFirst7(
-    bytes32 ability,
-    bytes32 caster,
-    bytes32[] memory source
-  ) external view returns (bytes32[] memory);
-
   function HasBoardCardEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);
 
   function HasBoardCardSelf(bytes32 ability_key, bytes32 caster, bytes32 target) external view returns (bool);

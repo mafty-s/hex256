@@ -26,7 +26,7 @@ interface IAbilitySystem {
     bytes32 caster,
     bytes32 trigger_card,
     ConditionTargetType condition_type
-  ) external pure returns (bool);
+  ) external returns (bool);
 
   function ResolveEffectTarget(
     bytes32 game_uid,

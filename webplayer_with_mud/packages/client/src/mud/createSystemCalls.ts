@@ -263,8 +263,8 @@ export function createSystemCalls(
         console.log("initAbility", id, key, status, status_code);
 
 
-        const conditionsTrigger_byes32 = arrStr2Bytes32(conditionsTrigger);
-        const filtersTarget_byes32 = arrStr2Bytes32(filtersTarget);
+        const conditionsTrigger_byes32 = [];//arrStr2Bytes32(conditionsTrigger);
+        const filtersTarget_byes32 = [];//arrStr2Bytes32(filtersTarget);
         const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
 
         const tx = await worldContract.write.initAbility([

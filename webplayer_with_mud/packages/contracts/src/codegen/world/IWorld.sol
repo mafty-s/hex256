@@ -21,6 +21,7 @@ import { IEffect5System } from "./IEffect5System.sol";
 import { IEffect6System } from "./IEffect6System.sol";
 import { IEffectSystem } from "./IEffectSystem.sol";
 import { IEndTurnSystem } from "./IEndTurnSystem.sol";
+import { IFilterSystem } from "./IFilterSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
 import { IGmSystem } from "./IGmSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
@@ -57,6 +58,7 @@ interface IWorld is
   IEffect6System,
   IEffectSystem,
   IEndTurnSystem,
+  IFilterSystem,
   IGameStartSystem,
   IGmSystem,
   IMarketSystem,
