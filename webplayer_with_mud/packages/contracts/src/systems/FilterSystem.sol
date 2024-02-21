@@ -22,44 +22,47 @@ contract FilterSystem is System {
         return true;
     }
 
-    function FilterTargets(bytes4 filter, bytes32 game_uid, bytes32 ability_key, bytes32 caster, ConditionTargetType condition_type) public view returns (bytes32[] memory)
+    function FilterTargets(bytes4 filter, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public returns (bytes32[] memory)
     {
-        bytes32[] memory result = new bytes32[](0);
-        return result;
+        bytes memory call_data = abi.encodeWithSelector(filter, ability_key, source, condition_type);
+        bytes memory result_data = SystemSwitch.call(call_data);
+
+        (bytes32[] memory dest) = abi.decode(result_data, (bytes32[]));
+        return dest;
     }
 
     ////=========================
 
 
-    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.HP, ability, caster, source);
     }
 
-    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.Attack, ability, caster, source);
     }
 
-    function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterRandom(1, ability, caster, source);
     }
 
-    function FilterRandom2(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterRandom2(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterRandom(2, ability, caster, source);
     }
 
-    function FilterRandom3(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterRandom3(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterRandom(2, ability, caster, source);
     }
 
-    function FilterFirst1(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterFirst1(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterFirst(1, ability, caster, source);
     }
 
-    function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterFirst6(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterFirst(6, ability, caster, source);
     }
 
-    function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
+    function FilterFirst7(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterFirst(7, ability, caster, source);
     }
 
