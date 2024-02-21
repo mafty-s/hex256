@@ -107,17 +107,29 @@ contract AbilitySystem is System {
     }
 
 
-    function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+    function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+        //todo
+
+//        foreach (ConditionData cond in conditions_trigger)
+//        {
+//        if (cond != null)
+//        {
+//        if (!condCanTargetCard.IsTriggerConditionMet(data, this, caster))
+//        return false;
+//        if (!cond.IsTargetConditionMet(data, this, caster, trigger_card))
+//        return false;
+//        }
+//        }
+
+        return true;
+    }
+
+    function AreTargetConditionsMetPlayer(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_player) public pure returns (bool) {
         //todo
         return true;
     }
 
-    function AreTargetConditionsMetPlayer(bytes32 game_uid, bytes32 caster, bytes32 trigger_player) public pure returns (bool) {
-        //todo
-        return true;
-    }
-
-    function AreTargetConditionsMetSlot(bytes32 game_uid, bytes32 caster, uint16 slot) public pure returns (bool) {
+    function AreTargetConditionsMetSlot(bytes32 game_uid, bytes32 ability_key, bytes32 caster, uint16 slot) public pure returns (bool) {
         //todo
         return true;
     }
@@ -127,7 +139,7 @@ contract AbilitySystem is System {
         return target == AbilityTarget.SelectTarget || target == AbilityTarget.CardSelector || target == AbilityTarget.ChoiceSelector;
     }
 
-    function CanTargetCard(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool) {
+    function CanTargetCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool) {
 
         if (CardLogicLib.HasStatus(target, Status.Stealth)) {
             return false; //Hidden
@@ -137,25 +149,25 @@ contract AbilitySystem is System {
             return false; ////Spell immunity
         }
 
-        bool condition_match = AreTargetConditionsMetCard(game_uid, caster, target);
+        bool condition_match = AreTargetConditionsMetCard(game_uid, ability_key, caster, target);
         return condition_match;
     }
 
     //Can target check additional restrictions and is usually for SelectTarget or PlayTarget abilities
-    function CanTargetPlayer(bytes32 game_uid, bytes32 caster, bytes32 target) internal returns (bool){
-        return AreTargetConditionsMetPlayer(game_uid, caster, target);
+    function CanTargetPlayer(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+        return AreTargetConditionsMetPlayer(game_uid, ability_key, caster, target);
     }
 
-    function CanTargetSlot(bytes32 game_uid, bytes32 caster, uint16 target) internal returns (bool){
+    function CanTargetSlot(bytes32 game_uid, bytes32 ability_key, bytes32 caster, uint16 target) internal returns (bool){
 
-        return AreTargetConditionsMetSlot(game_uid, caster, target); //No additional conditions for slots
+        return AreTargetConditionsMetSlot(game_uid, ability_key, caster, target); //No additional conditions for slots
     }
 
-    function CanTarget(bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
+    function CanTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
         if (is_card) {
-            return CanTargetCard(game_uid, caster, target);
+            return CanTargetCard(game_uid, ability_key, caster, target);
         } else {
-            return CanTargetPlayer(game_uid, caster, target);
+            return CanTargetPlayer(game_uid, ability_key, caster, target);
         }
     }
 
@@ -191,7 +203,7 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.Self) {
             targets = new bytes32[](1);
-            if (AreTargetConditionsMetCard(game_uid, caster, caster)) {
+            if (AreTargetConditionsMetCard(game_uid, ability_key, caster, caster)) {
                 targets[numTargets] = caster;
                 numTargets++;
             }
@@ -205,13 +217,13 @@ contract AbilitySystem is System {
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
                     targets[numTargets] = cards_board_a[i];
                     numTargets++;
                 }
             }
             for (uint i = 0; i < cards_board_b.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
                     targets[numTargets] = cards_board_b[i];
                     numTargets++;
                 }
@@ -225,13 +237,13 @@ contract AbilitySystem is System {
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
                     targets[numTargets] = cards_board_a[i];
                     numTargets++;
                 }
             }
             for (uint i = 0; i < cards_board_b.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
                     targets[numTargets] = cards_board_b[i];
                     numTargets++;
                 }
@@ -248,7 +260,7 @@ contract AbilitySystem is System {
         {
             targets = new bytes32[](1);
             bytes32 last_played = GamesExtended.getLastPlayed(game_uid);
-            if (last_played != 0 && AreTargetConditionsMetCard(game_uid, caster, last_played)) {
+            if (last_played != 0 && AreTargetConditionsMetCard(game_uid, ability_key, caster, last_played)) {
                 targets[numTargets] = last_played;
                 numTargets++;
             }
@@ -258,7 +270,7 @@ contract AbilitySystem is System {
         {
             targets = new bytes32[](1);
             bytes32 last_destroyed = GamesExtended.getLastDestroyed(game_uid);
-            if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, caster, last_destroyed)) {
+            if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, ability_key, caster, last_destroyed)) {
                 targets[numTargets] = last_destroyed;
                 numTargets++;
             }
@@ -268,7 +280,7 @@ contract AbilitySystem is System {
         {
             targets = new bytes32[](1);
             bytes32 last_target = GamesExtended.getLastTarget(game_uid);
-            if (last_target != 0 && AreTargetConditionsMetCard(game_uid, caster, last_target)) {
+            if (last_target != 0 && AreTargetConditionsMetCard(game_uid, ability_key, caster, last_target)) {
                 targets[numTargets] = last_target;
                 numTargets++;
             }
@@ -304,7 +316,7 @@ contract AbilitySystem is System {
     }
 
     function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target) internal {
-        if (target == AbilityTarget.AllCardData){
+        if (target == AbilityTarget.AllCardData) {
             //todo
         }
         //Filter targets

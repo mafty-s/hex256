@@ -22,17 +22,24 @@ interface IAbilitySystem {
 
   function AreTargetConditionsMetCard(
     bytes32 game_uid,
+    bytes32 ability_key,
     bytes32 caster,
     bytes32 trigger_card
   ) external pure returns (bool);
 
   function AreTargetConditionsMetPlayer(
     bytes32 game_uid,
+    bytes32 ability_key,
     bytes32 caster,
     bytes32 trigger_player
   ) external pure returns (bool);
 
-  function AreTargetConditionsMetSlot(bytes32 game_uid, bytes32 caster, uint16 slot) external pure returns (bool);
+  function AreTargetConditionsMetSlot(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    uint16 slot
+  ) external pure returns (bool);
 
   function ResolveEffectTarget(
     bytes32 game_uid,

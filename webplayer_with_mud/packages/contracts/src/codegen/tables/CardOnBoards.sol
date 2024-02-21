@@ -45,7 +45,7 @@ struct CardOnBoardsData {
   uint32[] status;
   uint32[] ongoingStatus;
   bytes32[] ability;
-  uint8[] trait;
+  uint16[] trait;
   string name;
 }
 
@@ -90,7 +90,7 @@ library CardOnBoards {
     _valueSchema[12] = SchemaType.UINT32_ARRAY;
     _valueSchema[13] = SchemaType.UINT32_ARRAY;
     _valueSchema[14] = SchemaType.BYTES32_ARRAY;
-    _valueSchema[15] = SchemaType.UINT8_ARRAY;
+    _valueSchema[15] = SchemaType.UINT16_ARRAY;
     _valueSchema[16] = SchemaType.STRING;
 
     return SchemaLib.encode(_valueSchema);
@@ -1137,29 +1137,29 @@ library CardOnBoards {
   /**
    * @notice Get trait.
    */
-  function getTrait(bytes32 key) internal view returns (uint8[] memory trait) {
+  function getTrait(bytes32 key) internal view returns (uint16[] memory trait) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 3);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint16());
   }
 
   /**
    * @notice Get trait.
    */
-  function _getTrait(bytes32 key) internal view returns (uint8[] memory trait) {
+  function _getTrait(bytes32 key) internal view returns (uint16[] memory trait) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 3);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint16());
   }
 
   /**
    * @notice Set trait.
    */
-  function setTrait(bytes32 key, uint8[] memory trait) internal {
+  function setTrait(bytes32 key, uint16[] memory trait) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -1169,7 +1169,7 @@ library CardOnBoards {
   /**
    * @notice Set trait.
    */
-  function _setTrait(bytes32 key, uint8[] memory trait) internal {
+  function _setTrait(bytes32 key, uint16[] memory trait) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -1185,7 +1185,7 @@ library CardOnBoards {
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 3);
     unchecked {
-      return _byteLength / 1;
+      return _byteLength / 2;
     }
   }
 
@@ -1198,7 +1198,7 @@ library CardOnBoards {
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 3);
     unchecked {
-      return _byteLength / 1;
+      return _byteLength / 2;
     }
   }
 
@@ -1206,13 +1206,13 @@ library CardOnBoards {
    * @notice Get an item of trait.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemTrait(bytes32 key, uint256 _index) internal view returns (uint8) {
+  function getItemTrait(bytes32 key, uint256 _index) internal view returns (uint16) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 2, (_index + 1) * 2);
+      return (uint16(bytes2(_blob)));
     }
   }
 
@@ -1220,20 +1220,20 @@ library CardOnBoards {
    * @notice Get an item of trait.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemTrait(bytes32 key, uint256 _index) internal view returns (uint8) {
+  function _getItemTrait(bytes32 key, uint256 _index) internal view returns (uint16) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 2, (_index + 1) * 2);
+      return (uint16(bytes2(_blob)));
     }
   }
 
   /**
    * @notice Push an element to trait.
    */
-  function pushTrait(bytes32 key, uint8 _element) internal {
+  function pushTrait(bytes32 key, uint16 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -1243,7 +1243,7 @@ library CardOnBoards {
   /**
    * @notice Push an element to trait.
    */
-  function _pushTrait(bytes32 key, uint8 _element) internal {
+  function _pushTrait(bytes32 key, uint16 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -1257,7 +1257,7 @@ library CardOnBoards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 3, 1);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 3, 2);
   }
 
   /**
@@ -1267,32 +1267,32 @@ library CardOnBoards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 3, 1);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 3, 2);
   }
 
   /**
    * @notice Update an element of trait at `_index`.
    */
-  function updateTrait(bytes32 key, uint256 _index, uint8 _element) internal {
+  function updateTrait(bytes32 key, uint256 _index, uint16 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 2), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of trait at `_index`.
    */
-  function _updateTrait(bytes32 key, uint256 _index, uint8 _element) internal {
+  function _updateTrait(bytes32 key, uint256 _index, uint16 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 2), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -1508,7 +1508,7 @@ library CardOnBoards {
     uint32[] memory status,
     uint32[] memory ongoingStatus,
     bytes32[] memory ability,
-    uint8[] memory trait,
+    uint16[] memory trait,
     string memory name
   ) internal {
     bytes memory _staticData = encodeStatic(
@@ -1555,7 +1555,7 @@ library CardOnBoards {
     uint32[] memory status,
     uint32[] memory ongoingStatus,
     bytes32[] memory ability,
-    uint8[] memory trait,
+    uint16[] memory trait,
     string memory name
   ) internal {
     bytes memory _staticData = encodeStatic(
@@ -1723,7 +1723,7 @@ library CardOnBoards {
       uint32[] memory status,
       uint32[] memory ongoingStatus,
       bytes32[] memory ability,
-      uint8[] memory trait,
+      uint16[] memory trait,
       string memory name
     )
   {
@@ -1750,7 +1750,7 @@ library CardOnBoards {
     unchecked {
       _end += _encodedLengths.atIndex(3);
     }
-    trait = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint8());
+    trait = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint16());
 
     _start = _end;
     unchecked {
@@ -1854,7 +1854,7 @@ library CardOnBoards {
     uint32[] memory status,
     uint32[] memory ongoingStatus,
     bytes32[] memory ability,
-    uint8[] memory trait,
+    uint16[] memory trait,
     string memory name
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
@@ -1863,7 +1863,7 @@ library CardOnBoards {
         status.length * 4,
         ongoingStatus.length * 4,
         ability.length * 32,
-        trait.length * 1,
+        trait.length * 2,
         bytes(name).length
       );
     }
@@ -1877,7 +1877,7 @@ library CardOnBoards {
     uint32[] memory status,
     uint32[] memory ongoingStatus,
     bytes32[] memory ability,
-    uint8[] memory trait,
+    uint16[] memory trait,
     string memory name
   ) internal pure returns (bytes memory) {
     return
@@ -1912,7 +1912,7 @@ library CardOnBoards {
     uint32[] memory status,
     uint32[] memory ongoingStatus,
     bytes32[] memory ability,
-    uint8[] memory trait,
+    uint16[] memory trait,
     string memory name
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(

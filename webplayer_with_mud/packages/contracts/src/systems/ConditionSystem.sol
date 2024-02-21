@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
-import {Condition, ConditionCardType, CardOnBoards, Cards, Games, Players} from "../codegen/index.sol";
+import {Condition, ConditionCardType, CardOnBoards, Cards, Games, GamesExtended, Players} from "../codegen/index.sol";
 import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsEquip, PlayerCardsDeck, PlayerCardsTemp, PlayerCardsDiscard, PlayerCardsSecret} from "../codegen/index.sol";
 import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
@@ -298,9 +298,14 @@ contract ConditionSystem is System {
         return CompareBool(CardOnBoards.getExhausted(target), oper);
     }
 
-    function ConditionOnce(bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
-        //todo
-        return false;
+    function ConditionOnce(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
+        bytes32[] memory ability_played = GamesExtended.getAbilityPlayed(game_uid);
+        for (uint i = 0; i < ability_played.length; i++) {
+            if (ability_played[i] == ability_key) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function ConditionOwner(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
@@ -480,7 +485,7 @@ contract ConditionSystem is System {
     }
 
 
-    function FilterFirst(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
+    function FilterFirst(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) internal pure returns (bytes32[] memory){
         bytes32[] memory result = new bytes32[](amount);
         for (uint i = 0; i < amount; i++) {
             result[i] = source[i];

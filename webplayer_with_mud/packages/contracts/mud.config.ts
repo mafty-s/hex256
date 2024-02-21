@@ -147,7 +147,7 @@ export default mudConfig({
                 status: "uint32[]",
                 ongoingStatus: "uint32[]",
                 ability: "bytes32[]",
-                trait: "uint8[]",
+                trait: "uint16[]",
                 name: "string",
             }
         },
