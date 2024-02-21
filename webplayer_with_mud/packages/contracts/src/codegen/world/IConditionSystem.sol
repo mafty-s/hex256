@@ -68,6 +68,10 @@ interface IConditionSystem {
 
   function IsHero(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
+  function IsCard(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
   function IsSlot() external;
 
   function IsSlotX1() external;

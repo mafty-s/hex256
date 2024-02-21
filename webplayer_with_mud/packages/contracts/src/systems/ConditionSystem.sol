@@ -147,6 +147,14 @@ contract ConditionSystem is System {
         return ConditionCardType(CardType.Hero, CardTeam.None, CardTrait.None, ability_key, caster, target);
     }
 
+    function IsCard(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionTarget(ConditionTargetType.Card, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsDeckBuilding(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionDeckbuilding(ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    }
+
     function IsSlot() public {
         //todo
     }
@@ -244,7 +252,7 @@ contract ConditionSystem is System {
 
     }
 
-    function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+    function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
         //todo
         return false;
     }
