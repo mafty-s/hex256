@@ -41,7 +41,7 @@ struct PlayersData {
   bytes32 game;
   string name;
   string deck;
-  uint8[] status;
+  uint32[] status;
   uint32[] ongoingStatus;
 }
 
@@ -82,7 +82,7 @@ library Players {
     _valueSchema[8] = SchemaType.BYTES32;
     _valueSchema[9] = SchemaType.STRING;
     _valueSchema[10] = SchemaType.STRING;
-    _valueSchema[11] = SchemaType.UINT8_ARRAY;
+    _valueSchema[11] = SchemaType.UINT32_ARRAY;
     _valueSchema[12] = SchemaType.UINT32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
@@ -837,29 +837,29 @@ library Players {
   /**
    * @notice Get status.
    */
-  function getStatus(bytes32 key) internal view returns (uint8[] memory status) {
+  function getStatus(bytes32 key) internal view returns (uint32[] memory status) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
   /**
    * @notice Get status.
    */
-  function _getStatus(bytes32 key) internal view returns (uint8[] memory status) {
+  function _getStatus(bytes32 key) internal view returns (uint32[] memory status) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
   /**
    * @notice Set status.
    */
-  function setStatus(bytes32 key, uint8[] memory status) internal {
+  function setStatus(bytes32 key, uint32[] memory status) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -869,7 +869,7 @@ library Players {
   /**
    * @notice Set status.
    */
-  function _setStatus(bytes32 key, uint8[] memory status) internal {
+  function _setStatus(bytes32 key, uint32[] memory status) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -885,7 +885,7 @@ library Players {
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
-      return _byteLength / 1;
+      return _byteLength / 4;
     }
   }
 
@@ -898,7 +898,7 @@ library Players {
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
-      return _byteLength / 1;
+      return _byteLength / 4;
     }
   }
 
@@ -906,13 +906,13 @@ library Players {
    * @notice Get an item of status.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemStatus(bytes32 key, uint256 _index) internal view returns (uint8) {
+  function getItemStatus(bytes32 key, uint256 _index) internal view returns (uint32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 4, (_index + 1) * 4);
+      return (uint32(bytes4(_blob)));
     }
   }
 
@@ -920,20 +920,20 @@ library Players {
    * @notice Get an item of status.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemStatus(bytes32 key, uint256 _index) internal view returns (uint8) {
+  function _getItemStatus(bytes32 key, uint256 _index) internal view returns (uint32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 4, (_index + 1) * 4);
+      return (uint32(bytes4(_blob)));
     }
   }
 
   /**
    * @notice Push an element to status.
    */
-  function pushStatus(bytes32 key, uint8 _element) internal {
+  function pushStatus(bytes32 key, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -943,7 +943,7 @@ library Players {
   /**
    * @notice Push an element to status.
    */
-  function _pushStatus(bytes32 key, uint8 _element) internal {
+  function _pushStatus(bytes32 key, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -957,7 +957,7 @@ library Players {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 1);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 4);
   }
 
   /**
@@ -967,32 +967,32 @@ library Players {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 1);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 4);
   }
 
   /**
    * @notice Update an element of status at `_index`.
    */
-  function updateStatus(bytes32 key, uint256 _index, uint8 _element) internal {
+  function updateStatus(bytes32 key, uint256 _index, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of status at `_index`.
    */
-  function _updateStatus(bytes32 key, uint256 _index, uint8 _element) internal {
+  function _updateStatus(bytes32 key, uint256 _index, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -1204,7 +1204,7 @@ library Players {
     bytes32 game,
     string memory name,
     string memory deck,
-    uint8[] memory status,
+    uint32[] memory status,
     uint32[] memory ongoingStatus
   ) internal {
     bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards, ncards, game);
@@ -1234,7 +1234,7 @@ library Players {
     bytes32 game,
     string memory name,
     string memory deck,
-    uint8[] memory status,
+    uint32[] memory status,
     uint32[] memory ongoingStatus
   ) internal {
     bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards, ncards, game);
@@ -1346,7 +1346,7 @@ library Players {
   )
     internal
     pure
-    returns (string memory name, string memory deck, uint8[] memory status, uint32[] memory ongoingStatus)
+    returns (string memory name, string memory deck, uint32[] memory status, uint32[] memory ongoingStatus)
   {
     uint256 _start;
     uint256 _end;
@@ -1365,7 +1365,7 @@ library Players {
     unchecked {
       _end += _encodedLengths.atIndex(2);
     }
-    status = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint8());
+    status = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
 
     _start = _end;
     unchecked {
@@ -1445,7 +1445,7 @@ library Players {
   function encodeLengths(
     string memory name,
     string memory deck,
-    uint8[] memory status,
+    uint32[] memory status,
     uint32[] memory ongoingStatus
   ) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
@@ -1453,7 +1453,7 @@ library Players {
       _encodedLengths = PackedCounterLib.pack(
         bytes(name).length,
         bytes(deck).length,
-        status.length * 1,
+        status.length * 4,
         ongoingStatus.length * 4
       );
     }
@@ -1466,7 +1466,7 @@ library Players {
   function encodeDynamic(
     string memory name,
     string memory deck,
-    uint8[] memory status,
+    uint32[] memory status,
     uint32[] memory ongoingStatus
   ) internal pure returns (bytes memory) {
     return
@@ -1491,7 +1491,7 @@ library Players {
     bytes32 game,
     string memory name,
     string memory deck,
-    uint8[] memory status,
+    uint32[] memory status,
     uint32[] memory ongoingStatus
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(owner, hp, mana, hpMax, manaMax, isAI, dcards, ncards, game);

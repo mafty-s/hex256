@@ -65,7 +65,7 @@ contract AbilitySystem is System {
                 if (is_card) {
                     CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
                 } else {
-                    PlayerLogicLib.AddStatus(target, (Status)(status[i]));
+                    PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
                 }
 
 //                uint256 len = PlayerActionHistory.length(game_key);
@@ -107,7 +107,7 @@ contract AbilitySystem is System {
     }
 
 
-    function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) public  returns (bool) {
+    function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) public returns (bool) {
         bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
         for (uint i = 0; i < conditions_trigger.length; i++) {
             bytes4 condition = conditions_trigger[i];

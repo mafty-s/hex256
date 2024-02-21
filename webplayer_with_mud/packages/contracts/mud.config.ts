@@ -208,7 +208,7 @@ export default mudConfig({
                 game: "bytes32",
                 name: "string",
                 deck: "string",
-                status: "uint8[]",
+                status: "uint32[]",
                 ongoingStatus: "uint32[]",
             }
         },

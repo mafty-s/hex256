@@ -11,6 +11,7 @@ import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, Conditi
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 
 contract ConditionSystem is System {
 
@@ -409,14 +410,30 @@ contract ConditionSystem is System {
     }
 
 
-    function ConditionTurn(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+    function ConditionTurn(ConditionTargetType condition_type, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+        if (condition_type != ConditionTargetType.Card) {
+            return true;
+        }
+
         bool yourturn = CardOnBoards.getPlayerId(caster) == Games.getCurrentPlayer(game_uid);
         return CompareBool(yourturn, oper);
     }
 
-    function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
-        (Status card_status, uint8 status_duration, uint8 status_value) = CardLogicLib.GetStatus(target, has_status);
-        return card_status != Status.None && status_value >= (uint8)(value);
+    function ConditionStatus(ConditionTargetType condition_type, Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Card) {
+            (Status card_status, uint8 status_duration, uint8 status_value) = CardLogicLib.GetStatus(target, has_status);
+            return card_status != Status.None && status_value >= (uint8)(value);
+        }
+
+        if (condition_type == ConditionTargetType.Player) {
+            (Status player_status, uint8 status_duration, uint8 status_value) = PlayerLogicLib.GetStatus(target, has_status);
+            return player_status != Status.None && status_value >= (uint8)(value);
+        }
+
+        if (condition_type == ConditionTargetType.Slot) {
+
+        }
+        return true;
     }
 
     function ConditionOwnerAI(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){

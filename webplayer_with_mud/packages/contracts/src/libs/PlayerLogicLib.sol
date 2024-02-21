@@ -95,17 +95,29 @@ library PlayerLogicLib {
         Players.pushOngoingStatus(player_uid, uint8(status));
     }
 
-    function AddStatus(bytes32 player_uid, Status status) internal {
-        Players.pushStatus(player_uid, uint8(status));
+    function AddStatus(bytes32 player_uid, Status status, uint8 duration, uint8 value) internal {
+        uint32 payload = combineUint32(uint8(status), duration, value, 0);
+        Players.pushStatus(player_uid, payload);
+    }
+
+    function GetStatus(bytes32 player_uid, Status status) internal view returns (Status, uint8, uint8){
+        uint32[] memory player_status = Players.getStatus(player_uid);
+        for (uint i = 0; i < player_status.length; i++) {
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(player_status[i]);
+            if (status_id == uint8(status)) {
+                return (status, duration, value);
+            }
+        }
+        return (Status.None, 0, 0);
     }
 
     function ClearStatus(bytes32 player_uid) internal {
-        uint8[] memory status = new uint8[](0);
+        uint32[] memory status = new uint32[](0);
         Players.setStatus(player_uid, status);
     }
 
     function RemoveStatus(bytes32 player_uid, Status status) internal {
-        uint8[] memory player_status = Players.getStatus(player_uid);
+        uint32[] memory player_status = Players.getStatus(player_uid);
         for (uint i = 0; i < player_status.length; i++) {
             if (player_status[i] == uint8(status)) {
                 Players.updateStatus(player_uid, i, uint8(Status.None));
@@ -141,6 +153,19 @@ library PlayerLogicLib {
     function GetBearerCard(bytes32 player_key, bytes32 equipment) internal returns (bytes32){
 
         return 0;
+    }
+
+    function combineUint32(uint8 a, uint8 b, uint8 c, uint8 d) internal pure returns (uint32) {
+        uint32 result = (uint32(a) << 24) | (uint32(b) << 16) | (uint32(c) << 8) | uint32(d);
+        return result;
+    }
+
+    function splitUint32(uint32 value) internal pure returns (uint8, uint8, uint8, uint8) {
+        uint8 a = uint8((value >> 24) & 0xFF);
+        uint8 b = uint8((value >> 16) & 0xFF);
+        uint8 c = uint8((value >> 8) & 0xFF);
+        uint8 d = uint8(value & 0xFF);
+        return (a, b, c, d);
     }
 
 //public Card GetBearerCard(Card equipment)
