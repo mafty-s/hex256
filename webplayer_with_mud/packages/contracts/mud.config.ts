@@ -178,6 +178,7 @@ export default mudConfig({
                 lastTarget: "bytes32",
                 lastDestroyed: "bytes32",
                 rolledValue: "int8",
+                abilityPlayed: "bytes32[]",
             }
         },
         Matches: {

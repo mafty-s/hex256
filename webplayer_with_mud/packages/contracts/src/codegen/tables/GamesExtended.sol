@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GamesExtendedTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x00e2090001202020202020200100000000000000000000000000000000000000
+  0x00e2090101202020202020200100000000000000000000000000000000000000
 );
 
 struct GamesExtendedData {
@@ -42,6 +42,7 @@ struct GamesExtendedData {
   bytes32 lastTarget;
   bytes32 lastDestroyed;
   int8 rolledValue;
+  bytes32[] abilityPlayed;
 }
 
 library GamesExtended {
@@ -69,7 +70,7 @@ library GamesExtended {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](9);
+    SchemaType[] memory _valueSchema = new SchemaType[](10);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.BYTES32;
     _valueSchema[2] = SchemaType.BYTES32;
@@ -79,6 +80,7 @@ library GamesExtended {
     _valueSchema[6] = SchemaType.BYTES32;
     _valueSchema[7] = SchemaType.BYTES32;
     _valueSchema[8] = SchemaType.INT8;
+    _valueSchema[9] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -97,7 +99,7 @@ library GamesExtended {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](9);
+    fieldNames = new string[](10);
     fieldNames[0] = "selector";
     fieldNames[1] = "selectorPlayerId";
     fieldNames[2] = "selectorCasterUid";
@@ -107,6 +109,7 @@ library GamesExtended {
     fieldNames[6] = "lastTarget";
     fieldNames[7] = "lastDestroyed";
     fieldNames[8] = "rolledValue";
+    fieldNames[9] = "abilityPlayed";
   }
 
   /**
@@ -502,6 +505,168 @@ library GamesExtended {
   }
 
   /**
+   * @notice Get abilityPlayed.
+   */
+  function getAbilityPlayed(bytes32 key) internal view returns (bytes32[] memory abilityPlayed) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /**
+   * @notice Get abilityPlayed.
+   */
+  function _getAbilityPlayed(bytes32 key) internal view returns (bytes32[] memory abilityPlayed) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /**
+   * @notice Set abilityPlayed.
+   */
+  function setAbilityPlayed(bytes32 key, bytes32[] memory abilityPlayed) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((abilityPlayed)));
+  }
+
+  /**
+   * @notice Set abilityPlayed.
+   */
+  function _setAbilityPlayed(bytes32 key, bytes32[] memory abilityPlayed) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((abilityPlayed)));
+  }
+
+  /**
+   * @notice Get the length of abilityPlayed.
+   */
+  function lengthAbilityPlayed(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 32;
+    }
+  }
+
+  /**
+   * @notice Get the length of abilityPlayed.
+   */
+  function _lengthAbilityPlayed(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 32;
+    }
+  }
+
+  /**
+   * @notice Get an item of abilityPlayed.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemAbilityPlayed(bytes32 key, uint256 _index) internal view returns (bytes32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of abilityPlayed.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemAbilityPlayed(bytes32 key, uint256 _index) internal view returns (bytes32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
+    }
+  }
+
+  /**
+   * @notice Push an element to abilityPlayed.
+   */
+  function pushAbilityPlayed(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Push an element to abilityPlayed.
+   */
+  function _pushAbilityPlayed(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Pop an element from abilityPlayed.
+   */
+  function popAbilityPlayed(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 32);
+  }
+
+  /**
+   * @notice Pop an element from abilityPlayed.
+   */
+  function _popAbilityPlayed(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 32);
+  }
+
+  /**
+   * @notice Update an element of abilityPlayed at `_index`.
+   */
+  function updateAbilityPlayed(bytes32 key, uint256 _index, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of abilityPlayed at `_index`.
+   */
+  function _updateAbilityPlayed(bytes32 key, uint256 _index, bytes32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (GamesExtendedData memory _table) {
@@ -544,7 +709,8 @@ library GamesExtended {
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
-    int8 rolledValue
+    int8 rolledValue,
+    bytes32[] memory abilityPlayed
   ) internal {
     bytes memory _staticData = encodeStatic(
       selector,
@@ -558,8 +724,8 @@ library GamesExtended {
       rolledValue
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(abilityPlayed);
+    bytes memory _dynamicData = encodeDynamic(abilityPlayed);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -580,7 +746,8 @@ library GamesExtended {
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
-    int8 rolledValue
+    int8 rolledValue,
+    bytes32[] memory abilityPlayed
   ) internal {
     bytes memory _staticData = encodeStatic(
       selector,
@@ -594,8 +761,8 @@ library GamesExtended {
       rolledValue
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(abilityPlayed);
+    bytes memory _dynamicData = encodeDynamic(abilityPlayed);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -619,8 +786,8 @@ library GamesExtended {
       _table.rolledValue
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.abilityPlayed);
+    bytes memory _dynamicData = encodeDynamic(_table.abilityPlayed);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -644,8 +811,8 @@ library GamesExtended {
       _table.rolledValue
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(_table.abilityPlayed);
+    bytes memory _dynamicData = encodeDynamic(_table.abilityPlayed);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -693,15 +860,30 @@ library GamesExtended {
   }
 
   /**
+   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
+   */
+  function decodeDynamic(
+    PackedCounter _encodedLengths,
+    bytes memory _blob
+  ) internal pure returns (bytes32[] memory abilityPlayed) {
+    uint256 _start;
+    uint256 _end;
+    unchecked {
+      _end = _encodedLengths.atIndex(0);
+    }
+    abilityPlayed = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
+  }
+
+  /**
    * @notice Decode the tightly packed blobs using this table's field layout.
    * @param _staticData Tightly packed static fields.
-   *
-   *
+   * @param _encodedLengths Encoded lengths of dynamic fields.
+   * @param _dynamicData Tightly packed dynamic fields.
    */
   function decode(
     bytes memory _staticData,
-    PackedCounter,
-    bytes memory
+    PackedCounter _encodedLengths,
+    bytes memory _dynamicData
   ) internal pure returns (GamesExtendedData memory _table) {
     (
       _table.selector,
@@ -714,6 +896,8 @@ library GamesExtended {
       _table.lastDestroyed,
       _table.rolledValue
     ) = decodeStatic(_staticData);
+
+    (_table.abilityPlayed) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -766,6 +950,25 @@ library GamesExtended {
   }
 
   /**
+   * @notice Tightly pack dynamic data lengths using this table's schema.
+   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
+   */
+  function encodeLengths(bytes32[] memory abilityPlayed) internal pure returns (PackedCounter _encodedLengths) {
+    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
+    unchecked {
+      _encodedLengths = PackedCounterLib.pack(abilityPlayed.length * 32);
+    }
+  }
+
+  /**
+   * @notice Tightly pack dynamic (variable length) data using this table's schema.
+   * @return The dynamic data, encoded into a sequence of bytes.
+   */
+  function encodeDynamic(bytes32[] memory abilityPlayed) internal pure returns (bytes memory) {
+    return abi.encodePacked(EncodeArray.encode((abilityPlayed)));
+  }
+
+  /**
    * @notice Encode all of a record's fields.
    * @return The static (fixed length) data, encoded into a sequence of bytes.
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
@@ -780,7 +983,8 @@ library GamesExtended {
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
-    int8 rolledValue
+    int8 rolledValue,
+    bytes32[] memory abilityPlayed
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(
       selector,
@@ -794,8 +998,8 @@ library GamesExtended {
       rolledValue
     );
 
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
+    PackedCounter _encodedLengths = encodeLengths(abilityPlayed);
+    bytes memory _dynamicData = encodeDynamic(abilityPlayed);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

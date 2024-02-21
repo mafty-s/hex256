@@ -13,22 +13,22 @@ contract ConditionSystem is System {
 
     }
 
-    function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster)
+    function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) public
     {
 
     }
 
-    function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target)
+    function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public
     {
 
     }
 
-    function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target)
+    function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public
     {
 
     }
 
-    function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target)
+    function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public
     {
 
     }
@@ -92,6 +92,7 @@ contract ConditionSystem is System {
 //return (is_type && is_team && is_trait);
 
     function HasBoardCardEnemy() public {
+
         //todo
     }
 
@@ -105,6 +106,14 @@ contract ConditionSystem is System {
 
     function HasDiscardSpell() public {
         //todo
+    }
+
+    function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionOwnerAI(ability_key, caster, target, ConditionOperatorBool.IsFalse);
+    }
+
+    function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionOwnerAI(ability_key, caster, target, ConditionOperatorBool.IsTure);
     }
 
     function IsAlly() public {
@@ -204,6 +213,10 @@ contract ConditionSystem is System {
         return (is_type && is_team && is_trait);
     }
 
+    function ConditionTarget(ConditionTargetType target_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+        return CompareBool(target_type == ConditionTargetType.Card, oper); //Is Card
+    }
+
     function ConditionCount(ConditionPlayerType target, PileType pile, ConditionOperatorInt oper, CardType has_type, CardTeam has_team, int8 value) internal returns (bool)
     {
         int8 count = 0;
@@ -222,36 +235,34 @@ contract ConditionSystem is System {
 
     }
 
-    function ConditionDeckbuilding() internal {
+    function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         //todo
-
+        return false;
     }
 
-    function ConditionExhaust(ConditionOperatorBool oper) internal {
-        //todo
-
+    function ConditionExhaust(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+        return CompareBool(CardOnBoards.getExhausted(target), oper);
     }
 
-    function ConditionOnce() internal {
+    function ConditionOnce(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         //todo
-
+        return false;
     }
 
-    function ConditionOwner() internal {
-        //todo
-
+    function ConditionOwner(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+        bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(target);
+        return CompareBool(same_owner, oper);
+        return false;
     }
 
-    function ConditionSlotDist(uint8 distance, bool diagonals) public {
+    function ConditionSlotDist(uint8 distance, bool diagonals, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         //todo
-
+        return false;
     }
 
     function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-//        bool yourturn = caster.player_id == data.current_player;
-//        return CompareBool(yourturn, oper);
-        //todo
-        return false;
+        bool yourturn = CardOnBoards.getPlayerId(caster) == Games.getCurrentPlayer(game_uid);
+        return CompareBool(yourturn, oper);
     }
 
     function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
@@ -261,12 +272,14 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionOwnerAI() internal {
-
+    function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
+        //todo
+        return false;
     }
 
-    function ConditionPlayerStat() internal {
-
+    function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
+        //todo
+        return false;
     }
 
     function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
@@ -317,6 +330,10 @@ contract ConditionSystem is System {
         }
 
         return false;
+    }
+
+    function ConditionStatCustom() internal {
+
     }
 
     function CompareBool(bool condition, ConditionOperatorBool oper) public returns (bool)

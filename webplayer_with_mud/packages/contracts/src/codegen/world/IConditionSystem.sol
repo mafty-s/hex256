@@ -10,6 +10,14 @@ import { ConditionOperatorBool, ConditionOperatorInt } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IConditionSystem {
+  function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) external;
+
+  function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) external;
+
+  function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) external;
+
+  function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) external;
+
   function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
 
   function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) external returns (bytes32[] memory);
@@ -39,6 +47,10 @@ interface IConditionSystem {
   function HasBoardCharacters2() external;
 
   function HasDiscardSpell() external;
+
+  function AiIsAlly(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
+
+  function AiIsEnemy(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function IsAlly() external;
 
@@ -79,8 +91,6 @@ interface IConditionSystem {
   function IsBlue(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
-
-  function ConditionSlotDist(uint8 distance, bool diagonals) external;
 
   function CompareBool(bool condition, ConditionOperatorBool oper) external returns (bool);
 
