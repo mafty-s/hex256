@@ -128,7 +128,7 @@ contract ConditionSystem is System {
     }
 
     function IsDeckBuilding(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionDeckbuilding(ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        return ConditionDeckbuilding(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
     function IsGrowth3(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -285,14 +285,33 @@ contract ConditionSystem is System {
 
     }
 
-    function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
-//        if()
-        bytes32 card_config_key = CardOnBoards.getId(target);
-        return CompareBool(Cards.getDeckbuilding(card_config_key), oper);
+    function ConditionDeckbuilding(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Card) {
+            bytes32 card_config_key = CardOnBoards.getId(target);
+            return CompareBool(Cards.getDeckbuilding(card_config_key), oper);
+        }
+
+        if (condition_type == ConditionTargetType.CardData) {
+            return CompareBool(Cards.getDeckbuilding(target), oper);
+        }
+
+        return true;
     }
 
-    function ConditionExhaust(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
-        return CompareBool(CardOnBoards.getExhausted(target), oper);
+    function ConditionExhaust(ConditionTargetType condition_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Card) {
+            return CompareBool(CardOnBoards.getExhausted(target), oper);
+        }
+
+        if (condition_type == ConditionTargetType.Player) {
+            return CompareBool(false, oper);
+
+        }
+
+        if (condition_type == ConditionTargetType.Slot) {
+            return CompareBool(false, oper);
+        }
+        return true;
     }
 
     function ConditionOnce(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) internal view returns (bool){
