@@ -35,11 +35,11 @@ contract FilterSystem is System {
 
 
     function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
-        return FilterLowestStat(ConditionStatType.HP, ability, caster, source);
+        return FilterLowestStat(ConditionStatType.HP, ability, caster, source, condition_type);
     }
 
     function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
-        return FilterLowestStat(ConditionStatType.Attack, ability, caster, source);
+        return FilterLowestStat(ConditionStatType.Attack, ability, caster, source, condition_type);
     }
 
     function FilterRandom1(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
@@ -69,24 +69,29 @@ contract FilterSystem is System {
     ////=========================
 
     function FilterFirst(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) internal pure returns (bytes32[] memory){
-        bytes32[] memory result = new bytes32[](amount);
-        for (uint i = 0; i < amount; i++) {
+        uint min = source.length <= (uint)(amount) ? source.length : (uint)(amount);
+        bytes32[] memory result = new bytes32[](min);
+        for (uint i = 0; i < min; i++) {
             result[i] = source[i];
         }
         return result;
     }
 
     function FilterRandom(uint8 amount, bytes32 ability_key, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
+        uint min = source.length <= (uint)(amount) ? source.length : (uint)(amount);
         source = shuffle(source);
-        bytes32[] memory result = new bytes32[](amount);
-        for (uint i = 0; i < amount; i++) {
+        bytes32[] memory result = new bytes32[](min);
+        for (uint i = 0; i < min; i++) {
             result[i] = source[i];
         }
         return result;
     }
 
 //找到属性最低的牌
-    function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
+    function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal view returns (bytes32[] memory){
+        if (condition_type != ConditionTargetType.Card) {
+            return source;
+        }
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
             if (result == 0) {
@@ -103,7 +108,10 @@ contract FilterSystem is System {
         return dist;
     }
 
-    function FilterHighestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source) internal view returns (bytes32[] memory){
+    function FilterHighestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal view returns (bytes32[] memory){
+        if (condition_type != ConditionTargetType.Card) {
+            return source;
+        }
         bytes32 result = 0;
         for (uint i = 0; i < source.length; i++) {
             if (result == 0) {
