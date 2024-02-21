@@ -6,7 +6,7 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
 import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
-import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType} from "../codegen/common.sol";
+import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip} from "../codegen/index.sol";
@@ -107,29 +107,19 @@ contract AbilitySystem is System {
     }
 
 
-    function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
+    function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) public pure returns (bool) {
         bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
         for (uint i = 0; i < conditions_trigger.length; i++) {
-            bytes32 condition = conditions_trigger[i];
+            bytes4 condition = conditions_trigger[i];
             if (condition != 0) {
-                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster))), (bool))) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster, condition_type))), (bool))) {
                     return false;
                 }
-                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMetCard, (condition, game_uid, ability_key, caster, trigger_card))), (bool))) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger_card, condition_type))), (bool))) {
                     return false;
                 }
             }
         }
-        return true;
-    }
-
-    function AreTargetConditionsMetPlayer(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_player) public pure returns (bool) {
-        //todo
-        return true;
-    }
-
-    function AreTargetConditionsMetSlot(bytes32 game_uid, bytes32 ability_key, bytes32 caster, uint16 slot) public pure returns (bool) {
-        //todo
         return true;
     }
 
@@ -148,18 +138,17 @@ contract AbilitySystem is System {
             return false; ////Spell immunity
         }
 
-        bool condition_match = AreTargetConditionsMetCard(game_uid, ability_key, caster, target);
+        bool condition_match = AreTargetConditionsMet(game_uid, ability_key, caster, target, ConditionTargetType.Card);
         return condition_match;
     }
 
     //Can target check additional restrictions and is usually for SelectTarget or PlayTarget abilities
     function CanTargetPlayer(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        return AreTargetConditionsMetPlayer(game_uid, ability_key, caster, target);
+        return AreTargetConditionsMet(game_uid, ability_key, caster, target, ConditionTargetType.Player);
     }
 
     function CanTargetSlot(bytes32 game_uid, bytes32 ability_key, bytes32 caster, uint16 target) internal returns (bool){
-
-        return AreTargetConditionsMetSlot(game_uid, ability_key, caster, target); //No additional conditions for slots
+        return AreTargetConditionsMet(game_uid, ability_key, caster, bytes32(uint256(target)), ConditionTargetType.Slot); //No additional conditions for slots
     }
 
     function CanTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
@@ -202,7 +191,7 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.Self) {
             targets = new bytes32[](1);
-            if (AreTargetConditionsMetCard(game_uid, ability_key, caster, caster)) {
+            if (AreTargetConditionsMet(game_uid, ability_key, caster, caster, ConditionTargetType.Card)) {
                 targets[numTargets] = caster;
                 numTargets++;
             }
@@ -216,13 +205,13 @@ contract AbilitySystem is System {
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
                     targets[numTargets] = cards_board_a[i];
                     numTargets++;
                 }
             }
             for (uint i = 0; i < cards_board_b.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
                     targets[numTargets] = cards_board_b[i];
                     numTargets++;
                 }
@@ -236,13 +225,13 @@ contract AbilitySystem is System {
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
                     targets[numTargets] = cards_board_a[i];
                     numTargets++;
                 }
             }
             for (uint i = 0; i < cards_board_b.length; i++) {
-                if (AreTargetConditionsMetCard(game_uid, ability_key, caster, cards_board_a[i])) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
                     targets[numTargets] = cards_board_b[i];
                     numTargets++;
                 }
@@ -259,7 +248,7 @@ contract AbilitySystem is System {
         {
             targets = new bytes32[](1);
             bytes32 last_played = GamesExtended.getLastPlayed(game_uid);
-            if (last_played != 0 && AreTargetConditionsMetCard(game_uid, ability_key, caster, last_played)) {
+            if (last_played != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, last_played, ConditionTargetType.Card)) {
                 targets[numTargets] = last_played;
                 numTargets++;
             }
@@ -269,7 +258,7 @@ contract AbilitySystem is System {
         {
             targets = new bytes32[](1);
             bytes32 last_destroyed = GamesExtended.getLastDestroyed(game_uid);
-            if (last_destroyed != 0 && AreTargetConditionsMetCard(game_uid, ability_key, caster, last_destroyed)) {
+            if (last_destroyed != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, last_destroyed, ConditionTargetType.Card)) {
                 targets[numTargets] = last_destroyed;
                 numTargets++;
             }
@@ -279,7 +268,7 @@ contract AbilitySystem is System {
         {
             targets = new bytes32[](1);
             bytes32 last_target = GamesExtended.getLastTarget(game_uid);
-            if (last_target != 0 && AreTargetConditionsMetCard(game_uid, ability_key, caster, last_target)) {
+            if (last_target != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, last_target, ConditionTargetType.Card)) {
                 targets[numTargets] = last_target;
                 numTargets++;
             }

@@ -27,53 +27,36 @@ contract ConditionSystem is System {
     }
 
 
-    function IsTriggerConditionMet(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster) public view returns (bool)
+    function IsTriggerConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, ConditionTargetType condition_type) public view returns (bool)
     {
+        if (!IsConditionFunctionExist(condition)) {
+            return true;
+        }
+
+        bytes memory data = abi.encodeWithSelector(condition, game_uid, ability_key, caster, condition_type);
         //todo
+//        SystemSwitch.call(data);
+
         return true;
     }
 
 
-    function IsTargetConditionMet(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster) public view returns (bool)
+    function IsTargetConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) public view returns (bool)
     {
-        //todo
-        return true;
-    }
+        if (!IsConditionFunctionExist(condition)) {
+            return true;
+        }
 
-    function IsTargetConditionMetCard(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view returns (bool)
-    {
-        //todo
-        return true;
-    }
 
-    function IsTargetConditionMetPlayer(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view returns (bool)
-    {
+        bytes memory data = abi.encodeWithSelector(condition, game_uid, ability_key, caster, condition_type);
         //todo
-        return true;
-    }
+//        SystemSwitch.call(data);
 
-    function IsTargetConditionMetSlot(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public view returns (bool)
-    {
-        //todo
         return true;
     }
 
 ////=========================
 
-//
-//    function SetConditionCardTypeConfig(string memory name, string memory team, string memory has_type, string memory has_trait) public {
-//        bytes32 key = keccak256(abi.encode(name));
-//        ConditionCardType.setName(key, name);
-//        ConditionCardType.setHasType(key, has_type);
-//        ConditionCardType.setHasTrait(key, has_trait);
-//        Condition.setName(key, name);
-//        Condition.setObjType(key, ConditionObjType.ConditionCardType);
-//    }
-
-    function FilterTargets(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
-        //todo
-        return source;
-    }
 
     function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.HP, ability, caster, source);
