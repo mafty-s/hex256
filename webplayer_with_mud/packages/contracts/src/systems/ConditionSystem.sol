@@ -27,24 +27,35 @@ contract ConditionSystem is System {
     }
 
 
-    function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) public view
+    function IsTriggerConditionMet(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster) public view returns (bool)
     {
         //todo
+        return true;
     }
 
-    function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view
+
+    function IsTargetConditionMet(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster) public view returns (bool)
     {
         //todo
+        return true;
     }
 
-    function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view
+    function IsTargetConditionMetCard(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view returns (bool)
     {
         //todo
+        return true;
     }
 
-    function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public view
+    function IsTargetConditionMetPlayer(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public view returns (bool)
     {
         //todo
+        return true;
+    }
+
+    function IsTargetConditionMetSlot(byte4 condition, bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public view returns (bool)
+    {
+        //todo
+        return true;
     }
 
 ////=========================

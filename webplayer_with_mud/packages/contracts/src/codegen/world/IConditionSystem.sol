@@ -10,13 +10,30 @@ pragma solidity >=0.8.21;
 interface IConditionSystem {
   function IsConditionFunctionExist(bytes4 selector) external view returns (bool);
 
-  function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) external view;
+  function IsTriggerConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) external view returns (bool);
 
-  function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) external view;
+  function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) external view returns (bool);
 
-  function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) external view;
+  function IsTargetConditionMetCard(
+    bytes32 game_uid,
+    bytes32 ability,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
 
-  function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) external view;
+  function IsTargetConditionMetPlayer(
+    bytes32 game_uid,
+    bytes32 ability,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsTargetConditionMetSlot(
+    bytes32 game_uid,
+    bytes32 ability,
+    bytes32 caster,
+    uint16 target
+  ) external view returns (bool);
 
   function FilterTargets(
     bytes32 ability,

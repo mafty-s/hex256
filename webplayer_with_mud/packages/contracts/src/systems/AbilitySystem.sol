@@ -108,19 +108,18 @@ contract AbilitySystem is System {
 
 
     function AreTargetConditionsMetCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card) public pure returns (bool) {
-        //todo
-
-//        foreach (ConditionData cond in conditions_trigger)
-//        {
-//        if (cond != null)
-//        {
-//        if (!condCanTargetCard.IsTriggerConditionMet(data, this, caster))
-//        return false;
-//        if (!cond.IsTargetConditionMet(data, this, caster, trigger_card))
-//        return false;
-//        }
-//        }
-
+        bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
+        for (uint i = 0; i < conditions_trigger.length; i++) {
+            bytes32 condition = conditions_trigger[i];
+            if (condition != 0) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster))), (bool))) {
+                    return false;
+                }
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMetCard, (condition, game_uid, ability_key, caster, trigger_card))), (bool))) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 

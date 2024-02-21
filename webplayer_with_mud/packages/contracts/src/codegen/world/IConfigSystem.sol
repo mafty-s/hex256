@@ -40,7 +40,7 @@ interface IConfigSystem {
     uint8 duration,
     bool exhaust,
     bytes4[] memory effects,
-    bytes32[] memory conditionsTrigger,
+    bytes4[] memory conditionsTrigger,
     bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities,
     uint8[] memory status
