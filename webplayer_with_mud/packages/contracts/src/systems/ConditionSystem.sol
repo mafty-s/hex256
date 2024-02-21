@@ -307,8 +307,18 @@ contract ConditionSystem is System {
     }
 
     function ConditionSlotDist(bytes32 ability_key, bytes32 caster, bytes32 target, uint8 distance, bool diagonals) internal returns (bool){
-        //todo
-        return false;
+
+        uint16 slot_encode = bytes32ToUint16(target);
+        Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+
+        uint16 cslot_encode = CardOnBoards.getSlot(caster);
+        Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+
+        if (diagonals) {
+            return SlotLib.IsInDistance(cslot, target_slot, distance);
+        }
+
+        return  SlotLib.IsInDistanceStraight(cslot, target_slot, distance);
     }
 
     function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){

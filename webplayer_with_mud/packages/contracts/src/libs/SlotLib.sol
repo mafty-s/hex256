@@ -92,15 +92,15 @@ library SlotLib {
         return (slot.p >= range);
     }
 
-    function IsInDistanceStraight(Slot memory slot, uint8 dist) internal pure returns (bool) {
-        uint8 r = (slot.x - x_min) + (slot.y - y_min) + slot.p;
+    function IsInDistanceStraight(Slot memory origin, Slot memory slot, uint8 dist) internal pure returns (bool) {
+        uint8 r = (origin.x - slot.x) + (origin.y - slot.y) + (origin.p - slot.p);
         return r <= dist;
     }
 
-    function IsInDistance(Slot memory slot, uint8 dist) internal pure returns (bool) {
-        uint8 dx = (slot.x - x_min);
-        uint8 dy = (slot.y - y_min);
-        uint8 dp = slot.p;
+    function IsInDistance(Slot memory origin, Slot memory slot, uint8 dist) internal pure returns (bool) {
+        uint8 dx = (origin.x - slot.x);
+        uint8 dy = (origin.y - slot.y);
+        uint8 dp = (origin.p - slot.p);
         return dx <= dist && dy <= dist && dp <= dist;
     }
 
