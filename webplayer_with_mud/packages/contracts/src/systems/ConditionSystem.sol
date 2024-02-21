@@ -124,6 +124,10 @@ contract ConditionSystem is System {
         return ConditionCardType(condition_type, CardType.Hero, CardTeam.None, CardTrait.None, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
+    function IsSecret(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardType(condition_type, CardType.Secret, CardTeam.None, CardTrait.None, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    }
+
     function IsCard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionTarget(condition_type, ConditionTargetType.Card, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
@@ -152,7 +156,7 @@ contract ConditionSystem is System {
         return ConditionCardPile(condition_type, PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInSecret(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function IsInSecretArea(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Secret, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
@@ -186,6 +190,10 @@ contract ConditionSystem is System {
     }
 
     function IsSlotEmpty(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    }
+
+    function IsNotEmptySlot(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
@@ -215,6 +223,10 @@ contract ConditionSystem is System {
 
     function IsAttackL4(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionStat(ability_key, caster, target, ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4);
+    }
+
+    function Rolled4P(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionRolled(game_uid, ConditionOperatorInt.GreaterEqual, 4);
     }
 
 //=======================================//=======================================//=======================================
@@ -431,7 +443,8 @@ contract ConditionSystem is System {
         }
 
         if (condition_type == ConditionTargetType.Slot) {
-
+//            Card card = data.GetSlotCard(target);
+            //todo
         }
         return true;
     }
@@ -621,6 +634,11 @@ contract ConditionSystem is System {
             }
         }
         return count;
+    }
+
+    function ConditionRolled(bytes32 game_uid, ConditionOperatorInt oper, int8 value) internal view returns (bool){
+        int8 rolled_value = (int8)(GamesExtended.getRolledValue(game_uid));
+        return CompareInt(rolled_value, oper, value);
     }
 
     function IsTrait(bytes32 card_key, CardType has_type, CardTeam has_team, CardTrait has_trait) internal view returns (bool){

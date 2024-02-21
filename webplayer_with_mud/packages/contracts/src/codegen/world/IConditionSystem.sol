@@ -141,6 +141,14 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
+  function IsSecret(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
   function IsCard(
     bytes32 game_uid,
     bytes32 ability_key,
@@ -197,7 +205,7 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
-  function IsInSecret(
+  function IsInSecretArea(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
@@ -269,6 +277,14 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
+  function IsNotEmptySlot(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
   function IsPlayer(
     bytes32 game_uid,
     bytes32 ability_key,
@@ -318,6 +334,14 @@ interface IConditionSystem {
   ) external view returns (bool);
 
   function IsAttackL4(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function Rolled4P(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
