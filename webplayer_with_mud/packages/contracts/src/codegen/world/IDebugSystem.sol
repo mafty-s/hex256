@@ -11,6 +11,4 @@ interface IDebugSystem {
   function IsBoardCard(bytes32 key) external view returns (bool);
 
   function IsEquipment(bytes32 key) external view returns (bool);
-
-  function TestCoinCard() external;
 }

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {Games, Cards, CardsData, Players} from "../codegen/index.sol";
+import {Games, Cards, Players} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {MathLib} from "./MathLib.sol";
@@ -15,14 +15,14 @@ library GameLogicLib {
         uint8 i = Players.getNcards(player_key);
         bytes32 card_uid = keccak256(abi.encode(player_key, i));
 
-        CardsData memory card = Cards.get(card_config_key);
+//        CardsData memory card = Cards.get(card_config_key);
 
         CardOnBoards.setId(card_uid, card_config_key);
-        CardOnBoards.setHp(card_uid, card.hp);
-        CardOnBoards.setAttack(card_uid, card.attack);
-        CardOnBoards.setMana(card_uid, card.mana);
+        CardOnBoards.setHp(card_uid, Cards.getHp(card_config_key));
+        CardOnBoards.setAttack(card_uid, Cards.getAttack(card_config_key));
+        CardOnBoards.setMana(card_uid, Cards.getMana(card_config_key));
         CardOnBoards.setPlayerId(card_uid, player_key);
-        CardOnBoards.setName(card_uid,card.tid);
+        CardOnBoards.setName(card_uid,Cards.getTid(card_config_key));
         Players.setNcards(player_key, i + 1);
 
         return card_uid;

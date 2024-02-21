@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Cards, CardsData} from "../codegen/index.sol";
+import {Cards} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability, AbilityExtend} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
@@ -18,7 +18,7 @@ contract ConfigSystem is System {
         Cards.setCost(key, cost);
         Cards.setTid(key, name);
         Cards.setCardType(key, cardType);
-        Cards.setTeam(key, "1");
+//        Cards.setTeam(key, "1");
         Cards.setRarity(key, rarity);
         Cards.setAbilities(key, abilities);
 
@@ -41,15 +41,15 @@ contract ConfigSystem is System {
 
     }
 
-    function getCard(string memory id) public view returns (CardsData memory _table) {
-        bytes32 key = keccak256(abi.encode(id));
-        return Cards.get(key);
-    }
-
-    function setCard(string memory id, CardsData calldata data) public {
-        bytes32 key = keccak256(abi.encode(id));
-        Cards.set(key, data);
-    }
+//    function getCard(string memory id) public view returns (CardsData memory _table) {
+//        bytes32 key = keccak256(abi.encode(id));
+//        return Cards.get(key);
+//    }
+//
+//    function setCard(string memory id, CardsData calldata data) public {
+//        bytes32 key = keccak256(abi.encode(id));
+//        Cards.set(key, data);
+//    }
 
     function initPack(string memory name, PackType _packType, uint8 _cards, uint8[] memory _rarities, uint32 _cost) public returns (bytes32 key) {
         key = keccak256(abi.encode(name));

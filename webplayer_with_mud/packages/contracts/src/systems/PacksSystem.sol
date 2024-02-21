@@ -2,8 +2,8 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Cards, CardsData} from "../codegen/index.sol";
-import {Users, UsersData} from "../codegen/index.sol";
+import {Cards} from "../codegen/index.sol";
+import {Users} from "../codegen/index.sol";
 import {CardRaritySingleton} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {RarityType} from "../codegen/common.sol";

@@ -102,9 +102,7 @@ interface IConditionSystem {
 
   function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
-  function IsPlayer() external;
-
-  function IsAI() external;
+  function IsPlayer(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 
   function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) external returns (bool);
 

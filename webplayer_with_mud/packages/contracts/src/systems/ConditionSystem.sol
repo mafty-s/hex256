@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
-import {Condition, ConditionCardType, CardOnBoards, Games} from "../codegen/index.sol";
+import {Condition, ConditionCardType, CardOnBoards, Cards, Games} from "../codegen/index.sol";
 import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 
@@ -26,22 +26,22 @@ contract ConditionSystem is System {
 
     function IsTargetConditionMet(bytes32 game_uid, bytes32 ability, bytes32 caster) public
     {
-
+        //todo
     }
 
     function IsTargetConditionMetCard(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public
     {
-
+        //todo
     }
 
     function IsTargetConditionMetPlayer(bytes32 game_uid, bytes32 ability, bytes32 caster, bytes32 target) public
     {
-
+        //todo
     }
 
     function IsTargetConditionMetSlot(bytes32 game_uid, bytes32 ability, bytes32 caster, uint16 target) public
     {
-
+        //todo
     }
 
 ////=========================
@@ -200,42 +200,31 @@ contract ConditionSystem is System {
 
 
     function IsSlot(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        //todo
-        return false;
+        return ConditionTarget(ConditionTargetType.Slot, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsSlotX1(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        //todo
-        return false;
+        return ConditionSlotValue(ability_key, caster, target, ConditionOperatorInt.Equal, 1, ConditionOperatorInt.GreaterEqual, 0);
     }
 
     function IsSlotSameP(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        //todo
-        return false;
+        return ConditionSlotRange(ability_key, caster, target, 99, 99, 0);
     }
 
     function IsSlotNextTo(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        //todo
-        return false;
+        return ConditionSlotRange(ability_key, caster, target, 1, 1, 0);
     }
 
     function IsSlotInRange(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        //todo
-        return false;
+        return ConditionSlotRange(ability_key, caster, target, 1, 1, 1);
     }
 
     function IsSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
         return ConditionSlotEmpty(ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
-    function IsPlayer() public {
-        //todo
-
-    }
-
-    function IsAI() public {
-        //todo
-
+    function IsPlayer(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
+        return ConditionTarget(ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsWolf(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
@@ -326,6 +315,16 @@ contract ConditionSystem is System {
         return false;
     }
 
+    function ConditionSlotValue(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal returns (bool){
+        //todo
+        return false;
+    }
+
+    function ConditionSlotRange(bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal returns (bool){
+        //todo
+        return false;
+    }
+
 
     function ConditionTurn(ConditionOperatorBool oper, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         bool yourturn = CardOnBoards.getPlayerId(caster) == Games.getCurrentPlayer(game_uid);
@@ -333,19 +332,19 @@ contract ConditionSystem is System {
     }
 
     function ConditionStatus(Status has_status, int8 value, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-//        bool hstatus = target.HasStatus(has_status) && target.GetStatusValue(has_status) >= value;
+        //        bool hstatus = target.HasStatus(has_status) && target.GetStatusValue(has_status) >= value;
 
-//todo
+        //todo
         return false;
     }
 
     function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
-//todo
+        //todo
         return false;
     }
 
     function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-//todo
+        //todo
         return false;
     }
 
@@ -526,6 +525,27 @@ contract ConditionSystem is System {
 
         return shuffled;
     }
+
+    function CountPile(bytes32 player_key, PileType pile) internal returns (int8){
+
+        //todo
+        return 0;
+    }
+
+    function IsTrait(bytes32 card_key, CardType has_type, CardTeam has_team, CardTrait has_trait) internal returns (bool){
+        bytes32 card_config_key = CardOnBoards.getId(card_key);
+        bool is_type = has_type == CardType.None || Cards.getCardType(card_config_key) == has_type;
+        bool is_team = has_team == CardTeam.None;
+        bool is_trait = has_trait == CardTrait.None;
+        return (is_type && is_team && is_trait);
+    }
+//private bool IsTrait(Card card)
+//{
+//bool is_type = card.CardData.type == has_type || has_type == CardType.None;
+//bool is_team = card.CardData.team == has_team || has_team == null;
+//bool is_trait = card.HasTrait(has_trait) || has_trait == null;
+//return (is_type && is_team && is_trait);
+//}
 
 
 }
