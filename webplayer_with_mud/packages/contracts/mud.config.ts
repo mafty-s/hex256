@@ -92,18 +92,23 @@ export default mudConfig({
         },
         Cards: {
             valueSchema: {
-                rarity: "RarityType",
                 mana: "int8",
                 attack: "int8",
                 hp: "int8",
-                cost: "uint32",
                 cardType: "CardType",
                 team: "CardTeam",
-                traits:"CardTrait",
+                traits: "CardTrait",
                 deckbuilding: "bool",
                 tid: "string",
                 abilities: "bytes32[]",
             },
+        },
+        CardsExntend: {
+            valueSchema: {
+                rarity: "RarityType",
+                packs: "bytes32[]",
+                cost: "uint32",
+            }
         },
         Ability: {
             valueSchema: {

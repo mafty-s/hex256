@@ -19,7 +19,7 @@ contract ConfigSystem is System {
         Cards.setTid(key, name);
         Cards.setCardType(key, cardType);
 //        Cards.setTeam(key, "1");
-        Cards.setRarity(key, rarity);
+//        Cards.setRarity(key, rarity);
         Cards.setAbilities(key, abilities);
 
 

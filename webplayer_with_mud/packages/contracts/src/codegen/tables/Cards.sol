@@ -21,7 +21,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
 // Import user types
-import { RarityType, CardType, CardTeam, CardTrait } from "./../common.sol";
+import { CardType, CardTeam, CardTrait } from "./../common.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
   bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("Cards")))
@@ -29,15 +29,13 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant CardsTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x000c090201010101040101010100000000000000000000000000000000000000
+  0x0007070201010101010101000000000000000000000000000000000000000000
 );
 
 struct CardsData {
-  RarityType rarity;
   int8 mana;
   int8 attack;
   int8 hp;
-  uint32 cost;
   CardType cardType;
   CardTeam team;
   CardTrait traits;
@@ -71,18 +69,16 @@ library Cards {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](11);
-    _valueSchema[0] = SchemaType.UINT8;
+    SchemaType[] memory _valueSchema = new SchemaType[](9);
+    _valueSchema[0] = SchemaType.INT8;
     _valueSchema[1] = SchemaType.INT8;
     _valueSchema[2] = SchemaType.INT8;
-    _valueSchema[3] = SchemaType.INT8;
-    _valueSchema[4] = SchemaType.UINT32;
+    _valueSchema[3] = SchemaType.UINT8;
+    _valueSchema[4] = SchemaType.UINT8;
     _valueSchema[5] = SchemaType.UINT8;
-    _valueSchema[6] = SchemaType.UINT8;
-    _valueSchema[7] = SchemaType.UINT8;
-    _valueSchema[8] = SchemaType.BOOL;
-    _valueSchema[9] = SchemaType.STRING;
-    _valueSchema[10] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[6] = SchemaType.BOOL;
+    _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[8] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -101,18 +97,16 @@ library Cards {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](11);
-    fieldNames[0] = "rarity";
-    fieldNames[1] = "mana";
-    fieldNames[2] = "attack";
-    fieldNames[3] = "hp";
-    fieldNames[4] = "cost";
-    fieldNames[5] = "cardType";
-    fieldNames[6] = "team";
-    fieldNames[7] = "traits";
-    fieldNames[8] = "deckbuilding";
-    fieldNames[9] = "tid";
-    fieldNames[10] = "abilities";
+    fieldNames = new string[](9);
+    fieldNames[0] = "mana";
+    fieldNames[1] = "attack";
+    fieldNames[2] = "hp";
+    fieldNames[3] = "cardType";
+    fieldNames[4] = "team";
+    fieldNames[5] = "traits";
+    fieldNames[6] = "deckbuilding";
+    fieldNames[7] = "tid";
+    fieldNames[8] = "abilities";
   }
 
   /**
@@ -130,55 +124,13 @@ library Cards {
   }
 
   /**
-   * @notice Get rarity.
-   */
-  function getRarity(bytes32 key) internal view returns (RarityType rarity) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return RarityType(uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Get rarity.
-   */
-  function _getRarity(bytes32 key) internal view returns (RarityType rarity) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return RarityType(uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Set rarity.
-   */
-  function setRarity(bytes32 key, RarityType rarity) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(rarity)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set rarity.
-   */
-  function _setRarity(bytes32 key, RarityType rarity) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(rarity)), _fieldLayout);
-  }
-
-  /**
    * @notice Get mana.
    */
   function getMana(bytes32 key) internal view returns (int8 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (int8(uint8(bytes1(_blob))));
   }
 
@@ -189,7 +141,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (int8(uint8(bytes1(_blob))));
   }
 
@@ -200,7 +152,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((mana)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((mana)), _fieldLayout);
   }
 
   /**
@@ -210,7 +162,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((mana)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((mana)), _fieldLayout);
   }
 
   /**
@@ -220,7 +172,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (int8(uint8(bytes1(_blob))));
   }
 
@@ -231,7 +183,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (int8(uint8(bytes1(_blob))));
   }
 
@@ -242,7 +194,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((attack)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((attack)), _fieldLayout);
   }
 
   /**
@@ -252,7 +204,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((attack)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((attack)), _fieldLayout);
   }
 
   /**
@@ -262,7 +214,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (int8(uint8(bytes1(_blob))));
   }
 
@@ -273,7 +225,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (int8(uint8(bytes1(_blob))));
   }
 
@@ -284,7 +236,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((hp)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((hp)), _fieldLayout);
   }
 
   /**
@@ -294,49 +246,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((hp)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get cost.
-   */
-  function getCost(bytes32 key) internal view returns (uint32 cost) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get cost.
-   */
-  function _getCost(bytes32 key) internal view returns (uint32 cost) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set cost.
-   */
-  function setCost(bytes32 key, uint32 cost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((cost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set cost.
-   */
-  function _setCost(bytes32 key, uint32 cost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((cost)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((hp)), _fieldLayout);
   }
 
   /**
@@ -346,7 +256,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
     return CardType(uint8(bytes1(_blob)));
   }
 
@@ -357,7 +267,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
     return CardType(uint8(bytes1(_blob)));
   }
 
@@ -368,7 +278,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(cardType)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked(uint8(cardType)), _fieldLayout);
   }
 
   /**
@@ -378,7 +288,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(cardType)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked(uint8(cardType)), _fieldLayout);
   }
 
   /**
@@ -388,7 +298,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
     return CardTeam(uint8(bytes1(_blob)));
   }
 
@@ -399,7 +309,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
     return CardTeam(uint8(bytes1(_blob)));
   }
 
@@ -410,7 +320,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked(uint8(team)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked(uint8(team)), _fieldLayout);
   }
 
   /**
@@ -420,7 +330,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked(uint8(team)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked(uint8(team)), _fieldLayout);
   }
 
   /**
@@ -430,7 +340,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return CardTrait(uint8(bytes1(_blob)));
   }
 
@@ -441,7 +351,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return CardTrait(uint8(bytes1(_blob)));
   }
 
@@ -452,7 +362,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked(uint8(traits)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(traits)), _fieldLayout);
   }
 
   /**
@@ -462,7 +372,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked(uint8(traits)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(traits)), _fieldLayout);
   }
 
   /**
@@ -472,7 +382,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 8, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (_toBool(uint8(bytes1(_blob))));
   }
 
@@ -483,7 +393,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 8, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (_toBool(uint8(bytes1(_blob))));
   }
 
@@ -494,7 +404,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 8, abi.encodePacked((deckbuilding)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((deckbuilding)), _fieldLayout);
   }
 
   /**
@@ -504,7 +414,7 @@ library Cards {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 8, abi.encodePacked((deckbuilding)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((deckbuilding)), _fieldLayout);
   }
 
   /**
@@ -866,11 +776,9 @@ library Cards {
    */
   function set(
     bytes32 key,
-    RarityType rarity,
     int8 mana,
     int8 attack,
     int8 hp,
-    uint32 cost,
     CardType cardType,
     CardTeam team,
     CardTrait traits,
@@ -878,7 +786,7 @@ library Cards {
     string memory tid,
     bytes32[] memory abilities
   ) internal {
-    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType, team, traits, deckbuilding);
+    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, traits, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, abilities);
@@ -894,11 +802,9 @@ library Cards {
    */
   function _set(
     bytes32 key,
-    RarityType rarity,
     int8 mana,
     int8 attack,
     int8 hp,
-    uint32 cost,
     CardType cardType,
     CardTeam team,
     CardTrait traits,
@@ -906,7 +812,7 @@ library Cards {
     string memory tid,
     bytes32[] memory abilities
   ) internal {
-    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType, team, traits, deckbuilding);
+    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, traits, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, abilities);
@@ -922,11 +828,9 @@ library Cards {
    */
   function set(bytes32 key, CardsData memory _table) internal {
     bytes memory _staticData = encodeStatic(
-      _table.rarity,
       _table.mana,
       _table.attack,
       _table.hp,
-      _table.cost,
       _table.cardType,
       _table.team,
       _table.traits,
@@ -947,11 +851,9 @@ library Cards {
    */
   function _set(bytes32 key, CardsData memory _table) internal {
     bytes memory _staticData = encodeStatic(
-      _table.rarity,
       _table.mana,
       _table.attack,
       _table.hp,
-      _table.cost,
       _table.cardType,
       _table.team,
       _table.traits,
@@ -975,35 +877,21 @@ library Cards {
   )
     internal
     pure
-    returns (
-      RarityType rarity,
-      int8 mana,
-      int8 attack,
-      int8 hp,
-      uint32 cost,
-      CardType cardType,
-      CardTeam team,
-      CardTrait traits,
-      bool deckbuilding
-    )
+    returns (int8 mana, int8 attack, int8 hp, CardType cardType, CardTeam team, CardTrait traits, bool deckbuilding)
   {
-    rarity = RarityType(uint8(Bytes.slice1(_blob, 0)));
+    mana = (int8(uint8(Bytes.slice1(_blob, 0))));
 
-    mana = (int8(uint8(Bytes.slice1(_blob, 1))));
+    attack = (int8(uint8(Bytes.slice1(_blob, 1))));
 
-    attack = (int8(uint8(Bytes.slice1(_blob, 2))));
+    hp = (int8(uint8(Bytes.slice1(_blob, 2))));
 
-    hp = (int8(uint8(Bytes.slice1(_blob, 3))));
+    cardType = CardType(uint8(Bytes.slice1(_blob, 3)));
 
-    cost = (uint32(Bytes.slice4(_blob, 4)));
+    team = CardTeam(uint8(Bytes.slice1(_blob, 4)));
 
-    cardType = CardType(uint8(Bytes.slice1(_blob, 8)));
+    traits = CardTrait(uint8(Bytes.slice1(_blob, 5)));
 
-    team = CardTeam(uint8(Bytes.slice1(_blob, 9)));
-
-    traits = CardTrait(uint8(Bytes.slice1(_blob, 10)));
-
-    deckbuilding = (_toBool(uint8(Bytes.slice1(_blob, 11))));
+    deckbuilding = (_toBool(uint8(Bytes.slice1(_blob, 6))));
   }
 
   /**
@@ -1039,11 +927,9 @@ library Cards {
     bytes memory _dynamicData
   ) internal pure returns (CardsData memory _table) {
     (
-      _table.rarity,
       _table.mana,
       _table.attack,
       _table.hp,
-      _table.cost,
       _table.cardType,
       _table.team,
       _table.traits,
@@ -1078,17 +964,15 @@ library Cards {
    * @return The static data, encoded into a sequence of bytes.
    */
   function encodeStatic(
-    RarityType rarity,
     int8 mana,
     int8 attack,
     int8 hp,
-    uint32 cost,
     CardType cardType,
     CardTeam team,
     CardTrait traits,
     bool deckbuilding
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(rarity, mana, attack, hp, cost, cardType, team, traits, deckbuilding);
+    return abi.encodePacked(mana, attack, hp, cardType, team, traits, deckbuilding);
   }
 
   /**
@@ -1120,11 +1004,9 @@ library Cards {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    RarityType rarity,
     int8 mana,
     int8 attack,
     int8 hp,
-    uint32 cost,
     CardType cardType,
     CardTeam team,
     CardTrait traits,
@@ -1132,7 +1014,7 @@ library Cards {
     string memory tid,
     bytes32[] memory abilities
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(rarity, mana, attack, hp, cost, cardType, team, traits, deckbuilding);
+    bytes memory _staticData = encodeStatic(mana, attack, hp, cardType, team, traits, deckbuilding);
 
     PackedCounter _encodedLengths = encodeLengths(tid, abilities);
     bytes memory _dynamicData = encodeDynamic(tid, abilities);
