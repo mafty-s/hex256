@@ -234,5 +234,6 @@ enum ConditionTargetType {
   None,
   Card,
   Player,
-  Slot
+  Slot,
+  CardData
 }
