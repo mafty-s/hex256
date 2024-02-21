@@ -65,7 +65,7 @@ contract ConditionSystem is System {
 //return (is_type && is_team && is_trait);
 
     function HasBoardCardEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCount(condition_type,  caster, target, ConditionPlayerType.Opponent, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
+        return ConditionCount(condition_type, caster, target, ConditionPlayerType.Opponent, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
     }
 
     function HasBoardCardSelf(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -136,31 +136,31 @@ contract ConditionSystem is System {
     }
 
     function IsInTemp(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Temp, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Temp, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInHand(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Hand, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Hand, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInDiscard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Discard, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Discard, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInDeck(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInSecret(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Secret, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Secret, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInEquipment(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
     function IsInBoard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardPile(PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+        return ConditionCardPile(condition_type, PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
 
@@ -218,12 +218,28 @@ contract ConditionSystem is System {
 
 //=======================================//=======================================//=======================================
 
-    function ConditionCardType(CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
-        bytes32 card_config_key = CardOnBoards.getId(target);
-        bool is_type = has_type == CardType.None || Cards.getCardType(card_config_key) == has_type;
-        bool is_team = has_team == CardTeam.None || Cards.getTeam(card_config_key) == has_team;
-        bool is_trait = has_trait == CardTrait.None || Cards.getTrait(card_config_key) == has_trait;
-        return (is_type && is_team && is_trait);
+    function ConditionCardType(ConditionTargetType condition_type, CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Player)
+        {
+            return false;
+        }
+
+        if (condition_type == ConditionTargetType.Slot)
+        {
+            return false;
+        }
+
+        if (condition_type == ConditionTargetType.CardData)
+        {
+            bool is_type = has_type == CardType.None || Cards.getCardType(target) == has_type;
+            bool is_team = has_team == CardTeam.None || Cards.getTeam(target) == has_team;
+            bool is_trait = has_trait == CardTrait.None || Cards.getTrait(target) == has_trait;
+            return (is_type && is_team && is_trait);
+        }
+        if (condition_type == ConditionTargetType.Card) {
+            return CompareBool(IsTrait(target), oper);
+        }
+        return true;
     }
 
     function ConditionTarget(ConditionTargetType target_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal pure returns (bool){
@@ -339,41 +355,74 @@ contract ConditionSystem is System {
         return card_status != Status.None && status_value >= (uint8)(value);
     }
 
-    function ConditionOwnerAI(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
-//todo
-        return false;
+    function ConditionOwnerAI(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Card)
+        {
+            //todo
+//            if (!IsAIPlayer(data, caster))
+//                return true; //Condition always true for human players
+
+            bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(caster);
+            return CompareBool(same_owner, oper);
+        }
+
+        if (condition_type == ConditionTargetType.Player)
+        {
+            //todo
+        }
+
+
+        if (condition_type == ConditionTargetType.Slot)
+        {
+            //todo
+        }
+
+        return true;
     }
 
 
-    function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
-        if (target == 0) {
+    function ConditionCardPile(ConditionTargetType condition_type, PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal view returns (bool){
+
+        if (condition_type == ConditionTargetType.Player) {
             return false;
         }
-        if (pile_type == PileType.Hand) {
-            return CompareBool(CardPosLogicLib.IsInHand(target), oper);
+
+        if (condition_type == ConditionTargetType.Slot) {
+            return pile_type == PileType.Board && target != 0;
         }
 
-        if (pile_type == PileType.Board) {
-            return CompareBool(CardPosLogicLib.IsOnBoard(target), oper);
+        if (condition_type == ConditionTargetType.Card) {
+            if (target == 0) {
+                return false;
+            }
+            if (pile_type == PileType.Hand) {
+                return CompareBool(CardPosLogicLib.IsInHand(target), oper);
+            }
+
+            if (pile_type == PileType.Board) {
+                return CompareBool(CardPosLogicLib.IsOnBoard(target), oper);
+            }
+
+            if (pile_type == PileType.Deck) {
+                return CompareBool(CardPosLogicLib.IsInDeck(target), oper);
+            }
+
+            if (pile_type == PileType.Discard) {
+                return CompareBool(CardPosLogicLib.IsInDiscard(target), oper);
+            }
+
+            if (pile_type == PileType.Secret) {
+                return CompareBool(CardPosLogicLib.IsInSecret(target), oper);
+            }
+
+            if (pile_type == PileType.Temp) {
+                return CompareBool(CardPosLogicLib.IsInTemp(target), oper);
+            }
+
+            return false;
         }
 
-        if (pile_type == PileType.Deck) {
-            return CompareBool(CardPosLogicLib.IsInDeck(target), oper);
-        }
-
-        if (pile_type == PileType.Discard) {
-            return CompareBool(CardPosLogicLib.IsInDiscard(target), oper);
-        }
-
-        if (pile_type == PileType.Secret) {
-            return CompareBool(CardPosLogicLib.IsInSecret(target), oper);
-        }
-
-        if (pile_type == PileType.Temp) {
-            return CompareBool(CardPosLogicLib.IsInTemp(target), oper);
-        }
-
-        return false;
+        return true;
     }
 
     function ConditionStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal view returns (bool) {
