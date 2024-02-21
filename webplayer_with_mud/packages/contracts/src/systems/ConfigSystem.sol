@@ -10,6 +10,9 @@ import {CardRaritySingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
 
+    constructor() {
+    }
+
     function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
         Cards.setMana(key, mana);
@@ -51,6 +54,7 @@ contract ConfigSystem is System {
 //        bytes32 key = keccak256(abi.encode(id));
 //        Cards.set(key, data);
 //    }
+
 
     function initPack(string memory name, PackType _packType, uint8 _cards, uint8[] memory _rarities, uint32 _cost) public returns (bytes32 key) {
         key = keccak256(abi.encode(name));

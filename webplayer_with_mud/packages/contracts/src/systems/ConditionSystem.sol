@@ -5,10 +5,11 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
-import {Condition, ConditionCardType, CardOnBoards, Cards, Games} from "../codegen/index.sol";
+import {Condition, ConditionCardType, CardOnBoards, Cards, Games, Players} from "../codegen/index.sol";
 import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsEquip, PlayerCardsDeck, PlayerCardsTemp, PlayerCardsDiscard, PlayerCardsSecret} from "../codegen/index.sol";
 import {Status, ConditionObjType, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
+import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 contract ConditionSystem is System {
 
@@ -249,7 +250,7 @@ contract ConditionSystem is System {
     }
 
     function IsAttackL4(bytes32 ability_key, bytes32 caster, bytes32 target) public returns (bool){
-        return ConditionStat(ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4, ability_key, caster, target);
+        return ConditionStat(ability_key, caster, target, ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4);
     }
 
     //=======================================//=======================================//=======================================
@@ -272,9 +273,8 @@ contract ConditionSystem is System {
 
         if (player_type == ConditionPlayerType.Self || player_type == ConditionPlayerType.Both)
         {
-            //todo
-//            Player player =  data.GetPlayer(caster.player_id);
-//            count += CountPile(player, pile);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            count = count + CountPile(player_key, pile, has_type, has_team, CardTrait.None);
         }
         if (player_type == ConditionPlayerType.Opponent || player_type == ConditionPlayerType.Both)
         {
@@ -287,8 +287,8 @@ contract ConditionSystem is System {
     }
 
     function ConditionDeckbuilding(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
-        //todo
-        return false;
+        bytes32 card_config_key = CardOnBoards.getId(target);
+        return CompareBool(Cards.getDeckbuilding(card_config_key), oper);
     }
 
     function ConditionExhaust(ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
@@ -312,18 +312,36 @@ contract ConditionSystem is System {
     }
 
     function ConditionSlotEmpty(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal returns (bool){
-        //todo
-        return false;
+        uint16 slot_encode = bytes32ToUint16(target);
+        Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
+
+        return CompareBool(slot_card == 0, oper);
     }
 
     function ConditionSlotValue(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal returns (bool){
-        //todo
-        return false;
+
+        uint16 slot_encode = bytes32ToUint16(target);
+        Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+
+        bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
+        bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
+        return valid_x && valid_y;
     }
 
     function ConditionSlotRange(bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal returns (bool){
-        //todo
-        return false;
+        uint16 slot_encode = bytes32ToUint16(target);
+        Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+
+        uint16 cslot_encode = CardOnBoards.getSlot(caster);
+        Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+
+        uint8 dist_x = uint8(cslot.x - target_slot.x);
+        uint8 dist_y = uint8(cslot.y - target_slot.y);
+        uint8 dist_p = uint8(cslot.p - target_slot.p);
+
+        return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
     }
 
 
@@ -344,10 +362,6 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        //todo
-        return false;
-    }
 
     function ConditionCardPile(PileType pile_type, ConditionOperatorBool oper, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
         if (target == 0) {
@@ -380,7 +394,7 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionStat(ConditionStatType stat_type, ConditionOperatorInt oper, int8 value, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool) {
+    function ConditionStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal returns (bool) {
         if (stat_type == ConditionStatType.Attack)
         {
             return CompareInt(CardOnBoards.getAttack(target), oper, value);
@@ -399,8 +413,22 @@ contract ConditionSystem is System {
         return false;
     }
 
+    function ConditionPlayerStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionStatType stat_type, ConditionOperatorInt oper, int8 value) internal returns (bool){
+        if (stat_type == ConditionStatType.HP)
+        {
+            return CompareInt(Players.getHp(target), oper, value);
+        }
+
+        if (stat_type == ConditionStatType.Mana)
+        {
+            return CompareInt(Players.getMana(target), oper, value);
+        }
+
+        return false;
+    }
+
     function ConditionStatCustom(bytes32 ability_key, bytes32 caster, bytes32 target, CardTrait has_trait, ConditionOperatorInt oper, int8 value) internal returns (bool){
-        //todo
+//todo
         return false;
     }
 
@@ -578,4 +606,11 @@ contract ConditionSystem is System {
         return (is_type && is_team && is_trait);
     }
 
+    function bytes32ToUint16(bytes32 data) internal pure returns (uint16) {
+        return uint16(uint256(data));
+    }
+
+    function uint16ToBytes32(uint16 data) internal pure returns (bytes32) {
+        return bytes32(uint256(data));
+    }
 }
