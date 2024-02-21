@@ -2,9 +2,9 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Cards} from "../codegen/index.sol";
-import {Packs, PacksData} from "../codegen/index.sol";
-import {Users, UsersData} from "../codegen/index.sol";
+import {Cards, CardsExtend} from "../codegen/index.sol";
+import {Packs} from "../codegen/index.sol";
+import {Users} from "../codegen/index.sol";
 
 contract MarketSystem is System {
 
@@ -13,7 +13,7 @@ contract MarketSystem is System {
         bytes32 user_key = keccak256(abi.encode(_msgSender()));
         bytes32 card_key = keccak256(abi.encode(card_id));
 
-        uint32 cost = Cards.getCost(card_key);
+        uint32 cost = CardsExtend.getCost(card_key);
         uint256 coin = Users.getCoin(user_key);
 
         require(coin >= cost * quantity, "Insufficient coin to buy card");

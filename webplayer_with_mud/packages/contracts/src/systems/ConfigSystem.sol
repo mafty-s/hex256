@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Cards} from "../codegen/index.sol";
+import {Cards, CardsExtend} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability, AbilityExtend} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
@@ -15,12 +15,13 @@ contract ConfigSystem is System {
         Cards.setMana(key, mana);
         Cards.setAttack(key, attack);
         Cards.setHp(key, hp);
-        Cards.setCost(key, cost);
         Cards.setTid(key, name);
         Cards.setCardType(key, cardType);
 //        Cards.setTeam(key, "1");
-//        Cards.setRarity(key, rarity);
         Cards.setAbilities(key, abilities);
+
+        CardsExtend.setCost(key, cost);
+        CardsExtend.setRarity(key, rarity);
 
 
         if (rarity == RarityType.COMMON) {

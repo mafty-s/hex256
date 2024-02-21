@@ -103,11 +103,11 @@ export default mudConfig({
                 abilities: "bytes32[]",
             },
         },
-        CardsExntend: {
+        CardsExtend: {
             valueSchema: {
                 rarity: "RarityType",
-                packs: "bytes32[]",
                 cost: "uint32",
+                packs: "bytes32[]",
             }
         },
         Ability: {

@@ -12,7 +12,7 @@ import { Packs, PacksData, PacksTableId } from "./tables/Packs.sol";
 import { Users, UsersData, UsersTableId } from "./tables/Users.sol";
 import { UsersExtended, UsersExtendedData, UsersExtendedTableId } from "./tables/UsersExtended.sol";
 import { Cards, CardsData, CardsTableId } from "./tables/Cards.sol";
-import { CardsExntend, CardsExntendTableId } from "./tables/CardsExntend.sol";
+import { CardsExtend, CardsExtendData, CardsExtendTableId } from "./tables/CardsExtend.sol";
 import { Ability, AbilityData, AbilityTableId } from "./tables/Ability.sol";
 import { AbilityExtend, AbilityExtendData, AbilityExtendTableId } from "./tables/AbilityExtend.sol";
 import { CardOnBoards, CardOnBoardsData, CardOnBoardsTableId } from "./tables/CardOnBoards.sol";
