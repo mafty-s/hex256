@@ -5,6 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
+import {IFilterSystem} from "../codegen/world/IFilterSystem.sol";
 import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
@@ -275,18 +276,17 @@ contract AbilitySystem is System {
         }
 
         bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
-        if (filters_target.length > 0 && targets.length > 0) {
+        if (filters_target.length > 0 && targets.length > 0)
+        {
             for (uint i = 0; i < filters_target.length; i++) {
-                bytes32 filter = filters_target[i];
+                bytes4 filter = filters_target[i];
                 if (filter != 0) {
-                    //todo
-//                    uint32 returnValue = abi.decode(
-//                        SystemSwitch.call(
-//                            abi.encodeCall(IIncrementSystem.increment, ())
-//                        ),
-//                        (uint32)
-//                    );
-//                    IConditionSystem.FilterFirst(1, ability_key, caster, target);
+                    targets = abi.decode(
+                        SystemSwitch.call(
+                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.Card))
+                        ),
+                        (bytes32[])
+                    );
                 }
             }
         }
