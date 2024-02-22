@@ -90,7 +90,6 @@ contract OnGoingSystem is System {
                 UpdateOngoingAbilities(player_key, cards_hand[c], players);
             }
         }
-        return;
         //Stats bonus 状态奖励
         for (uint i = 0; i < players.length; i++) {
             bytes32 player_key = players[i];
@@ -104,22 +103,26 @@ contract OnGoingSystem is System {
 
                 //Status bonus
                 uint32[] memory status_list = CardOnBoards.getStatus(cards_board[c]);
+
                 for (uint cs = 0; cs < status_list.length; cs++) {
-                    AddOngoingStatusBonus(cards_board[c], (Status)(status_list[cs]), 0);
+                    (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(status_list[cs]);
+                    AddOngoingStatusBonus(cards_board[c], (Status)(status_id),  int8(value));
                 }
                 uint32[] memory status_ongoing_list = CardOnBoards.getOngoingStatus(cards_board[c]);
                 for (uint csg = 0; csg < status_ongoing_list.length; csg++) {
-                    AddOngoingStatusBonus(cards_board[c], (Status)(status_ongoing_list[csg]), 0);
+                    (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(status_ongoing_list[csg]);
+                    AddOngoingStatusBonus(cards_board[c], (Status)(status_id), int8(value));
                 }
             }
         }
+        return;
 
         //Kill stuff with 0 hp
         for (uint i = 0; i < players.length; i++) {
             bytes32 player_key = players[i];
             bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
             for (uint c = 0; c < cards_board.length; c++) {
-                if(CardLogicLib.GetHP(cards_board[c]) <= 0)
+                if (CardLogicLib.GetHP(cards_board[c]) <= 0)
                 {
                     //todo
                 }
@@ -217,5 +220,14 @@ contract OnGoingSystem is System {
         }
 
 
+    }
+
+
+    function splitUint32(uint32 value) internal pure returns (uint8, uint8, uint8, uint8) {
+        uint8 a = uint8((value >> 24) & 0xFF);
+        uint8 b = uint8((value >> 16) & 0xFF);
+        uint8 c = uint8((value >> 8) & 0xFF);
+        uint8 d = uint8(value & 0xFF);
+        return (a, b, c, d);
     }
 }

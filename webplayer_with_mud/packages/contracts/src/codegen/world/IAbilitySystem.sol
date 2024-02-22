@@ -35,4 +35,6 @@ interface IAbilitySystem {
     bytes32 target,
     bool is_card
   ) external;
+
+  function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) external;
 }

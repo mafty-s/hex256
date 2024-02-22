@@ -7,11 +7,12 @@ import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
 import {IFilterSystem} from "../codegen/world/IFilterSystem.sol";
 import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended, Config} from "../codegen/index.sol";
-import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType} from "../codegen/common.sol";
+import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType, GameState} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
+import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract AbilitySystem is System {
     //使用技能
@@ -444,6 +445,30 @@ contract AbilitySystem is System {
             }
         }
         GamesExtended.setLastTarget(game_uid, target);
+    }
+
+    function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) public {
+        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+        AbilityTrigger trigger = Ability.getTrigger(ability_key);
+        AbilityTarget target = Ability.getTarget(ability_key);
+        if (trigger == AbilityTrigger.ACTIVATE) {
+            Players.setMana(player_key, Players.getMana(player_key) - (int8)(Ability.getManaCost(ability_key)));
+            CardOnBoards.setExhausted(caster, CardOnBoards.getExhausted(caster) || Ability.getExhaust(ability_key));
+        }
+
+        GameLogicLib.CheckForWinner(game_uid);
+
+        //Chain ability
+        if (target != AbilityTarget.ChoiceSelector && Games.getGameState(game_uid) != GameState.GAME_ENDED)
+        {
+            bytes32[] memory chain_abilities = AbilityExtend.getChainAbilities(ability_key);
+            for (uint i = 0; i < chain_abilities.length; i++) {
+                bytes32 chain_ability = chain_abilities[i];
+                if (chain_ability != 0) {
+                    TriggerCardAbility(chain_ability, caster, 0, true);
+                }
+            }
+        }
     }
 
 
