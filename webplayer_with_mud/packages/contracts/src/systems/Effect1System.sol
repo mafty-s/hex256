@@ -103,7 +103,7 @@ contract Effect1System is System {
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
-    function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
@@ -165,20 +165,25 @@ contract Effect1System is System {
 
         if (is_card) {
             if (stat == EffectStatType.HP) {
-                CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
+                CardOnBoards.setHp(target, value);
+                CardOnBoards.setDamage(target, 0);
             }
             if (stat == EffectStatType.Mana) {
-                CardOnBoards.setMana(target, value + CardOnBoards.getMana(target));
+                CardOnBoards.setMana(target, value);
             }
             if (stat == EffectStatType.Attack) {
                 CardOnBoards.setAttack(target, value);
             }
         } else {
             if (stat == EffectStatType.HP) {
-                Players.setHp(target, value + Players.getHp(target));
+                Players.setHp(target, value);
             }
             if (stat == EffectStatType.Mana) {
-                Players.setMana(target, value + Players.getMana(target));
+                if (value < 0) {
+                    Players.setMana(target, 0);
+                } else {
+                    Players.setMana(target, value);
+                }
             }
         }
     }

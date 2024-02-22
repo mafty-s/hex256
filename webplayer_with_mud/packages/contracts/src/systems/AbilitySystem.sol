@@ -51,7 +51,6 @@ contract AbilitySystem is System {
         bytes4[] memory effects = Ability.getEffects(ability_key);
         if (effects.length > 0 && ability_key != 0 && caster != 0 && targets.length > 0) {
             for (uint i = 0; i < effects.length; i++) {
-//                SystemSwitch.call(abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card)));
                 for (uint t = 0; t < targets.length; t++) {
                     if (targets[t] != 0) {
                         bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, targets[t], is_card);
@@ -218,19 +217,26 @@ contract AbilitySystem is System {
         if (target == AbilityTarget.AllCardsBoard || target == AbilityTarget.SelectTarget)
         {
 
+//            targets = new bytes32[](0);
             bytes32[] memory cards_board_a = PlayerCardsBoard.getValue(players[0]);
             bytes32[] memory cards_board_b = PlayerCardsBoard.getValue(players[1]);
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
                 if (cards_board_a[i] != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
+                    if (numTargets > targets.length) {
+                        revert("numTargets>targets.length");
+                    }
                     targets[numTargets] = cards_board_a[i];
                     numTargets++;
                 }
             }
-            for (uint i = 0; i < cards_board_b.length; i++) {
-                if (cards_board_b[i] != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_b[i], ConditionTargetType.Card)) {
-                    targets[numTargets] = cards_board_b[i];
+            for (uint x = 0; x < cards_board_b.length; x++) {
+                if (cards_board_b[x] != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_b[x], ConditionTargetType.Card)) {
+                    if (numTargets > targets.length) {
+                        revert("numTargets>targets.length");
+                    }
+                    targets[numTargets] = cards_board_b[x];
                     numTargets++;
                 }
             }

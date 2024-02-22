@@ -36,7 +36,7 @@ interface IEffect1System {
 
   function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectSetHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectSetHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 

@@ -84,6 +84,7 @@ contract GameStartSystem is System {
         PlayerCardsTemp.setValue(player_key, new bytes32[](0));
         PlayerCardsBoard.setValue(player_key, new bytes32[](0));
         PlayerCardsDeck.setValue(player_key, new bytes32[](0));
+        PlayerCardsHand.setValue(player_key, new bytes32[](0));
 
         for (uint i = 0; i < cards.length; i++) {
             bytes32 on_board_card_key = GameLogicLib.AddCard(player_key, cards[i]);
