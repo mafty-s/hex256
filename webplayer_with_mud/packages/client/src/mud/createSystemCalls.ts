@@ -128,6 +128,19 @@ export function createSystemCalls(
         return functionSelector;
     }
 
+    const getConditionSelector = (name) => {
+        if (name.length === 0) {
+            return null
+        }
+        //0xb618c8ba
+        // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
+        const functionName = convertToPascalCase(name) + '(bytes32,bytes32,uint8,bytes32,bytes32)';
+        const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
+        console.log(functionName, functionSelector)
+
+        return functionSelector;
+    }
+
     const getSelectorFromArrStr = (arrstr: string, formater) => {
         if (arrstr.length === 0) {
             return [];
@@ -276,7 +289,7 @@ export function createSystemCalls(
         console.log("initAbility", id, key, status, status_code);
 
 
-        const conditionsTrigger_byes32 = [];//arrStr2Bytes32(conditionsTrigger);
+        const conditionsTrigger_byes32 = getSelectorFromArrStr(conditionsTrigger, getConditionSelector);
         const filtersTarget_byes32 = getSelectorFromArrStr(filtersTarget, getFilterSelector);
         const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
 

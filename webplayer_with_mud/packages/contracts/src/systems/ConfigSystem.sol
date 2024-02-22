@@ -2,6 +2,8 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
+import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
+import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
 import {Cards, CardsExtend} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability, AbilityExtend} from "../codegen/index.sol";
@@ -86,8 +88,26 @@ contract ConfigSystem is System {
         bytes4[] memory filtersTarget,
         bytes32[] memory chainAbilities,
         uint8[] memory status
-    )
-    public returns (bytes32 key){
+    ) public returns (bytes32 key)
+    {
+        for(uint i = 0; i < effects.length; i++) {
+            if (!isSelectorExist(effects[i])) {
+                revert("Effect not exist");
+            }
+        }
+
+        for(uint i = 0; i < conditionsTrigger.length; i++) {
+            if (!isSelectorExist(conditionsTrigger[i])) {
+                revert("Condition not exist");
+            }
+        }
+
+        for(uint i = 0; i < filtersTarget.length; i++) {
+            if (!isSelectorExist(filtersTarget[i])) {
+                revert("Filter not exist");
+            }
+        }
+
         key = keccak256(abi.encode(id));
         Ability.setId(key, id);
         Ability.setValue(key, value);
@@ -103,6 +123,14 @@ contract ConfigSystem is System {
         AbilityExtend.setChainAbilities(key, chainAbilities);
 
         Config.pushAbility(key);
+    }
+
+    function isSelectorExist(bytes4 selector) internal view returns (bool) {
+        (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(selector);
+        if (ResourceId.unwrap(systemId) == 0) {
+            return false;
+        }
+        return true;
     }
 
 
