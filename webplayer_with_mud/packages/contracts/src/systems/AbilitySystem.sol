@@ -227,7 +227,7 @@ contract AbilitySystem is System {
                 }
             }
             for (uint i = 0; i < cards_board_b.length; i++) {
-                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_b[i], ConditionTargetType.Card)) {
                     targets[numTargets] = cards_board_b[i];
                     numTargets++;
                 }
@@ -247,7 +247,7 @@ contract AbilitySystem is System {
                 }
             }
             for (uint i = 0; i < cards_board_b.length; i++) {
-                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_a[i], ConditionTargetType.Card)) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards_board_b[i], ConditionTargetType.Card)) {
                     targets[numTargets] = cards_board_b[i];
                     numTargets++;
                 }
