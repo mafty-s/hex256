@@ -14,6 +14,7 @@ import {PlayerCardsHand, PlayerCardsDeck, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 
 
 contract EndTurnSystem is System {
@@ -72,7 +73,7 @@ contract EndTurnSystem is System {
         bytes32 opponent_player_key = getOpponentPlayer(game_key, player_key);
 
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.UpdateOngoing, (game_key))
+            abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
         );
 
         return (opponent_player_key, board_card_key, mana, mana_max);

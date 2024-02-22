@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 import {Cards, Players, CardOnBoards, Games} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, CardType, AbilityTrigger, Action} from "../codegen/common.sol";
 import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip, CardOnBoards} from "../codegen/index.sol";
@@ -121,7 +122,7 @@ contract PlayCardSystem is System {
 
 
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.UpdateOngoing, (game_key))
+            abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
         );
 
         return (mana_cost, player_mana);

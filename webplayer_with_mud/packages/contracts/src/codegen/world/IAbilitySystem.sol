@@ -35,8 +35,4 @@ interface IAbilitySystem {
     bytes32 target,
     bool is_card
   ) external;
-
-  function UpdateOngoing(bytes32 game_key) external;
-
-  function UpdateOngoingAbilities(bytes32 player_key, bytes32 card_key, bytes32[] memory players) external;
 }

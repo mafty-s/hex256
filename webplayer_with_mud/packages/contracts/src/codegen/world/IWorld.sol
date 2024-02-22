@@ -26,6 +26,7 @@ import { IGmSystem } from "./IGmSystem.sol";
 import { IMarketSystem } from "./IMarketSystem.sol";
 import { IMatchSystem } from "./IMatchSystem.sol";
 import { IMoveSystem } from "./IMoveSystem.sol";
+import { IOnGoingSystem } from "./IOnGoingSystem.sol";
 import { IPacksSystem } from "./IPacksSystem.sol";
 import { IPlayCardSystem } from "./IPlayCardSystem.sol";
 import { ISelectSystem } from "./ISelectSystem.sol";
@@ -62,6 +63,7 @@ interface IWorld is
   IMarketSystem,
   IMatchSystem,
   IMoveSystem,
+  IOnGoingSystem,
   IPacksSystem,
   IPlayCardSystem,
   ISelectSystem,
