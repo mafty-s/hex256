@@ -27,7 +27,7 @@ contract Effect1System is System {
         EffectAddTrait(ability_key, caster, target, is_card, TraitData.Growth);
     }
 
-    function EffectAddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 

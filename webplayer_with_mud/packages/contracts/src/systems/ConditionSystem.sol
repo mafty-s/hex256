@@ -74,7 +74,7 @@ contract ConditionSystem is System {
 
     }
 
-    function HasDiscardCharacters(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function HasDiscardCharacter(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCount(condition_type, caster, target, ConditionPlayerType.Self, PileType.Discard, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
 
     }
@@ -225,7 +225,7 @@ contract ConditionSystem is System {
         return ConditionStat(ability_key, caster, target, ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4);
     }
 
-    function Rolled4P(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function Rolled_4P(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionRolled(game_uid, ConditionOperatorInt.GreaterEqual, 4);
     }
 

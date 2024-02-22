@@ -12,7 +12,7 @@ interface IEffect1System {
 
   function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function EffectAddHP(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+  function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 

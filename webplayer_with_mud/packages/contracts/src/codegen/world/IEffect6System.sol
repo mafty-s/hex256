@@ -21,4 +21,6 @@ interface IEffect6System {
   function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+
+  function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }

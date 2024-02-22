@@ -15,15 +15,15 @@ contract Effect4System is System {
     }
 
     //todo
-//    function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-//        int8 value = Ability.getValue(ability_key);
+    function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        int8 value = Ability.getValue(ability_key);
 //        int8 damage = GetDamage(caster, value, is_card, TraitData.SpellDamage);
 //        if (is_card) {
 //            GameLogicLib.DamageCard(caster, target, damage, true);
 //        } else {
 //            GameLogicLib.DamagePlayer(caster, target, damage, true);
 //        }
-//    }
+    }
 
 
 

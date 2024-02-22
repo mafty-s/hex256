@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Players, Ability, GamesExtended,  CardOnBoards} from "../codegen/index.sol";
+import {Players, Ability, GamesExtended, CardOnBoards} from "../codegen/index.sol";
 import {Action, EffectAttackerType, TraitData} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
@@ -23,8 +23,6 @@ contract Effect6System is System {
     function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         RunAttacker(ability_key, caster, target, is_card, EffectAttackerType.Self);
     }
-
-
 
 
     function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -85,6 +83,10 @@ contract Effect6System is System {
             //todo
 
         }
+    }
+
+    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        //todo create_temp
     }
 
     //----------------------------------------------------------------------------------------------------------------

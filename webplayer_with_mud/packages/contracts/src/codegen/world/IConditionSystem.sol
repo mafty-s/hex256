@@ -45,7 +45,7 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
-  function HasDiscardCharacters(
+  function HasDiscardCharacter(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
@@ -341,7 +341,7 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
-  function Rolled4P(
+  function Rolled_4P(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
