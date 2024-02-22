@@ -99,7 +99,6 @@ contract Effect1System is System {
     }
 
 
-
     function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
@@ -203,7 +202,7 @@ contract Effect1System is System {
             bytes32 action_key = keccak256(abi.encode(game_key, len));
             PlayerActionHistory.push(game_key, action_key);
             ActionHistory.setActionType(action_key, Action.ChangeCard);
-            ActionHistory.setPayload(ability_key, abi.encodePacked(caster,value));
+            ActionHistory.setPayload(ability_key, abi.encodePacked(caster, value));
         } else {
             if (stat == EffectStatType.HP) {
                 int8 hp = Players.getHp(target);
