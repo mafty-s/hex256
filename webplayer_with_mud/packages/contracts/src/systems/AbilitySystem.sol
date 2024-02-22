@@ -530,6 +530,7 @@ contract AbilitySystem is System {
                 UpdateOngoingAbilities(player_key, cards_hand[c], players);
             }
         }
+        return;
         //Stats bonus 状态奖励
         for (uint i = 0; i < players.length; i++) {
             bytes32 player_key = players[i];
@@ -554,7 +555,17 @@ contract AbilitySystem is System {
         }
 
         //Kill stuff with 0 hp
-        //todo
+        for (uint i = 0; i < players.length; i++) {
+            bytes32 player_key = players[i];
+            bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+            for (uint c = 0; c < cards_board.length; c++) {
+                if(CardLogicLib.GetHP(cards_board[c]) <= 0)
+                {
+                    //todo
+                }
+                //todo
+            }
+        }
         //Clear cards
         //todo
     }

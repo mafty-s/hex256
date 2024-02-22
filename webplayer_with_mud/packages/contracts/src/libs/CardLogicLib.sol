@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
+import {CardOnBoards} from "../codegen/index.sol";
 import {Cards, Ability} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
@@ -9,20 +9,29 @@ import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 
 library CardLogicLib {
 
-    function GetAttack(CardOnBoardsData memory card) internal pure returns (int8) {
-        return card.attack + card.attackOngoing;
+    function GetAttack(bytes32 card_key) internal view returns (int8) {
+        int8 attack = CardOnBoards.getAttack(card_key);
+        int8 attackOngoing = CardOnBoards.getAttackOngoing(card_key);
+        return attack + attackOngoing;
     }
 
-    function GetHP(CardOnBoardsData memory card) internal pure returns (int8) {
-        return card.hp + card.hpOngoing - card.damage;
+    function GetHP(bytes32 card_key) internal view returns (int8) {
+        int8 hp = CardOnBoards.getHp(card_key);
+        int8 hpOngoing = CardOnBoards.getHpOngoing(card_key);
+        int8 damage = CardOnBoards.getDamage(card_key);
+        return hp + hpOngoing - damage;
     }
 
-    function GetHPMax(CardOnBoardsData memory card) internal pure returns (int8) {
-        return card.hp + card.hpOngoing;
+    function GetHPMax(bytes32 card_key) internal view returns (int8) {
+        int8 hp = CardOnBoards.getHp(card_key);
+        int8 hpOngoing = CardOnBoards.getHpOngoing(card_key);
+        return hp + hpOngoing;
     }
 
-    function GetMana(CardOnBoardsData memory card) internal pure returns (int8) {
-        return card.mana + card.manaOngoing;
+    function GetMana(bytes32 card_key) internal view returns (int8) {
+        int8 mana = CardOnBoards.getMana(card_key);
+        int8 manaOngoing = CardOnBoards.getManaOngoing(card_key);
+        return mana + manaOngoing;
     }
 
     function IsBoardCard(bytes32 card_key) internal view returns (bool) {
