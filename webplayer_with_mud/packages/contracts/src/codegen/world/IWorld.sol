@@ -10,7 +10,6 @@ import { IActionSystem } from "./IActionSystem.sol";
 import { IAttackSystem } from "./IAttackSystem.sol";
 import { IConditionSystem } from "./IConditionSystem.sol";
 import { IConfigSystem } from "./IConfigSystem.sol";
-import { ICounterSystem } from "./ICounterSystem.sol";
 import { IDebugSystem } from "./IDebugSystem.sol";
 import { IDeckSystem } from "./IDeckSystem.sol";
 import { IEffect1System } from "./IEffect1System.sol";
@@ -47,7 +46,6 @@ interface IWorld is
   IAttackSystem,
   IConditionSystem,
   IConfigSystem,
-  ICounterSystem,
   IDebugSystem,
   IDeckSystem,
   IEffect1System,

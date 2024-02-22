@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
+import {console} from "forge-std/console.sol";
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
 import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
 import {IFilterSystem} from "../codegen/world/IFilterSystem.sol";
-import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended} from "../codegen/index.sol";
+import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended, Config} from "../codegen/index.sol";
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip} from "../codegen/index.sol";
+import {Slot, SlotLib} from "../libs/SlotLib.sol";
 
 contract AbilitySystem is System {
     //使用技能
@@ -313,24 +315,64 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.AllSlots)
         {
-            //todo
             Slot[] memory slots = SlotLib.GetAll();
             for (uint i = 0; i < slots.length; i++) {
-                if (CanTargetSlot(game_uid, ability_key, caster, slots[i].id)) {
-                    targets.push(bytes32(uint256(slots[i].id)));
+                //todo
+//                if (CanTargetSlot(game_uid, ability_key, caster, slots[i].id)) {
+//                    targets.push(bytes32(uint256(slots[i].id)));
+//                }
+            }
+        }
+        //Filter targets
+        bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
+        if (filters_target.length > 0 && targets.length > 0)
+        {
+            for (uint i = 0; i < filters_target.length; i++) {
+                bytes4 filter = filters_target[i];
+                if (filter != 0) {
+                    targets = abi.decode(
+                        SystemSwitch.call(
+                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.Slot))
+                        ),
+                        (bytes32[])
+                    );
+                }
+            }
+        }
+
+    }
+
+    function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
+        uint numTargets = 0;
+        bytes32[] memory targets;
+        if (target == AbilityTarget.AllCardData) {
+            bytes32[] memory cards = Config.getCards();
+            targets = new bytes32[](cards.length);
+            for (uint i = 0; i < cards.length; i++) {
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, cards[i], ConditionTargetType.CardData)) {
+                    targets[numTargets] = cards[i];
+                    numTargets++;
                 }
             }
         }
         //Filter targets
-        //todo
-    }
-
-    function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target) internal {
-        if (target == AbilityTarget.AllCardData) {
-            //todo
+        bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
+        if (filters_target.length > 0 && targets.length > 0)
+        {
+            for (uint i = 0; i < filters_target.length; i++) {
+                bytes4 filter = filters_target[i];
+                if (filter != 0) {
+                    targets = abi.decode(
+                        SystemSwitch.call(
+                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.CardData))
+                        ),
+                        (bytes32[])
+                    );
+                }
+            }
         }
-        //Filter targets
-        //todo
+
+        return targets;
     }
 
     function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bool){

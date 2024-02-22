@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {MatchingSingleton, Matches, MatchesData, CounterSingleton} from "../codegen/index.sol";
+import {MatchingSingleton, Matches, MatchesData} from "../codegen/index.sol";
 
 
 contract MatchSystem is System {
@@ -13,15 +13,15 @@ contract MatchSystem is System {
 
         if (matching == 0 && Matches.getStartTime(matching_key) <= block.timestamp - 5) {
 //            MatchingSingleton.setValue(game_uid);
-            CounterSingleton.setValue(CounterSingleton.getValue() + 1);
-            uint256 matching_id = CounterSingleton.getValue();
+            uint256 matching_id = MatchingSingleton.getValue() + 1;
             bytes32 matching_key = keccak256(abi.encode(matching_id));
             Matches.setStartTime(matching_key, block.timestamp);
             Matches.setGame(matching_key, matching_id);
             Matches.setNbPlayers(matching_key, nb_players);
 
-            MatchingSingleton.setValue(matching_id);
             Matches.pushPlayers(matching_key, _msgSender());
+
+            MatchingSingleton.setValue(matching_id);
 
             return Matches.get(matching_key);
         } else {

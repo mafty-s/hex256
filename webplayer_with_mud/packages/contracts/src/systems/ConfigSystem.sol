@@ -5,12 +5,15 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Cards, CardsExtend} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability, AbilityExtend} from "../codegen/index.sol";
+import {Config} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 import {CardRaritySingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
 
+
     constructor() {
+
     }
 
     function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity) public returns (bytes32 key)  {
@@ -42,6 +45,8 @@ contract ConfigSystem is System {
         if (rarity == RarityType.MYTHIC) {
             CardRaritySingleton.pushMythic(key);
         }
+
+        Config.pushCards(key);
 
     }
 
@@ -96,6 +101,8 @@ contract ConfigSystem is System {
         AbilityExtend.setConditionsTrigger(key, conditionsTrigger);
         AbilityExtend.setFiltersTarget(key, filtersTarget);
         AbilityExtend.setChainAbilities(key, chainAbilities);
+
+        Config.pushAbility(key);
     }
 
 

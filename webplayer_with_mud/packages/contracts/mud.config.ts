@@ -30,14 +30,6 @@ export default mudConfig({
         ConditionTargetType: ["None", "Card", "Player", "Slot", "CardData"],
     },
     tables: {
-        AdminSingleton: {
-            keySchema: {},
-            valueSchema: "address",
-        },
-        CounterSingleton: {
-            keySchema: {},
-            valueSchema: "uint256",
-        },
         MatchingSingleton: {
             keySchema: {},
             valueSchema: "uint256",
@@ -88,6 +80,14 @@ export default mudConfig({
             valueSchema: {
                 avatar: "string",
                 cardback: "string",
+            }
+        },
+        Config: {
+            keySchema: {},
+            valueSchema: {
+                admin: "bytes32[]",
+                cards: "bytes32[]",
+                ability: "bytes32[]",
             }
         },
         Cards: {
