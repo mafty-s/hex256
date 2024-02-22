@@ -275,7 +275,6 @@ public class MudRefresh
                     StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {
-                        value = 10000;
                         Debug.Log("ongoing status:" + status_id + " value" + (int)value + " card_key: " +
                                   mud_card.key + " name:" + mud_card.name);
                         card.AddOngoingStatus(s, (int)value);
