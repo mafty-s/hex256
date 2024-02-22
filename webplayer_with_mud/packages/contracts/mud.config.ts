@@ -30,6 +30,10 @@ export default mudConfig({
         ConditionTargetType: ["None", "Card", "Player", "Slot", "CardData"],
     },
     tables: {
+        Logger: {
+            keySchema: {},
+            valueSchema: "string",
+        },
         MatchingSingleton: {
             keySchema: {},
             valueSchema: "uint256",

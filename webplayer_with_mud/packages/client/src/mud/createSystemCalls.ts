@@ -115,13 +115,26 @@ export function createSystemCalls(
         return functionSelector;
     }
 
-    const getEffectSelectorFromArrStr = (arrstr: string) => {
+    const getFilterSelector = (name) => {
+        if (name.length === 0) {
+            return null
+        }
+        //0xb618c8ba
+        // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
+        const functionName = convertToPascalCase(name) + '(bytes32,bytes32,bytes32[],uint8)';
+        const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
+        console.log(functionName, functionSelector)
+
+        return functionSelector;
+    }
+
+    const getSelectorFromArrStr = (arrstr: string, formater) => {
         if (arrstr.length === 0) {
             return [];
         }
         const arr = arrstr.split('|');
         const arr_bytes4 = arr.map((item) => {
-            return getEffectSelector(item);
+            return formater(item);
         });
         return arr_bytes4;
     }
@@ -264,7 +277,7 @@ export function createSystemCalls(
 
 
         const conditionsTrigger_byes32 = [];//arrStr2Bytes32(conditionsTrigger);
-        const filtersTarget_byes32 = [];//arrStr2Bytes32(filtersTarget);
+        const filtersTarget_byes32 = getSelectorFromArrStr(filtersTarget, getFilterSelector);
         const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
 
         const tx = await worldContract.write.initAbility([
@@ -275,7 +288,7 @@ export function createSystemCalls(
             manaCost,
             duration,
             exhaust,
-            getEffectSelectorFromArrStr(effect_str),
+            getSelectorFromArrStr(effect_str, getEffectSelector),
             conditionsTrigger_byes32,
             filtersTarget_byes32,
             chainAbilities_byes32,
@@ -816,7 +829,7 @@ export function createSystemCalls(
         let player_action_history = useStore.getState().getValue(tables.PlayerActionHistory, {key});
         let action_historys = [];
         // console.log(player_action_history);
-        if(player_action_history!=undefined) {
+        if (player_action_history != undefined) {
             for (let i = 0; i < player_action_history.value.length; i++) {
                 let action_key = player_action_history.value[i];
                 let action_history = useStore.getState().getValue(tables.ActionHistory, {action_key});
@@ -915,7 +928,7 @@ export function createSystemCalls(
         await worldContract.write.TriggerCardAbilityType([AbilityTrigger.ON_PLAY, caster, caster, true]);
     }
 
-    const isConditionFunctionExist = async(selector:string) => {
+    const isConditionFunctionExist = async (selector: string) => {
         return await worldContract.read.IsConditionFunctionExist([selector]);
     }
 
