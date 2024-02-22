@@ -10,7 +10,7 @@ import { Slot } from "./../../libs/SlotLib.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ISlotSystem {
-  function GetAllSlot(int8 p) external pure returns (Slot[] memory);
+  function GetAllSlot() external pure returns (Slot[] memory);
 
   function GetRandomEmptySlot(bytes32 player_key) external view returns (Slot memory);
 

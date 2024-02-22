@@ -24,7 +24,7 @@ library SlotLib {
         return slot;
     }
 
-    function GetAll(int8 p) internal pure returns (Slot[] memory) {
+    function GetAll() internal pure returns (Slot[] memory) {
         Slot[] memory slots = new Slot[](x_max * y_max * 2);
         uint8 index = 0;
         for (uint8 y = y_min; y <= y_max; y++) {
@@ -38,6 +38,22 @@ library SlotLib {
         }
         return slots;
     }
+
+
+//    function GetAllInP(int8 p) internal pure returns (Slot[] memory) {
+//        Slot[] memory slots = new Slot[](x_max * y_max * 2);
+//        uint8 index = 0;
+//        for (uint8 y = y_min; y <= y_max; y++) {
+//            for (uint8 x = x_min; x <= x_max; x++) {
+//                for (uint8 p = 0; p <= 1; p++) {
+//                    Slot memory slot = SlotLib.NewSlot(x, y, p);
+//                    slots[index] = slot;
+//                    index++;
+//                }
+//            }
+//        }
+//        return slots;
+//    }
 
     function SetSlot(bytes32 card_key, Slot memory slot) internal {
         CardOnBoards.setSlot(card_key, EncodeSlot(slot));

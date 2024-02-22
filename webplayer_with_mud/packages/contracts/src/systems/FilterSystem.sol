@@ -87,7 +87,7 @@ contract FilterSystem is System {
         return result;
     }
 
-//找到属性最低的牌
+    //找到属性最低的牌
     function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal view returns (bytes32[] memory){
         if (condition_type != ConditionTargetType.Card) {
             return source;

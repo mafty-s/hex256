@@ -161,16 +161,16 @@ contract AbilitySystem is System {
     }
 
     //Return player targets,  memory_array is used for optimization and avoid allocating new memory
-    function GetPlayerTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster_key) internal returns (bytes32[] memory){
+    function GetPlayerTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
         bytes32[] memory players = Games.getPlayers(game_uid);
         bytes32[] memory targets;
         if (target == AbilityTarget.PlayerSelf) {
             targets = new bytes32[](1);
-            bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
             targets[0] = player_key;
         } else if (target == AbilityTarget.PlayerOpponent) {
             targets = new bytes32[](1);
-            bytes32 player_key = CardOnBoards.getPlayerId(caster_key);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
             bytes32 opponent_key = player_key == players[0] ? players[1] : players[0];
             targets[0] = opponent_key;
         } else if (target == AbilityTarget.AllPlayers) {
@@ -178,7 +178,21 @@ contract AbilitySystem is System {
         }
 
         //Filter targets
-        //todo
+        bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
+        if (filters_target.length > 0 && targets.length > 0)
+        {
+            for (uint i = 0; i < filters_target.length; i++) {
+                bytes4 filter = filters_target[i];
+                if (filter != 0) {
+                    targets = abi.decode(
+                        SystemSwitch.call(
+                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.Player))
+                        ),
+                        (bytes32[])
+                    );
+                }
+            }
+        }
 
 
         return targets;
@@ -294,10 +308,18 @@ contract AbilitySystem is System {
         return targets;
     }
 
-    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target) internal {
+    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal {
+        bytes32[] memory targets;
+
         if (target == AbilityTarget.AllSlots)
         {
             //todo
+            Slot[] memory slots = SlotLib.GetAll();
+            for (uint i = 0; i < slots.length; i++) {
+                if (CanTargetSlot(game_uid, ability_key, caster, slots[i].id)) {
+                    targets.push(bytes32(uint256(slots[i].id)));
+                }
+            }
         }
         //Filter targets
         //todo

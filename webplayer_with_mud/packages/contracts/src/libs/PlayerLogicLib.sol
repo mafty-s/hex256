@@ -83,7 +83,7 @@ library PlayerLogicLib {
 
     function GetRandomEmptySlot(bytes32 player_key) internal pure returns (Slot memory) {
         Slot memory slot = SlotLib.NewSlot(0, 0, 0);
-        Slot[] memory slots = SlotLib.GetAll(0);
+        Slot[] memory slots = SlotLib.GetAll();
         for (uint i = 0; i < slots.length; i++) {
             //todo
         }
