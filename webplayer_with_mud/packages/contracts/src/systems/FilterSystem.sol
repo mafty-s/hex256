@@ -24,7 +24,7 @@ contract FilterSystem is System {
 
     function FilterTargets(bytes4 filter, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public returns (bytes32[] memory)
     {
-        bytes memory call_data = abi.encodeWithSelector(filter, ability_key, source, condition_type);
+        bytes memory call_data = abi.encodeWithSelector(filter, ability_key, caster, source, condition_type);
         bytes memory result_data = SystemSwitch.call(call_data);
 
         (bytes32[] memory dest) = abi.decode(result_data, (bytes32[]));
@@ -99,6 +99,7 @@ contract FilterSystem is System {
 
     //找到属性最低的牌
     function FilterLowestStat(ConditionStatType stat_type, bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal view returns (bytes32[] memory){
+//        return source;
         if (source.length == 0) {
             return source;
         }
