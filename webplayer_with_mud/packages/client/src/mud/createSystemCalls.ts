@@ -37,7 +37,7 @@ export function createSystemCalls(
      */
     {tables, useStore, worldContract, waitForTransaction, publicClient}: SetupNetworkResult
 ) {
-
+    
     const convertBigIntToInt = (obj) => {
         if (typeof obj !== 'object' || obj === null) {
             // 基本类型或 null，直接返回
@@ -945,6 +945,7 @@ export function createSystemCalls(
         return await worldContract.read.IsConditionFunctionExist([selector]);
     }
 
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -1002,6 +1003,7 @@ export function createSystemCalls(
         addCardOnEmptySlots,
         triggerCardAbilityType,
         isConditionFunctionExist,
+        now_game_uid
         // ablities,
     };
 

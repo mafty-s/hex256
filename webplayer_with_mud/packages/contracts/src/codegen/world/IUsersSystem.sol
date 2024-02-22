@@ -10,11 +10,11 @@ import { UsersData } from "./../index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IUsersSystem {
-  function addUser(string memory username) external returns (bytes32 key);
+  function addUser(string memory username) external returns (address key);
 
   function getUser() external view returns (UsersData memory _table);
 
-  function getUserByKey(bytes32 key) external view returns (UsersData memory _table);
+  function getUserByKey(address key) external view returns (UsersData memory _table);
 
   function getUserByOwner(address owner) external view returns (UsersData memory _table);
 }

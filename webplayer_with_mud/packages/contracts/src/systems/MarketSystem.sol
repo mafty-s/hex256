@@ -10,7 +10,7 @@ contract MarketSystem is System {
 
 
     function buyCard(string memory card_id, uint8 quantity) public {
-        bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        address user_key = _msgSender();
         bytes32 card_key = keccak256(abi.encode(card_id));
 
         uint32 cost = CardsExtend.getCost(card_key);
@@ -26,7 +26,7 @@ contract MarketSystem is System {
     }
 
     function sellCard(string memory card_id, uint8 quantity) public {
-        bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        address user_key = _msgSender();
         bytes32 card_key = keccak256(abi.encode(card_id));
 
         bytes32[] memory cards = Users.getCards(user_key);
@@ -47,7 +47,7 @@ contract MarketSystem is System {
     }
 
     function buyPack(string memory pack_id, uint8 quantity) public {
-        bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        address user_key = _msgSender();
         bytes32 pack_key = keccak256(abi.encode(pack_id));
 
         uint32 cost = Packs.getCost(pack_key);

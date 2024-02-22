@@ -69,6 +69,9 @@ export default mudConfig({
             }
         },
         Users: {
+            keySchema:{
+                key:"address"
+            },
             valueSchema: {
                 owner: "address",
                 coin: "uint256",
@@ -81,6 +84,9 @@ export default mudConfig({
             }
         },
         UsersExtended: {
+            keySchema:{
+                key:"address"
+            },
             valueSchema: {
                 avatar: "string",
                 cardback: "string",

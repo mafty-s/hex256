@@ -1,17 +1,12 @@
 import {useMUD} from "./MUDContext";
 import React, {useEffect} from 'react';
-import {ethers} from 'ethers';
-import * as console from "console";
+import {retry} from "rxjs";
 
 export const App = () => {
     const {
         network: {tables, useStore, walletClient},
         systemCalls: {
-            addTask,
-            toggleTask,
-            deleteTask,
             addUser,
-            // getUser,
             getUserByOwner,
             initCard,
             initPack,
@@ -19,20 +14,51 @@ export const App = () => {
             initAbility,
             calculateKeccak256Hash,
             convertBigIntToInt,
-            buyCard,
-            getCard,
-            incr,
-            getRandomCardByRarity,
-            openPack
+            now_game_uid,
         },
     } = useMUD();
+
+
+    const state = useStore((state) => {
+        return state;
+    })
+
+    const tttt = useStore((state) => {
+        const records = Object.values(state.getRecords(tables.CardOnBoards));
+
+        return records;//.getRecords(tables.CardOnBoards);
+        // return state.getRecord(window.tables.Config,{}).value.cards;
+        // return state.getValue(tables.Cards, {"0x34e5e01274697aaaf3201d8e56ef014585ee783376fde9a8ef2f8b2a5137be8e	"});
+    });
+
+    const gameInstance = useStore((state) => {
+        if (now_game_uid == null) {
+            return null;
+        }
+        const key = calculateKeccak256Hash(now_game_uid);
+        let game = useStore.getState().getValue(tables.Games, {key});
+        return game;//.getRecords(tables.CardOnBoards);
+    });
+
+    const user = useStore((state) => {
+        const address = walletClient.account.addres;
+        if (address == null) {
+            return null;
+        }
+        return state.getRecord(tables.Users, {address});
+    });
+
+    useEffect(() => {
+        console.log("user change", user);
+    }, [user])
+
 
     // const tasks = useStore((state) => {
     //     const records = Object.values(state.getRecords(tables.Tasks));
     //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
     //     return records;
     // });
-    //
+
     // const cards = useStore((state) => {
     //     const records = Object.values(state.getRecords(tables.Cards));
     //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
@@ -298,8 +324,6 @@ export const App = () => {
     }
 
     let initUnity = () => {
-        // console.log("walletClient", walletClient.account.address)
-        // console.log("initUnity");
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
         var loadingBar = document.querySelector("#unity-loading-bar");
@@ -370,11 +394,18 @@ export const App = () => {
     let getUser = async () => {
         let user = await getUserByOwner(walletClient.account.address)
         user = convertBigIntToInt(user);
-        // console.log("getUser from App.tsx", user)
         return user;
     }
 
     useEffect(async () => {
+
+        // const entity = worldContract.registerEntity({id: "0xDEAD" as EntityI})
+
+        // window.components = components;
+        window.tttt = tttt;
+        window.state = state;
+        window.tables = tables;
+        window.useStore = useStore;
         // window.addTask = addTask;
         // window.addUser = addUser;
         window.getUser = getUser;

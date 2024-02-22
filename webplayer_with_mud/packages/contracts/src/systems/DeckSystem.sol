@@ -13,7 +13,7 @@ contract DeckSystem is System {
         Decks.setCards(key, cards);
         Decks.setTid(key, tid);
 
-        bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        address user_key = _msgSender();
         bytes32[] memory decks = Users.getDecks(user_key);
         bool find = false;
         for (uint i = 0; i < decks.length; i++) {

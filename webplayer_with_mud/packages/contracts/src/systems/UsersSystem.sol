@@ -5,8 +5,8 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {Users, UsersData} from "../codegen/index.sol";
 
 contract UsersSystem is System {
-    function addUser(string memory username) public returns (bytes32 key) {
-        key = keccak256(abi.encode(_msgSender()));
+    function addUser(string memory username) public returns (address key) {
+         key = _msgSender();
 
 //        UsersData memory userData = UsersData(
 //            _msgSender(),
@@ -30,16 +30,16 @@ contract UsersSystem is System {
     }
 
     function getUser() public view returns (UsersData memory _table) {
-        bytes32 key = keccak256(abi.encode(_msgSender()));
+        address key = _msgSender();
         return Users.get(key);
     }
 
-    function getUserByKey(bytes32 key) public view returns (UsersData memory _table) {
+    function getUserByKey(address key) public view returns (UsersData memory _table) {
         return Users.get(key);
     }
 
     function getUserByOwner(address owner) public view returns (UsersData memory _table) {
-        bytes32 key = keccak256(abi.encode(owner));
+        address key = _msgSender();
         return Users.get(key);
     }
 }

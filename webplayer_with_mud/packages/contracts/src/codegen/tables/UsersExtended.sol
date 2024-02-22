@@ -49,7 +49,7 @@ library UsersExtended {
    */
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _keySchema = new SchemaType[](1);
-    _keySchema[0] = SchemaType.BYTES32;
+    _keySchema[0] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_keySchema);
   }
@@ -102,9 +102,9 @@ library UsersExtended {
   /**
    * @notice Get avatar.
    */
-  function getAvatar(bytes32 key) internal view returns (string memory avatar) {
+  function getAvatar(address key) internal view returns (string memory avatar) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
     return (string(_blob));
@@ -113,9 +113,9 @@ library UsersExtended {
   /**
    * @notice Get avatar.
    */
-  function _getAvatar(bytes32 key) internal view returns (string memory avatar) {
+  function _getAvatar(address key) internal view returns (string memory avatar) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
     return (string(_blob));
@@ -124,9 +124,9 @@ library UsersExtended {
   /**
    * @notice Set avatar.
    */
-  function setAvatar(bytes32 key, string memory avatar) internal {
+  function setAvatar(address key, string memory avatar) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((avatar)));
   }
@@ -134,9 +134,9 @@ library UsersExtended {
   /**
    * @notice Set avatar.
    */
-  function _setAvatar(bytes32 key, string memory avatar) internal {
+  function _setAvatar(address key, string memory avatar) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((avatar)));
   }
@@ -144,9 +144,9 @@ library UsersExtended {
   /**
    * @notice Get the length of avatar.
    */
-  function lengthAvatar(bytes32 key) internal view returns (uint256) {
+  function lengthAvatar(address key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
@@ -157,9 +157,9 @@ library UsersExtended {
   /**
    * @notice Get the length of avatar.
    */
-  function _lengthAvatar(bytes32 key) internal view returns (uint256) {
+  function _lengthAvatar(address key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
@@ -171,9 +171,9 @@ library UsersExtended {
    * @notice Get an item of avatar.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemAvatar(bytes32 key, uint256 _index) internal view returns (string memory) {
+  function getItemAvatar(address key, uint256 _index) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
@@ -185,9 +185,9 @@ library UsersExtended {
    * @notice Get an item of avatar.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemAvatar(bytes32 key, uint256 _index) internal view returns (string memory) {
+  function _getItemAvatar(address key, uint256 _index) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
@@ -198,9 +198,9 @@ library UsersExtended {
   /**
    * @notice Push a slice to avatar.
    */
-  function pushAvatar(bytes32 key, string memory _slice) internal {
+  function pushAvatar(address key, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
   }
@@ -208,9 +208,9 @@ library UsersExtended {
   /**
    * @notice Push a slice to avatar.
    */
-  function _pushAvatar(bytes32 key, string memory _slice) internal {
+  function _pushAvatar(address key, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
   }
@@ -218,9 +218,9 @@ library UsersExtended {
   /**
    * @notice Pop a slice from avatar.
    */
-  function popAvatar(bytes32 key) internal {
+  function popAvatar(address key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
   }
@@ -228,9 +228,9 @@ library UsersExtended {
   /**
    * @notice Pop a slice from avatar.
    */
-  function _popAvatar(bytes32 key) internal {
+  function _popAvatar(address key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
   }
@@ -238,9 +238,9 @@ library UsersExtended {
   /**
    * @notice Update a slice of avatar at `_index`.
    */
-  function updateAvatar(bytes32 key, uint256 _index, string memory _slice) internal {
+  function updateAvatar(address key, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
@@ -251,9 +251,9 @@ library UsersExtended {
   /**
    * @notice Update a slice of avatar at `_index`.
    */
-  function _updateAvatar(bytes32 key, uint256 _index, string memory _slice) internal {
+  function _updateAvatar(address key, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
@@ -264,9 +264,9 @@ library UsersExtended {
   /**
    * @notice Get cardback.
    */
-  function getCardback(bytes32 key) internal view returns (string memory cardback) {
+  function getCardback(address key) internal view returns (string memory cardback) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
     return (string(_blob));
@@ -275,9 +275,9 @@ library UsersExtended {
   /**
    * @notice Get cardback.
    */
-  function _getCardback(bytes32 key) internal view returns (string memory cardback) {
+  function _getCardback(address key) internal view returns (string memory cardback) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
     return (string(_blob));
@@ -286,9 +286,9 @@ library UsersExtended {
   /**
    * @notice Set cardback.
    */
-  function setCardback(bytes32 key, string memory cardback) internal {
+  function setCardback(address key, string memory cardback) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((cardback)));
   }
@@ -296,9 +296,9 @@ library UsersExtended {
   /**
    * @notice Set cardback.
    */
-  function _setCardback(bytes32 key, string memory cardback) internal {
+  function _setCardback(address key, string memory cardback) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((cardback)));
   }
@@ -306,9 +306,9 @@ library UsersExtended {
   /**
    * @notice Get the length of cardback.
    */
-  function lengthCardback(bytes32 key) internal view returns (uint256) {
+  function lengthCardback(address key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
@@ -319,9 +319,9 @@ library UsersExtended {
   /**
    * @notice Get the length of cardback.
    */
-  function _lengthCardback(bytes32 key) internal view returns (uint256) {
+  function _lengthCardback(address key) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
@@ -333,9 +333,9 @@ library UsersExtended {
    * @notice Get an item of cardback.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemCardback(bytes32 key, uint256 _index) internal view returns (string memory) {
+  function getItemCardback(address key, uint256 _index) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
@@ -347,9 +347,9 @@ library UsersExtended {
    * @notice Get an item of cardback.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemCardback(bytes32 key, uint256 _index) internal view returns (string memory) {
+  function _getItemCardback(address key, uint256 _index) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
@@ -360,9 +360,9 @@ library UsersExtended {
   /**
    * @notice Push a slice to cardback.
    */
-  function pushCardback(bytes32 key, string memory _slice) internal {
+  function pushCardback(address key, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
@@ -370,9 +370,9 @@ library UsersExtended {
   /**
    * @notice Push a slice to cardback.
    */
-  function _pushCardback(bytes32 key, string memory _slice) internal {
+  function _pushCardback(address key, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
@@ -380,9 +380,9 @@ library UsersExtended {
   /**
    * @notice Pop a slice from cardback.
    */
-  function popCardback(bytes32 key) internal {
+  function popCardback(address key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
   }
@@ -390,9 +390,9 @@ library UsersExtended {
   /**
    * @notice Pop a slice from cardback.
    */
-  function _popCardback(bytes32 key) internal {
+  function _popCardback(address key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
   }
@@ -400,9 +400,9 @@ library UsersExtended {
   /**
    * @notice Update a slice of cardback at `_index`.
    */
-  function updateCardback(bytes32 key, uint256 _index, string memory _slice) internal {
+  function updateCardback(address key, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
@@ -413,9 +413,9 @@ library UsersExtended {
   /**
    * @notice Update a slice of cardback at `_index`.
    */
-  function _updateCardback(bytes32 key, uint256 _index, string memory _slice) internal {
+  function _updateCardback(address key, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
@@ -426,9 +426,9 @@ library UsersExtended {
   /**
    * @notice Get the full data.
    */
-  function get(bytes32 key) internal view returns (UsersExtendedData memory _table) {
+  function get(address key) internal view returns (UsersExtendedData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
@@ -441,9 +441,9 @@ library UsersExtended {
   /**
    * @notice Get the full data.
    */
-  function _get(bytes32 key) internal view returns (UsersExtendedData memory _table) {
+  function _get(address key) internal view returns (UsersExtendedData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
@@ -456,13 +456,13 @@ library UsersExtended {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, string memory avatar, string memory cardback) internal {
+  function set(address key, string memory avatar, string memory cardback) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(avatar, cardback);
     bytes memory _dynamicData = encodeDynamic(avatar, cardback);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -470,13 +470,13 @@ library UsersExtended {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, string memory avatar, string memory cardback) internal {
+  function _set(address key, string memory avatar, string memory cardback) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(avatar, cardback);
     bytes memory _dynamicData = encodeDynamic(avatar, cardback);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -484,13 +484,13 @@ library UsersExtended {
   /**
    * @notice Set the full data using the data struct.
    */
-  function set(bytes32 key, UsersExtendedData memory _table) internal {
+  function set(address key, UsersExtendedData memory _table) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(_table.avatar, _table.cardback);
     bytes memory _dynamicData = encodeDynamic(_table.avatar, _table.cardback);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -498,13 +498,13 @@ library UsersExtended {
   /**
    * @notice Set the full data using the data struct.
    */
-  function _set(bytes32 key, UsersExtendedData memory _table) internal {
+  function _set(address key, UsersExtendedData memory _table) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(_table.avatar, _table.cardback);
     bytes memory _dynamicData = encodeDynamic(_table.avatar, _table.cardback);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -547,9 +547,9 @@ library UsersExtended {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 key) internal {
+  function deleteRecord(address key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -557,9 +557,9 @@ library UsersExtended {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 key) internal {
+  function _deleteRecord(address key) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -606,9 +606,9 @@ library UsersExtended {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(address key) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     return _keyTuple;
   }

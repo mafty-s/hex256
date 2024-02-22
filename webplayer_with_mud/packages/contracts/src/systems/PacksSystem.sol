@@ -15,7 +15,7 @@ contract PacksSystem is System {
     }
 
     function OpenPack(bytes32 key) public returns (bytes32[] memory){
-        bytes32 user_key = keccak256(abi.encode(_msgSender()));
+        address user_key = _msgSender();
         bytes32[] memory res = new bytes32[](5);
 
         uint256 user_packs_length = Users.lengthPacks(user_key);
