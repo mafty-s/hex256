@@ -25,4 +25,6 @@ interface IEffect2System {
   function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
+
+  function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 }

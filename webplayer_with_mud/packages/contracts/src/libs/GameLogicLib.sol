@@ -22,7 +22,7 @@ library GameLogicLib {
         CardOnBoards.setAttack(card_uid, Cards.getAttack(card_config_key));
         CardOnBoards.setMana(card_uid, Cards.getMana(card_config_key));
         CardOnBoards.setPlayerId(card_uid, player_key);
-        CardOnBoards.setName(card_uid,Cards.getTid(card_config_key));
+        CardOnBoards.setName(card_uid, Cards.getTid(card_config_key));
         Players.setNcards(player_key, i + 1);
 
         return card_uid;
@@ -190,5 +190,16 @@ library GameLogicLib {
 //        }
         return true;
     }
+
+    function GetOpponent(bytes32 game_uid, bytes32 player_key) internal returns (bytes32){
+        bytes32[] memory players = Games.getPlayers(game_uid);
+        for (uint8 i = 0; i < players.length; i++) {
+            if (players[i] != 0 && players[i] != player_key) {
+                return players[i];
+            }
+        }
+        return 0;
+    }
+
 
 }

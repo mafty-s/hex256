@@ -85,11 +85,10 @@ contract Effect6System is System {
         }
     }
 
-    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        //todo create_temp
-    }
 
     //----------------------------------------------------------------------------------------------------------------
+
+
 
     function RunAttacker(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectAttackerType attack_type) internal {
         bytes32 attacker = GetAttacker(caster, attack_type);

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Players, Ability, Games, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
+import {Players, Ability, Games, GamesExtended, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
 import {Action, PileType} from "../codegen/common.sol";
 import {MathLib} from "../libs/MathLib.sol";
 import {Cards, CardOnBoards} from "../codegen/index.sol";
@@ -63,7 +63,37 @@ contract Effect2System is System {
         }
     }
 
+
+    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        EffectCreate(ability_key, caster, target, is_card, PileType.Temp, false);
+    }
+
     //----------------------------------------------------------------------------------------------------------------
+
+    function EffectCreate(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, PileType create_pile, bool create_opponent) internal {
+        if (is_card) {
+            bytes32 card_config_id = CardOnBoards.getId(target);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            bytes32 game_uid = Players.getGame(player_key);
+            if (create_opponent) {
+                player_key = GameLogicLib.GetOpponent(game_uid, player_key);
+            }
+            bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_id);
+            GamesExtended.setLastSummoned(game_uid, card_uid);
+            if (create_pile == PileType.Deck) {
+                PlayerCardsDeck.pushValue(player_key, card_uid);
+            }
+            if (create_pile == PileType.Hand) {
+                PlayerCardsHand.pushValue(player_key, card_uid);
+            }
+            if (create_pile == PileType.Discard) {
+                PlayerCardsDiscard.pushValue(player_key, card_uid);
+            }
+            if (create_pile == PileType.Temp) {
+                PlayerCardsTemp.pushValue(player_key, card_uid);
+            }
+        }
+    }
 
     function shuffle(bytes32[] memory array) internal view returns (bytes32[] memory) {
         uint256 arrSize = array.length;
