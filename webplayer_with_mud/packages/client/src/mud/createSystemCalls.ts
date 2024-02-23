@@ -598,7 +598,7 @@ export function createSystemCalls(
 
         const game_key = calculateKeccak256Hash(game_uid);
         const player_key = calculateKeccak256HashTwoString(game_uid, player_name);
-        const tx = await worldContract.write.EndTurn([game_key, player_key]);
+        const tx = await worldContract.write.EndTurn([game_key]);
         await waitForTransaction(tx);
 
         const tx_result = await getTxResult(tx);

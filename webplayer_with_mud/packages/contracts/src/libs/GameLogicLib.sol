@@ -182,6 +182,19 @@ library GameLogicLib {
         return true;
     }
 
+//    function getOpponentPlayer(bytes32 game_key, bytes32 player_key) public view returns (bytes32 opponent_player_key) {
+//        bytes32[] memory players = Games.getPlayers(game_key);
+//        require(players.length == 2, "player count must be 2");
+//        require(players[0] != 0 && players[1] != 0, "player key must not be 0");
+//        require(players[0] != players[1], "player key must not be same");
+//        require(players[0] == player_key || players[1] == player_key, "player key must be in game");
+//        if (players[0] == player_key) {
+//            return players[1];
+//        } else {
+//            return players[0];
+//        }
+//    }
+
     function GetOpponent(bytes32 game_uid, bytes32 player_key) internal returns (bytes32){
         bytes32[] memory players = Games.getPlayers(game_uid);
         for (uint8 i = 0; i < players.length; i++) {
@@ -192,5 +205,11 @@ library GameLogicLib {
         return 0;
     }
 
+    function StartMainPhase(bytes32 game_uid) internal {
+        if (Games.getGameState(game_uid) == GameState.GAME_ENDED) {
+            return;
+        }
+        Games.setGamePhase(game_uid, GamePhase.MAIN);
+    }
 
 }

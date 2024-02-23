@@ -29,7 +29,7 @@ export const App = () => {
         }
         const key = calculateKeccak256Hash(game_uid);
         let game = state.getValue(tables.Games, {key});
-        if(!game){
+        if (!game) {
             return null;
         }
         let game_extend = state.getValue(tables.GamesExtended, {key});
@@ -51,7 +51,7 @@ export const App = () => {
         let cards = [];
 
         for (const player_key of game.players) {
-            if(player_key!="0x0000000000000000000000000000000000000000000000000000000000000000") {
+            if (player_key != "0x0000000000000000000000000000000000000000000000000000000000000000") {
                 const player = state.getValue(tables.Players, {player_key});
                 player.key = player_key;
                 player.deck = state.getValue(tables.PlayerCardsDeck, {player_key})?.value;
@@ -109,7 +109,7 @@ export const App = () => {
 
     useEffect(() => {
         console.log("game change", gameInstance, walletClient.account.address);
-        if(gameInstance &&  window.MyUnityInstance){
+        if (gameInstance && window.MyUnityInstance) {
             window.MyUnityInstance.SendMessage('Client', 'RefreshGame', JSON.stringify(gameInstance));
         }
         return () => {
@@ -434,13 +434,13 @@ export const App = () => {
     }
 
 
-    useEffect( () => {
+    useEffect(() => {
 
         window.game_uid = game_uid;
         window.setGameUid = setGameUid;
         window.gameInstance = gameInstance;
 
-        window.gameSetting = async(game_uid)=>{
+        window.gameSetting = async (game_uid) => {
             setGameUid(game_uid);
             return mud.gameSetting(game_uid);
         }
@@ -457,13 +457,15 @@ export const App = () => {
 
         let interval = setInterval(async () => {
             let a = await getUserByKey(walletClient.account.address);
-            if (a && a.owner != "0x0000000000000000000000000000000000000000") {
-                clearInterval(interval);
-                initUnity();
-            } else {
-                await addUser(walletClient.account.address)
+            if (a) {
+                if (a.owner == "0x0000000000000000000000000000000000000000") {
+                    await addUser(walletClient.account.address);
+                } else {
+                    clearInterval(interval);
+                    initUnity();
+                }
             }
-        }, 100);
+        }, 1000);
 
         return () => {
         };

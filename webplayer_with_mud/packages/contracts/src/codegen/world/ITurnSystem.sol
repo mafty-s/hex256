@@ -8,7 +8,5 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ITurnSystem {
-  function EndTurn(bytes32 game_key, bytes32 player_key) external;
-
-  function getOpponentPlayer(bytes32 game_key, bytes32 player_key) external view returns (bytes32 opponent_player_key);
+  function EndTurn(bytes32 game_key) external;
 }

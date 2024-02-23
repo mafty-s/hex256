@@ -178,6 +178,7 @@ export default mudConfig({
                 firstPlayer: "bytes32",
                 currentPlayer: "bytes32",
                 turnCount: "uint8",
+                turnDuration: "uint256",
                 nbPlayer: "uint8",
                 level: "string",
                 uid: "string",

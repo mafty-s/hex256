@@ -126,70 +126,11 @@ contract GameStartSystem is System {
         }
 
         //Start state
-        StartTurn(game_key);
+        GameLogicLib.StartMainPhase(game_key);
     }
 
-    function StartTurn(bytes32 game_key) internal {
-        if (Games.get(game_key).gameState == GameState.GAME_ENDED) {
-            revert("Game already ended");
-        }
-        ClearTurnData();
-        Games.setGamePhase(game_key, GamePhase.START_TURN);
 
-        //todo
 
-        //
-        //        Player player = game_data.GetActivePlayer();
-        //
-        //        //Cards draw
-        //        if (game_data.turn_count > 1 || player.player_id != game_data.first_player)
-        //        {
-        //            DrawCard(player, GameplayData.Get().cards_per_turn);
-        //        }
-        //
-        //        //Mana
-        //        player.mana_max += GameplayData.Get().mana_per_turn;
-        //        player.mana_max = Mathf.Min(player.mana_max, GameplayData.Get().mana_max);
-        //        player.mana = player.mana_max;
-        //
-        //        //Turn timer and history
-        //        game_data.turn_timer = GameplayData.Get().turn_duration;
-        //        player.history_list.Clear();
-        //
-        //        //Player poison
-        //        if (player.HasStatus(StatusType.Poisoned))
-        //            player.hp -= player.GetStatusValue(StatusType.Poisoned);
-        //
-        //        if (player.hero != null)
-        //            player.hero.Refresh();
-        //
-        //        //Refresh Cards and Status Effects
-        //        for (int i = player.cards_board.Count - 1; i >= 0; i--)
-        //        {
-        //            Card card = player.cards_board[i];
-        //
-        //            if(!card.HasStatus(StatusType.Sleep))
-        //                card.Refresh();
-        //
-        //            if (card.HasStatus(StatusType.Poisoned))
-        //                DamageCard(card, card.GetStatusValue(StatusType.Poisoned));
-        //        }
-        //
-        //        //Ongoing Abilities
-        //        UpdateOngoing();
-        //
-        //        //StartTurn Abilities
-        //        TriggerPlayerCardsAbilityType(player, AbilityTrigger.StartOfTurn);
-        //        TriggerPlayerSecrets(player, AbilityTrigger.StartOfTurn);
-        //
-        //        resolve_queue.AddCallback(StartMainPhase);
-        //        resolve_queue.ResolveAll(0.2f);
-
-    }
-
-    function ClearTurnData() internal {
-        //todo
-    }
 
     function GetPlayerByGame(bytes32 game_key) public view returns (bytes32[] memory players){
         return Games.getPlayers(game_key);

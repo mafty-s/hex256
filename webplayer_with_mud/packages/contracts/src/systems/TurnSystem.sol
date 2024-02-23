@@ -6,7 +6,7 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {Cards} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action, Status} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action, Status, SelectorType} from "../codegen/common.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Games, GamesExtended} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
@@ -14,6 +14,7 @@ import {PlayerCardsHand, PlayerCardsDeck, PlayerCardsEquip, PlayerCardsBoard, Pl
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 
@@ -25,7 +26,7 @@ contract TurnSystem is System {
 
     }
 
-    function EndTurn(bytes32 game_key, bytes32 player_key) public {
+    function EndTurn(bytes32 game_key) public {
 
         if (Games.getGameState(game_key) == GameState.GAME_ENDED) {
             revert("game ended");
@@ -34,16 +35,9 @@ contract TurnSystem is System {
             revert("not main phase");
         }
 
-        Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
         Games.setGamePhase(game_key, GamePhase.END_TURN);
 
-        //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
-
-        //todo  Games.setCurrentPlayer(game_key, opponent_player_key);
-//        Games.setGamePhase(game_key, GamePhase.START_TURN);
-        if (Games.getGameType(game_key) == GameType.SOLO || Games.getGameType(game_key) == GameType.ADVENTURE) {
-            //AiLogicLib.Think(game_key, opponent_player_key);
-        }
+        bytes32 player_key = Games.getCurrentPlayer(game_key);
 
 //        EndTurnResultData memory result = EndTurnResultData
 
@@ -66,7 +60,11 @@ contract TurnSystem is System {
             }
         }
 
-        StartOfTurn(game_key);
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.END_OF_TURN))
+        );
+
+        StartNextTurn(game_key);
     }
 
     function StartOfTurn(bytes32 game_key) internal {
@@ -96,7 +94,8 @@ contract TurnSystem is System {
         Players.setManaMax(player_key, mana_max);
 
         //Turn timer and history
-        //todo
+        PlayerActionHistory.setValue(game_key, new bytes32[](0));
+        Games.setTurnDuration(game_key, block.timestamp);
 
         //Player poison
         if (PlayerLogicLib.HasStatus(player_key, Status.Poisoned)) {
@@ -125,27 +124,28 @@ contract TurnSystem is System {
             abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (player_key, AbilityTrigger.START_OF_TURN))
         );
 
-        bytes32 opponent_player_key = getOpponentPlayer(game_key, player_key);
-
         SystemSwitch.call(
             abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
         );
 
+        GameLogicLib.StartMainPhase(game_key);
     }
 
-
-    function getOpponentPlayer(bytes32 game_key, bytes32 player_key) public view returns (bytes32 opponent_player_key) {
-        bytes32[] memory players = Games.getPlayers(game_key);
-        require(players.length == 2, "player count must be 2");
-        require(players[0] != 0 && players[1] != 0, "player key must not be 0");
-        require(players[0] != players[1], "player key must not be same");
-        require(players[0] == player_key || players[1] == player_key, "player key must be in game");
-        if (players[0] == player_key) {
-            return players[1];
-        } else {
-            return players[0];
+    function StartNextTurn(bytes32 game_uid) internal {
+        if (Games.getGameState(game_uid) == GameState.GAME_ENDED) {
+            return;
         }
+        bytes32 current_player = Games.getCurrentPlayer(game_uid);
+        bytes32 opponent_player = GameLogicLib.GetOpponent(game_uid, current_player);
+        Games.setCurrentPlayer(game_uid, opponent_player);
+        if (current_player == Games.getFirstPlayer(game_uid)) {
+            Games.setTurnCount(game_uid, Games.getTurnCount(game_uid) + 1);
+        }
+        GameLogicLib.CheckForWinner(game_uid);
+        StartOfTurn(game_uid);
     }
+
+//public virtual void StartNextTurn()
 
 //
 //protected virtual void ClearTurnData()
@@ -167,11 +167,11 @@ contract TurnSystem is System {
 
     function ClearTurnData(bytes32 game_uid) internal {
         //todo
+        GamesExtended.setSelector(game_uid, SelectorType.None);
         GamesExtended.setLastPlayed(game_uid, 0);
         GamesExtended.setLastDestroyed(game_uid, 0);
         GamesExtended.setLastTarget(game_uid, 0);
         GamesExtended.setLastSummoned(game_uid, 0);
         GamesExtended.setAbilityTriggerer(game_uid, 0);
     }
-
 }

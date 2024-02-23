@@ -29,7 +29,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GamesTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0045070301010120200101000000000000000000000000000000000000000000
+  0x0065080301010120200120010000000000000000000000000000000000000000
 );
 
 struct GamesData {
@@ -39,6 +39,7 @@ struct GamesData {
   bytes32 firstPlayer;
   bytes32 currentPlayer;
   uint8 turnCount;
+  uint256 turnDuration;
   uint8 nbPlayer;
   string level;
   string uid;
@@ -70,17 +71,18 @@ library Games {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](10);
+    SchemaType[] memory _valueSchema = new SchemaType[](11);
     _valueSchema[0] = SchemaType.UINT8;
     _valueSchema[1] = SchemaType.UINT8;
     _valueSchema[2] = SchemaType.UINT8;
     _valueSchema[3] = SchemaType.BYTES32;
     _valueSchema[4] = SchemaType.BYTES32;
     _valueSchema[5] = SchemaType.UINT8;
-    _valueSchema[6] = SchemaType.UINT8;
-    _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[6] = SchemaType.UINT256;
+    _valueSchema[7] = SchemaType.UINT8;
     _valueSchema[8] = SchemaType.STRING;
-    _valueSchema[9] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[9] = SchemaType.STRING;
+    _valueSchema[10] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -99,17 +101,18 @@ library Games {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](10);
+    fieldNames = new string[](11);
     fieldNames[0] = "gameType";
     fieldNames[1] = "gameState";
     fieldNames[2] = "gamePhase";
     fieldNames[3] = "firstPlayer";
     fieldNames[4] = "currentPlayer";
     fieldNames[5] = "turnCount";
-    fieldNames[6] = "nbPlayer";
-    fieldNames[7] = "level";
-    fieldNames[8] = "uid";
-    fieldNames[9] = "players";
+    fieldNames[6] = "turnDuration";
+    fieldNames[7] = "nbPlayer";
+    fieldNames[8] = "level";
+    fieldNames[9] = "uid";
+    fieldNames[10] = "players";
   }
 
   /**
@@ -379,13 +382,55 @@ library Games {
   }
 
   /**
+   * @notice Get turnDuration.
+   */
+  function getTurnDuration(bytes32 key) internal view returns (uint256 turnDuration) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Get turnDuration.
+   */
+  function _getTurnDuration(bytes32 key) internal view returns (uint256 turnDuration) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Set turnDuration.
+   */
+  function setTurnDuration(bytes32 key, uint256 turnDuration) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((turnDuration)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set turnDuration.
+   */
+  function _setTurnDuration(bytes32 key, uint256 turnDuration) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((turnDuration)), _fieldLayout);
+  }
+
+  /**
    * @notice Get nbPlayer.
    */
   function getNbPlayer(bytes32 key) internal view returns (uint8 nbPlayer) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (uint8(bytes1(_blob)));
   }
 
@@ -396,7 +441,7 @@ library Games {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (uint8(bytes1(_blob)));
   }
 
@@ -407,7 +452,7 @@ library Games {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((nbPlayer)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((nbPlayer)), _fieldLayout);
   }
 
   /**
@@ -417,7 +462,7 @@ library Games {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((nbPlayer)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((nbPlayer)), _fieldLayout);
   }
 
   /**
@@ -947,6 +992,7 @@ library Games {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint256 turnDuration,
     uint8 nbPlayer,
     string memory level,
     string memory uid,
@@ -959,6 +1005,7 @@ library Games {
       firstPlayer,
       currentPlayer,
       turnCount,
+      turnDuration,
       nbPlayer
     );
 
@@ -982,6 +1029,7 @@ library Games {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint256 turnDuration,
     uint8 nbPlayer,
     string memory level,
     string memory uid,
@@ -994,6 +1042,7 @@ library Games {
       firstPlayer,
       currentPlayer,
       turnCount,
+      turnDuration,
       nbPlayer
     );
 
@@ -1017,6 +1066,7 @@ library Games {
       _table.firstPlayer,
       _table.currentPlayer,
       _table.turnCount,
+      _table.turnDuration,
       _table.nbPlayer
     );
 
@@ -1040,6 +1090,7 @@ library Games {
       _table.firstPlayer,
       _table.currentPlayer,
       _table.turnCount,
+      _table.turnDuration,
       _table.nbPlayer
     );
 
@@ -1067,6 +1118,7 @@ library Games {
       bytes32 firstPlayer,
       bytes32 currentPlayer,
       uint8 turnCount,
+      uint256 turnDuration,
       uint8 nbPlayer
     )
   {
@@ -1082,7 +1134,9 @@ library Games {
 
     turnCount = (uint8(Bytes.slice1(_blob, 67)));
 
-    nbPlayer = (uint8(Bytes.slice1(_blob, 68)));
+    turnDuration = (uint256(Bytes.slice32(_blob, 68)));
+
+    nbPlayer = (uint8(Bytes.slice1(_blob, 100)));
   }
 
   /**
@@ -1130,6 +1184,7 @@ library Games {
       _table.firstPlayer,
       _table.currentPlayer,
       _table.turnCount,
+      _table.turnDuration,
       _table.nbPlayer
     ) = decodeStatic(_staticData);
 
@@ -1167,9 +1222,11 @@ library Games {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint256 turnDuration,
     uint8 nbPlayer
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount, nbPlayer);
+    return
+      abi.encodePacked(gameType, gameState, gamePhase, firstPlayer, currentPlayer, turnCount, turnDuration, nbPlayer);
   }
 
   /**
@@ -1212,6 +1269,7 @@ library Games {
     bytes32 firstPlayer,
     bytes32 currentPlayer,
     uint8 turnCount,
+    uint256 turnDuration,
     uint8 nbPlayer,
     string memory level,
     string memory uid,
@@ -1224,6 +1282,7 @@ library Games {
       firstPlayer,
       currentPlayer,
       turnCount,
+      turnDuration,
       nbPlayer
     );
 
