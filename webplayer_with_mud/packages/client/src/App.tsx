@@ -13,7 +13,6 @@ export const App = () => {
             initAbility,
             calculateKeccak256Hash,
             convertBigIntToInt,
-            now_game_uid,
         },
     } = useMUD();
 
@@ -435,12 +434,16 @@ export const App = () => {
     }
 
 
-    useEffect(async () => {
+    useEffect( () => {
 
-        setGameUid("yQGr4rpNJ2")
         window.game_uid = game_uid;
         window.setGameUid = setGameUid;
         window.gameInstance = gameInstance;
+
+        window.gameSetting = async(game_uid)=>{
+            setGameUid(game_uid);
+            return mud.gameSetting(game_uid);
+        }
 
         window.state = state;
         window.tables = tables;
@@ -466,15 +469,8 @@ export const App = () => {
         };
     }, [walletClient]);
 
-    const updateVariable = () => {
-        setGameUid('new value');
-    };
-
     return (
         <>
-            <p>{game_uid}</p>
-            <button onClick={updateVariable}>Update</button>
-
             <div id="unity-container" className="unity-desktop">
                 <canvas id="unity-canvas">
                 </canvas>

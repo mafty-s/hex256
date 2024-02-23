@@ -58,7 +58,7 @@ mergeInto(LibraryManager.library, {
     },
 
     gameSetting: async function (game_uid) {
-        let result = await mud.gameSetting(UTF8ToString(game_uid));
+        let result = await gameSetting(UTF8ToString(game_uid));
         let returnStr = JSON.stringify(result.res);
         console.log(returnStr);
         MyUnityInstance.SendMessage("Client", "OnGameSettingSuccess", returnStr);
