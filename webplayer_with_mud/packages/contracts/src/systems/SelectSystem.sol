@@ -7,6 +7,7 @@ import {GamesExtended, CardOnBoards, PlayerActionHistory, ActionHistory, Ability
 import {SelectorType, Action, AbilityTarget} from "../codegen/common.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 
 contract SelectSystem is System {
     function SelectCard(bytes32 game_uid, bytes32 target) public {
@@ -56,6 +57,11 @@ contract SelectSystem is System {
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, true))
             );
+
+            SystemSwitch.call(
+                abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_uid))
+            );
+
         } else {
             revert("SelectCard: selector type not supported");
         }
@@ -84,6 +90,10 @@ contract SelectSystem is System {
             PlayerActionHistory.push(game_uid, action_key);
             ActionHistory.setActionType(action_key, Action.SelectPlayer);
         }
+
+        SystemSwitch.call(
+            abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_uid))
+        );
     }
 
     function SelectSlot(bytes32 game_uid, uint16 slot_encode) public {
@@ -106,6 +116,10 @@ contract SelectSystem is System {
             PlayerActionHistory.push(game_uid, action_key);
             ActionHistory.setActionType(action_key, Action.SelectSlot);
         }
+
+        SystemSwitch.call(
+            abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_uid))
+        );
     }
 
     function SelectChoice(bytes32 game_uid, uint8 choice) public {
@@ -129,6 +143,10 @@ contract SelectSystem is System {
             PlayerActionHistory.push(game_uid, action_key);
             ActionHistory.setActionType(action_key, Action.SelectChoice);
         }
+
+        SystemSwitch.call(
+            abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_uid))
+        );
     }
 
     function CancelSelection(bytes32 game_uid) public {

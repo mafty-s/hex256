@@ -85,7 +85,7 @@ public class MudGame
     {
         return Array.IndexOf(players, player);
     }
-    
+
     public static MudGame FromJson(string str)
     {
         return JsonHelper.FromJson<MudGame>(str) as MudGame;
@@ -173,7 +173,6 @@ public class MudRefresh
                 ? null
                 : mud_game.lastTarget;
 
-        // gamedata.turn_count;
         gamedata.rolled_value = mud_game.rolledValue;
         gamedata.state = MudEnum.ConvertGameState((Mud.GameState)mud_game.gameState);
         gamedata.phase = MudEnum.ConvertGamePhase((Mud.GamePhase)mud_game.gamePhase);
@@ -188,8 +187,8 @@ public class MudRefresh
                 ? null
                 : mud_game.selectorCasterUid;
         gamedata.selector_player_id = mud_game.getPlayerIndex(mud_game.selectorPlayerId);
-        
-        // gamedata.first_player;
+        gamedata.first_player = mud_game.getPlayerIndex(mud_game.firstPlayer);
+        gamedata.current_player = mud_game.getPlayerIndex(mud_game.currentPlayer);
 
 
         foreach (var card in mud_game.cards)
