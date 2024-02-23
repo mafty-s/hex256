@@ -10,7 +10,7 @@ import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, Action
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType, GameState} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
-import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip} from "../codegen/index.sol";
+import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsTemp, PlayerCardsSecret, PlayerCardsDiscard, PlayerCardsDeck} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
@@ -265,8 +265,16 @@ contract AbilitySystem is System {
 
         if (target == AbilityTarget.AllCardsAllPiles || target == AbilityTarget.CardSelector)
         {
-            //todo
-            revert("not implemented");
+            for (uint i = 0; i < players.length; i++) {
+                bytes32 player_key = players[i];
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsDeck.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsDiscard.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsHand.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsBoard.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsEquip.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsSecret.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsTemp.getValue(player_key), ConditionTargetType.Card));
+            }
         }
 
         if (target == AbilityTarget.LastPlayed)
@@ -471,5 +479,31 @@ contract AbilitySystem is System {
         }
     }
 
+    function AddValidCards(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal returns (bytes32[] memory){
+        bytes32[] memory dist = new bytes32[](source.length);
+        uint number = 0;
+        for (uint i = 0; i < source.length; i++) {
+            if (source[i] != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, source[i], condition_type)) {
+                dist[number] = source[i];
+                number++;
+            }
+        }
+        return dist;
+    }
 
+    function concatArrays(bytes32[] memory array1, bytes32[] memory array2) internal pure returns (bytes32[] memory) {
+        bytes32[] memory result = new bytes32[](array1.length + array2.length);
+
+        uint256 i;
+        for (i = 0; i < array1.length; i++) {
+            result[i] = array1[i];
+        }
+
+        for (uint256 j = 0; j < array2.length; j++) {
+            result[i] = array2[j];
+            i++;
+        }
+
+        return result;
+    }
 }
