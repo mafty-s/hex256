@@ -2,11 +2,11 @@
 pragma solidity >=0.8.21;
 
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {Games, Cards, Players} from "../codegen/index.sol";
+import {Games, Cards, Players, GamesExtended} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {MathLib} from "./MathLib.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType} from "../codegen/common.sol";
 
 library GameLogicLib {
 
@@ -104,28 +104,19 @@ library GameLogicLib {
             }
         }
         if (count_alive == 0) {
-            EndGame(game_key, 0);
+            EndGame(game_key, 0);//Everyone is dead, Draw
         } else if (count_alive == 1) {
             EndGame(game_key, alive);
         }
     }
 
+
     function EndGame(bytes32 game_key, bytes32 winner) internal {
-//        if (game_data.state != GameState.GameEnded)
-//        {
-//            game_data.state = GameState.GameEnded;
-//            game_data.phase = GamePhase.None;
-//            game_data.selector = SelectorType.None;
-//            game_data.current_player = winner; //Winner player
-//            resolve_queue.Clear();
-//            Player player = game_data.GetPlayer(winner);
-//            onGameEnd?.Invoke(player);
-//        }
-        //todo
         if (Games.getGameState(game_key) != GameState.GAME_ENDED) {
             Games.setGameState(game_key, GameState.GAME_ENDED);
             Games.setGamePhase(game_key, GamePhase.NONE);
-            Games.setCurrentPlayer(game_key, winner);
+            GamesExtended.setSelector(game_key, SelectorType.None);
+            Games.setCurrentPlayer(game_key, winner);//winner
         }
     }
 

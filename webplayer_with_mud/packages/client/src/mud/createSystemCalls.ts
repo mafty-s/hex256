@@ -446,6 +446,7 @@ export function createSystemCalls(
         }
 
         console.log("pid", pid);
+        console.log("need_shuffle",shuffle);
         await sleep(200)
 
         //todo

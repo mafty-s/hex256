@@ -136,6 +136,7 @@ contract AttackSystem is System {
                 AbilityTrigger.ON_AFTER_ATTACK, attacker_key, target_key, false))
         );
 
+        GameLogicLib.CheckForWinner(game_key);
     }
 
 

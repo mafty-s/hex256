@@ -374,7 +374,8 @@ namespace TcgEngine.Client
 
             if (MudManager.Get().useMud)
             {
-                bool shuffer = pdeck != null ? !pdeck.dont_shuffle_deck : false;
+                bool shuffer = pdeck != null ? pdeck.dont_shuffle_deck : false;
+                Debug.Log("shuffer:" + shuffer);
                 MudManager.Get().PlayerSetting(GetPlayer().username, game_settings.game_uid, psettings.deck.tid, false,
                     hp_max, mana_max, dcards, GetPlayer().player_id, shuffer);
             }
