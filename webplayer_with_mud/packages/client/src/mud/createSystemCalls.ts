@@ -861,6 +861,11 @@ export function createSystemCalls(
         return await worldContract.read.IsConditionFunctionExist([selector]);
     }
 
+    const setGameEnd = async()=>{
+        const game_uid = now_game_uid;
+        const game_key = calculateKeccak256Hash(game_uid);
+        return await worldContract.write.SetGameEnd([game_key]);
+    }
 
     const out = {
         convertBigIntToInt,
@@ -916,7 +921,7 @@ export function createSystemCalls(
         addCardOnEmptySlots,
         triggerCardAbilityType,
         isConditionFunctionExist,
-        now_game_uid
+        setGameEnd,
         // ablities,
     };
 

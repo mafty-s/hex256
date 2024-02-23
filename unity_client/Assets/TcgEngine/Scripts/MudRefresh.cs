@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEditor;
 using LitJson;
 using Mud;
+using SelectorType = TcgEngine.SelectorType;
 
 [System.Serializable]
 public class MudCardInfo
@@ -75,7 +76,16 @@ public class MudGame
     public string lastSummoned;
     public int rolledValue;
     public int selector;
+    public string selectorPlayerId;
+    public string selectorCasterUid;
+    public string selectorAbility;
+    public string selectorTrigger;
 
+    public int getPlayerIndex(string player)
+    {
+        return Array.IndexOf(players, player);
+    }
+    
     public static MudGame FromJson(string str)
     {
         return JsonHelper.FromJson<MudGame>(str) as MudGame;
@@ -165,9 +175,20 @@ public class MudRefresh
 
         // gamedata.turn_count;
         gamedata.rolled_value = mud_game.rolledValue;
-        // gamedata.selector;
         gamedata.state = MudEnum.ConvertGameState((Mud.GameState)mud_game.gameState);
         gamedata.phase = MudEnum.ConvertGamePhase((Mud.GamePhase)mud_game.gamePhase);
+
+        gamedata.selector = MudEnum.ConvertSelectorType((Mud.SelectorType)mud_game.selector);
+        gamedata.selector_ability_id =
+            mud_game.selectorAbility == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.selectorAbility;
+        gamedata.selector_caster_uid =
+            mud_game.selectorCasterUid == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.selectorCasterUid;
+        gamedata.selector_player_id = mud_game.getPlayerIndex(mud_game.selectorPlayerId);
+        
         // gamedata.first_player;
 
 

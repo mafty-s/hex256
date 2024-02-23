@@ -229,6 +229,55 @@ static class MudEnum
         return (a, b, c, d);
     }
     
+    public static TcgEngine.GameState ConvertGameState(Mud.GameState state)
+    {
+        switch (state)
+        {
+            case GameState.INIT:
+                return TcgEngine.GameState.Connecting;
+            case GameState.PLAY:
+                return TcgEngine.GameState.Play;
+            case GameState.GAME_ENDED:
+                return TcgEngine.GameState.GameEnded;
+        }
+
+        return TcgEngine.GameState.Connecting;
+    }
+    
+    public static TcgEngine.GamePhase ConvertGamePhase(Mud.GamePhase phase)
+    {
+        switch (phase)
+        {
+            case GamePhase.NONE:
+                return TcgEngine.GamePhase.None;
+            case GamePhase.START_TURN:
+                return TcgEngine.GamePhase.StartTurn;
+            case GamePhase.MAIN:
+                return TcgEngine.GamePhase.Main;
+            case GamePhase.END_TURN:
+                return TcgEngine.GamePhase.EndTurn;
+        }
+
+        return TcgEngine.GamePhase.None;
+    }
+    
+    public static TcgEngine.SelectorType ConvertSelectorType(Mud.SelectorType type)
+    {
+        switch (type)
+        {
+            case SelectorType.None:
+                return TcgEngine.SelectorType.None;
+            case SelectorType.SelectTarget:
+                return TcgEngine.SelectorType.SelectTarget;
+            case SelectorType.SelectorCard:
+                return TcgEngine.SelectorType.SelectorCard;
+            case SelectorType.SelectorChoice:
+                return TcgEngine.SelectorType.SelectorChoice;
+        }
+
+        return TcgEngine.SelectorType.None;
+    }
+    
     public static TcgEngine.StatusType CoverStatus(Mud.Status status)
     {
         switch (status)
