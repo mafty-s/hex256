@@ -902,6 +902,7 @@ export function createSystemCalls(
     }
 
     const refreshGame = () => {
+        return;
         const game_info = getGame();
         window.MyUnityInstance.SendMessage('Client', 'RefreshGame', JSON.stringify(game_info));
     }

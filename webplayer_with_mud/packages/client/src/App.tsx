@@ -110,6 +110,9 @@ export const App = () => {
 
     useEffect(() => {
         console.log("game change", gameInstance, walletClient.account.address);
+        if(gameInstance &&  window.MyUnityInstance){
+            window.MyUnityInstance.SendMessage('Client', 'RefreshGame', JSON.stringify(gameInstance));
+        }
         return () => {
         };
     }, [gameInstance, walletClient])
