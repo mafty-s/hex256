@@ -69,8 +69,8 @@ export default mudConfig({
             }
         },
         Users: {
-            keySchema:{
-                key:"address"
+            keySchema: {
+                key: "address"
             },
             valueSchema: {
                 owner: "address",
@@ -85,8 +85,8 @@ export default mudConfig({
             }
         },
         UsersExtended: {
-            keySchema:{
-                key:"address"
+            keySchema: {
+                key: "address"
             },
             valueSchema: {
                 avatar: "string",
@@ -190,7 +190,7 @@ export default mudConfig({
                 selectorPlayerId: "bytes32",
                 selectorCasterUid: "bytes32",
                 selectorAbility: "bytes32",
-                abilityTrigger: "bytes32",
+                abilityTriggerer: "bytes32",
                 lastPlayed: "bytes32",
                 lastTarget: "bytes32",
                 lastDestroyed: "bytes32",
@@ -218,6 +218,7 @@ export default mudConfig({
                 dcards: "int8",
                 ncards: "uint8",
                 game: "bytes32",
+                hero: "bytes32",
                 name: "string",
                 deck: "string",
                 status: "uint32[]",

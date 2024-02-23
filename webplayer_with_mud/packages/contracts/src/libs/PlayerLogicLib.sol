@@ -116,6 +116,28 @@ library PlayerLogicLib {
         Players.setStatus(player_uid, status);
     }
 
+    function HasStatus(bytes32 player_uid, Status status) internal view returns (bool) {
+        uint32[] memory player_status = Players.getStatus(player_uid);
+        for (uint i = 0; i < player_status.length; i++) {
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(player_status[i]);
+            if (status_id == uint8(status)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function GetStatusValue(bytes32 player_uid,Status status) internal view returns (uint8){
+        uint32[] memory player_status = Players.getStatus(player_uid);
+        for (uint i = 0; i < player_status.length; i++) {
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(player_status[i]);
+            if (status_id == uint8(status)) {
+                return value;
+            }
+        }
+        return 0;
+    }
+
     function RemoveStatus(bytes32 player_uid, Status status) internal {
         uint32[] memory player_status = Players.getStatus(player_uid);
         for (uint i = 0; i < player_status.length; i++) {

@@ -19,7 +19,6 @@ import { IEffect4System } from "./IEffect4System.sol";
 import { IEffect5System } from "./IEffect5System.sol";
 import { IEffect6System } from "./IEffect6System.sol";
 import { IEffectSystem } from "./IEffectSystem.sol";
-import { IEndTurnSystem } from "./IEndTurnSystem.sol";
 import { IFilterSystem } from "./IFilterSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
 import { IGmSystem } from "./IGmSystem.sol";
@@ -32,6 +31,7 @@ import { IPlayCardSystem } from "./IPlayCardSystem.sol";
 import { ISelectSystem } from "./ISelectSystem.sol";
 import { ISlotSystem } from "./ISlotSystem.sol";
 import { ITasksSystem } from "./ITasksSystem.sol";
+import { ITurnSystem } from "./ITurnSystem.sol";
 import { IUsersSystem } from "./IUsersSystem.sol";
 
 /**
@@ -56,7 +56,6 @@ interface IWorld is
   IEffect5System,
   IEffect6System,
   IEffectSystem,
-  IEndTurnSystem,
   IFilterSystem,
   IGameStartSystem,
   IGmSystem,
@@ -69,6 +68,7 @@ interface IWorld is
   ISelectSystem,
   ISlotSystem,
   ITasksSystem,
+  ITurnSystem,
   IUsersSystem
 {
 

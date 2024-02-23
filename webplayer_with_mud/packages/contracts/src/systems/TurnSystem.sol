@@ -6,9 +6,9 @@ import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol
 import {Cards} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action, Status} from "../codegen/common.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
-import {Games, GamesData} from "../codegen/index.sol";
+import {Games, GamesExtended} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
 import {PlayerCardsHand, PlayerCardsDeck, PlayerCardsEquip, PlayerCardsBoard, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
@@ -18,14 +18,14 @@ import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 
 
-contract EndTurnSystem is System {
+contract TurnSystem is System {
 
 
     constructor() {
 
     }
 
-    function EndTurn(bytes32 game_key, bytes32 player_key) public returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max){
+    function EndTurn(bytes32 game_key, bytes32 player_key) public {
 
         if (Games.getGameState(game_key) == GameState.GAME_ENDED) {
             revert("game ended");
@@ -37,26 +37,9 @@ contract EndTurnSystem is System {
         Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
         Games.setGamePhase(game_key, GamePhase.END_TURN);
 
-        int8 mana = Players.getMana(player_key);
-        int8 mana_max = Players.getManaMax(player_key);
-        mana += 1;
-        mana_max += 1;
-        if (mana > mana_max) {
-            mana = Players.getManaMax(player_key);
-        }
-        Players.setMana(player_key, mana);
-        Players.setManaMax(player_key, mana_max);
-
-        //抽张卡出来
-        bytes32 board_card_key = 0;
-        bytes32[] memory draw_cards = PlayerLogicLib.DrawCard(player_key, 1);
-        if (draw_cards.length > 0) {
-            board_card_key = draw_cards[0];
-        }
-
         //参考 GameLogic.cs StartTurn StartNextTurn 恢复Mana等
 
-        Games.setCurrentPlayer(game_key, opponent_player_key);
+        //todo  Games.setCurrentPlayer(game_key, opponent_player_key);
 //        Games.setGamePhase(game_key, GamePhase.START_TURN);
         if (Games.getGameType(game_key) == GameType.SOLO || Games.getGameType(game_key) == GameType.ADVENTURE) {
             //AiLogicLib.Think(game_key, opponent_player_key);
@@ -64,11 +47,11 @@ contract EndTurnSystem is System {
 
 //        EndTurnResultData memory result = EndTurnResultData
 
-        uint256 len = PlayerActionHistory.length(game_key);
-        bytes32 action_key = keccak256(abi.encode(game_key, len));
-        PlayerActionHistory.push(game_key, action_key);
-        ActionHistory.setActionType(action_key, Action.EndTurn);
-        ActionHistory.setTarget(action_key, board_card_key);
+//        uint256 len = PlayerActionHistory.length(game_key);
+//        bytes32 action_key = keccak256(abi.encode(game_key, len));
+//        PlayerActionHistory.push(game_key, action_key);
+//        ActionHistory.setActionType(action_key, Action.EndTurn);
+//        ActionHistory.setTarget(action_key, board_card_key);
 //        ActionHistory.setPlayerId(action_key, player_index);
 
         bytes32[] memory players = Games.getPlayers(game_key);
@@ -82,6 +65,57 @@ contract EndTurnSystem is System {
                 CardLogicLib.ReduceStatusDurations(cards_equiped[c]);
             }
         }
+
+        StartOfTurn(game_key);
+    }
+
+    function StartOfTurn(bytes32 game_key) internal {
+        if (Games.getGameState(game_key) == GameState.GAME_ENDED) {
+            revert("game ended");
+        }
+        ClearTurnData(game_key);
+        Games.setGamePhase(game_key, GamePhase.START_TURN);
+        bytes32 player_key = Games.getCurrentPlayer(game_key);
+
+        //Cards draw
+        uint turn_count = Games.getTurnCount(game_key);
+        bytes32 first_player_key = Games.getFirstPlayer(game_key);
+        if (turn_count > 1 && player_key == first_player_key) {
+            PlayerLogicLib.DrawCard(player_key, 1);
+        }
+
+        //Mana
+        int8 mana = Players.getMana(player_key);
+        int8 mana_max = Players.getManaMax(player_key);
+        mana += 1;
+        mana_max += 1;
+        if (mana > mana_max) {
+            mana = Players.getManaMax(player_key);
+        }
+        Players.setMana(player_key, mana);
+        Players.setManaMax(player_key, mana_max);
+
+        //Turn timer and history
+        //todo
+
+        //Player poison
+        if (PlayerLogicLib.HasStatus(player_key, Status.Poisoned)) {
+            int8 hp = Players.getHp(player_key);
+            hp -= (int8)(PlayerLogicLib.GetStatusValue(player_key, Status.Poisoned));
+            Players.setHp(player_key, hp);
+        }
+
+        bytes32 hero = Players.getHero(player_key);
+        if (hero != 0) {
+            CardLogicLib.ReduceStatusDurations(hero);
+        }
+
+        //Refresh Cards and Status Effects
+        bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
+        for (uint i = 0; i < cards_board.length; i++) {
+            CardLogicLib.Refresh(cards_board[i]);
+        }
+
 
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.START_OF_TURN))
@@ -97,8 +131,8 @@ contract EndTurnSystem is System {
             abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
         );
 
-        return (opponent_player_key, board_card_key, mana, mana_max);
     }
+
 
     function getOpponentPlayer(bytes32 game_key, bytes32 player_key) public view returns (bytes32 opponent_player_key) {
         bytes32[] memory players = Games.getPlayers(game_key);
@@ -111,6 +145,33 @@ contract EndTurnSystem is System {
         } else {
             return players[0];
         }
+    }
+
+//
+//protected virtual void ClearTurnData()
+//{
+//game_data.selector = SelectorType.None;
+//resolve_queue.Clear();
+//card_array.Clear();
+//player_array.Clear();
+//slot_array.Clear();
+//card_data_array.Clear();
+//game_data.last_played = null;
+//game_data.last_destroyed = null;
+//game_data.last_target = null;
+//game_data.last_summoned = null;
+//game_data.ability_triggerer = null;
+//game_data.ability_played.Clear();
+//game_data.cards_attacked.Clear();
+//}
+
+    function ClearTurnData(bytes32 game_uid) internal {
+        //todo
+        GamesExtended.setLastPlayed(game_uid, 0);
+        GamesExtended.setLastDestroyed(game_uid, 0);
+        GamesExtended.setLastTarget(game_uid, 0);
+        GamesExtended.setLastSummoned(game_uid, 0);
+        GamesExtended.setAbilityTriggerer(game_uid, 0);
     }
 
 }

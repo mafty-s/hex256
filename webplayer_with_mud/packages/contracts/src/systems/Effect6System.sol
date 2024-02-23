@@ -108,7 +108,7 @@ contract Effect6System is System {
         if (attacker_type == EffectAttackerType.Self)
             return caster;
         if (attacker_type == EffectAttackerType.AbilityTriggerer) {
-            return GamesExtended.getAbilityTrigger(game_key);
+            return GamesExtended.getAbilityTriggerer(game_key);
         }
         if (attacker_type == EffectAttackerType.LastPlayed) {
             return GamesExtended.getLastPlayed(game_key);

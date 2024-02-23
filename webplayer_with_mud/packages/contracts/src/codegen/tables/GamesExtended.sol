@@ -37,7 +37,7 @@ struct GamesExtendedData {
   bytes32 selectorPlayerId;
   bytes32 selectorCasterUid;
   bytes32 selectorAbility;
-  bytes32 abilityTrigger;
+  bytes32 abilityTriggerer;
   bytes32 lastPlayed;
   bytes32 lastTarget;
   bytes32 lastDestroyed;
@@ -106,7 +106,7 @@ library GamesExtended {
     fieldNames[1] = "selectorPlayerId";
     fieldNames[2] = "selectorCasterUid";
     fieldNames[3] = "selectorAbility";
-    fieldNames[4] = "abilityTrigger";
+    fieldNames[4] = "abilityTriggerer";
     fieldNames[5] = "lastPlayed";
     fieldNames[6] = "lastTarget";
     fieldNames[7] = "lastDestroyed";
@@ -298,9 +298,9 @@ library GamesExtended {
   }
 
   /**
-   * @notice Get abilityTrigger.
+   * @notice Get abilityTriggerer.
    */
-  function getAbilityTrigger(bytes32 key) internal view returns (bytes32 abilityTrigger) {
+  function getAbilityTriggerer(bytes32 key) internal view returns (bytes32 abilityTriggerer) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -309,9 +309,9 @@ library GamesExtended {
   }
 
   /**
-   * @notice Get abilityTrigger.
+   * @notice Get abilityTriggerer.
    */
-  function _getAbilityTrigger(bytes32 key) internal view returns (bytes32 abilityTrigger) {
+  function _getAbilityTriggerer(bytes32 key) internal view returns (bytes32 abilityTriggerer) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -320,23 +320,23 @@ library GamesExtended {
   }
 
   /**
-   * @notice Set abilityTrigger.
+   * @notice Set abilityTriggerer.
    */
-  function setAbilityTrigger(bytes32 key, bytes32 abilityTrigger) internal {
+  function setAbilityTriggerer(bytes32 key, bytes32 abilityTriggerer) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((abilityTrigger)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((abilityTriggerer)), _fieldLayout);
   }
 
   /**
-   * @notice Set abilityTrigger.
+   * @notice Set abilityTriggerer.
    */
-  function _setAbilityTrigger(bytes32 key, bytes32 abilityTrigger) internal {
+  function _setAbilityTriggerer(bytes32 key, bytes32 abilityTriggerer) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((abilityTrigger)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((abilityTriggerer)), _fieldLayout);
   }
 
   /**
@@ -750,7 +750,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
-    bytes32 abilityTrigger,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
@@ -763,7 +763,7 @@ library GamesExtended {
       selectorPlayerId,
       selectorCasterUid,
       selectorAbility,
-      abilityTrigger,
+      abilityTriggerer,
       lastPlayed,
       lastTarget,
       lastDestroyed,
@@ -789,7 +789,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
-    bytes32 abilityTrigger,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
@@ -802,7 +802,7 @@ library GamesExtended {
       selectorPlayerId,
       selectorCasterUid,
       selectorAbility,
-      abilityTrigger,
+      abilityTriggerer,
       lastPlayed,
       lastTarget,
       lastDestroyed,
@@ -828,7 +828,7 @@ library GamesExtended {
       _table.selectorPlayerId,
       _table.selectorCasterUid,
       _table.selectorAbility,
-      _table.abilityTrigger,
+      _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed,
@@ -854,7 +854,7 @@ library GamesExtended {
       _table.selectorPlayerId,
       _table.selectorCasterUid,
       _table.selectorAbility,
-      _table.abilityTrigger,
+      _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed,
@@ -884,7 +884,7 @@ library GamesExtended {
       bytes32 selectorPlayerId,
       bytes32 selectorCasterUid,
       bytes32 selectorAbility,
-      bytes32 abilityTrigger,
+      bytes32 abilityTriggerer,
       bytes32 lastPlayed,
       bytes32 lastTarget,
       bytes32 lastDestroyed,
@@ -900,7 +900,7 @@ library GamesExtended {
 
     selectorAbility = (Bytes.slice32(_blob, 65));
 
-    abilityTrigger = (Bytes.slice32(_blob, 97));
+    abilityTriggerer = (Bytes.slice32(_blob, 97));
 
     lastPlayed = (Bytes.slice32(_blob, 129));
 
@@ -944,7 +944,7 @@ library GamesExtended {
       _table.selectorPlayerId,
       _table.selectorCasterUid,
       _table.selectorAbility,
-      _table.abilityTrigger,
+      _table.abilityTriggerer,
       _table.lastPlayed,
       _table.lastTarget,
       _table.lastDestroyed,
@@ -984,7 +984,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
-    bytes32 abilityTrigger,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
@@ -997,7 +997,7 @@ library GamesExtended {
         selectorPlayerId,
         selectorCasterUid,
         selectorAbility,
-        abilityTrigger,
+        abilityTriggerer,
         lastPlayed,
         lastTarget,
         lastDestroyed,
@@ -1036,7 +1036,7 @@ library GamesExtended {
     bytes32 selectorPlayerId,
     bytes32 selectorCasterUid,
     bytes32 selectorAbility,
-    bytes32 abilityTrigger,
+    bytes32 abilityTriggerer,
     bytes32 lastPlayed,
     bytes32 lastTarget,
     bytes32 lastDestroyed,
@@ -1049,7 +1049,7 @@ library GamesExtended {
       selectorPlayerId,
       selectorCasterUid,
       selectorAbility,
-      abilityTrigger,
+      abilityTriggerer,
       lastPlayed,
       lastTarget,
       lastDestroyed,

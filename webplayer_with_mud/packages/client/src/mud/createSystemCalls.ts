@@ -605,13 +605,13 @@ export function createSystemCalls(
         console.log("tx-result", tx_result)
 
         // return tx;
-        return {
-            operator_player_key: player_key,
-            opponent_player_key: tx_result.result[0],
-            board_card_key: tx_result.result[1],
-            mana: tx_result.result[2],
-            mana_max: tx_result.result[3]
-        }
+        // return {
+        //     operator_player_key: player_key,
+        //     opponent_player_key: tx_result.result[0],
+        //     board_card_key: tx_result.result[1],
+        //     mana: tx_result.result[2],
+        //     mana_max: tx_result.result[3]
+        // }
     }
 
     const test = async () => {

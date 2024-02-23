@@ -173,4 +173,8 @@ library CardLogicLib {
             }
         }
     }
+
+    function Refresh(bytes32 card_key) internal{
+        CardOnBoards.setExhausted(card_key, false);
+    }
 }

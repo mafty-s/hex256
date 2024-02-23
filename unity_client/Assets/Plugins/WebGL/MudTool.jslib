@@ -160,10 +160,10 @@ mergeInto(LibraryManager.library, {
         console.log("player_name", UTF8ToString(player_name));
 
         let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_name), player_id);
-        console.log(result);
+        // console.log(result);
 
-        let returnStr = JSON.stringify(result);
-        MyUnityInstance.SendMessage("Client", "OnEndTurnSuccess", returnStr);
+        // let returnStr = JSON.stringify(result);
+        // MyUnityInstance.SendMessage("Client", "OnEndTurnSuccess", returnStr);
     },
 
     startMatchmaking: async function (game_uid, nb_players) {
