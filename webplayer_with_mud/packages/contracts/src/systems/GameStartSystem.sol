@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
-import {Cards} from "../codegen/index.sol";
+import {Cards, Users} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {Games, GamesData, GamesExtended} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
@@ -96,7 +96,7 @@ contract GameStartSystem is System {
             StartGame(game_uid);
         }
 
-
+        Users.setGame(_msgSender(), game_key);
         return PlayerCardsDeck.getValue(player_key);
 
     }

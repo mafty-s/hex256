@@ -42,17 +42,16 @@ export const App = () => {
     });
 
     const user = useStore((state) => {
-        const address = walletClient.account.addres;
-        // console.log("address", address)
-        if (address == null || address == undefined) {
-            return null;
-        }
-        return state.getRecord(tables.Users, {address});
+        let key = walletClient.account.address;
+        let user = state.getValue(tables.Users, {key});
+        return user;
     });
 
     useEffect(() => {
-        console.log("user change", user);
-    }, [user])
+        console.log("user change", user, walletClient.account.address);
+        return () => {
+        };
+    }, [user, walletClient])
 
 
     // const tasks = useStore((state) => {
@@ -394,46 +393,30 @@ export const App = () => {
 
 
     useEffect(async () => {
-
-        // const entity = worldContract.registerEntity({id: "0xDEAD" as EntityI})
-
-        // window.components = components;
-        window.user = user;
         window.tttt = tttt;
         window.state = state;
         window.tables = tables;
         window.useStore = useStore;
-        window.getUser = async ()=>{
+        window.getUser = async () => {
             return convertBigIntToInt(await getUserByKey(walletClient.account.address));
         };
-        // window.addTask = addTask;
-        // window.addUser = addUser;
-        // window.initCard = initCard;
-        // window.initPack = initPack;
         window.init = init;
         window.initAbliities = initAbliities;
-        // window.buyCard = buyCard;
-        // window.getCard = getCard;
         window.calculateKeccak256Hash = calculateKeccak256Hash;
-        // window.incr = incr;
-        // window.getRandomCardByRarity = getRandomCardByRarity;
-        // window.openPack = openPack;
-        window.runApiTask = async (url, json_data) => {
-            console.log("111", url, JSON.parse(json_data))
-        }
 
-        while (true) {
-            const user = await getUserByKey(walletClient.account.address);
-            if (user && user.owner != '0x0000000000000000000000000000000000000000') {
+        let interval = setInterval(async () => {
+            let a = await getUserByKey(walletClient.account.address);
+            if(a && a.owner!="0x0000000000000000000000000000000000000000"){
+                clearInterval(interval);
                 initUnity();
-                break;
-            } else {
+            }else{
                 await addUser(walletClient.account.address)
             }
-        }
+        }, 100);
+
         return () => {
         };
-    }, []);
+    }, [walletClient]);
 
 
     return (

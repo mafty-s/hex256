@@ -26,7 +26,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant UsersTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0074040414202020000000000000000000000000000000000000000000000000
+  0x0094050414202020200000000000000000000000000000000000000000000000
 );
 
 struct UsersData {
@@ -34,6 +34,7 @@ struct UsersData {
   uint256 coin;
   uint256 xp;
   uint256 createdAt;
+  bytes32 game;
   bytes32[] cards;
   bytes32[] packs;
   string id;
@@ -65,15 +66,16 @@ library Users {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](8);
+    SchemaType[] memory _valueSchema = new SchemaType[](9);
     _valueSchema[0] = SchemaType.ADDRESS;
     _valueSchema[1] = SchemaType.UINT256;
     _valueSchema[2] = SchemaType.UINT256;
     _valueSchema[3] = SchemaType.UINT256;
-    _valueSchema[4] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[4] = SchemaType.BYTES32;
     _valueSchema[5] = SchemaType.BYTES32_ARRAY;
-    _valueSchema[6] = SchemaType.STRING;
-    _valueSchema[7] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[6] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[7] = SchemaType.STRING;
+    _valueSchema[8] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -92,15 +94,16 @@ library Users {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](8);
+    fieldNames = new string[](9);
     fieldNames[0] = "owner";
     fieldNames[1] = "coin";
     fieldNames[2] = "xp";
     fieldNames[3] = "createdAt";
-    fieldNames[4] = "cards";
-    fieldNames[5] = "packs";
-    fieldNames[6] = "id";
-    fieldNames[7] = "decks";
+    fieldNames[4] = "game";
+    fieldNames[5] = "cards";
+    fieldNames[6] = "packs";
+    fieldNames[7] = "id";
+    fieldNames[8] = "decks";
   }
 
   /**
@@ -283,6 +286,48 @@ library Users {
     _keyTuple[0] = bytes32(uint256(uint160(key)));
 
     StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((createdAt)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get game.
+   */
+  function getGame(address key) internal view returns (bytes32 game) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Get game.
+   */
+  function _getGame(address key) internal view returns (bytes32 game) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    return (bytes32(_blob));
+  }
+
+  /**
+   * @notice Set game.
+   */
+  function setGame(address key, bytes32 game) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((game)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set game.
+   */
+  function _setGame(address key, bytes32 game) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(uint256(uint160(key)));
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((game)), _fieldLayout);
   }
 
   /**
@@ -972,12 +1017,13 @@ library Users {
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
+    bytes32 game,
     bytes32[] memory cards,
     bytes32[] memory packs,
     string memory id,
     bytes32[] memory decks
   ) internal {
-    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt);
+    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt, game);
 
     PackedCounter _encodedLengths = encodeLengths(cards, packs, id, decks);
     bytes memory _dynamicData = encodeDynamic(cards, packs, id, decks);
@@ -997,12 +1043,13 @@ library Users {
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
+    bytes32 game,
     bytes32[] memory cards,
     bytes32[] memory packs,
     string memory id,
     bytes32[] memory decks
   ) internal {
-    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt);
+    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt, game);
 
     PackedCounter _encodedLengths = encodeLengths(cards, packs, id, decks);
     bytes memory _dynamicData = encodeDynamic(cards, packs, id, decks);
@@ -1017,7 +1064,7 @@ library Users {
    * @notice Set the full data using the data struct.
    */
   function set(address key, UsersData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.owner, _table.coin, _table.xp, _table.createdAt);
+    bytes memory _staticData = encodeStatic(_table.owner, _table.coin, _table.xp, _table.createdAt, _table.game);
 
     PackedCounter _encodedLengths = encodeLengths(_table.cards, _table.packs, _table.id, _table.decks);
     bytes memory _dynamicData = encodeDynamic(_table.cards, _table.packs, _table.id, _table.decks);
@@ -1032,7 +1079,7 @@ library Users {
    * @notice Set the full data using the data struct.
    */
   function _set(address key, UsersData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.owner, _table.coin, _table.xp, _table.createdAt);
+    bytes memory _staticData = encodeStatic(_table.owner, _table.coin, _table.xp, _table.createdAt, _table.game);
 
     PackedCounter _encodedLengths = encodeLengths(_table.cards, _table.packs, _table.id, _table.decks);
     bytes memory _dynamicData = encodeDynamic(_table.cards, _table.packs, _table.id, _table.decks);
@@ -1048,7 +1095,7 @@ library Users {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (address owner, uint256 coin, uint256 xp, uint256 createdAt) {
+  ) internal pure returns (address owner, uint256 coin, uint256 xp, uint256 createdAt, bytes32 game) {
     owner = (address(Bytes.slice20(_blob, 0)));
 
     coin = (uint256(Bytes.slice32(_blob, 20)));
@@ -1056,6 +1103,8 @@ library Users {
     xp = (uint256(Bytes.slice32(_blob, 52)));
 
     createdAt = (uint256(Bytes.slice32(_blob, 84)));
+
+    game = (Bytes.slice32(_blob, 116));
   }
 
   /**
@@ -1102,7 +1151,7 @@ library Users {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (UsersData memory _table) {
-    (_table.owner, _table.coin, _table.xp, _table.createdAt) = decodeStatic(_staticData);
+    (_table.owner, _table.coin, _table.xp, _table.createdAt, _table.game) = decodeStatic(_staticData);
 
     (_table.cards, _table.packs, _table.id, _table.decks) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -1135,9 +1184,10 @@ library Users {
     address owner,
     uint256 coin,
     uint256 xp,
-    uint256 createdAt
+    uint256 createdAt,
+    bytes32 game
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(owner, coin, xp, createdAt);
+    return abi.encodePacked(owner, coin, xp, createdAt, game);
   }
 
   /**
@@ -1191,12 +1241,13 @@ library Users {
     uint256 coin,
     uint256 xp,
     uint256 createdAt,
+    bytes32 game,
     bytes32[] memory cards,
     bytes32[] memory packs,
     string memory id,
     bytes32[] memory decks
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt);
+    bytes memory _staticData = encodeStatic(owner, coin, xp, createdAt, game);
 
     PackedCounter _encodedLengths = encodeLengths(cards, packs, id, decks);
     bytes memory _dynamicData = encodeDynamic(cards, packs, id, decks);

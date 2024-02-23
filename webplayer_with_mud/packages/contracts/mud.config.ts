@@ -77,6 +77,7 @@ export default mudConfig({
                 coin: "uint256",
                 xp: "uint256",
                 createdAt: "uint256",
+                game: "bytes32",
                 cards: "bytes32[]",
                 packs: "bytes32[]",
                 id: "string",
