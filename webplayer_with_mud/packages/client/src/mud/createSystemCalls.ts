@@ -37,7 +37,7 @@ export function createSystemCalls(
      */
     {tables, useStore, worldContract, waitForTransaction, publicClient}: SetupNetworkResult
 ) {
-    
+
     const convertBigIntToInt = (obj) => {
         if (typeof obj !== 'object' || obj === null) {
             // 基本类型或 null，直接返回
@@ -132,11 +132,9 @@ export function createSystemCalls(
         if (name.length === 0) {
             return null
         }
-        //0xb618c8ba
-        // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
         const functionName = convertToPascalCase(name) + '(bytes32,bytes32,uint8,bytes32,bytes32)';
         const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
-        console.log(functionName, functionSelector)
+        console.log(name, functionName, functionSelector)
 
         return functionSelector;
     }
@@ -206,12 +204,12 @@ export function createSystemCalls(
     const getUser = async () => {
         const address = walletClient.account.address;
         return await getUserByKey(address);
-    //     const user = await worldContract.read.getUser();
-    //     return user;
-    //
-    //     console.log(address);
-    //
-    //     // return state.getRecord(tables.Users, {address});
+        //     const user = await worldContract.read.getUser();
+        //     return user;
+        //
+        //     console.log(address);
+        //
+        //     // return state.getRecord(tables.Users, {address});
     };
 
     const IsBoardCard = async (key: string) => {
@@ -269,7 +267,7 @@ export function createSystemCalls(
 
     // let ablities = [];
     const initAbility = async (
-        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string,conditionsTarget: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
+        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string, conditionsTarget: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
 
         const key = calculateKeccak256Hash(id);
 
@@ -454,7 +452,7 @@ export function createSystemCalls(
         }
 
         console.log("pid", pid);
-        console.log("need_shuffle",!not_shuffle);
+        console.log("need_shuffle", !not_shuffle);
         await sleep(200)
 
         //todo
@@ -870,7 +868,7 @@ export function createSystemCalls(
         return await worldContract.read.IsConditionFunctionExist([selector]);
     }
 
-    const setGameEnd = async()=>{
+    const setGameEnd = async () => {
         const game_uid = now_game_uid;
         const game_key = calculateKeccak256Hash(game_uid);
         return await worldContract.write.SetGameEnd([game_key]);

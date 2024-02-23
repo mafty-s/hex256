@@ -157,7 +157,7 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
-  function IsDeckBuilding(
+  function IsDeckbuilding(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,

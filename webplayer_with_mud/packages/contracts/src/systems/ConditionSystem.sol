@@ -132,8 +132,8 @@ contract ConditionSystem is System {
         return ConditionTarget(condition_type, ConditionTargetType.Card, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsDeckBuilding(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionDeckBuilding(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    function IsDeckbuilding(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionDeckbuilding(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
     function IsGrowth3(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -330,7 +330,7 @@ contract ConditionSystem is System {
 
     }
 
-    function ConditionDeckBuilding(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+    function ConditionDeckbuilding(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         if (condition_type == ConditionTargetType.Card) {
             bytes32 card_config_key = CardOnBoards.getId(target);
             return CompareBool(Cards.getDeckbuilding(card_config_key), oper);
