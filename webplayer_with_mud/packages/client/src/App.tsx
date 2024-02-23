@@ -30,6 +30,69 @@ export const App = () => {
         }
         const key = calculateKeccak256Hash(game_uid);
         let game = state.getValue(tables.Games, {key});
+        if(!game){
+            return null;
+        }
+        let game_extend = state.getValue(tables.GamesExtended, {key});
+        let player_action_history = state.getValue(tables.PlayerActionHistory, {key});
+        let action_historys = [];
+        // console.log(player_action_history);
+        if (player_action_history != undefined) {
+            for (let i = 0; i < player_action_history.value.length; i++) {
+                let action_key = player_action_history.value[i];
+                let action_history = state.getValue(tables.ActionHistory, {action_key});
+                console.log(action_history);
+                action_historys.push(action_history);
+            }
+        }
+
+        game = {...game, ...game_extend};
+        game.player_objs = [];
+        game.action_history = action_historys;
+        let cards = [];
+
+        for (const player_key of game.players) {
+            if(player_key!="0x0000000000000000000000000000000000000000000000000000000000000000") {
+                const player = state.getValue(tables.Players, {player_key});
+                player.key = player_key;
+                player.deck = state.getValue(tables.PlayerCardsDeck, {player_key})?.value;
+                player.hand = state.getValue(tables.PlayerCardsHand, {player_key})?.value;
+                player.discard = state.getValue(tables.PlayerCardsDiscard, {player_key})?.value;
+                player.board = state.getValue(tables.PlayerCardsBoard, {player_key})?.value;
+                player.secret = state.getValue(tables.PlayerCardsSecret, {player_key})?.value;
+                player.equip = state.getValue(tables.PlayerCardsEquip, {player_key})?.value;
+                player.board = state.getValue(tables.PlayerCardsBoard, {player_key})?.value;
+                player.temp = state.getValue(tables.PlayerCardsTemp, {player_key})?.value;
+                player.slot = state.getValue(tables.PlayerSlots, {player_key});
+                game.player_objs.push(player);
+            }
+        }
+
+        for (const player of game.player_objs) {
+
+            for (const card_key of player.deck) {
+                let card = state.getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+            for (const card_key of player.hand) {
+                let card = state.getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+            for (const card_key of player.discard) {
+                let card = state.getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+            for (const card_key of player.board) {
+                let card = state.getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
+        }
+
+        game.cards = cards;
         return game;//.getRecords(tables.CardOnBoards);
     });
 
