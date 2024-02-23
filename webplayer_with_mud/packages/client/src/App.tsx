@@ -1,6 +1,5 @@
 import {useMUD} from "./MUDContext";
-import React, {useEffect} from 'react';
-import {retry} from "rxjs";
+import React, {useEffect, useState} from 'react';
 
 export const App = () => {
     const {
@@ -8,7 +7,6 @@ export const App = () => {
         systemCalls: {
             addUser,
             getUserByKey,
-            getUser,
             initCard,
             initPack,
             initDeck,
@@ -24,13 +22,6 @@ export const App = () => {
         return state;
     })
 
-    const tttt = useStore((state) => {
-        const records = Object.values(state.getRecords(tables.CardOnBoards));
-
-        return records;//.getRecords(tables.CardOnBoards);
-        // return state.getRecord(window.tables.Config,{}).value.cards;
-        // return state.getValue(tables.Cards, {"0x34e5e01274697aaaf3201d8e56ef014585ee783376fde9a8ef2f8b2a5137be8e	"});
-    });
 
     const gameInstance = useStore((state) => {
         if (now_game_uid == null) {
@@ -52,26 +43,6 @@ export const App = () => {
         return () => {
         };
     }, [user, walletClient])
-
-
-    // const tasks = useStore((state) => {
-    //     const records = Object.values(state.getRecords(tables.Tasks));
-    //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-    //     return records;
-    // });
-
-    // const cards = useStore((state) => {
-    //     const records = Object.values(state.getRecords(tables.Cards));
-    //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-    //     return records;
-    // });
-    //
-    // const users = useStore((state) => {
-    //     const records = Object.values(state.getRecords(tables.Users));
-    //     records.sort((a, b) => Number(a.value.createdAt - b.value.createdAt));
-    //     // console.log("users", records);
-    //     return records;
-    // });
 
 
     function unityShowBanner(msg, type) {
@@ -406,10 +377,10 @@ export const App = () => {
 
         let interval = setInterval(async () => {
             let a = await getUserByKey(walletClient.account.address);
-            if(a && a.owner!="0x0000000000000000000000000000000000000000"){
+            if (a && a.owner != "0x0000000000000000000000000000000000000000") {
                 clearInterval(interval);
                 initUnity();
-            }else{
+            } else {
                 await addUser(walletClient.account.address)
             }
         }, 100);
