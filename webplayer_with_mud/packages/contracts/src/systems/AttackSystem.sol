@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Cards, CardOnBoards, Games, PlayerCardsDiscard} from "../codegen/index.sol";
+import {Cards, CardOnBoards, Games, PlayerCardsDiscard, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, Action} from "../codegen/common.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
@@ -124,12 +124,12 @@ contract AttackSystem is System {
 
         }
         int8 attacker_attack = CardOnBoards.getAttack(attacker_key);
-        int8 target_hp = Player.getHp(target_key);
+        int8 target_hp = Players.getHp(target_key);
         target_hp = target_hp - attacker_attack;
         if (target_hp <= 0) {
             target_hp = 0;
         }
-        Player.setHp(target_key, target_hp);
+        Players.setHp(target_key, target_hp);
 
         uint256 len = PlayerActionHistory.length(game_key);
         bytes32 action_key = keccak256(abi.encode(game_key, len));
