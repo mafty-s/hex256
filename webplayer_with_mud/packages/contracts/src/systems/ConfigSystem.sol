@@ -75,6 +75,12 @@ contract ConfigSystem is System {
         Decks.setCards(key, _cards);
     }
 
+    function revertWithStringAndBytes4(string memory str, bytes4 errorData) internal pure {
+        bytes memory strBytes = bytes(str);
+        bytes memory errorMsg = abi.encodePacked(strBytes, errorData);
+        revert(string(errorMsg));
+    }
+
     function initAbilityExtend(
         string memory id,
         bytes4[] memory conditionsTarget,
