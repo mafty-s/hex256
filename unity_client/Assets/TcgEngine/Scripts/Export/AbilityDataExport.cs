@@ -26,13 +26,14 @@ namespace TcgEngine
             {
                 // Write the header
                 sw.WriteLine(
-                    "ID,Trigger,ConditionsTrigger,Target,FiltersTarget,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
+                    "ID,Trigger,ConditionsTarget,ConditionsTrigger,Target,FiltersTarget,Effects,Status,Value,Duration,ChainAbilities,ManaCost,Exhaust,Title,Description,BoardFX,CasterFX,TargetFX,CastAudio,TargetAudio,ChargeTarget");
 
                 // Write the data rows
                 foreach (AbilityData abilityData in abilityList)
                 {
                     string trigger = abilityData.trigger.ToString();
                     string conditionsTrigger = GetConditionsString(abilityData.conditions_trigger);
+                    string conditionsTarget = GetConditionsString(abilityData.conditions_target);
 
                     string filtersTarget = GetFilterDataString(abilityData.filters_target);
                     string target = abilityData.target.ToString();
@@ -41,10 +42,11 @@ namespace TcgEngine
                     string chainAbilities = GetChainAbilitiesString(abilityData.chain_abilities);
 
                     sw.WriteLine(string.Format(
-                        "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19}",
+                        "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}",
                         abilityData.id,
                         trigger,
                         conditionsTrigger,
+                        conditionsTarget,
                         target,
                         filtersTarget,
                         effects,
