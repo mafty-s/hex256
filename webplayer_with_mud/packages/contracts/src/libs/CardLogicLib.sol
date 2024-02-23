@@ -73,7 +73,7 @@ library CardLogicLib {
     }
 
     function HasStatus(bytes32 card_uid, Status status) internal view returns (bool) {
-        uint32[] memory  card_status= CardOnBoards.getStatus(card_uid);
+        uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         for (uint i = 0; i < card_status.length; i++) {
             (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(card_status[i]);
             if (status_id == uint8(status)) {
@@ -158,7 +158,19 @@ library CardLogicLib {
         return true;
     }
 
-    function ReduceStatusDurations(bytes32 card_uid) internal{
-        //todo
+    function ReduceStatusDurations(bytes32 card_uid) internal {
+        uint32[] memory status = CardOnBoards.getStatus(card_uid);
+        for (uint i = 0; i < status.length; i++) {
+            (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(status[i]);
+            if (status_id != uint8(Status.None)) {
+                duration -= 1;
+                if (duration <= 0) {
+                    RemoveStatus(card_uid, Status(status_id));
+                } else {
+                    uint32 status = combineUint32(status_id, duration, value, 0);
+                    CardOnBoards.updateStatus(card_uid, i, status);
+                }
+            }
+        }
     }
 }
