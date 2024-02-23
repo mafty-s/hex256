@@ -133,7 +133,7 @@ contract ConditionSystem is System {
     }
 
     function IsDeckBuilding(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionDeckbuilding(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        return ConditionDeckBuilding(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
     function IsGrowth3(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -167,7 +167,6 @@ contract ConditionSystem is System {
     function IsInBoard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
-
 
     function IsSlot(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionTarget(condition_type, ConditionTargetType.Slot, ConditionOperatorBool.IsTrue, ability_key, caster, target);
@@ -221,7 +220,7 @@ contract ConditionSystem is System {
         return ConditionCardType(condition_type, CardType.None, CardTeam.Blue, CardTrait.None, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsAttackL4(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function IsAttack_4L(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionStat(ability_key, caster, target, ConditionStatType.Attack, ConditionOperatorInt.LessEqual, 4);
     }
 
@@ -237,7 +236,32 @@ contract ConditionSystem is System {
         return ConditionTurn(condition_type, game_uid, ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
+    function IsNotSelf(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionSelf(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
+    }
+
+    function IsNotEmpty(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
+    }
+
+    function IsNotStealth(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionStatus(condition_type, Status.Stealth, 0, ConditionOperatorBool.IsFalse, ability_key, caster, target);
+    }
+
 //=======================================//=======================================//=======================================
+
+    function ConditionSelf(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Card) {
+            return CompareBool(caster == target, oper);
+        }
+
+        if (condition_type == ConditionTargetType.Player) {
+            bool same_owner = CardOnBoards.getPlayerId(caster) == CardOnBoards.getPlayerId(target);
+            return CompareBool(same_owner, oper);
+        }
+
+        return true;
+    }
 
     function ConditionCardType(ConditionTargetType condition_type, CardType has_type, CardTeam has_team, CardTrait has_trait, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         if (condition_type == ConditionTargetType.Player)
@@ -306,7 +330,7 @@ contract ConditionSystem is System {
 
     }
 
-    function ConditionDeckbuilding(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
+    function ConditionDeckBuilding(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         if (condition_type == ConditionTargetType.Card) {
             bytes32 card_config_key = CardOnBoards.getId(target);
             return CompareBool(Cards.getDeckbuilding(card_config_key), oper);

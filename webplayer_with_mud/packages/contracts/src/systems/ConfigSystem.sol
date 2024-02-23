@@ -94,13 +94,13 @@ contract ConfigSystem is System {
 
         for (uint i = 0; i < conditionsTrigger.length; i++) {
             if (!isSelectorExist(conditionsTrigger[i])) {
-                revert("Condition trigger not exist");
+                revertWithStringAndBytes4("Condition trigger not exist",conditionsTrigger[i]);
             }
         }
 
         for (uint i = 0; i < conditionsTarget.length; i++) {
             if (!isSelectorExist(conditionsTarget[i])) {
-                revert("Condition target not exist");
+                revertWithStringAndBytes4("Condition target not exist",conditionsTarget[i]);
             }
         }
 
