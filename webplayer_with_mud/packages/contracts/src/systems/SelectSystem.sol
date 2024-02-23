@@ -55,7 +55,7 @@ contract SelectSystem is System {
 //            resolve_queue.ResolveAll();
 
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, true))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, true))
             );
 
             SystemSwitch.call(
@@ -82,7 +82,7 @@ contract SelectSystem is System {
         if (selector == SelectorType.SelectTarget) {
 
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (ability_key, caster, target, false))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid,ability_key, caster, target, false))
             );
 
             uint256 len = PlayerActionHistory.length(game_uid);

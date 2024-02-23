@@ -12,19 +12,39 @@ import { AbilityTrigger, ConditionTargetType } from "./../common.sol";
 interface IAbilitySystem {
   function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
-  function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 caster, bytes32 target, bool is_card) external;
+  function TriggerCardAbilityType(
+    AbilityTrigger trigger,
+    bytes32 game_uid,
+    bytes32 caster,
+    bytes32 target,
+    bool is_card
+  ) external;
 
   function TriggerPlayerCardsAbilityType(bytes32 caster, AbilityTrigger trigger) external;
 
   function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) external;
 
-  function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) external;
+  function TriggerCardAbility(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 triggerer,
+    bool is_card
+  ) external;
+
+  function AreTriggerConditionsMet(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 trigger,
+    ConditionTargetType condition_type
+  ) external returns (bool);
 
   function AreTargetConditionsMet(
     bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
-    bytes32 trigger_card,
+    bytes32 target,
     ConditionTargetType condition_type
   ) external returns (bool);
 

@@ -83,12 +83,12 @@ contract AbilitySystem is System {
     }
 
     //更具trigger技能触发器,触发指定卡的所有技能
-    function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 caster, bytes32 target, bool is_card) public {
+    function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card) public {
         bytes32 card_config_id = CardOnBoards.getId(caster);
         bytes32[] memory abilities = Cards.getAbilities(card_config_id);
         for (uint i = 0; i < abilities.length; i++) {
             if (Ability.getTrigger(abilities[i]) == trigger) {
-                TriggerCardAbility(abilities[i], caster, target, is_card);
+                TriggerCardAbility(game_uid, abilities[i], caster, target, is_card);
             }
         }
     }
@@ -102,16 +102,16 @@ contract AbilitySystem is System {
     }
 
     //触发指定技能
-    function TriggerCardAbility(bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
+    function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
         bytes32 trigger_card = triggerer != 0 ? triggerer : caster; //Triggerer is the caster if not set
 //    todo    if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMetCard(caster, triggerer)) {
-        if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced)) {
+        if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
             UseAbility(ability_key, caster, trigger_card, is_card);
         }
     }
 
 
-    function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) public returns (bool) {
+    function AreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger, ConditionTargetType condition_type) public returns (bool) {
         bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
         for (uint i = 0; i < conditions_trigger.length; i++) {
             bytes4 condition = conditions_trigger[i];
@@ -119,7 +119,7 @@ contract AbilitySystem is System {
                 if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster, condition_type))), (bool))) {
                     return false;
                 }
-                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger_card, condition_type))), (bool))) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger, condition_type))), (bool))) {
                     return false;
                 }
             }
@@ -127,6 +127,19 @@ contract AbilitySystem is System {
         return true;
     }
 
+
+    function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) public returns (bool) {
+        bytes4[] memory conditions_target = AbilityExtend.getConditionsTarget(ability_key);
+        for (uint i = 0; i < conditions_target.length; i++) {
+            bytes4 condition = conditions_target[i];
+            if (condition != 0) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, target, condition_type))), (bool))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     function IsSelector(AbilityTarget target) internal returns (bool) {
         return target == AbilityTarget.SelectTarget || target == AbilityTarget.CardSelector || target == AbilityTarget.ChoiceSelector;
@@ -473,7 +486,7 @@ contract AbilitySystem is System {
             for (uint i = 0; i < chain_abilities.length; i++) {
                 bytes32 chain_ability = chain_abilities[i];
                 if (chain_ability != 0) {
-                    TriggerCardAbility(chain_ability, caster, 0, true);
+                    TriggerCardAbility(game_uid, chain_ability, caster, 0, true);
                 }
             }
         }

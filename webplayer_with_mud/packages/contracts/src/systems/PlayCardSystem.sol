@@ -61,7 +61,7 @@ contract PlayCardSystem is System {
             //使用触发器触发技能
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                    AbilityTrigger.ON_PLAY, card_key, 0, true))
+                    AbilityTrigger.ON_PLAY, game_key, card_key, 0, true))
             );
 
         } else if (CardLogicLib.IsEquipment(card_config_key)) {
@@ -85,7 +85,7 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToDiscard(player_key, card_key);
 
             if (slot.x != 0) {
-                bytes32 slot_player = slot.p ==0 ? players[0]:players[1];
+                bytes32 slot_player = slot.p == 0 ? players[0] : players[1];
                 bytes32 card_on_slot = SlotLib.GetCardOnSlot(slot_player, slot.x);
 //                bytes32[] memory abilities = Cards.getAbilities(card_config_key);
 //                //使用触发器触发技能
@@ -96,11 +96,11 @@ contract PlayCardSystem is System {
 //                SystemSwitch.call(data);
 
                 SystemSwitch.call(
-                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, card_on_slot, true))
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, card_on_slot, true))
                 );
             } else {
                 SystemSwitch.call(
-                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, card_key, 0, true))
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, 0, true))
                 );
             }
 
@@ -108,8 +108,6 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToDiscard(player_key, card_key);
 //            SlotLib.SetCardOnSlot(player_key, 0, slot.x);
         }
-
-
 
 //        uint16 slot_encode = SlotLib.EncodeSlot(slot);
         uint256 len = PlayerActionHistory.length(game_key);
