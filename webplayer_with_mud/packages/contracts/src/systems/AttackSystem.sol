@@ -60,7 +60,7 @@ contract AttackSystem is System {
             bytes32 target_player = CardOnBoards.getPlayerId(target_key);
             PlayerLogicLib.RemoveCardFromAllGroups(target_player, target_key);
             SlotLib.ClearCardFromSlot(target_player, target_key);
-            PlayerCardsDiscard.pushValue(target_player,target_key);
+            PlayerCardsDiscard.pushValue(target_player, target_key);
         }
 
         CardOnBoards.setHp(target_key, target_hp);
@@ -123,6 +123,13 @@ contract AttackSystem is System {
             );
 
         }
+        int8 attacker_attack = CardOnBoards.getAttack(attacker_key);
+        int8 target_hp = Player.getHp(target_key);
+        target_hp = target_hp - attacker_attack;
+        if (target_hp <= 0) {
+            target_hp = 0;
+        }
+        Player.setHp(target_key, target_hp);
 
         uint256 len = PlayerActionHistory.length(game_key);
         bytes32 action_key = keccak256(abi.encode(game_key, len));
