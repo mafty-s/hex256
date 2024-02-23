@@ -22,13 +22,14 @@ export const App = () => {
         return state;
     })
 
+    const [game_uid, setGameUid] = useState(null);
 
     const gameInstance = useStore((state) => {
-        if (now_game_uid == null) {
+        if (game_uid == null) {
             return null;
         }
-        const key = calculateKeccak256Hash(now_game_uid);
-        let game = useStore.getState().getValue(tables.Games, {key});
+        const key = calculateKeccak256Hash(game_uid);
+        let game = state.getValue(tables.Games, {key});
         return game;//.getRecords(tables.CardOnBoards);
     });
 
@@ -44,6 +45,11 @@ export const App = () => {
         };
     }, [user, walletClient])
 
+    useEffect(() => {
+        console.log("game change", gameInstance, walletClient.account.address);
+        return () => {
+        };
+    }, [gameInstance, walletClient])
 
     function unityShowBanner(msg, type) {
         function updateBannerVisibility() {
@@ -364,7 +370,12 @@ export const App = () => {
 
 
     useEffect(async () => {
-        window.tttt = tttt;
+
+        setGameUid("yQGr4rpNJ2")
+        window.game_uid = game_uid;
+        window.setGameUid = setGameUid;
+        window.gameInstance = gameInstance;
+
         window.state = state;
         window.tables = tables;
         window.useStore = useStore;
@@ -389,9 +400,15 @@ export const App = () => {
         };
     }, [walletClient]);
 
+    const updateVariable = () => {
+        setGameUid('new value');
+    };
 
     return (
         <>
+            <p>{game_uid}</p>
+            <button onClick={updateVariable}>Update</button>
+
             <div id="unity-container" className="unity-desktop">
                 <canvas id="unity-canvas">
                 </canvas>
