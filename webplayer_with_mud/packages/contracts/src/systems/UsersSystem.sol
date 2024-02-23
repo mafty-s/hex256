@@ -29,17 +29,7 @@ contract UsersSystem is System {
 
     }
 
-    function getUser() public view returns (UsersData memory _table) {
-        address key = _msgSender();
-        return Users.get(key);
-    }
-
-    function getUserByKey(address key) public view returns (UsersData memory _table) {
-        return Users.get(key);
-    }
-
-    function getUserByOwner(address owner) public view returns (UsersData memory _table) {
-        address key = _msgSender();
+    function getUserByKey(address key) public view returns (UsersData memory ) {
         return Users.get(key);
     }
 }

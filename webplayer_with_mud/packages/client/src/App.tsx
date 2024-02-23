@@ -7,7 +7,8 @@ export const App = () => {
         network: {tables, useStore, walletClient},
         systemCalls: {
             addUser,
-            getUserByOwner,
+            getUserByKey,
+            getUser,
             initCard,
             initPack,
             initDeck,
@@ -42,7 +43,8 @@ export const App = () => {
 
     const user = useStore((state) => {
         const address = walletClient.account.addres;
-        if (address == null) {
+        // console.log("address", address)
+        if (address == null || address == undefined) {
             return null;
         }
         return state.getRecord(tables.Users, {address});
@@ -391,24 +393,21 @@ export const App = () => {
     }
 
 
-    let getUser = async () => {
-        let user = await getUserByOwner(walletClient.account.address)
-        user = convertBigIntToInt(user);
-        return user;
-    }
-
     useEffect(async () => {
 
         // const entity = worldContract.registerEntity({id: "0xDEAD" as EntityI})
 
         // window.components = components;
+        window.user = user;
         window.tttt = tttt;
         window.state = state;
         window.tables = tables;
         window.useStore = useStore;
+        window.getUser = async ()=>{
+            return convertBigIntToInt(await getUserByKey(walletClient.account.address));
+        };
         // window.addTask = addTask;
         // window.addUser = addUser;
-        window.getUser = getUser;
         // window.initCard = initCard;
         // window.initPack = initPack;
         window.init = init;
@@ -424,7 +423,7 @@ export const App = () => {
         }
 
         while (true) {
-            const user = await getUser();
+            const user = await getUserByKey(walletClient.account.address);
             if (user && user.owner != '0x0000000000000000000000000000000000000000') {
                 initUnity();
                 break;

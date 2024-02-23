@@ -12,9 +12,5 @@ import { UsersData } from "./../index.sol";
 interface IUsersSystem {
   function addUser(string memory username) external returns (address key);
 
-  function getUser() external view returns (UsersData memory _table);
-
-  function getUserByKey(address key) external view returns (UsersData memory _table);
-
-  function getUserByOwner(address owner) external view returns (UsersData memory _table);
+  function getUserByKey(address key) external view returns (UsersData memory);
 }

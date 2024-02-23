@@ -204,8 +204,14 @@ export function createSystemCalls(
     };
 
     const getUser = async () => {
-        const user = await worldContract.read.getUser();
-        return user;
+        const address = walletClient.account.address;
+        return await getUserByKey(address);
+    //     const user = await worldContract.read.getUser();
+    //     return user;
+    //
+    //     console.log(address);
+    //
+    //     // return state.getRecord(tables.Users, {address});
     };
 
     const IsBoardCard = async (key: string) => {
@@ -215,11 +221,6 @@ export function createSystemCalls(
 
     const getUserByKey = async (key: string) => {
         const user = await worldContract.read.getUserByKey([key]);
-        return user;
-    };
-
-    const getUserByOwner = async (owner: string) => {
-        const user = await worldContract.read.getUserByOwner([owner]);
         return user;
     };
 
@@ -955,7 +956,6 @@ export function createSystemCalls(
         addUser,
         getUser,
         getUserByKey,
-        getUserByOwner,
         initCard,
         initPack,
         initDeck,
