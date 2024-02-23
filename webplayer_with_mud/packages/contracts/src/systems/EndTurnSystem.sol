@@ -10,9 +10,10 @@ import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityT
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Games, GamesData} from "../codegen/index.sol";
 import {AiLogicLib} from "../libs/AiLogicLib.sol";
-import {PlayerCardsHand, PlayerCardsDeck, Players} from "../codegen/index.sol";
+import {PlayerCardsHand, PlayerCardsDeck, PlayerCardsEquip,Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 
@@ -25,6 +26,14 @@ contract EndTurnSystem is System {
     }
 
     function EndTurn(bytes32 game_key, bytes32 player_key) public returns (bytes32 opponent_player_key, bytes32 board_card_key, int8 mana, int8 mana_max){
+
+        if(Games.getGameState(game_key) == GameState.GAME_ENDED){
+            revert("game ended");
+        }
+        if(Games.getGamePhase(game_key) != GamePhase.MAIN){
+            revert("not main phase");
+        }
+
         Games.setTurnCount(game_key, Games.getTurnCount(game_key) + 1);
         Games.setGamePhase(game_key, GamePhase.END_TURN);
 
@@ -61,6 +70,18 @@ contract EndTurnSystem is System {
         ActionHistory.setActionType(action_key, Action.EndTurn);
         ActionHistory.setTarget(action_key, board_card_key);
 //        ActionHistory.setPlayerId(action_key, player_index);
+
+        bytes32[] memory players = Games.getPlayers(game_key);
+        for (uint i = 0; i < players.length; i++) {
+            bytes32[] memory cards_onboard = PlayerCardsBoard.getValue(players[i]);
+            for(uint c = 0; c < cards_onboard.length; c++){
+                CardLogicLib.ReduceStatusDurations(cards_onboard[c]);
+            }
+            bytes32[] memory cards_equiped = PlayerCardsEquip.getValue(players[i]);
+            for(uint c = 0; c < cards_equiped.length; c++){
+                CardLogicLib.ReduceStatusDurations(cards_equiped[c]);
+            }
+        }
 
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.START_OF_TURN))

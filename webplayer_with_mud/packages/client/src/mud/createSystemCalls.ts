@@ -438,7 +438,7 @@ export function createSystemCalls(
 
     let player_name = null;
     const playerSetting = async (username: string, game_uid: string, desk_id: string, is_ai: boolean, hp: number, mana: number,
-                                 dcards: number, pid: number, shuffle: boolean) => {
+                                 dcards: number, pid: number, not_shuffle: boolean) => {
         if (!is_ai) {
             player_name = username;
         } else {
@@ -446,13 +446,13 @@ export function createSystemCalls(
         }
 
         console.log("pid", pid);
-        console.log("need_shuffle",shuffle);
+        console.log("need_shuffle",!not_shuffle);
         await sleep(200)
 
         //todo
         mana = 10;
 
-        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards, shuffle, pid]);
+        const hash = await worldContract.write.PlayerSetting([username, game_uid, desk_id, is_ai, hp, mana, dcards, !not_shuffle, pid]);
         await waitForTransaction(hash);
 
         const tx_result = await getTxResult(hash);

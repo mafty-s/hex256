@@ -157,4 +157,8 @@ library CardLogicLib {
             return false;
         return true;
     }
+
+    function ReduceStatusDurations(bytes32 card_uid) internal{
+        //todo
+    }
 }

@@ -1110,12 +1110,12 @@ namespace TcgEngine.Client
                     // defender.hp = result.defender_hp;
 
                     onAttackStart?.Invoke(attacker, target);
-                    target.hp = target.hp - attacker.attack;
-                    if (target.hp <= 0)
-                    {
-                        Player attack_target_player = game_data.GetPlayer(target.player_id);
-                        attack_target_player.RemoveCardFromAllGroups(target);
-                    }
+                    // target.hp = target.hp - attacker.attack;
+                    // if (target.hp <= 0)
+                    // {
+                    //     Player attack_target_player = game_data.GetPlayer(target.player_id);
+                    //     attack_target_player.RemoveCardFromAllGroups(target);
+                    // }
 
                     onAttackEnd?.Invoke(attacker, target);
                     onRefreshAll?.Invoke();
@@ -1138,7 +1138,7 @@ namespace TcgEngine.Client
                     // defender.hp = result.defender_hp;
 
                     onAttackPlayerStart?.Invoke(attacker_card, target_player);
-                    target_player.hp = 0;
+                    // target_player.hp = 0;
 
                     onAttackPlayerEnd?.Invoke(attacker_card, target_player);
                     onRefreshAll?.Invoke();
