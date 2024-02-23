@@ -18,7 +18,7 @@ contract ConfigSystem is System {
 
     }
 
-    function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity) public returns (bytes32 key)  {
+    function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity,bool is_deckbuilding) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
         Cards.setMana(key, mana);
         Cards.setAttack(key, attack);
@@ -27,6 +27,7 @@ contract ConfigSystem is System {
         Cards.setCardType(key, cardType);
 //        Cards.setTeam(key, "1");
         Cards.setAbilities(key, abilities);
+        Cards.setDeckbuilding(key,is_deckbuilding);
 
         CardsExtend.setCost(key, cost);
         CardsExtend.setRarity(key, rarity);

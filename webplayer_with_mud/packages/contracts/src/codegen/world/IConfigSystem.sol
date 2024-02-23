@@ -18,7 +18,8 @@ interface IConfigSystem {
     uint32 cost,
     bytes32[] memory abilities,
     CardType cardType,
-    RarityType rarity
+    RarityType rarity,
+    bool is_deckbuilding
   ) external returns (bytes32 key);
 
   function initPack(
