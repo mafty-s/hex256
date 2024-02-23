@@ -5,8 +5,9 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IPlayCardSystem} from "../codegen/world/IPlayCardSystem.sol";
-import {Decks, Users, Cards, Ability, CardOnBoards} from "../codegen/index.sol";
+import {Decks, Users, Cards, Ability, CardOnBoards, Games} from "../codegen/index.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {GameState} from "../codegen/common.sol";
 
 
 contract DebugSystem is System {
@@ -17,6 +18,10 @@ contract DebugSystem is System {
 
     function IsEquipment(bytes32 key) public view returns (bool) {
         return CardLogicLib.IsEquipment(key);
+    }
+
+    function SetGameEnd(bytes32 game_uid) public {
+        Games.setGameState(game_uid,GameState.GAME_ENDED);
     }
 
 //    function TestCoinCard() public {

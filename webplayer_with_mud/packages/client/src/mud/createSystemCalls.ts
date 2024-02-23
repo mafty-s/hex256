@@ -533,11 +533,6 @@ export function createSystemCalls(
             mana_cost: tx_result.result[0],
             player_mana: tx_result.result[1],
         }
-
-        setTimeout(() => {
-            refreshGame();
-        }, 1000)
-
         return convertBigIntToInt({hash, tx_result, result});
     }
 
@@ -568,10 +563,6 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_id);
         const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, false]);
         await waitForTransaction(tx);
-
-        setTimeout(() => {
-            refreshGame()
-        }, 1000);
 
         return {
             attacker_uid: attacker_key,
@@ -836,77 +827,6 @@ export function createSystemCalls(
         return slots;
     }
 
-    const getGame = () => {
-        const key = calculateKeccak256Hash(now_game_uid);
-        let game = useStore.getState().getValue(tables.Games, {key});
-        let game_extend = useStore.getState().getValue(tables.GamesExtended, {key});
-        let player_action_history = useStore.getState().getValue(tables.PlayerActionHistory, {key});
-        let action_historys = [];
-        // console.log(player_action_history);
-        if (player_action_history != undefined) {
-            for (let i = 0; i < player_action_history.value.length; i++) {
-                let action_key = player_action_history.value[i];
-                let action_history = useStore.getState().getValue(tables.ActionHistory, {action_key});
-                console.log(action_history);
-                action_historys.push(action_history);
-            }
-        }
-
-        game = {...game, ...game_extend};
-        game.player_objs = [];
-        game.action_history = action_historys;
-        let cards = [];
-
-        for (const player_key of game.players) {
-            const player = useStore.getState().getValue(tables.Players, {player_key});
-            player.key = player_key;
-            player.deck = useStore.getState().getValue(tables.PlayerCardsDeck, {player_key})?.value;
-            player.hand = useStore.getState().getValue(tables.PlayerCardsHand, {player_key})?.value;
-            player.discard = useStore.getState().getValue(tables.PlayerCardsDiscard, {player_key})?.value;
-            player.board = useStore.getState().getValue(tables.PlayerCardsBoard, {player_key})?.value;
-            player.secret = useStore.getState().getValue(tables.PlayerCardsSecret, {player_key})?.value;
-            player.equip = useStore.getState().getValue(tables.PlayerCardsEquip, {player_key})?.value;
-            player.board = useStore.getState().getValue(tables.PlayerCardsBoard, {player_key})?.value;
-            player.temp = useStore.getState().getValue(tables.PlayerCardsTemp, {player_key})?.value;
-            player.slot = useStore.getState().getValue(tables.PlayerSlots, {player_key});
-            game.player_objs.push(player);
-        }
-
-        for (const player of game.player_objs) {
-
-            for (const card_key of player.deck) {
-                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
-                card.key = card_key
-                cards.push(card);
-            }
-            for (const card_key of player.hand) {
-                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
-                card.key = card_key
-                cards.push(card);
-            }
-            for (const card_key of player.discard) {
-                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
-                card.key = card_key
-                cards.push(card);
-            }
-            for (const card_key of player.board) {
-                let card = useStore.getState().getValue(tables.CardOnBoards, {card_key});
-                card.key = card_key
-                cards.push(card);
-            }
-        }
-
-        game.cards = cards;
-        console.log(JSON.stringify(game));
-        return game;
-    }
-
-    const refreshGame = () => {
-        return;
-        const game_info = getGame();
-        window.MyUnityInstance.SendMessage('Client', 'RefreshGame', JSON.stringify(game_info));
-    }
-
     const setMana = async () => {
         const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.setMana([key]);
@@ -915,17 +835,11 @@ export function createSystemCalls(
     const addCardOnEmptySlots = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCardOnEmptySlots([now_game_uid, player_name, card_name]);
-        setTimeout(() => {
-            refreshGame();
-        }, 1000)
     }
 
     const addCard = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
         await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
-        setTimeout(() => {
-            refreshGame();
-        }, 1500)
     }
 
     const getSlotCard = async (slot_x, slot_y, slot_p) => {
@@ -989,14 +903,12 @@ export function createSystemCalls(
         checkMatchmaking,
         checkPlayerSetting,
         checkAction,
-        refreshGame,
         selectCard,
         selectPlayer,
         selectSlot,
         cancelSelection,
         getRandomEmptySlot,
         getAllSlot,
-        getGame,
         setMana,
         addCard,
         getSlotCard,

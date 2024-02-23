@@ -6,6 +6,7 @@ using TcgEngine;
 using UnityEngine;
 using UnityEditor;
 using LitJson;
+using Mud;
 
 [System.Serializable]
 public class MudCardInfo
@@ -67,6 +68,13 @@ public class MudGame
     public string[] players;
     public MudPlayerInfo[] player_objs;
     public MudCardInfo[] cards;
+
+    public string lastPlayed;
+    public string lastTarget;
+    public string lastDestroyed;
+    public string lastSummoned;
+    public int rolledValue;
+    public int selector;
 
     public static MudGame FromJson(string str)
     {
@@ -134,6 +142,35 @@ public class MudRefresh
     public static void RefreshGame(MudGame mud_game, TcgEngine.Game gamedata)
     {
         gamedata.turn_count = mud_game.turnCount;
+        gamedata.last_destroyed =
+            mud_game.lastDestroyed == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.lastDestroyed;
+        gamedata.last_summoned =
+            mud_game.lastSummoned == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.lastSummoned;
+        gamedata.last_played =
+            mud_game.lastPlayed == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.lastPlayed;
+        gamedata.last_summoned =
+            mud_game.lastSummoned == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.lastSummoned;
+        gamedata.last_target =
+            mud_game.lastTarget == "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ? null
+                : mud_game.lastTarget;
+
+        // gamedata.turn_count;
+        gamedata.rolled_value = mud_game.rolledValue;
+        // gamedata.selector;
+        gamedata.state = MudEnum.ConvertGameState((Mud.GameState)mud_game.gameState);
+        gamedata.phase = MudEnum.ConvertGamePhase((Mud.GamePhase)mud_game.gamePhase);
+        // gamedata.first_player;
+
+
         foreach (var card in mud_game.cards)
         {
             RefreshCard(card, gamedata.GetCard(card.key), gamedata, mud_game);
@@ -215,9 +252,8 @@ public class MudRefresh
         {
             player.cards_board.Add(gamedata.GetCard(card));
         }
-        
-        // player.history_list.Clear();
 
+        // player.history_list.Clear();
     }
 
     public static void RefreshCard(MudCardInfo mud_card, TcgEngine.Card card, TcgEngine.Game gamedata, MudGame gameinfo)
@@ -253,25 +289,26 @@ public class MudRefresh
                 foreach (var status in mud_card.status)
                 {
                     (uint status_id, uint duration, uint value, uint unuse) = MudEnum.SplitUint32(status);
-                
+
                     StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {
                         duration = 10000;
-                        Debug.Log("status:" + status_id + " duration:" + (int)duration + " value" + (int)value + " card_key: " +
+                        Debug.Log("status:" + status_id + " duration:" + (int)duration + " value" + (int)value +
+                                  " card_key: " +
                                   mud_card.key + " name:" + mud_card.name);
                         card.AddStatus(s, (int)value, (int)duration);
                     }
                 }
             }
-            
+
             if (mud_card.ongoingStatus.Length > 0)
             {
                 card.ongoing_status.Clear();
                 foreach (var status in mud_card.ongoingStatus)
                 {
                     (uint status_id, uint duration, uint value, uint unuse) = MudEnum.SplitUint32(status);
-                
+
                     StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {
