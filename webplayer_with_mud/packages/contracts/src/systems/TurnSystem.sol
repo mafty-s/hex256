@@ -88,7 +88,7 @@ contract TurnSystem is System {
         mana += 1;
         mana_max += 1;
         if (mana > mana_max) {
-            mana = Players.getManaMax(player_key);
+            mana = mana_max;
         }
         Players.setMana(player_key, mana);
         Players.setManaMax(player_key, mana_max);

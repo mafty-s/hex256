@@ -26,10 +26,11 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant AbilityExtendTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0000000300000000000000000000000000000000000000000000000000000000
+  0x0000000400000000000000000000000000000000000000000000000000000000
 );
 
 struct AbilityExtendData {
+  bytes4[] conditionsTarget;
   bytes4[] conditionsTrigger;
   bytes4[] filtersTarget;
   bytes32[] chainAbilities;
@@ -60,10 +61,11 @@ library AbilityExtend {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](3);
+    SchemaType[] memory _valueSchema = new SchemaType[](4);
     _valueSchema[0] = SchemaType.BYTES4_ARRAY;
     _valueSchema[1] = SchemaType.BYTES4_ARRAY;
-    _valueSchema[2] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[2] = SchemaType.BYTES4_ARRAY;
+    _valueSchema[3] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -82,10 +84,11 @@ library AbilityExtend {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
-    fieldNames[0] = "conditionsTrigger";
-    fieldNames[1] = "filtersTarget";
-    fieldNames[2] = "chainAbilities";
+    fieldNames = new string[](4);
+    fieldNames[0] = "conditionsTarget";
+    fieldNames[1] = "conditionsTrigger";
+    fieldNames[2] = "filtersTarget";
+    fieldNames[3] = "chainAbilities";
   }
 
   /**
@@ -103,13 +106,175 @@ library AbilityExtend {
   }
 
   /**
+   * @notice Get conditionsTarget.
+   */
+  function getConditionsTarget(bytes32 key) internal view returns (bytes4[] memory conditionsTarget) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
+  }
+
+  /**
+   * @notice Get conditionsTarget.
+   */
+  function _getConditionsTarget(bytes32 key) internal view returns (bytes4[] memory conditionsTarget) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
+  }
+
+  /**
+   * @notice Set conditionsTarget.
+   */
+  function setConditionsTarget(bytes32 key, bytes4[] memory conditionsTarget) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((conditionsTarget)));
+  }
+
+  /**
+   * @notice Set conditionsTarget.
+   */
+  function _setConditionsTarget(bytes32 key, bytes4[] memory conditionsTarget) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((conditionsTarget)));
+  }
+
+  /**
+   * @notice Get the length of conditionsTarget.
+   */
+  function lengthConditionsTarget(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 4;
+    }
+  }
+
+  /**
+   * @notice Get the length of conditionsTarget.
+   */
+  function _lengthConditionsTarget(bytes32 key) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 4;
+    }
+  }
+
+  /**
+   * @notice Get an item of conditionsTarget.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemConditionsTarget(bytes32 key, uint256 _index) internal view returns (bytes4) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      return (bytes4(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of conditionsTarget.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemConditionsTarget(bytes32 key, uint256 _index) internal view returns (bytes4) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      return (bytes4(_blob));
+    }
+  }
+
+  /**
+   * @notice Push an element to conditionsTarget.
+   */
+  function pushConditionsTarget(bytes32 key, bytes4 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Push an element to conditionsTarget.
+   */
+  function _pushConditionsTarget(bytes32 key, bytes4 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+  }
+
+  /**
+   * @notice Pop an element from conditionsTarget.
+   */
+  function popConditionsTarget(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+  }
+
+  /**
+   * @notice Pop an element from conditionsTarget.
+   */
+  function _popConditionsTarget(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+  }
+
+  /**
+   * @notice Update an element of conditionsTarget at `_index`.
+   */
+  function updateConditionsTarget(bytes32 key, uint256 _index, bytes4 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of conditionsTarget at `_index`.
+   */
+  function _updateConditionsTarget(bytes32 key, uint256 _index, bytes4 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get conditionsTrigger.
    */
   function getConditionsTrigger(bytes32 key) internal view returns (bytes4[] memory conditionsTrigger) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
   }
 
@@ -120,7 +285,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
   }
 
@@ -131,7 +296,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((conditionsTrigger)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((conditionsTrigger)));
   }
 
   /**
@@ -141,7 +306,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((conditionsTrigger)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((conditionsTrigger)));
   }
 
   /**
@@ -151,7 +316,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
       return _byteLength / 4;
     }
@@ -164,7 +329,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
       return _byteLength / 4;
     }
@@ -179,7 +344,7 @@ library AbilityExtend {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 4, (_index + 1) * 4);
       return (bytes4(_blob));
     }
   }
@@ -193,7 +358,7 @@ library AbilityExtend {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 4, (_index + 1) * 4);
       return (bytes4(_blob));
     }
   }
@@ -205,7 +370,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
   }
 
   /**
@@ -215,7 +380,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
   }
 
   /**
@@ -225,7 +390,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 4);
   }
 
   /**
@@ -235,7 +400,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 4);
   }
 
   /**
@@ -247,7 +412,7 @@ library AbilityExtend {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -260,7 +425,7 @@ library AbilityExtend {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -271,7 +436,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
   }
 
@@ -282,7 +447,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes4());
   }
 
@@ -293,7 +458,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((filtersTarget)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((filtersTarget)));
   }
 
   /**
@@ -303,7 +468,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 1, EncodeArray.encode((filtersTarget)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((filtersTarget)));
   }
 
   /**
@@ -313,7 +478,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
       return _byteLength / 4;
     }
@@ -326,7 +491,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
       return _byteLength / 4;
     }
@@ -341,7 +506,7 @@ library AbilityExtend {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 4, (_index + 1) * 4);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 4, (_index + 1) * 4);
       return (bytes4(_blob));
     }
   }
@@ -355,7 +520,7 @@ library AbilityExtend {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 4, (_index + 1) * 4);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 4, (_index + 1) * 4);
       return (bytes4(_blob));
     }
   }
@@ -367,7 +532,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
   }
 
   /**
@@ -377,7 +542,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
   }
 
   /**
@@ -387,7 +552,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 4);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 4);
   }
 
   /**
@@ -397,7 +562,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 4);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 4);
   }
 
   /**
@@ -409,7 +574,7 @@ library AbilityExtend {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -422,7 +587,7 @@ library AbilityExtend {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 4), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -433,7 +598,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 3);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
@@ -444,7 +609,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 3);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
@@ -455,7 +620,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((chainAbilities)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((chainAbilities)));
   }
 
   /**
@@ -465,7 +630,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 2, EncodeArray.encode((chainAbilities)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 3, EncodeArray.encode((chainAbilities)));
   }
 
   /**
@@ -475,7 +640,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 3);
     unchecked {
       return _byteLength / 32;
     }
@@ -488,7 +653,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 3);
     unchecked {
       return _byteLength / 32;
     }
@@ -503,7 +668,7 @@ library AbilityExtend {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 32, (_index + 1) * 32);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 32, (_index + 1) * 32);
       return (bytes32(_blob));
     }
   }
@@ -517,7 +682,7 @@ library AbilityExtend {
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 32, (_index + 1) * 32);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 3, _index * 32, (_index + 1) * 32);
       return (bytes32(_blob));
     }
   }
@@ -529,7 +694,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
   }
 
   /**
@@ -539,7 +704,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
   }
 
   /**
@@ -549,7 +714,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 32);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 3, 32);
   }
 
   /**
@@ -559,7 +724,7 @@ library AbilityExtend {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 32);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 3, 32);
   }
 
   /**
@@ -571,7 +736,7 @@ library AbilityExtend {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -584,7 +749,7 @@ library AbilityExtend {
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 32), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 3, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -623,13 +788,14 @@ library AbilityExtend {
    */
   function set(
     bytes32 key,
+    bytes4[] memory conditionsTarget,
     bytes4[] memory conditionsTrigger,
     bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities
   ) internal {
     bytes memory _staticData;
-    PackedCounter _encodedLengths = encodeLengths(conditionsTrigger, filtersTarget, chainAbilities);
-    bytes memory _dynamicData = encodeDynamic(conditionsTrigger, filtersTarget, chainAbilities);
+    PackedCounter _encodedLengths = encodeLengths(conditionsTarget, conditionsTrigger, filtersTarget, chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(conditionsTarget, conditionsTrigger, filtersTarget, chainAbilities);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -642,13 +808,14 @@ library AbilityExtend {
    */
   function _set(
     bytes32 key,
+    bytes4[] memory conditionsTarget,
     bytes4[] memory conditionsTrigger,
     bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities
   ) internal {
     bytes memory _staticData;
-    PackedCounter _encodedLengths = encodeLengths(conditionsTrigger, filtersTarget, chainAbilities);
-    bytes memory _dynamicData = encodeDynamic(conditionsTrigger, filtersTarget, chainAbilities);
+    PackedCounter _encodedLengths = encodeLengths(conditionsTarget, conditionsTrigger, filtersTarget, chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(conditionsTarget, conditionsTrigger, filtersTarget, chainAbilities);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -662,11 +829,17 @@ library AbilityExtend {
   function set(bytes32 key, AbilityExtendData memory _table) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(
+      _table.conditionsTarget,
       _table.conditionsTrigger,
       _table.filtersTarget,
       _table.chainAbilities
     );
-    bytes memory _dynamicData = encodeDynamic(_table.conditionsTrigger, _table.filtersTarget, _table.chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(
+      _table.conditionsTarget,
+      _table.conditionsTrigger,
+      _table.filtersTarget,
+      _table.chainAbilities
+    );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -680,11 +853,17 @@ library AbilityExtend {
   function _set(bytes32 key, AbilityExtendData memory _table) internal {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(
+      _table.conditionsTarget,
       _table.conditionsTrigger,
       _table.filtersTarget,
       _table.chainAbilities
     );
-    bytes memory _dynamicData = encodeDynamic(_table.conditionsTrigger, _table.filtersTarget, _table.chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(
+      _table.conditionsTarget,
+      _table.conditionsTrigger,
+      _table.filtersTarget,
+      _table.chainAbilities
+    );
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -701,24 +880,35 @@ library AbilityExtend {
   )
     internal
     pure
-    returns (bytes4[] memory conditionsTrigger, bytes4[] memory filtersTarget, bytes32[] memory chainAbilities)
+    returns (
+      bytes4[] memory conditionsTarget,
+      bytes4[] memory conditionsTrigger,
+      bytes4[] memory filtersTarget,
+      bytes32[] memory chainAbilities
+    )
   {
     uint256 _start;
     uint256 _end;
     unchecked {
       _end = _encodedLengths.atIndex(0);
     }
-    conditionsTrigger = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes4());
+    conditionsTarget = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes4());
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(1);
     }
-    filtersTarget = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes4());
+    conditionsTrigger = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes4());
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(2);
+    }
+    filtersTarget = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes4());
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(3);
     }
     chainAbilities = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
   }
@@ -734,7 +924,7 @@ library AbilityExtend {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (AbilityExtendData memory _table) {
-    (_table.conditionsTrigger, _table.filtersTarget, _table.chainAbilities) = decodeDynamic(
+    (_table.conditionsTarget, _table.conditionsTrigger, _table.filtersTarget, _table.chainAbilities) = decodeDynamic(
       _encodedLengths,
       _dynamicData
     );
@@ -765,6 +955,7 @@ library AbilityExtend {
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
   function encodeLengths(
+    bytes4[] memory conditionsTarget,
     bytes4[] memory conditionsTrigger,
     bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities
@@ -772,6 +963,7 @@ library AbilityExtend {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
       _encodedLengths = PackedCounterLib.pack(
+        conditionsTarget.length * 4,
         conditionsTrigger.length * 4,
         filtersTarget.length * 4,
         chainAbilities.length * 32
@@ -784,12 +976,14 @@ library AbilityExtend {
    * @return The dynamic data, encoded into a sequence of bytes.
    */
   function encodeDynamic(
+    bytes4[] memory conditionsTarget,
     bytes4[] memory conditionsTrigger,
     bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
+        EncodeArray.encode((conditionsTarget)),
         EncodeArray.encode((conditionsTrigger)),
         EncodeArray.encode((filtersTarget)),
         EncodeArray.encode((chainAbilities))
@@ -803,13 +997,14 @@ library AbilityExtend {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
+    bytes4[] memory conditionsTarget,
     bytes4[] memory conditionsTrigger,
     bytes4[] memory filtersTarget,
     bytes32[] memory chainAbilities
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData;
-    PackedCounter _encodedLengths = encodeLengths(conditionsTrigger, filtersTarget, chainAbilities);
-    bytes memory _dynamicData = encodeDynamic(conditionsTrigger, filtersTarget, chainAbilities);
+    PackedCounter _encodedLengths = encodeLengths(conditionsTarget, conditionsTrigger, filtersTarget, chainAbilities);
+    bytes memory _dynamicData = encodeDynamic(conditionsTarget, conditionsTrigger, filtersTarget, chainAbilities);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

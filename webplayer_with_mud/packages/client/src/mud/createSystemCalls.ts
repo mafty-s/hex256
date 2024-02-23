@@ -269,7 +269,7 @@ export function createSystemCalls(
 
     // let ablities = [];
     const initAbility = async (
-        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
+        id: string, trigger: string, target: string, value: number, manaCost: number, duration: number, exhaust: boolean, effect_str: string,conditionsTarget: string, conditionsTrigger: string, filtersTarget: string, chainAbilities: string, status: string) => {
 
         const key = calculateKeccak256Hash(id);
 
@@ -290,6 +290,7 @@ export function createSystemCalls(
         console.log("initAbility", id, key, status, status_code);
 
 
+        const conditionsTarget_byes32 = getSelectorFromArrStr(conditionsTarget, getConditionSelector);
         const conditionsTrigger_byes32 = getSelectorFromArrStr(conditionsTrigger, getConditionSelector);
         const filtersTarget_byes32 = getSelectorFromArrStr(filtersTarget, getFilterSelector);
         const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
@@ -303,13 +304,20 @@ export function createSystemCalls(
             duration,
             exhaust,
             getSelectorFromArrStr(effect_str, getEffectSelector),
-            conditionsTrigger_byes32,
-            filtersTarget_byes32,
-            chainAbilities_byes32,
             status_code
         ]);
 
         await waitForTransaction(tx);
+
+        const tx2 = await worldContract.write.initAbilityExtend([
+            id,
+            conditionsTarget_byes32,
+            conditionsTrigger_byes32,
+            filtersTarget_byes32,
+            chainAbilities_byes32,
+        ]);
+
+        await waitForTransaction(tx2);
 
         // ablities[key.toString()] = id;
         return tx;

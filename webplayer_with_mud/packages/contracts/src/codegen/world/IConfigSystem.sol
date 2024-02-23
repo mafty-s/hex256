@@ -31,6 +31,14 @@ interface IConfigSystem {
 
   function initDeck(string memory name, bytes32 hero, bytes32[] memory _cards) external returns (bytes32 key);
 
+  function initAbilityExtend(
+    string memory id,
+    bytes4[] memory conditionsTarget,
+    bytes4[] memory conditionsTrigger,
+    bytes4[] memory filtersTarget,
+    bytes32[] memory chainAbilities
+  ) external returns (bytes32 key);
+
   function initAbility(
     string memory id,
     AbilityTrigger trigger,
@@ -40,9 +48,6 @@ interface IConfigSystem {
     uint8 duration,
     bool exhaust,
     bytes4[] memory effects,
-    bytes4[] memory conditionsTrigger,
-    bytes4[] memory filtersTarget,
-    bytes32[] memory chainAbilities,
     uint8[] memory status
   ) external returns (bytes32 key);
 }

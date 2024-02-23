@@ -75,6 +75,42 @@ contract ConfigSystem is System {
         Decks.setCards(key, _cards);
     }
 
+    function initAbilityExtend(
+        string memory id,
+        bytes4[] memory conditionsTarget,
+        bytes4[] memory conditionsTrigger,
+        bytes4[] memory filtersTarget,
+        bytes32[] memory chainAbilities
+    ) public returns (bytes32 key)
+    {
+
+        key = keccak256(abi.encode(id));
+
+        for (uint i = 0; i < conditionsTrigger.length; i++) {
+            if (!isSelectorExist(conditionsTrigger[i])) {
+                revert("Condition trigger not exist");
+            }
+        }
+
+        for (uint i = 0; i < conditionsTarget.length; i++) {
+            if (!isSelectorExist(conditionsTarget[i])) {
+                revert("Condition target not exist");
+            }
+        }
+
+        for (uint i = 0; i < filtersTarget.length; i++) {
+            if (!isSelectorExist(filtersTarget[i])) {
+                revert("Filter not exist");
+            }
+        }
+
+        AbilityExtend.setConditionsTarget(key, conditionsTarget);
+        AbilityExtend.setConditionsTrigger(key, conditionsTrigger);
+        AbilityExtend.setFiltersTarget(key, filtersTarget);
+        AbilityExtend.setChainAbilities(key, chainAbilities);
+
+    }
+
     function initAbility(
         string memory id,
         AbilityTrigger trigger,
@@ -84,27 +120,12 @@ contract ConfigSystem is System {
         uint8 duration,
         bool exhaust,
         bytes4[] memory effects,
-        bytes4[] memory conditionsTrigger,
-        bytes4[] memory filtersTarget,
-        bytes32[] memory chainAbilities,
         uint8[] memory status
     ) public returns (bytes32 key)
     {
-        for(uint i = 0; i < effects.length; i++) {
+        for (uint i = 0; i < effects.length; i++) {
             if (!isSelectorExist(effects[i])) {
                 revert("Effect not exist");
-            }
-        }
-
-        for(uint i = 0; i < conditionsTrigger.length; i++) {
-            if (!isSelectorExist(conditionsTrigger[i])) {
-                revert("Condition not exist");
-            }
-        }
-
-        for(uint i = 0; i < filtersTarget.length; i++) {
-            if (!isSelectorExist(filtersTarget[i])) {
-                revert("Filter not exist");
             }
         }
 
@@ -118,10 +139,6 @@ contract ConfigSystem is System {
         Ability.setTrigger(key, trigger);
         Ability.setTarget(key, target);
         Ability.setStatus(key, status);
-        AbilityExtend.setConditionsTrigger(key, conditionsTrigger);
-        AbilityExtend.setFiltersTarget(key, filtersTarget);
-        AbilityExtend.setChainAbilities(key, chainAbilities);
-
         Config.pushAbility(key);
     }
 
