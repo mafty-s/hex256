@@ -188,15 +188,15 @@ library CardLogicLib {
         return result;
     }
 
-    function combineUint16(uint8 lower, uint8 upper) public pure returns (uint16) {
-        uint16 value = (uint16(upper) << 8) | uint16(lower);
+    function combineUint16(uint8 a, uint8 b) public pure returns (uint16) {
+        uint16 value = (uint16(a) << 8) | uint16(b);
         return value;
     }
 
     function splitUint16(uint16 value) public pure returns (uint8, uint8) {
-        uint8 lower = uint8(value);
-        uint8 upper = uint8(value >> 8);
-        return (lower, upper);
+        uint8 a = uint8((value >> 8) & 0xFF);
+        uint8 b = uint8(value & 0xFF);
+        return (a, b);
     }
 
     function splitUint32(uint32 value) internal pure returns (uint8, uint8, uint8, uint8) {
@@ -206,7 +206,6 @@ library CardLogicLib {
         uint8 d = uint8(value & 0xFF);
         return (a, b, c, d);
     }
-
 
 
     function CanDoAbilities(bytes32 card_uid) internal view returns (bool){
