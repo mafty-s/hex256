@@ -20,7 +20,7 @@ interface IAbilitySystem {
     bool is_card
   ) external;
 
-  function TriggerPlayerCardsAbilityType(bytes32 caster, AbilityTrigger trigger) external;
+  function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) external;
 
   function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) external;
 
