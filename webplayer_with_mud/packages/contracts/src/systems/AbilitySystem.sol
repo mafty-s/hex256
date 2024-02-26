@@ -109,7 +109,7 @@ contract AbilitySystem is System {
         }
         bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
         if (cards_board.length > 0) {
-            for (uint i = 0; i < cards_board[i].length; i++) {
+            for (uint i = 0; i < cards_board.length; i++) {
                 bytes32 card = cards_board[i];
                 TriggerCardAbilityType(trigger, game_uid, card, card, true);
             }
