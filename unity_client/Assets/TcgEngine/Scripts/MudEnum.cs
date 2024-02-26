@@ -278,17 +278,11 @@ static class MudEnum
         return (a, b, c, d);
     }
 
-    
-    // function splitUint16(value) {
-        // const lower = value & 0xFF;
-        // const upper = (value >> 8) & 0xFF;
-        // return [lower, upper];
-        
     public static (uint, uint) SplitUint16(uint value)
     {
         uint lower = (uint)(value & 0xFF);
         uint upper = (uint)((value >> 8) & 0xFF);
-        return (lower, upper);
+        return (upper, lower);
     }
 
     public static string GetTraitById(Mud.CardTrait trait)
