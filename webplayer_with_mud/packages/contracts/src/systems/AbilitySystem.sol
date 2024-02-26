@@ -92,15 +92,14 @@ contract AbilitySystem is System {
             }
         }
     }
-    function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) public {
 
+    function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) public {
         bytes32 hero = Players.getHero(player_key);
         if (hero != 0) {
             TriggerCardAbilityType(trigger, game_uid, hero, 0, true);
         }
-
         bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
-        for (int i = 0; i < cards_board[i]; i++) {
+        for (uint i = 0; i < cards_board[i].length; i++) {
             TriggerCardAbilityType(trigger, game_uid, cards_board[i], cards_board[i], true);
         }
     }
