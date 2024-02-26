@@ -278,6 +278,32 @@ static class MudEnum
         return (a, b, c, d);
     }
 
+    public static (uint, uint) SplitUint16(uint value)
+    {
+        uint a = (uint)((value >> 8) & 0xFF);
+        uint b = (uint)(value & 0xFF);
+        return (a, b);
+    }
+
+    public static string GetTraitById(Mud.CardTrait trait)
+    {
+        switch (trait)
+        {
+            case CardTrait.None:
+                return "";
+            case CardTrait.Dragon:
+                return "dragon";
+            case CardTrait.Growth:
+                return "growth";
+            case CardTrait.Wolf:
+                return "wolf";
+            case CardTrait.SpellDamage:
+                return "spell_damage";
+        }
+
+        return "";
+    }
+
     public static TcgEngine.GameState ConvertGameState(Mud.GameState state)
     {
         switch (state)

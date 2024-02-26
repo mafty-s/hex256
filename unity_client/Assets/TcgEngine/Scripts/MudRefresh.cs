@@ -339,6 +339,19 @@ public class MudRefresh
                     }
                 }
             }
+
+            if (mud_card.trait.Length > 0)
+            {
+                card.traits.Clear();
+                foreach (var trait in mud_card.trait)
+                {
+                    (uint trait_id, uint trait_value) = MudEnum.SplitUint16(trait);
+                    string traitName = MudEnum.GetTraitById((Mud.CardTrait)(trait_id));
+                    Debug.Log("trait:" + trait_id + " value" + (int)trait_value + " card_key: " +
+                              mud_card.key + " name:" + mud_card.name + " traitName:" + traitName);
+                    card.AddTrait(traitName,(int)(trait_value));
+                }
+            }
         }
         else
         {
