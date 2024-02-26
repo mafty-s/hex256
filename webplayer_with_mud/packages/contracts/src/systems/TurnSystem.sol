@@ -61,7 +61,7 @@ contract TurnSystem is System {
         }
 
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.END_OF_TURN))
+            abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (AbilityTrigger.END_OF_TURN, game_key, player_key))
         );
 
         StartNextTurn(game_key);
@@ -121,7 +121,7 @@ contract TurnSystem is System {
 
 
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (player_key, AbilityTrigger.START_OF_TURN))
+            abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (AbilityTrigger.START_OF_TURN, game_key, player_key))
         );
 
         SystemSwitch.call(
