@@ -145,8 +145,7 @@ library CardLogicLib {
         uint16[] memory traits = CardOnBoards.getTrait(caster);
         for (uint i = 0; i < traits.length; i++) {
             uint16 trait_data = traits[i];
-            uint8 trait_id = uint8(trait_data);
-            uint8 trait_value = uint8(trait_data >> 8);
+            (uint8 trait_id,uint8 trait_value) = splitUint16(trait_data);
             if (trait == (TraitData)(trait_id)) {
                 return int8(trait_value);
             }
@@ -158,8 +157,7 @@ library CardLogicLib {
         uint16[] memory traits = CardOnBoards.getTrait(caster);
         for (uint i = 0; i < traits.length; i++) {
             uint16 trait_data = traits[i];
-            uint8 trait_id = uint8(trait_data);
-            uint8 trait_value = uint8(trait_data >> 8);
+            (uint8 trait_id,uint8 trait_value) = splitUint16(trait_data);
             if (trait == (TraitData)(trait_id)) {
                 return (i, trait_data);
             }
@@ -168,18 +166,18 @@ library CardLogicLib {
     }
 
     function SetTrait(bytes32 caster, TraitData trait, uint8 value) internal {
-        uint16 trait_data = (uint16(uint8(trait)) << 8) | uint16(value);
+//        uint16 trait_data = (uint16(uint8(trait)) << 8) | uint16(value);
+        uint16 trait_data = combineUint16(uint8(trait), value);
         CardOnBoards.pushTrait(caster, trait_data);
     }
 
     function AddTrait(bytes32 caster, TraitData trait, int8 value) internal {
         (uint256 trait_index, uint16 trait_data) = GetTrait(caster, trait);
         if (trait_data != 0) {
-            uint8 trait_id = uint8(trait_data);
-            uint8 trait_value = uint8(trait_data >> 8);
+            (uint8 trait_id,uint8 trait_value) = splitUint16(trait_data);
             trait_value = trait_value + uint8(value);
-            uint16 new_trait_data = (uint16(trait_id) << 8) | uint16(trait_value);
-            CardOnBoards.updateTrait(caster,trait_index,new_trait_data);
+            uint16 new_trait_data = combineUint16(trait_id, trait_value);
+            CardOnBoards.updateTrait(caster, trait_index, new_trait_data);
         } else {
             SetTrait(caster, trait, (uint8)(value));
         }
@@ -190,12 +188,23 @@ library CardLogicLib {
         return result;
     }
 
+    function combineUint16(uint8 lower, uint8 upper) public pure returns (uint16) {
+        uint16 value = (uint16(upper) << 8) | uint16(lower);
+        return value;
+    }
+
     function splitUint32(uint32 value) internal pure returns (uint8, uint8, uint8, uint8) {
         uint8 a = uint8((value >> 24) & 0xFF);
         uint8 b = uint8((value >> 16) & 0xFF);
         uint8 c = uint8((value >> 8) & 0xFF);
         uint8 d = uint8(value & 0xFF);
         return (a, b, c, d);
+    }
+
+    function splitUint16(uint16 value) public pure returns (uint8, uint8) {
+        uint8 lower = uint8(value);
+        uint8 upper = uint8(value >> 8);
+        return (lower, upper);
     }
 
     function CanDoAbilities(bytes32 card_uid) internal view returns (bool){
