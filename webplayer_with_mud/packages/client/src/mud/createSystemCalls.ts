@@ -152,27 +152,42 @@ export function createSystemCalls(
 
     const getAbilityTarget = (str: string) => {
         const abilityTarget: AbilityTarget = AbilityTarget[str as keyof typeof AbilityTarget];
+        if (abilityTarget === undefined) {
+            console.error("not exist getAbilityTarget", str)
+        }
         return abilityTarget;
     }
 
     const getStatus = (str: string) => {
         const status: Status = Status[str as keyof typeof Status];
+        if (status === undefined) {
+            console.error("not exist getStatus", str)
+        }
         return status;
     }
 
 
     const getAbilityTrigger = (str: string) => {
         const abilityTrigger: AbilityTrigger = AbilityTrigger[str as keyof typeof AbilityTrigger];
+        if (abilityTrigger === undefined) {
+            console.error("not exist getAbilityTrigger", str)
+        }
         return abilityTrigger;
     }
 
     const getRarityType = (str: string) => {
         const rarityType: RarityType = RarityType[str as keyof typeof RarityType];
+        if (rarityType === undefined) {
+            console.error("not exist getRarityType", str)
+        }
         return rarityType;
     }
 
     const getCardType = (str: string) => {
         const cardType: CardType = CardType[str as keyof typeof CardType];
+        if (cardType == undefined) {
+            console.error("not exist getCardType", str)
+        }
         return cardType;
     }
 
@@ -223,7 +238,7 @@ export function createSystemCalls(
     };
 
     const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number, abilities_str: string, cardType: string, rarity: string, is_deckbuilding: boolean) => {
-        const cardTypeCode = getCardType(convertToEnumFormat(cardType));
+        const cardTypeCode = getCardType((cardType));
         let rarity_str = convertToEnumFormat(rarity);
         const rarityCode = getRarityType(rarity_str.substr(2,));
         const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding]);
@@ -272,7 +287,7 @@ export function createSystemCalls(
         const key = calculateKeccak256Hash(id);
 
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
-        const target_code = getAbilityTarget(convertToEnumFormat(target));
+        const target_code = getAbilityTarget((target));
         let status_code = [];
         if (status.length != "") {
             status_code = status.split("|").map((i) => {
