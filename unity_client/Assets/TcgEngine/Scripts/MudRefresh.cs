@@ -347,8 +347,8 @@ public class MudRefresh
                 {
                     (uint trait_id, uint trait_value) = MudEnum.SplitUint16(trait);
                     string traitName = MudEnum.GetTraitById((Mud.CardTrait)(trait_id));
-                    Debug.Log("trait:" + trait_id + " value" + (int)trait_value + " card_key: " +
-                              mud_card.key + " name:" + mud_card.name + " traitName:" + traitName);
+                    Debug.Log("trait:" + trait_id + " value:" + (int)trait_value + " card_key: " +
+                              mud_card.key + " card_name:" + mud_card.name + " traitName:" + traitName);
                     card.AddTrait(traitName,(int)(trait_value));
                 }
             }

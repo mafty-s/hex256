@@ -193,6 +193,12 @@ library CardLogicLib {
         return value;
     }
 
+    function splitUint16(uint16 value) public pure returns (uint8, uint8) {
+        uint8 lower = uint8(value);
+        uint8 upper = uint8(value >> 8);
+        return (lower, upper);
+    }
+
     function splitUint32(uint32 value) internal pure returns (uint8, uint8, uint8, uint8) {
         uint8 a = uint8((value >> 24) & 0xFF);
         uint8 b = uint8((value >> 16) & 0xFF);
@@ -201,11 +207,7 @@ library CardLogicLib {
         return (a, b, c, d);
     }
 
-    function splitUint16(uint16 value) public pure returns (uint8, uint8) {
-        uint8 lower = uint8(value);
-        uint8 upper = uint8(value >> 8);
-        return (lower, upper);
-    }
+
 
     function CanDoAbilities(bytes32 card_uid) internal view returns (bool){
         if (HasStatus(card_uid, Status.Silenced))
