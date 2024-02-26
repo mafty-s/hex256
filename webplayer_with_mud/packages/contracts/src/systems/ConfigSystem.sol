@@ -8,7 +8,7 @@ import {Cards, CardsExtend} from "../codegen/index.sol";
 import {Packs, PacksData} from "../codegen/index.sol";
 import {Decks, Ability, AbilityExtend} from "../codegen/index.sol";
 import {Config} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, AbilityTarget, CardTrait} from "../codegen/common.sol";
 import {CardRaritySingleton} from "../codegen/index.sol";
 
 contract ConfigSystem is System {
@@ -18,7 +18,7 @@ contract ConfigSystem is System {
 
     }
 
-    function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity, bool is_deckbuilding) public returns (bytes32 key)  {
+    function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity, bool is_deckbuilding, CardTrait trait) public returns (bytes32 key)  {
         key = keccak256(abi.encode(name));
         Cards.setMana(key, mana);
         Cards.setAttack(key, attack);
@@ -28,6 +28,7 @@ contract ConfigSystem is System {
 //        Cards.setTeam(key, "1");
         Cards.setAbilities(key, abilities);
         Cards.setDeckbuilding(key, is_deckbuilding);
+        Cards.setTrait(key, trait);
 
         CardsExtend.setCost(key, cost);
         CardsExtend.setRarity(key, rarity);

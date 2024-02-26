@@ -8,7 +8,7 @@ import {SetupNetworkResult} from "./setupNetwork";
 import {decodeFunctionData} from "viem";
 import worlds from "contracts/worlds.json";
 import {ethers} from "ethers";
-import {AbilityTarget, AbilityTrigger, RarityType, CardType, Status, Action} from "./common";
+import {AbilityTarget, AbilityTrigger, RarityType, CardType, Status, Action, CardTrait} from "./common";
 import {abilities} from "./abilities";
 
 // import { getTransactionResult } from "";
@@ -183,6 +183,16 @@ export function createSystemCalls(
         return rarityType;
     }
 
+    const getCardTrait = (str: getCardTrait) => {
+        const trait: CardTrait = CardTrait[str as keyof typeof CardTrait];
+        if (trait === undefined) {
+            console.error("not exist getCardTrait", str)
+        }
+        return trait;
+    }
+
+
+
     const getCardType = (str: string) => {
         const cardType: CardType = CardType[str as keyof typeof CardType];
         if (cardType == undefined) {
@@ -237,11 +247,12 @@ export function createSystemCalls(
         return user;
     };
 
-    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number, abilities_str: string, cardType: string, rarity: string, is_deckbuilding: boolean) => {
+    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number, abilities_str: string, cardType: string, rarity: string, is_deckbuilding: boolean, trait: string) => {
         const cardTypeCode = getCardType((cardType));
         let rarity_str = convertToEnumFormat(rarity);
         const rarityCode = getRarityType(rarity_str.substr(2,));
-        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding]);
+        const traitCode = getCardTrait(trait);
+        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding, traitCode]);
         await waitForTransaction(tx);
         console.log("init_card", name, calculateKeccak256Hash(name));
         return tx;
