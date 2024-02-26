@@ -137,7 +137,7 @@ contract ConditionSystem is System {
     }
 
     function IsGrowth3(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionStatCustom(ability_key, caster, target, CardTrait.Growth, ConditionOperatorInt.GreaterEqual, 3);
+        return ConditionStatCustom(condition_type, ability_key, caster, target, CardTrait.Growth, ConditionOperatorInt.GreaterEqual, 3);
     }
 
     function IsInTemp(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -584,8 +584,14 @@ contract ConditionSystem is System {
         return false;
     }
 
-    function ConditionStatCustom(bytes32 ability_key, bytes32 caster, bytes32 target, CardTrait has_trait, ConditionOperatorInt oper, int8 value) internal view returns (bool){
-//todo
+    function ConditionStatCustom(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, CardTrait trait, ConditionOperatorInt oper, int8 value) internal view returns (bool){
+        if (condition_type == ConditionTargetType.Card) {
+            return CompareInt(CardLogicLib.GetTraitValue(target, trait), oper, value);
+        }
+        if (condition_type == ConditionTargetType.Player) {
+
+            return CompareInt(PlayerLogicLib.GetTraitValue(target, trait), oper, value);
+        }
         return false;
     }
 

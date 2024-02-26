@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {CardOnBoards} from "../codegen/index.sol";
 import {Cards, Ability} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, TraitData} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, CardTrait} from "../codegen/common.sol";
 import {AbilityTrigger, AbilityTarget} from "../codegen/common.sol";
 //import {UintLib} from "./UintLib.sol";
 
@@ -141,37 +141,37 @@ library CardLogicLib {
         CardOnBoards.setStatus(card_uid, card_status);
     }
 
-    function GetTraitValue(bytes32 caster, TraitData trait) internal returns (int8){
+    function GetTraitValue(bytes32 caster, CardTrait trait) internal view returns (int8){
         uint16[] memory traits = CardOnBoards.getTrait(caster);
         for (uint i = 0; i < traits.length; i++) {
             uint16 trait_data = traits[i];
             (uint8 trait_id,uint8 trait_value) = splitUint16(trait_data);
-            if (trait == (TraitData)(trait_id)) {
+            if (trait == (CardTrait)(trait_id)) {
                 return int8(trait_value);
             }
         }
         return 0;
     }
 
-    function GetTrait(bytes32 caster, TraitData trait) internal returns (uint256, uint16){
+    function GetTrait(bytes32 caster, CardTrait trait) internal view returns (uint256, uint16){
         uint16[] memory traits = CardOnBoards.getTrait(caster);
         for (uint i = 0; i < traits.length; i++) {
             uint16 trait_data = traits[i];
             (uint8 trait_id,uint8 trait_value) = splitUint16(trait_data);
-            if (trait == (TraitData)(trait_id)) {
+            if (trait == (CardTrait)(trait_id)) {
                 return (i, trait_data);
             }
         }
         return (0, 0);
     }
 
-    function SetTrait(bytes32 caster, TraitData trait, uint8 value) internal {
+    function SetTrait(bytes32 caster, CardTrait trait, uint8 value) internal {
 //        uint16 trait_data = (uint16(uint8(trait)) << 8) | uint16(value);
         uint16 trait_data = combineUint16(uint8(trait), value);
         CardOnBoards.pushTrait(caster, trait_data);
     }
 
-    function AddTrait(bytes32 caster, TraitData trait, int8 value) internal {
+    function AddTrait(bytes32 caster, CardTrait trait, int8 value) internal {
         (uint256 trait_index, uint16 trait_data) = GetTrait(caster, trait);
         if (trait_data != 0) {
             (uint8 trait_id,uint8 trait_value) = splitUint16(trait_data);

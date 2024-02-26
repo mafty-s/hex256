@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Players, Ability, PlayerActionHistory, ActionHistory, CardOnBoards, Cards} from "../codegen/index.sol";
-import {Action, TraitData, EffectStatType, EffectAttackerType, Status} from "../codegen/common.sol";
+import {Action, CardTrait, EffectStatType, EffectAttackerType, Status} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {Logger} from  "../codegen/index.sol";
@@ -26,7 +26,7 @@ contract Effect1System is System {
 
     function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         Logger.pushValue("EffectAddGrowth");
-        EffectAddTrait(ability_key, caster, target, is_card, TraitData.Growth);
+        EffectAddTrait(ability_key, caster, target, is_card, CardTrait.Growth);
     }
 
     function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -38,7 +38,7 @@ contract Effect1System is System {
     }
 
     function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        EffectAddTrait(ability_key, caster, target, is_card, TraitData.SpellDamage);
+        EffectAddTrait(ability_key, caster, target, is_card, CardTrait.SpellDamage);
     }
 
 
@@ -152,7 +152,7 @@ contract Effect1System is System {
     }
 
     //添加特性
-    function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, TraitData trait) internal {
+    function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, CardTrait trait) internal {
         int8 value = Ability.getValue(ability_key);
         if (is_card) {
             CardLogicLib.AddTrait(target, trait, value);

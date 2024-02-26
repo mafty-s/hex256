@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {Players, Ability, GamesExtended, CardOnBoards} from "../codegen/index.sol";
-import {Action, EffectAttackerType, TraitData} from "../codegen/common.sol";
+import {Action, EffectAttackerType} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";

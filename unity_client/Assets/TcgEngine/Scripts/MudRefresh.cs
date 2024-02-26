@@ -29,7 +29,7 @@ public class MudCardInfo
     public uint[] status;
     public uint[] ongoingStatus;
     public string[] ability;
-    public string[] trait;
+    public uint[] trait;
 }
 
 public class MudPlayerInfo
@@ -52,6 +52,7 @@ public class MudPlayerInfo
     public string[] equip;
     public string[] secret;
     public string[] temp;
+    public uint[] trait;
 }
 
 [System.Serializable]
