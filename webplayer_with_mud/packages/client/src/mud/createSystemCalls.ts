@@ -222,11 +222,11 @@ export function createSystemCalls(
         return user;
     };
 
-    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number, abilities_str: string, cardType: string, rarity: string) => {
+    const initCard = async (name: string, mana: number, attack: number, hp: number, cost: number, abilities_str: string, cardType: string, rarity: string, is_deckbuilding: boolean) => {
         const cardTypeCode = getCardType(convertToEnumFormat(cardType));
         let rarity_str = convertToEnumFormat(rarity);
         const rarityCode = getRarityType(rarity_str.substr(2,));
-        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode]);
+        const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding]);
         await waitForTransaction(tx);
         console.log("init_card", name, calculateKeccak256Hash(name));
         return tx;
