@@ -17,7 +17,7 @@ import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract AbilitySystem is System {
     //使用技能
-    function UseAbility(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (ability_key == 0 || caster == 0) {
             return;
         }
@@ -29,8 +29,6 @@ contract AbilitySystem is System {
 //            caster.exhausted = caster.exhausted || iability.exhaust;
 //        }
 
-        bytes32 player_key = CardOnBoards.getPlayerId(target);
-        bytes32 game_key = Players.getGame(player_key);
         //如果是选择器
         bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
         if (is_selector) {
@@ -84,6 +82,9 @@ contract AbilitySystem is System {
 //                ActionHistory.setValue(action_key, int8(status[i]));
             }
         }
+
+        AfterAbilityResolved(game_key, ability_key, caster);
+
     }
 
     //更具trigger技能触发器,触发指定卡的所有技能
@@ -125,7 +126,7 @@ contract AbilitySystem is System {
         bytes32 trigger_card = triggerer != 0 ? triggerer : caster; //Triggerer is the caster if not set
 //    todo    if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMetCard(caster, triggerer)) {
         if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
-            UseAbility(ability_key, caster, trigger_card, is_card);
+            UseAbility(game_uid, ability_key, caster, trigger_card, is_card);
         }
     }
 
