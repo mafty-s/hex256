@@ -26,7 +26,7 @@ namespace TcgEngine
             {
                 // 写入表头
                 sw.WriteLine(
-                    "ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs,ArtFull,ArtBoard,SpawnFX,DeathFX,AttackFX,DamageFX,IdleFX,SpawnAudio,DeathAudio,AttackAudio,DamageAudio");
+                    "ID,Title,Type,Team,Rarity,Mana,Attack,HP,Traits,Abilities,Text,Description,DeckBuilding,Cost,Packs,ArtFull,ArtBoard,SpawnFX,DeathFX,AttackFX,DamageFX,IdleFX,SpawnAudio,DeathAudio,AttackAudio,DamageAudio,IsDeckBuilding");
 
                 // 写入数据行
                 foreach (CardData cardData in cardList)
@@ -69,6 +69,7 @@ namespace TcgEngine
                     string death_audio = (cardData.death_audio != null) ? AssetDatabase.GetAssetPath(cardData.death_audio) : "";
                     string attack_audio = (cardData.attack_audio != null) ? AssetDatabase.GetAssetPath(cardData.attack_audio) : "";
                     string damage_audio = (cardData.damage_audio != null) ? AssetDatabase.GetAssetPath(cardData.damage_audio) : "";
+                    string is_deckbuilding = cardData.deckbuilding.ToString();
                     
                     sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},\"{10}\",{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25}",
                         cardData.id,
@@ -96,7 +97,9 @@ namespace TcgEngine
                         spawn_audio,
                         death_audio,
                         attack_audio,
-                        damage_audio));
+                        damage_audio,
+                        is_deckbuilding
+                        ));
                 }
             }
 
