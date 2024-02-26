@@ -22,7 +22,7 @@ export default mudConfig({
         ConditionObjType: ["ConditionCardType"],
         TraitData: ["Dragon", "Growth", "SpellDamage", "Wolf"],
         EffectAttackerType: ["Self", "AbilityTriggerer", "LastPlayed", "LastTargeted"],
-        Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invicibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample', 'Protection'],
+        Status: ["None", "Armor", 'Attack', 'Deathtouch', 'Flying', 'Fury', 'Hp', 'Intimidate', 'Invincibility', 'Lifesteal', 'Paralysed', 'Poisoned', 'Protected', 'Shell', 'Silenced', 'Sleep', 'SpellImmunity', 'Stealth', 'Taunt', 'Trample', 'Protection'],
         ConditionStatType: ["None", 'Attack', 'HP', 'Mana'],
         ConditionPlayerType: ['Self', 'Opponent', 'Both'],
         ConditionOperatorInt: ['Equal', 'NotEqual', 'GreaterEqual', 'LessEqual', 'Greater', 'Less'],

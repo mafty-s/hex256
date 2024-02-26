@@ -188,7 +188,7 @@ enum Status {
   Fury,
   Hp,
   Intimidate,
-  Invicibility,
+  Invincibility,
   Lifesteal,
   Paralysed,
   Poisoned,

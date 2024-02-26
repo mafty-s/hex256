@@ -41,8 +41,50 @@ library GameLogicLib {
         //todo
     }
 
+//public virtual void DamageCard(Card target, int value)
+//{
+//if(target == null)
+//return;
+//
+//if (target.HasStatus(StatusType.Invincibility))
+//return; //Invincible
+//
+//if (target.HasStatus(StatusType.SpellImmunity))
+//return; //Spell immunity
+//
+//target.damage += value;
+//
+//if (target.GetHP() <= 0)
+//DiscardCard(target);
+//}
+
+    function DamageTargetCard(bytes32 target, uint8 value) internal {
+        if (target == 0) {
+            return;
+        }
+        if (CardLogicLib.HasStatus(target, Status.Invincibility))
+        {
+            return;//Invincible
+        }
+
+        if (CardLogicLib.HasStatus(target, Status.SpellImmunity))
+        {
+            return;//Spell immunity
+        }
+        int8 target_hp = CardOnBoards.getHp(target);
+        target_hp = target_hp - (int8)(value);
+        if (target_hp < 0) {
+            target_hp = 0;
+        }
+        if (target_hp < 0) {
+
+        }
+        //todo
+    }
+
+
     function DamageCard(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
-        if (CardLogicLib.HasStatus(target, Status.Invicibility)) {
+        if (CardLogicLib.HasStatus(target, Status.Invincibility)) {
             return;
         }
         bytes32 attack_card_config_key = CardOnBoards.getId(attacker);

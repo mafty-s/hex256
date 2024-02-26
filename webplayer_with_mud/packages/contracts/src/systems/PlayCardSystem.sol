@@ -53,17 +53,13 @@ contract PlayCardSystem is System {
 
         if (CardLogicLib.IsBoardCard(card_config_key)) {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);
-//            SlotLib.SetSlot(card_key, slot);
             CardOnBoards.setExhausted(card_key, true);
-
             SlotLib.SetCardOnSlot(player_key, card_key, slot.x);
-
             //使用触发器触发技能
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
                     AbilityTrigger.ON_PLAY, game_key, card_key, 0, true))
             );
-
         } else if (CardLogicLib.IsEquipment(card_config_key)) {
 //            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
 //            GameLogicLib.EquipCard(bearer, card_key);

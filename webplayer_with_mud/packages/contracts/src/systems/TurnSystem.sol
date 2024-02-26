@@ -113,6 +113,10 @@ contract TurnSystem is System {
         bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
         for (uint i = 0; i < cards_board.length; i++) {
             CardLogicLib.Refresh(cards_board[i]);
+
+            if (CardLogicLib.HasStatus(cards_board[i], Status.Poisoned)) {
+                GameLogicLib.DamageTargetCard(cards_board[i], CardLogicLib.GetStatusValue(cards_board[i], Status.Poisoned));
+            }
         }
 
 
