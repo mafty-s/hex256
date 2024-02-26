@@ -127,7 +127,7 @@ library PlayerLogicLib {
         return false;
     }
 
-    function GetStatusValue(bytes32 player_uid,Status status) internal view returns (uint8){
+    function GetStatusValue(bytes32 player_uid, Status status) internal view returns (uint8){
         uint32[] memory player_status = Players.getStatus(player_uid);
         for (uint i = 0; i < player_status.length; i++) {
             (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(player_status[i]);
@@ -148,11 +148,32 @@ library PlayerLogicLib {
     }
 
     function GetTraitValue(bytes32 caster, TraitData trait) internal returns (int8){
-        //todo
+        uint16[] memory traits = Players.getTrait(caster);
+        for (uint i = 0; i < traits.length; i++) {
+            uint16 trait_data = traits[i];
+            uint8 trait_id = uint8(trait_data);
+            uint8 trait_value = uint8(trait_data >> 8);
+            if (trait == (TraitData)(trait_id)) {
+                return int8(trait_value);
+            }
+        }
         return 0;
     }
 
-    function AddTrait(bytes32 caster, TraitData trait) internal {
+    function GetTrait(bytes32 caster,TraitData trait) internal returns (uint16){
+        uint16[] memory traits = Players.getTrait(caster);
+        for (uint i = 0; i < traits.length; i++) {
+            uint16 trait_data = traits[i];
+            uint8 trait_id = uint8(trait_data);
+            uint8 trait_value = uint8(trait_data >> 8);
+            if (trait == (TraitData)(trait_id)) {
+                return trait_data;
+            }
+        }
+        return 0;
+    }
+
+    function AddTrait(bytes32 caster, TraitData trait, int8 value) internal {
         //todo
     }
 

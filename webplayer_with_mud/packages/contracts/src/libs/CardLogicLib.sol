@@ -83,7 +83,7 @@ library CardLogicLib {
         return false;
     }
 
-    function GetStatusValue(bytes32 card_uid,Status status) internal view returns (uint8){
+    function GetStatusValue(bytes32 card_uid, Status status) internal view returns (uint8){
         uint32[] memory card_status = CardOnBoards.getStatus(card_uid);
         for (uint i = 0; i < card_status.length; i++) {
             (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(card_status[i]);
@@ -142,12 +142,46 @@ library CardLogicLib {
     }
 
     function GetTraitValue(bytes32 caster, TraitData trait) internal returns (int8){
-        //todo
+        uint16[] memory traits = CardOnBoards.getTrait(caster);
+        for (uint i = 0; i < traits.length; i++) {
+            uint16 trait_data = traits[i];
+            uint8 trait_id = uint8(trait_data);
+            uint8 trait_value = uint8(trait_data >> 8);
+            if (trait == (TraitData)(trait_id)) {
+                return int8(trait_value);
+            }
+        }
         return 0;
     }
 
-    function AddTrait(bytes32 caster, TraitData trait) internal {
-        //todo
+    function GetTrait(bytes32 caster, TraitData trait) internal returns (uint16){
+        uint16[] memory traits = CardOnBoards.getTrait(caster);
+        for (uint i = 0; i < traits.length; i++) {
+            uint16 trait_data = traits[i];
+            uint8 trait_id = uint8(trait_data);
+            uint8 trait_value = uint8(trait_data >> 8);
+            if (trait == (TraitData)(trait_id)) {
+                return trait_data;
+            }
+        }
+        return 0;
+    }
+
+    function SetTrait(bytes32 caster, TraitData trait, int8 value) internal {
+        uint16 trait_data = (uint16(uint8(trait)) << 8) | uint16(lower);
+        CardOnBoards.pushTrait(caster, trait_data);
+    }
+
+
+    function AddTrait(bytes32 caster, TraitData trait, int8 value) internal {
+
+//        CardTrait trait = GetTrait(id);
+//        if (trait != null)
+//            trait.value += value;
+//        else
+//            SetTrait(id, value);
+
+//        todo
     }
 
     function combineUint32(uint8 a, uint8 b, uint8 c, uint8 d) internal pure returns (uint32) {
@@ -185,7 +219,7 @@ library CardLogicLib {
         }
     }
 
-    function Refresh(bytes32 card_key) internal{
+    function Refresh(bytes32 card_key) internal {
         CardOnBoards.setExhausted(card_key, false);
     }
 }

@@ -151,10 +151,11 @@ contract Effect1System is System {
 
     //添加特性
     function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, TraitData trait) internal {
+        int8 value = Ability.getValue(ability_key);
         if (is_card) {
-            CardLogicLib.AddTrait(target, trait);
+            CardLogicLib.AddTrait(target, trait, value);
         } else {
-            PlayerLogicLib.AddTrait(target, trait);
+            PlayerLogicLib.AddTrait(target, trait, value);
         }
     }
 
