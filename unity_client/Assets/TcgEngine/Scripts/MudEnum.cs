@@ -68,13 +68,30 @@ namespace Mud
 
     enum CardType
     {
-        NONE,
-        HERO,
-        CHARACTER,
-        SPELL,
-        ARTIFACT,
-        SECRET,
-        EQUIPMENT
+        None,
+        Hero,
+        Character,
+        Spell,
+        Artifact,
+        Secret,
+        Equipment
+    }
+
+    enum CardTeam
+    {
+        None,
+        Green,
+        Red,
+        Blue
+    }
+
+    enum CardTrait
+    {
+        None,
+        Wolf,
+        Dragon,
+        Growth,
+        SpellDamage
     }
 
     enum AbilityTrigger
@@ -170,14 +187,6 @@ namespace Mud
         ConditionCardType
     }
 
-    enum TraitData
-    {
-        Dragon,
-        Growth,
-        SpellDamage,
-        Wolf
-    }
-
     enum EffectAttackerType
     {
         Self,
@@ -196,7 +205,7 @@ namespace Mud
         Fury,
         Hp,
         Intimidate,
-        Invicibility,
+        Invincibility,
         Lifesteal,
         Paralysed,
         Poisoned,
@@ -207,13 +216,53 @@ namespace Mud
         SpellImmunity,
         Stealth,
         Taunt,
-        Trample
+        Trample,
+        Protection
+    }
+
+    enum ConditionStatType
+    {
+        None,
+        Attack,
+        HP,
+        Mana
+    }
+
+    enum ConditionPlayerType
+    {
+        Self,
+        Opponent,
+        Both
+    }
+
+    enum ConditionOperatorInt
+    {
+        Equal,
+        NotEqual,
+        GreaterEqual,
+        LessEqual,
+        Greater,
+        Less
+    }
+
+    enum ConditionOperatorBool
+    {
+        IsTrue,
+        IsFalse
+    }
+
+    enum ConditionTargetType
+    {
+        None,
+        Card,
+        Player,
+        Slot,
+        CardData
     }
 }
 
 static class MudEnum
 {
-    
     public static uint CombineUint32(uint a, uint b, uint c, uint d)
     {
         uint result = ((uint)a << 24) | ((uint)b << 16) | ((uint)c << 8) | (uint)d;
@@ -228,7 +277,7 @@ static class MudEnum
         uint d = (uint)(value & 0xFF);
         return (a, b, c, d);
     }
-    
+
     public static TcgEngine.GameState ConvertGameState(Mud.GameState state)
     {
         switch (state)
@@ -243,7 +292,7 @@ static class MudEnum
 
         return TcgEngine.GameState.Connecting;
     }
-    
+
     public static TcgEngine.GamePhase ConvertGamePhase(Mud.GamePhase phase)
     {
         switch (phase)
@@ -260,7 +309,7 @@ static class MudEnum
 
         return TcgEngine.GamePhase.None;
     }
-    
+
     public static TcgEngine.SelectorType ConvertSelectorType(Mud.SelectorType type)
     {
         switch (type)
@@ -277,7 +326,7 @@ static class MudEnum
 
         return TcgEngine.SelectorType.None;
     }
-    
+
     public static TcgEngine.StatusType CoverStatus(Mud.Status status)
     {
         switch (status)
@@ -306,7 +355,7 @@ static class MudEnum
                 return TcgEngine.StatusType.HPBonus;
             case Status.Intimidate:
                 return TcgEngine.StatusType.Intimidate;
-            case Status.Invicibility:
+            case Status.Invincibility:
                 return TcgEngine.StatusType.Invincibility;
             case Status.Lifesteal:
                 return TcgEngine.StatusType.LifeSteal;
@@ -322,10 +371,9 @@ static class MudEnum
                 return TcgEngine.StatusType.Protection;
             case Status.Trample:
                 return TcgEngine.StatusType.Trample;
-        
-            
-            //todo
 
+
+            //todo
         }
 
         return TcgEngine.StatusType.None;
