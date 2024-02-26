@@ -71,7 +71,7 @@ namespace TcgEngine
                     string damage_audio = (cardData.damage_audio != null) ? AssetDatabase.GetAssetPath(cardData.damage_audio) : "";
                     string is_deckbuilding = cardData.deckbuilding.ToString();
                     
-                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},\"{10}\",{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25}",
+                    sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},\"{10}\",{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}",
                         cardData.id,
                         cardData.title,
                         cardData.type.ToString(),
