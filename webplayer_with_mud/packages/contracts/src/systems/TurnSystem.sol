@@ -54,14 +54,18 @@ contract TurnSystem is System {
             for (uint c = 0; c < cards_onboard.length; c++) {
                 CardLogicLib.ReduceStatusDurations(cards_onboard[c]);
             }
-            bytes32[] memory cards_equiped = PlayerCardsEquip.getValue(players[i]);
-            for (uint c = 0; c < cards_equiped.length; c++) {
-                CardLogicLib.ReduceStatusDurations(cards_equiped[c]);
+            bytes32[] memory cards_equipped = PlayerCardsEquip.getValue(players[i]);
+            for (uint c = 0; c < cards_equipped.length; c++) {
+                CardLogicLib.ReduceStatusDurations(cards_equipped[c]);
             }
         }
 
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerPlayerCardsAbilityType, (AbilityTrigger.END_OF_TURN, game_key, player_key))
+        );
+
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (player_key, AbilityTrigger.END_OF_TURN))
         );
 
         StartNextTurn(game_key);
@@ -111,11 +115,13 @@ contract TurnSystem is System {
 
         //Refresh Cards and Status Effects
         bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
-        for (uint i = 0; i < cards_board.length; i++) {
-            CardLogicLib.Refresh(cards_board[i]);
+        if (cards_board.length > 0) {
+            for (uint i = 0; i < cards_board.length; i++) {
+                CardLogicLib.Refresh(cards_board[i]);
 
-            if (CardLogicLib.HasStatus(cards_board[i], Status.Poisoned)) {
-                GameLogicLib.DamageTargetCard(cards_board[i], CardLogicLib.GetStatusValue(cards_board[i], Status.Poisoned));
+                if (CardLogicLib.HasStatus(cards_board[i], Status.Poisoned)) {
+                    GameLogicLib.DamageTargetCard(cards_board[i], CardLogicLib.GetStatusValue(cards_board[i], Status.Poisoned));
+                }
             }
         }
 
