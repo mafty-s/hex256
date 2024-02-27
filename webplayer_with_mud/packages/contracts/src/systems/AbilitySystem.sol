@@ -196,7 +196,7 @@ contract AbilitySystem is System {
         ResolveCardAbilityCards(game_uid, ability_key, target_type, caster);
 //        ResolveCardAbilitySlots(iability, caster);
 //        ResolveCardAbilityCardData(iability, caster);
-//        ResolveCardAbilityNoTarget(iability, caster);
+        ResolveCardAbilityNoTarget(game_uid, ability_key, target_type, caster);
         AfterAbilityResolved(game_uid, ability_key, caster);
     }
 
@@ -273,6 +273,50 @@ contract AbilitySystem is System {
 //        emit EventUseAbility(game_key, ability_key, caster, target, is_card);
 //    }
 
+    function DoEffects(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key, bool is_card){
+        //todo
+
+        bytes4[] memory effects = Ability.getEffects(ability_key);
+        if (effects.length > 0) {
+            for (uint i = 0; i < effects.length; i++) {
+                bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, target, is_card);
+                SystemSwitch.call(data);
+            }
+        }
+
+//        foreach (EffectData effect in effects)
+//    effect?.DoEffect(logic, this, caster, target);
+
+        // 添加状态，如嘲讽等
+        uint8[] memory status = Ability.getStatus(ability_key);
+        if (status.length > 0) {
+            uint8 duration = Ability.getDuration(ability_key);
+            uint8 value = uint8(Ability.getValue(ability_key));
+            for (uint i = 0; i < status.length; i++) {
+                if (is_card) {
+                    CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
+                } else {
+                    PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
+                }
+
+//                uint256 len = PlayerActionHistory.length(game_key);
+//                bytes32 action_key = keccak256(abi.encode(game_key, len));
+//                PlayerActionHistory.push(game_key, action_key);
+//                ActionHistory.setActionType(action_key, Action.AddStatus);
+//                ActionHistory.setCardId(action_key, target);
+//                ActionHistory.setValue(action_key, int8(status[i]));
+            }
+        }
+
+
+    }
+
+    function ResolveCardAbilityNoTarget(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
+    {
+        if (target_type == AbilityTarget.None)
+            DoEffects(game_uid, ability_key, target_type, caster_key);
+    }
+
 
     function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
     {
@@ -298,14 +342,8 @@ contract AbilitySystem is System {
 
     function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //使用效果
-        bytes4[] memory effects = Ability.getEffects(ability_key);
-        if (effects.length > 0) {
-            for (uint i = 0; i < effects.length; i++) {
-                bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, target, is_card);
-                SystemSwitch.call(data);
-            }
-        }
-        GamesExtended.setLastTarget(game_uid, target);
+        DoEffects(game_uid, ability_key, AbilityTarget.PlayTarget, caster,  is_card);
+//        GamesExtended.setLastTarget(game_uid, target);
     }
 
     function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) public {
