@@ -134,8 +134,7 @@ contract AbilitySystem is System {
     }
 
 
-    function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bool){
-        AbilityTarget target = Ability.getTarget(ability_key);
+    function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bool){
         if (target == AbilityTarget.SelectTarget) {
             //Wait for target
             GoToSelectTarget(game_uid, ability_key, caster);
@@ -182,14 +181,16 @@ contract AbilitySystem is System {
 //
 //        onAbilityStart?.Invoke(iability, caster);
 //        game_data.ability_triggerer = triggerer.uid;
+
+        AbilityTarget target_type = Ability.getTarget(ability_key);
 //
-        bool is_selector = ResolveCardAbilitySelector(game_uid, ability_key, caster);
+        bool is_selector = ResolveCardAbilitySelector(game_uid, ability_key, target_type, caster);
         if (is_selector)
             return; //Wait for player to select
 
 //        ResolveCardAbilityPlayTarget(iability, caster);
-        ResolveCardAbilityPlayers(game_uid, ability_key, caster);
-        ResolveCardAbilityCards(game_uid, ability_key, caster);
+        ResolveCardAbilityPlayers(game_uid, ability_key, target_type, caster);
+        ResolveCardAbilityCards(game_uid, ability_key, target_type, caster);
 //        ResolveCardAbilitySlots(iability, caster);
 //        ResolveCardAbilityCardData(iability, caster);
 //        ResolveCardAbilityNoTarget(iability, caster);
@@ -270,22 +271,21 @@ contract AbilitySystem is System {
     }
 
 
-    function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, bytes32 caster_key) internal
+    function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
     {
         //目标
-        bytes32[] memory targets = GetCardTargets(game_key, ability_key, target_type, caster);
+        bytes32[] memory targets = GetCardTargets(game_uid, ability_key, target_type, caster_key);
 
         //Resolve effects
         for (uint t = 0; t < targets.length; t++) {
             if (targets[t] != 0) {
-                bytes32 target = target[t];
+                bytes32 target = targets[t];
                 ResolveEffectTarget(game_uid, ability_key, caster_key, target, true);
             }
         }
     }
 
-    function ResolveCardAbilityPlayers(bytes32 game_uid, bytes32 ability_key, bytes32 caster_key) internal {
-        AbilityTarget target_type = Ability.getTarget(ability_key);
+    function ResolveCardAbilityPlayers(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal {
         bytes32[] memory targets = GetPlayerTargets(game_uid, ability_key, target_type, caster_key);
         for (uint i = 0; i < targets.length; i++) {
             bytes32 target = targets[i];

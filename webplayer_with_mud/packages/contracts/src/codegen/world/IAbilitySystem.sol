@@ -10,8 +10,6 @@ import { AbilityTrigger } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IAbilitySystem {
-  function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
-
   function TriggerCardAbilityType(
     AbilityTrigger trigger,
     bytes32 game_uid,
@@ -31,6 +29,8 @@ interface IAbilitySystem {
     bytes32 triggerer,
     bool is_card
   ) external;
+
+  function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) external;
 
   function ResolveEffectTarget(
     bytes32 game_uid,
