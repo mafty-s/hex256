@@ -17,37 +17,19 @@ import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
 
 contract AbilityTargetSystem is System {
-    function CanTargetCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool) {
 
-        if (CardLogicLib.HasStatus(target, Status.Stealth)) {
-            return false; //Hidden
-        }
-
-        if (CardLogicLib.HasStatus(target, Status.SpellImmunity)) {
-            return false; ////Spell immunity
-        }
-
-        bool condition_match = AreTargetConditionsMet(game_uid, ability_key, caster, target, ConditionTargetType.Card);
-        return condition_match;
-    }
-
-    //Can target check additional restrictions and is usually for SelectTarget or PlayTarget abilities
-    function CanTargetPlayer(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool){
-        return AreTargetConditionsMet(game_uid, ability_key, caster, target, ConditionTargetType.Player);
-    }
-
-    function CanTargetSlot(bytes32 game_uid, bytes32 ability_key, bytes32 caster, uint16 target) internal returns (bool){
-        return AreTargetConditionsMet(game_uid, ability_key, caster, bytes32(uint256(target)), ConditionTargetType.Slot); //No additional conditions for slots
-    }
 
     function CanTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal returns (bool) {
         if (is_card == ConditionTargetType.Card) {
-            return CanTargetCard(game_uid, ability_key, caster, target);
+            if (CardLogicLib.HasStatus(target, Status.Stealth)) {
+                return false; //Hidden
+            }
+
+            if (CardLogicLib.HasStatus(target, Status.SpellImmunity)) {
+                return false; ////Spell immunity
+            }
         }
-        if (is_card == ConditionTargetType.Player) {
-            return CanTargetPlayer(game_uid, ability_key, caster, target);
-        }
-        return false;
+        return AreTargetConditionsMet(game_uid, ability_key, caster, bytes32(uint256(target)), ConditionTargetType.Slot); //No additional conditions for slots
     }
 
     function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) internal returns (bool) {
@@ -225,10 +207,10 @@ contract AbilityTargetSystem is System {
             }
         }
 
-        return targets;
+        return slice(targets, 0, numTargets);
     }
 
-    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns(uint16[] memory) {
+    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns (uint16[] memory) {
         uint16[] memory targets;
 
         if (target == AbilityTarget.AllSlots)
@@ -295,6 +277,11 @@ contract AbilityTargetSystem is System {
         return targets;
     }
 
+    function HasValidSelectTarget() internal{
+        //todo
+    }
+
+
     /////
     function AddValidCards(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal returns (bytes32[] memory){
         bytes32[] memory dist = new bytes32[](source.length);
@@ -321,6 +308,15 @@ contract AbilityTargetSystem is System {
             i++;
         }
 
+        return result;
+    }
+
+    function slice(bytes32[] memory array, uint256 start, uint256 length) internal pure returns (bytes32[] memory) {
+        require(start + length <= array.length, "Invalid slice range");
+        bytes32[] memory result = new bytes32[](length);
+        for (uint256 i = 0; i < length; i++) {
+            result[i] = array[start + i];
+        }
         return result;
     }
 }

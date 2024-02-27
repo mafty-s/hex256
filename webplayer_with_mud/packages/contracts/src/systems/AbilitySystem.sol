@@ -157,6 +157,18 @@ contract AbilitySystem is System {
         return targets;
     }
 
+    function CanTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal returns (bool) {
+        if (is_card == ConditionTargetType.Card) {
+            if (CardLogicLib.HasStatus(target, Status.Stealth)) {
+                return false; //Hidden
+            }
+
+            if (CardLogicLib.HasStatus(target, Status.SpellImmunity)) {
+                return false; ////Spell immunity
+            }
+        }
+        return AreTargetConditionsMet(game_uid, ability_key, caster, bytes32(uint256(target)), ConditionTargetType.Slot); //No additional conditions for slots
+    }
 
     function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bool){
         if (target == AbilityTarget.SelectTarget) {
