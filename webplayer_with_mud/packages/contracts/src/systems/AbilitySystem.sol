@@ -16,78 +16,6 @@ import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract AbilitySystem is System {
-    //使用技能
-    event EventUseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
-
-    function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        if (ability_key == 0 || caster == 0) {
-            return;
-        }
-
-        //Pay cost
-//        if (iability.trigger == AbilityTrigger.Activate)
-//        {
-//            player.mana -= iability.mana_cost;
-//            caster.exhausted = caster.exhausted || iability.exhaust;
-//        }
-
-        //如果是选择器
-        bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
-        if (is_selector) {
-            uint256 len = PlayerActionHistory.length(game_key);
-            bytes32 action_key = keccak256(abi.encode(game_key, len));
-            PlayerActionHistory.push(game_key, action_key);
-            ActionHistory.setActionType(action_key, Action.SelectChoice);
-            return; //Wait for player to select
-        }
-
-        AbilityTarget target_type = Ability.getTarget(ability_key);
-
-        //目标
-        bytes32[] memory targets;
-        if (target_type == AbilityTarget.PlayTarget) {
-            targets = new bytes32[](1);
-            targets[0] = target;
-        } else {
-            targets = GetCardTargets(game_key, ability_key, target_type, caster);
-        }
-
-        //使用效果
-        bytes4[] memory effects = Ability.getEffects(ability_key);
-        if (effects.length > 0 && ability_key != 0 && caster != 0 && targets.length > 0) {
-            for (uint i = 0; i < effects.length; i++) {
-                for (uint t = 0; t < targets.length; t++) {
-                    if (targets[t] != 0) {
-                        bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, targets[t], is_card);
-                        SystemSwitch.call(data);
-                    }
-                }
-            }
-        }
-        //添加状态，如嘲讽等
-        uint8[] memory status = Ability.getStatus(ability_key);
-        if (status.length > 0) {
-            uint8 duration = Ability.getDuration(ability_key);
-            uint8 value = uint8(Ability.getValue(ability_key));
-            for (uint i = 0; i < status.length; i++) {
-                if (is_card) {
-                    CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
-                } else {
-                    PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
-                }
-
-//                uint256 len = PlayerActionHistory.length(game_key);
-//                bytes32 action_key = keccak256(abi.encode(game_key, len));
-//                PlayerActionHistory.push(game_key, action_key);
-//                ActionHistory.setActionType(action_key, Action.AddStatus);
-//                ActionHistory.setCardId(action_key, target);
-//                ActionHistory.setValue(action_key, int8(status[i]));
-            }
-        }
-
-        AfterAbilityResolved(game_key, ability_key, caster);
-        emit EventUseAbility(game_key, ability_key, caster, target, is_card);
-    }
 
     //更具trigger技能触发器,触发指定卡的所有技能
     event EventTriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card);
@@ -194,6 +122,17 @@ contract AbilitySystem is System {
         return targets;
     }
 
+    function GetPlayerTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
+        bytes32[] memory targets = abi.decode(
+            SystemSwitch.call(
+                abi.encodeCall(IAbilityTargetSystem.GetPlayerTargets, (game_uid, ability_key, target, caster))
+            ),
+            (bytes32[])
+        );
+
+        return targets;
+    }
+
 
     function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal returns (bool){
         AbilityTarget target = Ability.getTarget(ability_key);
@@ -235,13 +174,123 @@ contract AbilitySystem is System {
         GamesExtended.setSelectorCasterUid(game_uid, caster);
     }
 
-    function ResolveCardAbilityPlayers(bytes32 ability_key, bytes32 caster_key) internal {
-        //todo
-//        bytes32[] memory targets = GetPlayerTargets(ability_key, caster_key);
-//        for (uint i = 0; i < targets.length; i++) {
-//            bytes32 target = targets[i];
-////            ResolveEffectTarget(ability_key, caster_key, target);
+    function ResolveCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer) internal {
+//        if (!caster.CanDoAbilities())
+//            return; //Silenced card cant cast
+//
+//        //Debug.Log("Trigger Ability " + iability.id + " : " + caster.card_id);
+//
+//        onAbilityStart?.Invoke(iability, caster);
+//        game_data.ability_triggerer = triggerer.uid;
+//
+        bool is_selector = ResolveCardAbilitySelector(game_uid, ability_key, caster);
+        if (is_selector)
+            return; //Wait for player to select
+
+//        ResolveCardAbilityPlayTarget(iability, caster);
+        ResolveCardAbilityPlayers(game_uid, ability_key, caster);
+        ResolveCardAbilityCards(game_uid, ability_key, caster);
+//        ResolveCardAbilitySlots(iability, caster);
+//        ResolveCardAbilityCardData(iability, caster);
+//        ResolveCardAbilityNoTarget(iability, caster);
+//        AfterAbilityResolved(iability, caster);
+    }
+
+    //使用技能
+    event EventUseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+
+    function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        if (ability_key == 0 || caster == 0) {
+            return;
+        }
+
+        //Pay cost
+//        if (iability.trigger == AbilityTrigger.Activate)
+//        {
+//            player.mana -= iability.mana_cost;
+//            caster.exhausted = caster.exhausted || iability.exhaust;
 //        }
+
+        //如果是选择器
+//        bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
+//        if (is_selector) {
+//            uint256 len = PlayerActionHistory.length(game_key);
+//            bytes32 action_key = keccak256(abi.encode(game_key, len));
+//            PlayerActionHistory.push(game_key, action_key);
+//            ActionHistory.setActionType(action_key, Action.SelectChoice);
+//            return; //Wait for player to select
+//        }
+
+        AbilityTarget target_type = Ability.getTarget(ability_key);
+
+        //目标
+        bytes32[] memory targets;
+        if (target_type == AbilityTarget.PlayTarget) {
+            targets = new bytes32[](1);
+            targets[0] = target;
+        } else {
+            targets = GetCardTargets(game_key, ability_key, target_type, caster);
+        }
+
+        //使用效果
+        bytes4[] memory effects = Ability.getEffects(ability_key);
+        if (effects.length > 0 && ability_key != 0 && caster != 0 && targets.length > 0) {
+            for (uint i = 0; i < effects.length; i++) {
+                for (uint t = 0; t < targets.length; t++) {
+                    if (targets[t] != 0) {
+                        bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, targets[t], is_card);
+                        SystemSwitch.call(data);
+                    }
+                }
+            }
+        }
+        //添加状态，如嘲讽等
+        uint8[] memory status = Ability.getStatus(ability_key);
+        if (status.length > 0) {
+            uint8 duration = Ability.getDuration(ability_key);
+            uint8 value = uint8(Ability.getValue(ability_key));
+            for (uint i = 0; i < status.length; i++) {
+                if (is_card) {
+                    CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
+                } else {
+                    PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
+                }
+
+//                uint256 len = PlayerActionHistory.length(game_key);
+//                bytes32 action_key = keccak256(abi.encode(game_key, len));
+//                PlayerActionHistory.push(game_key, action_key);
+//                ActionHistory.setActionType(action_key, Action.AddStatus);
+//                ActionHistory.setCardId(action_key, target);
+//                ActionHistory.setValue(action_key, int8(status[i]));
+            }
+        }
+
+        AfterAbilityResolved(game_key, ability_key, caster);
+        emit EventUseAbility(game_key, ability_key, caster, target, is_card);
+    }
+
+
+    function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, bytes32 caster_key) internal
+    {
+        //目标
+        bytes32[] memory targets = GetCardTargets(game_key, ability_key, target_type, caster);
+
+        //Resolve effects
+        for (uint t = 0; t < targets.length; t++) {
+            if (targets[t] != 0) {
+                bytes32 target = target[t];
+                ResolveEffectTarget(game_uid, ability_key, caster_key, target, true);
+            }
+        }
+    }
+
+    function ResolveCardAbilityPlayers(bytes32 game_uid, bytes32 ability_key, bytes32 caster_key) internal {
+        AbilityTarget target_type = Ability.getTarget(ability_key);
+        bytes32[] memory targets = GetPlayerTargets(game_uid, ability_key, target_type, caster_key);
+        for (uint i = 0; i < targets.length; i++) {
+            bytes32 target = targets[i];
+            ResolveEffectTarget(game_uid, ability_key, caster_key, target, false);
+        }
     }
 
     function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
@@ -249,9 +298,6 @@ contract AbilitySystem is System {
         bytes4[] memory effects = Ability.getEffects(ability_key);
         if (effects.length > 0) {
             for (uint i = 0; i < effects.length; i++) {
-//                SystemSwitch.call(
-//                    abi.encodeCall(IEffectSystem.DoEffect, (effects[i], ability_key, caster, target, is_card))
-//                );
                 bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, target, is_card);
                 SystemSwitch.call(data);
             }
