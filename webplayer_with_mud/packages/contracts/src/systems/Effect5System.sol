@@ -13,6 +13,9 @@ contract Effect5System is System {
 
     }
 
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+
+
     function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         int8 min = 1;
         int8 max = 6;

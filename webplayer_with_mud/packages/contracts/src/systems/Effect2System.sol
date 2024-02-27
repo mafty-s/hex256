@@ -13,6 +13,7 @@ import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract Effect2System is System {
 
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
 
     function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         bytes32 flame_eagle = 0xeadaa9330dc55ff4f5a4be2783106cf919f0dccf372920ccfd645f6c9dbf8c0d;

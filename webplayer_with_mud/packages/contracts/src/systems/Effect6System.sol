@@ -16,6 +16,8 @@ contract Effect6System is System {
 
     }
 
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+
     function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         //todo
     }

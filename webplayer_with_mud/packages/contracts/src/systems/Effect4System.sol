@@ -14,6 +14,8 @@ contract Effect4System is System {
 
     }
 
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+
     //todo
     function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         int8 value = Ability.getValue(ability_key);

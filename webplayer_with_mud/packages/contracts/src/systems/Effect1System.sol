@@ -18,29 +18,36 @@ contract Effect1System is System {
 //        SystemSwitch.call(data);
 //    }
 
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
 
     function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAddAttack",ability_key, caster, target, is_card);
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAddGrowth",ability_key, caster, target, is_card);
         EffectAddTrait(ability_key, caster, target, is_card, CardTrait.Growth);
     }
 
     function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAddHp",ability_key, caster, target, is_card);
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
     function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAddMana",ability_key, caster, target, is_card);
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Mana);
     }
 
     function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAddSpellDamage",ability_key, caster, target, is_card);
         EffectAddTrait(ability_key, caster, target, is_card, CardTrait.SpellDamage);
     }
 
 
     function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectClearParalyse",ability_key, caster, target, is_card);
         if (is_card) {
             CardLogicLib.RemoveStatus(target, Status.Paralysed);
         } else {
@@ -49,6 +56,7 @@ contract Effect1System is System {
     }
 
     function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectClearTaunt",ability_key, caster, target, is_card);
         if (is_card) {
             CardLogicLib.RemoveStatus(target, Status.Taunt);
         } else {
@@ -57,6 +65,7 @@ contract Effect1System is System {
     }
 
     function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectClearStatusAll",ability_key, caster, target, is_card);
         if (is_card) {
             CardLogicLib.ClearStatus(target);
         } else {
@@ -65,6 +74,7 @@ contract Effect1System is System {
     }
 
     function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectDestroy",ability_key, caster, target, is_card);
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
@@ -73,6 +83,7 @@ contract Effect1System is System {
     }
 
     function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectDraw",ability_key, caster, target, is_card);
         int8 value = Ability.getValue(ability_key);
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
@@ -84,6 +95,7 @@ contract Effect1System is System {
 
 
     function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectGainMana",ability_key, caster, target, is_card);
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         EffectMana(ability_key, caster, player_key, is_card);
     }

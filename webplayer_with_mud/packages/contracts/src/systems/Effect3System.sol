@@ -8,6 +8,8 @@ import {MathLib} from "../libs/MathLib.sol";
 
 contract Effect3System is System {
 
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+
     function EffectAddAbilityActivateBurst(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         bytes32 activate_burst = 0x35a83131763a5fd836c655a2cbcf566b8f349f0ed26c06bc8b698efb92ef1030;
         EffectAddAbility(ability_key, caster, target, is_card, activate_burst);
