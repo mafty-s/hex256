@@ -388,6 +388,119 @@ export function createSystemCalls(
         await waitForTransaction(tx);
         return tx;
     }
+    
+    function getEvent(log){
+        let event=null;
+            try {
+                 event = decodeEventLog({
+                    abi: worldContract.abi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+            try {
+                 event = decodeEventLog({
+                    abi: GMSystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+            try {
+                 event = decodeEventLog({
+                    abi: AbilitySystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: ConditionSystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: Effect1SystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: Effect2SystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: Effect3SystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: Effect4SystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: Effect5SystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                return event;
+
+            }catch (e){
+
+            }
+
+            try {
+                 event = decodeEventLog({
+                    abi: Effect6SystemAbi,
+                    data: log.data,
+                    topics: log.topics
+                });
+                 return event;
+            }catch (e){
+
+            }
+        return event;
+
+    }
 
     const getTxResult = async (hash: string) => {
         const transaction = await publicClient.getTransaction({hash})
@@ -397,112 +510,9 @@ export function createSystemCalls(
         let events = [];
         if(transactionReceipt.logs && transactionReceipt.logs.length>0){
             for(let i=0;i<transactionReceipt.logs.length;i++){
-                try {
-                    const event = decodeEventLog({
-                        abi: worldContract.abi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
+                let event = getEvent(transactionReceipt.logs[i]);
+                if(event){
                     events.push(event);
-                }catch (e){
-
-                }
-                try {
-                    const event = decodeEventLog({
-                        abi: GMSystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-                try {
-                    const event = decodeEventLog({
-                        abi: AbilitySystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: ConditionSystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: Effect1SystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: Effect2SystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: Effect3SystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: Effect4SystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: Effect5SystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
-                }
-
-                try {
-                    const event = decodeEventLog({
-                        abi: Effect6SystemAbi,
-                        data: transactionReceipt.logs[i].data,
-                        topics: transactionReceipt.logs[i].topics
-                    });
-                    events.push(event);
-                }catch (e){
-
                 }
             }
         }
