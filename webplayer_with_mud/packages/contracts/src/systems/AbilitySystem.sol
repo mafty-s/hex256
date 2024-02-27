@@ -73,7 +73,8 @@ contract AbilitySystem is System {
             triggerer = caster;        //Triggerer is the caster if not set
         }
         if (!CardLogicLib.HasStatus(triggerer, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
-            UseAbility(game_uid, ability_key, caster, triggerer, is_card);
+//            UseAbility(game_uid, ability_key, caster, triggerer, is_card);
+            ResolveCardAbility(game_uid, ability_key, caster, triggerer);
         }
         emit EventTriggerCardAbility(game_uid, ability_key, caster, triggerer, is_card);
     }
@@ -173,14 +174,16 @@ contract AbilitySystem is System {
         GamesExtended.setSelectorCasterUid(game_uid, caster);
     }
 
+    event EventResolveCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer);
+
     function ResolveCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer) internal {
-//        if (!caster.CanDoAbilities())
-//            return; //Silenced card cant cast
-//
-//        //Debug.Log("Trigger Ability " + iability.id + " : " + caster.card_id);
-//
-//        onAbilityStart?.Invoke(iability, caster);
-//        game_data.ability_triggerer = triggerer.uid;
+        if (!CardLogicLib.CanDoAbilities(caster))
+            return; //Silenced card cant cast
+
+        emit EventResolveCardAbility(game_uid, ability_key, caster, triggerer);
+
+        bytes32 triggerer_uid = CardOnBoards.getPlayerId(triggerer);
+        GamesExtended.setAbilityTriggerer(game_uid, triggerer_uid);
 
         AbilityTarget target_type = Ability.getTarget(ability_key);
 //
@@ -194,81 +197,81 @@ contract AbilitySystem is System {
 //        ResolveCardAbilitySlots(iability, caster);
 //        ResolveCardAbilityCardData(iability, caster);
 //        ResolveCardAbilityNoTarget(iability, caster);
-//        AfterAbilityResolved(iability, caster);
+        AfterAbilityResolved(game_uid, ability_key, caster);
     }
 
     //使用技能
-    event EventUseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
-
-    function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        if (ability_key == 0 || caster == 0) {
-            return;
-        }
-
-        //Pay cost
-//        if (iability.trigger == AbilityTrigger.Activate)
-//        {
-//            player.mana -= iability.mana_cost;
-//            caster.exhausted = caster.exhausted || iability.exhaust;
+//    event EventUseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+//
+//    function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+//        if (ability_key == 0 || caster == 0) {
+//            return;
 //        }
-
-        //如果是选择器
-//        bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
-//        if (is_selector) {
-//            uint256 len = PlayerActionHistory.length(game_key);
-//            bytes32 action_key = keccak256(abi.encode(game_key, len));
-//            PlayerActionHistory.push(game_key, action_key);
-//            ActionHistory.setActionType(action_key, Action.SelectChoice);
-//            return; //Wait for player to select
+//
+//        //Pay cost
+////        if (iability.trigger == AbilityTrigger.Activate)
+////        {
+////            player.mana -= iability.mana_cost;
+////            caster.exhausted = caster.exhausted || iability.exhaust;
+////        }
+//
+//        //如果是选择器
+////        bool is_selector = ResolveCardAbilitySelector(game_key, ability_key, caster);
+////        if (is_selector) {
+////            uint256 len = PlayerActionHistory.length(game_key);
+////            bytes32 action_key = keccak256(abi.encode(game_key, len));
+////            PlayerActionHistory.push(game_key, action_key);
+////            ActionHistory.setActionType(action_key, Action.SelectChoice);
+////            return; //Wait for player to select
+////        }
+//
+//        AbilityTarget target_type = Ability.getTarget(ability_key);
+//
+//        //目标
+//        bytes32[] memory targets;
+//        if (target_type == AbilityTarget.PlayTarget) {
+//            targets = new bytes32[](1);
+//            targets[0] = target;
+//        } else {
+//            targets = GetCardTargets(game_key, ability_key, target_type, caster);
 //        }
-
-        AbilityTarget target_type = Ability.getTarget(ability_key);
-
-        //目标
-        bytes32[] memory targets;
-        if (target_type == AbilityTarget.PlayTarget) {
-            targets = new bytes32[](1);
-            targets[0] = target;
-        } else {
-            targets = GetCardTargets(game_key, ability_key, target_type, caster);
-        }
-
-        //使用效果
-        bytes4[] memory effects = Ability.getEffects(ability_key);
-        if (effects.length > 0 && ability_key != 0 && caster != 0 && targets.length > 0) {
-            for (uint i = 0; i < effects.length; i++) {
-                for (uint t = 0; t < targets.length; t++) {
-                    if (targets[t] != 0) {
-                        bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, targets[t], is_card);
-                        SystemSwitch.call(data);
-                    }
-                }
-            }
-        }
-        //添加状态，如嘲讽等
-        uint8[] memory status = Ability.getStatus(ability_key);
-        if (status.length > 0) {
-            uint8 duration = Ability.getDuration(ability_key);
-            uint8 value = uint8(Ability.getValue(ability_key));
-            for (uint i = 0; i < status.length; i++) {
-                if (is_card) {
-                    CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
-                } else {
-                    PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
-                }
-
-//                uint256 len = PlayerActionHistory.length(game_key);
-//                bytes32 action_key = keccak256(abi.encode(game_key, len));
-//                PlayerActionHistory.push(game_key, action_key);
-//                ActionHistory.setActionType(action_key, Action.AddStatus);
-//                ActionHistory.setCardId(action_key, target);
-//                ActionHistory.setValue(action_key, int8(status[i]));
-            }
-        }
-
-        AfterAbilityResolved(game_key, ability_key, caster);
-        emit EventUseAbility(game_key, ability_key, caster, target, is_card);
-    }
+//
+//        //使用效果
+//        bytes4[] memory effects = Ability.getEffects(ability_key);
+//        if (effects.length > 0 && ability_key != 0 && caster != 0 && targets.length > 0) {
+//            for (uint i = 0; i < effects.length; i++) {
+//                for (uint t = 0; t < targets.length; t++) {
+//                    if (targets[t] != 0) {
+//                        bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, targets[t], is_card);
+//                        SystemSwitch.call(data);
+//                    }
+//                }
+//            }
+//        }
+//        //添加状态，如嘲讽等
+//        uint8[] memory status = Ability.getStatus(ability_key);
+//        if (status.length > 0) {
+//            uint8 duration = Ability.getDuration(ability_key);
+//            uint8 value = uint8(Ability.getValue(ability_key));
+//            for (uint i = 0; i < status.length; i++) {
+//                if (is_card) {
+//                    CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
+//                } else {
+//                    PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
+//                }
+//
+////                uint256 len = PlayerActionHistory.length(game_key);
+////                bytes32 action_key = keccak256(abi.encode(game_key, len));
+////                PlayerActionHistory.push(game_key, action_key);
+////                ActionHistory.setActionType(action_key, Action.AddStatus);
+////                ActionHistory.setCardId(action_key, target);
+////                ActionHistory.setValue(action_key, int8(status[i]));
+//            }
+//        }
+//
+//        AfterAbilityResolved(game_key, ability_key, caster);
+//        emit EventUseAbility(game_key, ability_key, caster, target, is_card);
+//    }
 
 
     function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
