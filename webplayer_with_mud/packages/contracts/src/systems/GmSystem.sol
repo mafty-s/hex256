@@ -18,11 +18,16 @@ import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard} from "../codegen/ind
 //    }
 
 contract GmSystem is System {
+    event EventAddCard(bytes32 indexed id, string message);
+
     function AddCard(string memory game_uid, string memory player_name, string memory card_name) public returns (bytes32) {
         bytes32 card_config_key = keccak256(abi.encode(card_name));
         bytes32 player_key = keccak256(abi.encode(game_uid, player_name));
         bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
         PlayerCardsHand.pushValue(player_key, card_uid);
+
+        emit EventAddCard(card_uid, card_name);
+
         return card_uid;
     }
 

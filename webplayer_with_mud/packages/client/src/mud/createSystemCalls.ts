@@ -3,11 +3,14 @@
  * for changes in the World state (using the System contracts).
  */
 
-import {decodeFunctionData, Hex} from "viem";
+import {decodeEventLog, decodeFunctionData, Hex} from "viem";
 import {SetupNetworkResult} from "./setupNetwork";
 import {ethers} from "ethers";
 import {AbilityTarget, AbilityTrigger, Action, CardTrait, CardType, RarityType, Status} from "./common";
 import {abilities} from "./abilities";
+
+import GMSystemAbi from "contracts/out/GmSystem.sol/GmSystem.abi.json";
+import AbilitySystemAbi from "contracts/out/AbilitySystem.sol/AbilitySystem.abi.json";
 
 // import { getTransactionResult } from "";
 
@@ -189,7 +192,6 @@ export function createSystemCalls(
         }
         return trait;
     }
-
 
 
     const getCardType = (str: string) => {
@@ -384,6 +386,44 @@ export function createSystemCalls(
         const transaction = await publicClient.getTransaction({hash})
         const transactionReceipt = await publicClient.waitForTransactionReceipt({hash});
         const {functionName, args} = decodeFunctionData({abi: worldContract.abi, data: transaction.input});
+
+        let events = [];
+        if(transactionReceipt.logs && transactionReceipt.logs.length>0){
+            for(let i=0;i<transactionReceipt.logs.length;i++){
+                try {
+                    const event = decodeEventLog({
+                        abi: worldContract.abi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+                try {
+                    const event = decodeEventLog({
+                        abi: GMSystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+                try {
+                    const event = decodeEventLog({
+                        abi: AbilitySystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+            }
+        }
+
+        console.log("events",events);
 
         const tx_result = await publicClient.simulateContract({
             account: transaction.from,
@@ -871,7 +911,11 @@ export function createSystemCalls(
 
     const addCard = async (card_name: string) => {
         // const key = calculateKeccak256Hash(now_game_uid);
-        await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
+        const tx = await worldContract.write.AddCard([now_game_uid, player_name, card_name]);
+        const transaction = await waitForTransaction(tx);
+
+        const tx_result = await getTxResult(tx);
+        console.log(tx, transaction, tx_result);
     }
 
     const getSlotCard = async (slot_x, slot_y, slot_p) => {

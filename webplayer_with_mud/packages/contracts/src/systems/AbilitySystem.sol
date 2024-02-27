@@ -17,6 +17,8 @@ import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract AbilitySystem is System {
     //使用技能
+    event EventUseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+
     function UseAbility(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
         if (ability_key == 0 || caster == 0) {
             return;
@@ -84,7 +86,7 @@ contract AbilitySystem is System {
         }
 
         AfterAbilityResolved(game_key, ability_key, caster);
-
+        emit EventUseAbility(game_key, ability_key, caster, target, is_card);
     }
 
     //更具trigger技能触发器,触发指定卡的所有技能
@@ -103,7 +105,13 @@ contract AbilitySystem is System {
         }
     }
 
+    event EventTriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key);
+
     function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) public {
+        if (game_uid == 0 || player_key == 0) {
+            return;
+        }
+
         bytes32 hero = Players.getHero(player_key);
         if (hero != 0) {
             TriggerCardAbilityType(trigger, game_uid, hero, 0, true);
@@ -115,6 +123,8 @@ contract AbilitySystem is System {
                 TriggerCardAbilityType(trigger, game_uid, card, card, true);
             }
         }
+
+        emit EventTriggerPlayerCardsAbilityType(trigger, game_uid, player_key);
     }
 
     function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) public {
