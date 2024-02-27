@@ -327,7 +327,7 @@ public class MudRefresh
                     StatusType s = MudEnum.CoverStatus((Mud.Status)status_id);
                     if (s != StatusType.None)
                     {
-                        duration = 10000;
+                        // duration = 10000;
                         Debug.Log("status:" + status_id + " duration:" + (int)duration + " value" + (int)value +
                                   " card_key: " +
                                   mud_card.key + " name:" + mud_card.name);

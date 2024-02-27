@@ -36,9 +36,10 @@ contract SelectSystem is System {
 //            AfterAbilityResolved(ability, caster);
 //            resolve_queue.ResolveAll();
 
+            AbilityTarget target_type = Ability.getTarget(ability_key);
             GamesExtended.setSelector(game_uid, SelectorType.None);
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.ResolveEffectTarget, (game_uid, ability_key, caster, target, true))
+                abi.encodeCall(IAbilitySystem.ResolveEffectTarget, (game_uid, ability_key, caster, target, target_type,true))
             );
             uint256 len = PlayerActionHistory.length(game_uid);
             bytes32 action_key = keccak256(abi.encode(game_uid, len));
@@ -54,7 +55,8 @@ contract SelectSystem is System {
 //            AfterAbilityResolved(ability, caster);
 //            resolve_queue.ResolveAll();
 
-            SystemSwitch.call(
+
+        SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, true))
             );
 
@@ -82,7 +84,7 @@ contract SelectSystem is System {
         if (selector == SelectorType.SelectTarget) {
 
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid,ability_key, caster, target, false))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, false))
             );
 
             uint256 len = PlayerActionHistory.length(game_uid);
