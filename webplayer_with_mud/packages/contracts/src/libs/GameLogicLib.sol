@@ -5,7 +5,6 @@ import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
 import {Games, Cards, Players, GamesExtended} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
-import {MathLib} from "./MathLib.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType} from "../codegen/common.sol";
 
 library GameLogicLib {
@@ -106,7 +105,12 @@ library GameLogicLib {
 
         //Damage
         int8 target_hp = CardOnBoards.getHp(target);
-        int8 damage_max = MathLib.min_int8(value, target_hp);
+        int8 damage_max = value;
+        if (damage_max > target_hp)
+        {
+            damage_max = target_hp;
+        }
+//        int8 damage_max = MathLib.min_int8(value, target_hp);
         int8 extra = value - target_hp;
         CardOnBoards.setDamage(target, value + CardOnBoards.getDamage(target));
 
@@ -224,7 +228,7 @@ library GameLogicLib {
         return true;
     }
 
-    function GetOpponent(bytes32 game_key, bytes32 player_key) internal view returns (bytes32 ) {
+    function GetOpponent(bytes32 game_key, bytes32 player_key) internal view returns (bytes32) {
         bytes32[] memory players = Games.getPlayers(game_key);
         require(players.length == 2, "player count must be 2");
         require(players[0] != 0 && players[1] != 0, "player key must not be 0");

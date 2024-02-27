@@ -7,6 +7,8 @@ import {Action, CardTrait} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
+import {CardOnBoards} from "../codegen/index.sol";
+import {GameLogicLib} from "../libs/GameLogicLib.sol";
 
 contract Effect4System is System {
 
@@ -14,18 +16,21 @@ contract Effect4System is System {
 
     }
 
-    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
+    event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
     //todo
     function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectDamage", ability_key, caster, target, is_card);
         int8 value = Ability.getValue(ability_key);
-//        int8 damage = GetDamage(caster, value, is_card, CardTrait.SpellDamage);
-//        if (is_card == ConditionTargetType.Card) {
-//            GameLogicLib.DamageCard(caster, target, damage, true);
-//        } else {
-//            GameLogicLib.DamagePlayer(caster, target, damage, true);
-//        }
+        int8 damage = GetDamage(caster, value, is_card, CardTrait.SpellDamage);
+        if (is_card == ConditionTargetType.Card) {
+            GameLogicLib.DamageCard(caster, target, damage, true);
+        }
+
+        if (is_card == ConditionTargetType.Player) {
+            GameLogicLib.DamagePlayer(caster, target, damage, true);
+        }
+
     }
 
 
