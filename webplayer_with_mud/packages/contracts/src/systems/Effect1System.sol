@@ -6,6 +6,7 @@ import {Players, Ability, PlayerActionHistory, ActionHistory, CardOnBoards, Card
 import {Action, CardTrait, EffectStatType, EffectAttackerType, Status} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract Effect1System is System {
 
@@ -13,79 +14,79 @@ contract Effect1System is System {
 
     }
 
-//    function DoOngoingEffects(bytes4 effect_ongoing, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+//    function DoOngoingEffects(bytes4 effect_ongoing, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
 //        bytes memory data = abi.encodeWithSelector(effect_ongoing, ability_key, caster, target, is_card);
 //        SystemSwitch.call(data);
 //    }
 
-    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
-    function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAddAttack",ability_key, caster, target, is_card);
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
-    function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAddGrowth",ability_key, caster, target, is_card);
         EffectAddTrait(ability_key, caster, target, is_card, CardTrait.Growth);
     }
 
-    function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAddHp",ability_key, caster, target, is_card);
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
-    function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAddMana",ability_key, caster, target, is_card);
         EffectAddStat(ability_key, caster, target, is_card, EffectStatType.Mana);
     }
 
-    function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectAddSpellDamage(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAddSpellDamage",ability_key, caster, target, is_card);
         EffectAddTrait(ability_key, caster, target, is_card, CardTrait.SpellDamage);
     }
 
 
-    function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearParalyse(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectClearParalyse",ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             CardLogicLib.RemoveStatus(target, Status.Paralysed);
         } else {
             PlayerLogicLib.RemoveStatus(target, Status.Paralysed);
         }
     }
 
-    function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectClearTaunt",ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             CardLogicLib.RemoveStatus(target, Status.Taunt);
         } else {
             PlayerLogicLib.RemoveStatus(target, Status.Taunt);
         }
     }
 
-    function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearStatusAll(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectClearStatusAll",ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             CardLogicLib.ClearStatus(target);
         } else {
             PlayerLogicLib.ClearStatus(target);
         }
     }
 
-    function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectDestroy",ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
             PlayerLogicLib.AddCardToDiscard(player_key, target);
         }
     }
 
-    function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectDraw",ability_key, caster, target, is_card);
         int8 value = Ability.getValue(ability_key);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             PlayerLogicLib.DrawCard(player_key, value);
         } else {
@@ -94,52 +95,52 @@ contract Effect1System is System {
     }
 
 
-    function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectGainMana",ability_key, caster, target, is_card);
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         EffectMana(ability_key, caster, player_key, is_card);
     }
 
 
-    function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectRemoveAbilityAuraHelp",ability_key, caster, target, is_card);
 //        bytes32 auraHelp
         //todo 这个技能TCG没有实现
     }
 
-    function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectResetStats",ability_key, caster, target, is_card);
         //todo
     }
 
 
-    function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSetAttack",ability_key, caster, target, is_card);
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
-    function EffectSetHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetHp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSetHp",ability_key, caster, target, is_card);
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
-    function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSetMana",ability_key, caster, target, is_card);
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Mana);
     }
 
     //设置耗尽
-    function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectExhaust",ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             CardOnBoards.setExhausted(player_key, true);
         }
     }
 
-    function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectUnexhaust",ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             CardOnBoards.setExhausted(player_key, false);
         }
@@ -148,7 +149,7 @@ contract Effect1System is System {
     //----------------------------------------------------------------------------------------------------------------
 
     //mana相关
-    function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal {
+    function EffectMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal {
         int8 value = Ability.getValue(ability_key);
         int8 curr_mana = Players.getMana(target);
         int8 mana_max = Players.getManaMax(target);
@@ -169,9 +170,9 @@ contract Effect1System is System {
     }
 
     //添加特性
-    function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, CardTrait trait) internal {
+    function EffectAddTrait(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, CardTrait trait) internal {
         int8 value = Ability.getValue(ability_key);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             CardLogicLib.AddTrait(target, trait, value);
         } else {
             PlayerLogicLib.AddTrait(target, trait, value);
@@ -179,11 +180,11 @@ contract Effect1System is System {
     }
 
     //设置属性点
-    function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType stat) internal {
+    function EffectSetStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, EffectStatType stat) internal {
 
         int8 value = Ability.getValue(ability_key);
 
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             if (stat == EffectStatType.HP) {
                 CardOnBoards.setHp(target, value);
                 CardOnBoards.setDamage(target, 0);
@@ -209,9 +210,9 @@ contract Effect1System is System {
     }
 
     //属性点加成
-    function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, EffectStatType stat) internal {
+    function EffectAddStat(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, EffectStatType stat) internal {
         int8 value = Ability.getValue(ability_key);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             if (stat == EffectStatType.HP) {
                 CardOnBoards.setHp(target, value + CardOnBoards.getHp(target));
             }

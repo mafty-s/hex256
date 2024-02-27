@@ -8,6 +8,7 @@ import {SelectorType, Action, AbilityTarget} from "../codegen/common.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract SelectSystem is System {
     function SelectCard(bytes32 game_uid, bytes32 target) public {
@@ -39,7 +40,7 @@ contract SelectSystem is System {
             AbilityTarget target_type = Ability.getTarget(ability_key);
             GamesExtended.setSelector(game_uid, SelectorType.None);
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.ResolveEffectTarget, (game_uid, ability_key, caster, target, target_type,true))
+                abi.encodeCall(IAbilitySystem.ResolveEffectTarget, (game_uid, ability_key, caster, target, target_type,ConditionTargetType.Card))
             );
             uint256 len = PlayerActionHistory.length(game_uid);
             bytes32 action_key = keccak256(abi.encode(game_uid, len));
@@ -57,7 +58,7 @@ contract SelectSystem is System {
 
 
         SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, true))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, ConditionTargetType.Card))
             );
 
             SystemSwitch.call(
@@ -84,7 +85,7 @@ contract SelectSystem is System {
         if (selector == SelectorType.SelectTarget) {
 
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, false))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, target, ConditionTargetType.Player))
             );
 
             uint256 len = PlayerActionHistory.length(game_uid);

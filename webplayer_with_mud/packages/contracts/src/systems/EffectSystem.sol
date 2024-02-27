@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract EffectSystem is System {
 
@@ -11,7 +11,7 @@ contract EffectSystem is System {
 
     }
 
-    function DoEffect(bytes4 effect, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function DoEffect(bytes4 effect, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         bytes memory data = abi.encodeWithSelector(effect, ability_key, caster, target, is_card);
         SystemSwitch.call(data);
     }

@@ -14,6 +14,7 @@ import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract PlayCardSystem is System {
 
@@ -58,7 +59,7 @@ contract PlayCardSystem is System {
             //使用触发器触发技能
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                    AbilityTrigger.ON_PLAY, game_key, card_key, 0, true))
+                    AbilityTrigger.ON_PLAY, game_key, card_key, 0, ConditionTargetType.Card))
             );
         } else if (CardLogicLib.IsEquipment(card_config_key)) {
 //            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
@@ -92,11 +93,11 @@ contract PlayCardSystem is System {
 //                SystemSwitch.call(data);
 
                 SystemSwitch.call(
-                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, card_on_slot, true))
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, card_on_slot, ConditionTargetType.Card))
                 );
             } else {
                 SystemSwitch.call(
-                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, 0, true))
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, 0, ConditionTargetType.Card))
                 );
             }
 

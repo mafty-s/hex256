@@ -14,13 +14,14 @@ import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {PlayerCardsBoard} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract AbilitySystem is System {
 
     //更具trigger技能触发器,触发指定卡的所有技能
-    event EventTriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card);
+    event EventTriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
-    function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card) public {
+    function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         if (game_uid == 0 || caster == 0) {
             return;
         }
@@ -45,13 +46,13 @@ contract AbilitySystem is System {
 
         bytes32 hero = Players.getHero(player_key);
         if (hero != 0) {
-            TriggerCardAbilityType(trigger, game_uid, hero, 0, true);
+            TriggerCardAbilityType(trigger, game_uid, hero, 0, ConditionTargetType.Card);
         }
         bytes32[] memory cards_board = PlayerCardsBoard.getValue(player_key);
         if (cards_board.length > 0) {
             for (uint i = 0; i < cards_board.length; i++) {
                 bytes32 card = cards_board[i];
-                TriggerCardAbilityType(trigger, game_uid, card, card, true);
+                TriggerCardAbilityType(trigger, game_uid, card, card, ConditionTargetType.Card);
             }
         }
 
@@ -63,9 +64,9 @@ contract AbilitySystem is System {
     }
 
     //触发指定技能
-    event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card);
+    event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card);
 
-    function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
+    function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card) public {
         if (game_uid == 0 || ability_key == 0 || caster == 0) {
             return;
         }
@@ -122,6 +123,18 @@ contract AbilitySystem is System {
 
         return targets;
     }
+
+    function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
+        bytes32[] memory targets = abi.decode(
+            SystemSwitch.call(
+                abi.encodeCall(IAbilityTargetSystem.GetCardDataTargets, (game_uid, ability_key, target, caster))
+            ),
+            (bytes32[])
+        );
+
+        return targets;
+    }
+
 
     function GetPlayerTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
         bytes32[] memory targets = abi.decode(
@@ -195,13 +208,13 @@ contract AbilitySystem is System {
         ResolveCardAbilityPlayers(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityCards(game_uid, ability_key, target_type, caster);
 //        ResolveCardAbilitySlots(iability, caster);
-//        ResolveCardAbilityCardData(iability, caster);
+        ResolveCardAbilityCardData(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityNoTarget(game_uid, ability_key, target_type, caster);
         AfterAbilityResolved(game_uid, ability_key, caster);
     }
 
 
-    function DoEffects(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster, bytes32 target, bool is_card) internal {
+    function DoEffects(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal {
         if (target == 0) {
             bytes4[] memory effects = Ability.getEffects(ability_key);
             if (effects.length > 0) {
@@ -225,9 +238,10 @@ contract AbilitySystem is System {
                 uint8 duration = Ability.getDuration(ability_key);
                 uint8 value = uint8(Ability.getValue(ability_key));
                 for (uint i = 0; i < status.length; i++) {
-                    if (is_card) {
+                    if (is_card == ConditionTargetType.Card) {
                         CardLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
-                    } else {
+                    }
+                    if (is_card == ConditionTargetType.Player) {
                         PlayerLogicLib.AddStatus(target, (Status)(status[i]), duration, value);
                     }
                 }
@@ -238,10 +252,21 @@ contract AbilitySystem is System {
     function ResolveCardAbilityNoTarget(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
     {
         if (target_type == AbilityTarget.None) {
-            DoEffects(game_uid, ability_key, target_type, caster_key, 0, true);
+            DoEffects(game_uid, ability_key, target_type, caster_key, 0, ConditionTargetType.None);
         }
     }
 
+    function ResolveCardAbilityCardData(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
+    {
+//        List<CardData> targets = iability.GetCardDataTargets(game_data, caster, card_data_array);
+        bytes32[] memory targets = GetCardDataTargets(game_uid, ability_key, target_type, caster_key);
+        for (uint t = 0; t < targets.length; t++) {
+            if (targets[t] != 0) {
+                bytes32 target = targets[t];
+
+            }
+        }
+    }
 
     function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
     {
@@ -252,7 +277,7 @@ contract AbilitySystem is System {
         for (uint t = 0; t < targets.length; t++) {
             if (targets[t] != 0) {
                 bytes32 target = targets[t];
-                ResolveEffectTarget(game_uid, ability_key, caster_key, target, target_type, true);
+                ResolveEffectTarget(game_uid, ability_key, caster_key, target, target_type, ConditionTargetType.Card);
             }
         }
     }
@@ -261,11 +286,11 @@ contract AbilitySystem is System {
         bytes32[] memory targets = GetPlayerTargets(game_uid, ability_key, target_type, caster_key);
         for (uint i = 0; i < targets.length; i++) {
             bytes32 target = targets[i];
-            ResolveEffectTarget(game_uid, ability_key, caster_key, target, target_type, false);
+            ResolveEffectTarget(game_uid, ability_key, caster_key, target, target_type, ConditionTargetType.Player);
         }
     }
 
-    function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, AbilityTarget target_type, bool is_card) public {
+    function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, AbilityTarget target_type, ConditionTargetType is_card) public {
         //使用效果
         DoEffects(game_uid, ability_key, target_type, caster, target, is_card);
 //        GamesExtended.setLastTarget(game_uid, target);
@@ -289,7 +314,7 @@ contract AbilitySystem is System {
             for (uint i = 0; i < chain_abilities.length; i++) {
                 bytes32 chain_ability = chain_abilities[i];
                 if (chain_ability != 0) {
-                    TriggerCardAbility(game_uid, chain_ability, caster, 0, true);
+                    TriggerCardAbility(game_uid, chain_ability, caster, 0, ConditionTargetType.Card);
                 }
             }
         }

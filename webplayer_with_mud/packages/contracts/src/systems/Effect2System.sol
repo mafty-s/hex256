@@ -10,63 +10,64 @@ import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp, P
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract Effect2System is System {
 
-    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
+    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
-    function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSummonEagle(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSummonEagle", ability_key, caster, target, is_card);
         bytes32 flame_eagle = 0xeadaa9330dc55ff4f5a4be2783106cf919f0dccf372920ccfd645f6c9dbf8c0d;
         EffectSummon(ability_key, caster, target, is_card, flame_eagle);
     }
 
-    function EffectSummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSummonEgg(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSummonEgg", ability_key, caster, target, is_card);
         bytes32 phoenix_egg = 0xaf3ece100d5f745760efadfedc743cbe6077114f7105f0e642e09d1e8cb38de4;
         EffectSummon(ability_key, caster, target, is_card, phoenix_egg);
     }
 
-    function EffectSummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSummonWolf(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSummonWolf", ability_key, caster, target, is_card);
         bytes32 wolf_baby = 0xc0fd58a3602c8586b2e1583e65cef9c8e3dbc8bc36449e7fe2666856e4a1e554;
         EffectSummon(ability_key, caster, target, is_card, wolf_baby);
     }
 
-    function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectTransformFish(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectTransformFish", ability_key, caster, target, is_card);
         bytes32 fish = 0x922d0a331fd751dd3f9f56ab05f7acb5b6a7080eb367ecbe613cc632beee0576;
         EffectTransform(ability_key, caster, target, is_card, fish);
     }
 
-    function EffectTransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectTransformPhoenix(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectTransformPhoenix", ability_key, caster, target, is_card);
         bytes32 phoenix = 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071;
         EffectTransform(ability_key, caster, target, is_card, phoenix);
     }
 
-    function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSendDeck(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSendDeck", ability_key, caster, target, is_card);
         EffectSendPile(ability_key, caster, target, is_card, PileType.Deck);
     }
 
-    function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectSendHand(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSendHand", ability_key, caster, target, is_card);
         EffectSendPile(ability_key, caster, target, is_card, PileType.Hand);
     }
 
-    function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectShuffleDeck(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectShuffleDeck", ability_key, caster, target, is_card);
-        if (!is_card) {
+        if (is_card != ConditionTargetType.Card) {
             bytes32[] memory cards = PlayerCardsDeck.getValue(target);
             cards = shuffle(cards);
             PlayerCardsDeck.setValue(target, cards);
         }
     }
 
-    function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectClearTemp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectClearTemp", ability_key, caster, target, is_card);
-        if (is_card) {
+        if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             bytes32[] memory empty = new bytes32[](0);
             PlayerCardsTemp.set(player_key, empty);
@@ -74,15 +75,15 @@ contract Effect2System is System {
     }
 
 
-    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+    function EffectCreateTemp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectCreateTemp", ability_key, caster, target, is_card);
         EffectCreate(ability_key, caster, target, is_card, PileType.Temp, false);
     }
 
     //----------------------------------------------------------------------------------------------------------------
 
-    function EffectCreate(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, PileType create_pile, bool create_opponent) internal {
-        if (is_card) {
+    function EffectCreate(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, PileType create_pile, bool create_opponent) internal {
+        if (is_card == ConditionTargetType.Card) {
             bytes32 card_config_id = CardOnBoards.getId(target);
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             bytes32 game_uid = Players.getGame(player_key);
@@ -127,7 +128,7 @@ contract Effect2System is System {
     }
 
     //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
-    function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
+    function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {
 //        uint len = CardOnBoards.getLength(caster);
 
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
@@ -148,8 +149,8 @@ contract Effect2System is System {
     }
 
     //把一张牌变为另一张牌
-    function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
-        if (is_card) {
+    function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {
+        if (is_card == ConditionTargetType.Card) {
             string memory card_name = Cards.getTid(card_config_key);
             CardOnBoards.setId(target, card_config_key);
             CardOnBoards.setName(target,card_name);
@@ -157,7 +158,7 @@ contract Effect2System is System {
     }
 
     //将卡牌移动到指定区域，手牌区、弃牌区、显示区等
-    function EffectSendPile(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, PileType pile_type) internal {
+    function EffectSendPile(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, PileType pile_type) internal {
         bytes32 player_key = CardOnBoards.getPlayerId(target);
         if (pile_type == PileType.Deck) {
             PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);

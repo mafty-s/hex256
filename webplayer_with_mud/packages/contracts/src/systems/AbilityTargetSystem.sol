@@ -14,6 +14,7 @@ import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsTemp, PlayerCardsSecret, PlayerCardsDiscard, PlayerCardsDeck} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract AbilityTargetSystem is System {
     function CanTargetCard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target) internal returns (bool) {
@@ -39,12 +40,14 @@ contract AbilityTargetSystem is System {
         return AreTargetConditionsMet(game_uid, ability_key, caster, bytes32(uint256(target)), ConditionTargetType.Slot); //No additional conditions for slots
     }
 
-    function CanTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) internal returns (bool) {
-        if (is_card) {
+    function CanTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal returns (bool) {
+        if (is_card == ConditionTargetType.Card) {
             return CanTargetCard(game_uid, ability_key, caster, target);
-        } else {
+        }
+        if (is_card == ConditionTargetType.Player) {
             return CanTargetPlayer(game_uid, ability_key, caster, target);
         }
+        return false;
     }
 
     function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) internal returns (bool) {

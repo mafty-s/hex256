@@ -12,6 +12,7 @@ import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {SlotLib} from "../libs/SlotLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
+import {ConditionTargetType} from "../codegen/common.sol";
 
 contract AttackSystem is System {
 
@@ -34,10 +35,10 @@ contract AttackSystem is System {
 
         //使用触发器触发技能
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, true))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Card))
         );
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_BEFORE_DEFEND, game_key, target_key, attacker_key, true))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_BEFORE_DEFEND, game_key, target_key, attacker_key, ConditionTargetType.Card))
         );
 
         int8 attacker_attack = CardOnBoards.getAttack(attacker_key);
@@ -55,7 +56,7 @@ contract AttackSystem is System {
             target_hp = 0;
             GameLogicLib.KillCard(game_key, target_key);
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, game_key, target_key, target_key, true))
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, game_key, target_key, target_key, ConditionTargetType.Card))
             );
             bytes32 target_player = CardOnBoards.getPlayerId(target_key);
             PlayerLogicLib.RemoveCardFromAllGroups(target_player, target_key);
@@ -79,10 +80,10 @@ contract AttackSystem is System {
 
         //使用触发器触发技能
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, true))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Card))
         );
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_DEFEND, game_key, target_key, attacker_key, true))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_DEFEND, game_key, target_key, attacker_key, ConditionTargetType.Card))
         );
 
         return (
@@ -119,7 +120,7 @@ contract AttackSystem is System {
 
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                    AbilityTrigger.ON_BEFORE_ATTACK, game_key, attacker_key, target_key, false))
+                    AbilityTrigger.ON_BEFORE_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Player))
             );
 
         }
@@ -140,7 +141,7 @@ contract AttackSystem is System {
 
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
-                AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, false))
+                AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Player))
         );
 
         GameLogicLib.CheckForWinner(game_key);
