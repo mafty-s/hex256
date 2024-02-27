@@ -135,6 +135,16 @@ contract AbilitySystem is System {
         return targets;
     }
 
+    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (uint16[] memory){
+        uint16[] memory targets = abi.decode(
+            SystemSwitch.call(
+                abi.encodeCall(IAbilityTargetSystem.GetSlotTargets, (game_uid, ability_key, target, caster))
+            ),
+            (uint16[])
+        );
+
+        return targets;
+    }
 
     function GetPlayerTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bytes32[] memory){
         bytes32[] memory targets = abi.decode(
@@ -204,10 +214,10 @@ contract AbilitySystem is System {
         if (is_selector)
             return; //Wait for player to select
 
-//        ResolveCardAbilityPlayTarget(iability, caster);
+        ResolveCardAbilityPlayTarget(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityPlayers(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityCards(game_uid, ability_key, target_type, caster);
-//        ResolveCardAbilitySlots(iability, caster);
+        ResolveCardAbilitySlots(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityCardData(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityNoTarget(game_uid, ability_key, target_type, caster);
         AfterAbilityResolved(game_uid, ability_key, caster);
@@ -256,14 +266,55 @@ contract AbilitySystem is System {
         }
     }
 
+    function ResolveCardAbilityPlayTarget(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
+    {
+        if (target_type == AbilityTarget.PlayTarget) {
+            uint16 slot_encode = CardOnBoards.getSlot(caster_key);
+            bytes32 slot_card = SlotLib.GetSlotCard(game_uid, slot_encode);
+            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+
+
+            if (SlotLib.IsPlayerSlot(slot))
+            {
+                //todo
+//                Player tplayer = game_data.GetPlayer(slot.p);
+//                if (iability.CanTarget(game_data, caster, tplayer))
+//                    ResolveEffectTarget(iability, caster, tplayer);
+            }
+            else if (slot_card != 0)
+            {
+                //todo
+//                if (iability.CanTarget(game_data, caster, slot_card))
+//                    ResolveEffectTarget(iability, caster, slot_card);
+            }
+            else
+            {
+                //todo
+//                if (iability.CanTarget(game_data, caster, slot))
+//                    ResolveEffectTarget(iability, caster, slot);
+            }
+
+        }
+    }
+
+    function ResolveCardAbilitySlots(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
+    {
+        uint16[] memory targets = GetSlotTargets(game_uid, ability_key, target_type, caster_key);
+
+//        for (uint i = 0; i < targets.length; i++) {
+//            bytes32 target = targets[i];
+//            if (slot != Slot.None) {
+//            }
+//        }
+    }
+
     function ResolveCardAbilityCardData(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
     {
-//        List<CardData> targets = iability.GetCardDataTargets(game_data, caster, card_data_array);
         bytes32[] memory targets = GetCardDataTargets(game_uid, ability_key, target_type, caster_key);
         for (uint t = 0; t < targets.length; t++) {
             if (targets[t] != 0) {
                 bytes32 target = targets[t];
-
+                DoEffects(game_uid, ability_key, target_type, caster_key, 0, ConditionTargetType.CardData);
             }
         }
     }

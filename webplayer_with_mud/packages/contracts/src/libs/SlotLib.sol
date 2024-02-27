@@ -39,7 +39,6 @@ library SlotLib {
         return slots;
     }
 
-
 //    function GetAllInP(int8 p) internal pure returns (Slot[] memory) {
 //        Slot[] memory slots = new Slot[](x_max * y_max * 2);
 //        uint8 index = 0;
@@ -59,7 +58,7 @@ library SlotLib {
         CardOnBoards.setSlot(card_key, EncodeSlot(slot));
     }
 
-    function GetSlotCard(bytes32 game_key, Slot memory slot) internal view returns (bytes32) {
+    function GetSlotCard(bytes32 game_key, uint16 slot_encode) internal view returns (bytes32) {
 //todo
 //        return CardOnBoards.getSlotCard(game_key, EncodeSlot(slot));
         return 0;

@@ -228,8 +228,8 @@ contract AbilityTargetSystem is System {
         return targets;
     }
 
-    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public {
-        bytes32[] memory targets;
+    function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns(uint16[] memory) {
+        uint16[] memory targets;
 
         if (target == AbilityTarget.AllSlots)
         {
@@ -248,16 +248,18 @@ contract AbilityTargetSystem is System {
             for (uint i = 0; i < filters_target.length; i++) {
                 bytes4 filter = filters_target[i];
                 if (filter != 0) {
-                    targets = abi.decode(
-                        SystemSwitch.call(
-                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.Slot))
-                        ),
-                        (bytes32[])
-                    );
+                    //todo
+//                    targets = abi.decode(
+//                        SystemSwitch.call(
+//                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.Slot))
+//                        ),
+//                        (bytes32[])
+//                    );
                 }
             }
         }
 
+        return targets;
     }
 
     function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns (bytes32[] memory){
