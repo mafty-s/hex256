@@ -18,7 +18,7 @@ interface IConditionSystem {
     bytes32 ability_key,
     bytes32 caster,
     ConditionTargetType condition_type
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function IsTargetConditionMet(
     bytes4 condition,
@@ -27,7 +27,7 @@ interface IConditionSystem {
     bytes32 caster,
     bytes32 target,
     ConditionTargetType condition_type
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function HasBoardCardEnemy(
     bytes32 game_uid,
@@ -35,7 +35,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function HasBoardCardSelf(
     bytes32 game_uid,
@@ -171,7 +171,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function IsInTemp(
     bytes32 game_uid,
@@ -235,7 +235,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external pure returns (bool);
 
   function IsSlotX1(
     bytes32 game_uid,
@@ -291,7 +291,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external pure returns (bool);
 
   function IsWolf(
     bytes32 game_uid,

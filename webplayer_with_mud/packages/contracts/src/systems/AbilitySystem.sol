@@ -136,19 +136,21 @@ contract AbilitySystem is System {
 
     //触发指定技能
     event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card);
+
     function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
         if (game_uid == 0 || ability_key == 0 || caster == 0) {
             return;
         }
-        bytes32 trigger_card = triggerer != 0 ? triggerer : caster; //Triggerer is the caster if not set
-//    todo    if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMetCard(caster, triggerer)) {
-        if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
-            UseAbility(game_uid, ability_key, caster, trigger_card, is_card);
+        if (triggerer == 0) {
+            triggerer = caster;        //Triggerer is the caster if not set
+        }
+        if (!CardLogicLib.HasStatus(triggerer, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
+            UseAbility(game_uid, ability_key, caster, triggerer, is_card);
         }
         emit EventTriggerCardAbility(game_uid, ability_key, caster, triggerer, is_card);
     }
 
-    function AreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger, ConditionTargetType condition_type) internal returns (bool) {
+    function AreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) internal returns (bool) {
         bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
         for (uint i = 0; i < conditions_trigger.length; i++) {
             bytes4 condition = conditions_trigger[i];
@@ -156,7 +158,7 @@ contract AbilitySystem is System {
                 if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster, condition_type))), (bool))) {
                     return false;
                 }
-                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger, condition_type))), (bool))) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger_card, condition_type))), (bool))) {
                     return false;
                 }
             }

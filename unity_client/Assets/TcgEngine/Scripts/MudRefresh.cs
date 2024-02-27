@@ -294,6 +294,19 @@ public class MudRefresh
             // card.equipped_uid = mud_card.equippedUid;
             //card.player_id = mud_card.playerId;
 
+            CardData config = CardData.Get(mud_card.name);
+            if (config == null)
+            {
+                Debug.Log("card config not found:" + mud_card.name);
+                return;
+            }
+
+            if (config.name != card.CardData.name)
+            {
+                VariantData variant = VariantData.GetDefault();
+                card.SetCard(config, variant);
+            }
+
             if (mud_card.equippedUid != "0x0000000000000000000000000000000000000000000000000000000000000000")
             {
                 Card equiped = gamedata.GetCard(mud_card.equippedUid);

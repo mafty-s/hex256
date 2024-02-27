@@ -12,6 +12,7 @@ import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
+import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
 
 contract ConditionSystem is System {
 
@@ -28,32 +29,31 @@ contract ConditionSystem is System {
     }
 
 
-    function IsTriggerConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, ConditionTargetType condition_type) public view returns (bool)
+    event EventIsTriggerConditionMet(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target, bool result);
+    function IsTriggerConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, ConditionTargetType condition_type) public returns (bool)
     {
         if (!IsConditionFunctionExist(condition)) {
             return true;
         }
 
-        bytes memory data = abi.encodeWithSelector(condition, game_uid, ability_key, caster, condition_type);
-        //todo
-//        SystemSwitch.call(data);
-
-        return true;
+        bytes memory data = abi.encodeWithSelector(condition, game_uid, ability_key, condition_type, caster, caster);
+        bool result = abi.decode(SystemSwitch.call(data), (bool));
+        emit EventIsTriggerConditionMet(game_uid, ability_key, condition_type, caster, caster, result);
+        return result;
     }
 
 
-    function IsTargetConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) public view returns (bool)
+    event EventIsTargetConditionMet(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target, bool result);
+    function IsTargetConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) public returns (bool)
     {
         if (!IsConditionFunctionExist(condition)) {
             return true;
         }
 
-
-        bytes memory data = abi.encodeWithSelector(condition, game_uid, ability_key, caster, condition_type);
-        //todo
-//        SystemSwitch.call(data);
-
-        return true;
+        bytes memory data = abi.encodeWithSelector(condition, game_uid, ability_key, condition_type, caster, target);
+        bool result = abi.decode(SystemSwitch.call(data), (bool));
+        emit EventIsTargetConditionMet(game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     //================================================================================
@@ -65,8 +65,12 @@ contract ConditionSystem is System {
 //bool is_trait = target.HasTrait(has_trait) || has_trait == null;
 //return (is_type && is_team && is_trait);
 
-    function HasBoardCardEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCount(condition_type, caster, target, ConditionPlayerType.Opponent, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
+    event EventCondition(string name, bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target, bool result);
+
+    function HasBoardCardEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionCount(condition_type, caster, target, ConditionPlayerType.Opponent, PileType.Board, ConditionOperatorInt.GreaterEqual, CardType.None, CardTeam.None, 1);
+        emit EventCondition("HasBoardCardEnemy", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function HasBoardCardSelf(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -136,8 +140,10 @@ contract ConditionSystem is System {
         return ConditionDeckbuilding(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsGrowth3(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionStatCustom(condition_type, ability_key, caster, target, CardTrait.Growth, ConditionOperatorInt.GreaterEqual, 3);
+    function IsGrowth3(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionStatCustom(condition_type, ability_key, caster, target, CardTrait.Growth, ConditionOperatorInt.GreaterEqual, 3);
+        emit EventCondition("IsGrowth3", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function IsInTemp(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -168,7 +174,7 @@ contract ConditionSystem is System {
         return ConditionCardPile(condition_type, PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsSlot(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function IsSlot(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public pure returns (bool){
         return ConditionTarget(condition_type, ConditionTargetType.Slot, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
@@ -196,7 +202,7 @@ contract ConditionSystem is System {
         return ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
-    function IsPlayer(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function IsPlayer(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public pure returns (bool){
         return ConditionTarget(condition_type, ConditionTargetType.Player, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 

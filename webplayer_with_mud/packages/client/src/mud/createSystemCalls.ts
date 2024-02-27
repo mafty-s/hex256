@@ -11,6 +11,7 @@ import {abilities} from "./abilities";
 
 import GMSystemAbi from "contracts/out/GmSystem.sol/GmSystem.abi.json";
 import AbilitySystemAbi from "contracts/out/AbilitySystem.sol/AbilitySystem.abi.json";
+import ConditionSystemAbi from "contracts/out/ConditionSystem.sol/ConditionSystem.abi.json";
 
 // import { getTransactionResult } from "";
 
@@ -413,6 +414,17 @@ export function createSystemCalls(
                 try {
                     const event = decodeEventLog({
                         abi: AbilitySystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: ConditionSystemAbi,
                         data: transactionReceipt.logs[i].data,
                         topics: transactionReceipt.logs[i].topics
                     });
