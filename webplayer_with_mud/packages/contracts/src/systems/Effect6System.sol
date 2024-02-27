@@ -19,15 +19,18 @@ contract Effect6System is System {
     event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card);
 
     function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAttackRedirect", ability_key, caster, target, is_card);
         //todo
     }
 
     function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAttack", ability_key, caster, target, is_card);
         RunAttacker(ability_key, caster, target, is_card, EffectAttackerType.Self);
     }
 
 
     function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectDestroyEquip", ability_key, caster, target, is_card);
         if (is_card) {
             if (CardLogicLib.IsEquipment(target)) {
                 GameLogicLib.DiscardCard(target);
@@ -40,6 +43,7 @@ contract Effect6System is System {
 
 
     function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectHeal", ability_key, caster, target, is_card);
         int8 value = Ability.getValue(ability_key);
         if (is_card) {
             GameLogicLib.HealCard(target, value);
@@ -55,6 +59,7 @@ contract Effect6System is System {
 
 
     function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectChangeOwnerSelf", ability_key, caster, target, is_card);
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             GameLogicLib.ChangeOwner(target, player_key);
@@ -62,6 +67,7 @@ contract Effect6System is System {
     }
 
     function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectDiscard", ability_key, caster, target, is_card);
         if (is_card) {
             GameLogicLib.DiscardCard(target);
         } else {
@@ -71,6 +77,7 @@ contract Effect6System is System {
     }
 
     function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectPlayCard", ability_key, caster, target, is_card);
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             Slot memory slot = PlayerLogicLib.GetRandomEmptySlot(player_key);

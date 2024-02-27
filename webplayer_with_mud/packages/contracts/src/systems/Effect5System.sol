@@ -17,6 +17,7 @@ contract Effect5System is System {
 
 
     function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectRollD6", ability_key, caster, target, is_card);
         int8 min = 1;
         int8 max = 6;
         int8 value = int8(uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.prevrandao, msg.sender))) % (uint8(max - min + 1))) + uint8(min));
@@ -26,6 +27,7 @@ contract Effect5System is System {
     }
 
     function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectAddAttackRoll", ability_key, caster, target, is_card);
         EffectAddStatRoll(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 

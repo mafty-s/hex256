@@ -12,6 +12,12 @@ import {abilities} from "./abilities";
 import GMSystemAbi from "contracts/out/GmSystem.sol/GmSystem.abi.json";
 import AbilitySystemAbi from "contracts/out/AbilitySystem.sol/AbilitySystem.abi.json";
 import ConditionSystemAbi from "contracts/out/ConditionSystem.sol/ConditionSystem.abi.json";
+import Effect1SystemAbi from "contracts/out/Effect1System.sol/Effect1System.abi.json";
+import Effect2SystemAbi from "contracts/out/Effect2System.sol/Effect2System.abi.json";
+import Effect3SystemAbi from "contracts/out/Effect3System.sol/Effect3System.abi.json";
+import Effect4SystemAbi from "contracts/out/Effect4System.sol/Effect4System.abi.json";
+import Effect5SystemAbi from "contracts/out/Effect5System.sol/Effect5System.abi.json";
+import Effect6SystemAbi from "contracts/out/Effect6System.sol/Effect6System.abi.json";
 
 // import { getTransactionResult } from "";
 
@@ -425,6 +431,72 @@ export function createSystemCalls(
                 try {
                     const event = decodeEventLog({
                         abi: ConditionSystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: Effect1SystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: Effect2SystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: Effect3SystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: Effect4SystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: Effect5SystemAbi,
+                        data: transactionReceipt.logs[i].data,
+                        topics: transactionReceipt.logs[i].topics
+                    });
+                    events.push(event);
+                }catch (e){
+
+                }
+
+                try {
+                    const event = decodeEventLog({
+                        abi: Effect6SystemAbi,
                         data: transactionReceipt.logs[i].data,
                         topics: transactionReceipt.logs[i].topics
                     });

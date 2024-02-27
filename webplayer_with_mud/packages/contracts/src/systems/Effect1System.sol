@@ -102,29 +102,35 @@ contract Effect1System is System {
 
 
     function EffectRemoveAbilityAuraHelp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectRemoveAbilityAuraHelp",ability_key, caster, target, is_card);
 //        bytes32 auraHelp
         //todo 这个技能TCG没有实现
     }
 
     function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectResetStats",ability_key, caster, target, is_card);
         //todo
     }
 
 
     function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectSetAttack",ability_key, caster, target, is_card);
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     function EffectSetHp(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectSetHp",ability_key, caster, target, is_card);
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.HP);
     }
 
     function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectSetMana",ability_key, caster, target, is_card);
         EffectSetStat(ability_key, caster, target, is_card, EffectStatType.Mana);
     }
 
     //设置耗尽
     function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectExhaust",ability_key, caster, target, is_card);
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             CardOnBoards.setExhausted(player_key, true);
@@ -132,6 +138,7 @@ contract Effect1System is System {
     }
 
     function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
+        emit EventEffect("EffectUnexhaust",ability_key, caster, target, is_card);
         if (is_card) {
             bytes32 player_key = CardOnBoards.getPlayerId(target);
             CardOnBoards.setExhausted(player_key, false);
