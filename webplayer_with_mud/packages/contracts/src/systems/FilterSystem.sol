@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 import {ResourceId} from "@latticexyz/world/src/WorldResourceId.sol";
-import {Condition, ConditionCardType, CardOnBoards, Cards, Games, GamesExtended, Players, Logger} from "../codegen/index.sol";
+import {Condition, ConditionCardType, CardOnBoards, Cards, Games, GamesExtended, Players} from "../codegen/index.sol";
 import {Status, ConditionStatType, CardType, CardTeam, ConditionPlayerType, PileType, CardTrait, ConditionOperatorInt, ConditionOperatorBool, ConditionTargetType} from "../codegen/common.sol";
 import {IFilterSystem} from "../codegen/world/IFilterSystem.sol";
 
@@ -34,18 +34,15 @@ contract FilterSystem is System {
     ////=========================
 
 
-    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public returns (bytes32[] memory) {
-        Logger.pushValue("FilterLowestHp");
+    function FilterLowestHp(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.HP, ability, caster, source, condition_type);
     }
 
-    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public returns (bytes32[] memory) {
-        Logger.pushValue("FilterLowestAttack");
+    function FilterLowestAttack(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return FilterLowestStat(ConditionStatType.Attack, ability, caster, source, condition_type);
     }
 
-    function FilterRandom_1(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public returns (bytes32[] memory) {
-        Logger.pushValue("FilterRandom1");
+    function FilterRandom_1(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
         return source;
 //        return FilterRandom(1, ability, caster, source);
     }

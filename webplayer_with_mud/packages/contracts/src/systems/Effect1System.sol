@@ -6,7 +6,6 @@ import {Players, Ability, PlayerActionHistory, ActionHistory, CardOnBoards, Card
 import {Action, CardTrait, EffectStatType, EffectAttackerType, Status} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
-import {Logger} from  "../codegen/index.sol";
 
 contract Effect1System is System {
 
@@ -25,7 +24,6 @@ contract Effect1System is System {
     }
 
     function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card) public {
-        Logger.pushValue("EffectAddGrowth");
         EffectAddTrait(ability_key, caster, target, is_card, CardTrait.Growth);
     }
 

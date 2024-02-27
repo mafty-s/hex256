@@ -26,21 +26,21 @@ interface IFilterSystem {
     bytes32 caster,
     bytes32[] memory source,
     ConditionTargetType condition_type
-  ) external returns (bytes32[] memory);
+  ) external view returns (bytes32[] memory);
 
   function FilterLowestAttack(
     bytes32 ability,
     bytes32 caster,
     bytes32[] memory source,
     ConditionTargetType condition_type
-  ) external returns (bytes32[] memory);
+  ) external view returns (bytes32[] memory);
 
   function FilterRandom_1(
     bytes32 ability,
     bytes32 caster,
     bytes32[] memory source,
     ConditionTargetType condition_type
-  ) external returns (bytes32[] memory);
+  ) external view returns (bytes32[] memory);
 
   function FilterRandom_2(
     bytes32 ability,

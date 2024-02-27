@@ -139,7 +139,9 @@ contract Effect2System is System {
     //把一张牌变为另一张牌
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card, bytes32 card_config_key) internal {
         if (is_card) {
+            string memory card_name = Cards.getTid(card_config_key);
             CardOnBoards.setId(target, card_config_key);
+            CardOnBoards.setName(target,card_name);
         }
     }
 

@@ -90,8 +90,10 @@ contract AbilitySystem is System {
     }
 
     //更具trigger技能触发器,触发指定卡的所有技能
+    event EventTriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card);
+
     function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, bool is_card) public {
-        if (caster == 0) {
+        if (game_uid == 0 || caster == 0) {
             return;
         }
         bytes32 card_config_id = CardOnBoards.getId(caster);
@@ -103,6 +105,7 @@ contract AbilitySystem is System {
                 }
             }
         }
+        emit EventTriggerCardAbilityType(trigger, game_uid, caster, target, is_card);
     }
 
     event EventTriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key);
@@ -132,12 +135,17 @@ contract AbilitySystem is System {
     }
 
     //触发指定技能
+    event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card);
     function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, bool is_card) public {
+        if (game_uid == 0 || ability_key == 0 || caster == 0) {
+            return;
+        }
         bytes32 trigger_card = triggerer != 0 ? triggerer : caster; //Triggerer is the caster if not set
 //    todo    if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMetCard(caster, triggerer)) {
         if (!CardLogicLib.HasStatus(trigger_card, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
             UseAbility(game_uid, ability_key, caster, trigger_card, is_card);
         }
+        emit EventTriggerCardAbility(game_uid, ability_key, caster, triggerer, is_card);
     }
 
     function AreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger, ConditionTargetType condition_type) internal returns (bool) {
