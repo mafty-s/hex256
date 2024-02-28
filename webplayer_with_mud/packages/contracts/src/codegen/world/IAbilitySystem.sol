@@ -18,6 +18,22 @@ interface IAbilitySystem {
     ConditionTargetType is_card
   ) external;
 
+  function TriggerOtherCardsAbilityType(
+    AbilityTrigger trigger,
+    bytes32 game_uid,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
+
+  function TriggerSecrets(
+    AbilityTrigger trigger,
+    bytes32 game_uid,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
+
   function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) external;
 
   function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) external;
