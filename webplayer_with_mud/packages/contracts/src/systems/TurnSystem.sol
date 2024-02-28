@@ -120,7 +120,7 @@ contract TurnSystem is System {
                 CardLogicLib.Refresh(cards_board[i]);
 
                 if (CardLogicLib.HasStatus(cards_board[i], Status.Poisoned)) {
-                    GameLogicLib.DamageCard(cards_board[i], CardLogicLib.GetStatusValue(cards_board[i], Status.Poisoned));
+                    GameLogicLib.DamageCard(game_key, cards_board[i], CardLogicLib.GetStatusValue(cards_board[i], Status.Poisoned));
                 }
             }
         }
