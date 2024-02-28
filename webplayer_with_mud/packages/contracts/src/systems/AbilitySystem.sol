@@ -37,6 +37,15 @@ contract AbilitySystem is System {
         emit EventTriggerCardAbilityType(trigger, game_uid, caster, target, is_card);
     }
 
+    function TriggerOtherCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+        //todo
+    }
+
+    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+        //todo
+    }
+
+
     event EventTriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key);
 
     function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) public {
