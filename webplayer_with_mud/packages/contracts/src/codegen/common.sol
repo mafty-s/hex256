@@ -193,7 +193,8 @@ enum Status {
   Stealth,
   Taunt,
   Trample,
-  Protection
+  Protection,
+  LifeSteal
 }
 
 enum ConditionStatType {

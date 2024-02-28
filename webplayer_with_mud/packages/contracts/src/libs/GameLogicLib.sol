@@ -154,9 +154,22 @@ library GameLogicLib {
     }
 
     function DamagePlayer(bytes32 game_uid, bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
-        //        player.hp -= value;
-        //        player.hp = Math.clamp(player.hp, 0, player.hp_max);
-        //todo
+        //Damage player
+        int8 target_hp = Players.getHp(target);
+        target_hp -= value;
+        if (target_hp <= 0) {
+            target = 0;
+        }
+        Players.setHp(target, target_hp);
+
+        //Lifesteal
+        bytes32 aplayer = CardOnBoards.getPlayerId(attacker);
+        if(PlayerLogicLib.HasStatus(aplayer, Status.LifeSteal))
+        {
+            int8 hp = Players.getHp(aplayer);
+            hp += value;
+            Players.setHp(aplayer, hp);
+        }
     }
 
     function UpdateOngoing() internal {
