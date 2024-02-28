@@ -9,6 +9,7 @@ import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType, ConditionTargetType, AbilityTrigger} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {ISlotSystem} from "../codegen/world/ISlotSystem.sol";
 
 library GameLogicLib {
 
@@ -61,6 +62,9 @@ library GameLogicLib {
         PlayerLogicLib.RemoveCardFromAllGroups(player, card);
         PlayerCardsDiscard.pushValue(player, card);
         GamesExtended.setLastDestroyed(game_uid, card);
+        SystemSwitch.call(
+            abi.encodeCall(ISlotSystem.ClearCardFromSlot, (player, card))
+        );
 
 //        //Remove from bearer
 //        Card bearer = player.GetBearerCard(card);
@@ -138,12 +142,10 @@ library GameLogicLib {
         {
             damage_max = target_hp;
         }
-//        int8 damage_max = MathLib.min_int8(value, target_hp);
-        int8 extra = value - target_hp;
         CardOnBoards.setDamage(target, value + CardOnBoards.getDamage(target));
 
         //Remove sleep on damage
-        //todo target.RemoveStatus(StatusType.Sleep);
+        CardLogicLib.RemoveStatus(target, Status.Sleep);
 
         //Kill card if no hp
         if (CardLogicLib.GetHP(target) <= 0) {

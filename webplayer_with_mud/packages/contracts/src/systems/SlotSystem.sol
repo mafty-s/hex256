@@ -31,4 +31,8 @@ contract SlotSystem is System {
         uint8 p = players[0] == player_key ? 0 : 1;
         return SlotLib.GetEmptySlots(player_key, p);
     }
+
+    function ClearCardFromSlot(bytes32 player_key, bytes32 card_key) public {
+        SlotLib.ClearCardFromSlot(player_key, card_key);
+    }
 }

@@ -17,4 +17,6 @@ interface ISlotSystem {
   function GetSlotCard(bytes32 game_key, Slot memory slot) external view returns (bytes32);
 
   function GetEmptySlots(bytes32 player_key) external view returns (Slot[] memory);
+
+  function ClearCardFromSlot(bytes32 player_key, bytes32 card_key) external;
 }
