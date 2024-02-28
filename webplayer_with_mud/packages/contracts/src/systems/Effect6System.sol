@@ -75,7 +75,7 @@ contract Effect6System is System {
             GameLogicLib.DiscardCard(game_uid, target);
         } else {
             int8 value = Ability.getValue(ability_key);
-            GameLogicLib.DrawDiscardCard(target, value);
+            GameLogicLib.DrawDiscardCard(game_uid, target, value);
         }
     }
 

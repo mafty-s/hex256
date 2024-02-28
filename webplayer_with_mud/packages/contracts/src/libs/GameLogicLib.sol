@@ -6,8 +6,9 @@ import {CardOnBoards, PlayerCardsDiscard} from "../codegen/index.sol";
 import {Games, Cards, Players, GamesExtended} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType, ConditionTargetType, AbilityTrigger} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
+import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 
 library GameLogicLib {
 
@@ -60,26 +61,28 @@ library GameLogicLib {
         PlayerLogicLib.RemoveCardFromAllGroups(player, card);
         PlayerCardsDiscard.pushValue(player, card);
         GamesExtended.setLastDestroyed(game_uid, card);
-//        game_data.last_destroyed = card.uid;
-//
+
 //        //Remove from bearer
 //        Card bearer = player.GetBearerCard(card);
 //        if (bearer != null)
 //            bearer.equipped_uid = null;
-//
+
         if (was_on_board)
         {
             //Trigger on death abilities
-//            TriggerCardAbilityType(AbilityTrigger.OnDeath, card);
-//            TriggerOtherCardsAbilityType(AbilityTrigger.OnDeathOther, card);
-//            TriggerSecrets(AbilityTrigger.OnDeathOther, card);
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, game_uid, card, card, ConditionTargetType.Card))
+            );
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerOtherCardsAbilityType, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
+            );
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerSecrets, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
+            );
+
         }
-//
+
 //        cards_to_clear.Add(card); //Will be Clear() in the next UpdateOngoing, so that simultaneous damage effects work
-//        onCardDiscarded?.Invoke(card);
-//
-
-
     }
 
     function DrawDiscardCard(bytes32 game_uid, bytes32 target, int8 nb) internal {
@@ -148,7 +151,7 @@ library GameLogicLib {
         }
     }
 
-    function DamagePlayer(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
+    function DamagePlayer(bytes32 game_uid, bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
         //        player.hp -= value;
         //        player.hp = Math.clamp(player.hp, 0, player.hp_max);
         //todo

@@ -24,13 +24,11 @@ contract Effect4System is System {
         int8 value = Ability.getValue(ability_key);
         int8 damage = GetDamage(caster, value, is_card, CardTrait.SpellDamage);
         if (is_card == ConditionTargetType.Card) {
-            GameLogicLib.DamageCardByTarget(caster, target, damage, true);
+            GameLogicLib.DamageCardByTarget(game_uid, caster, target, damage, true);
         }
-
         if (is_card == ConditionTargetType.Player) {
-            GameLogicLib.DamagePlayer(caster, target, damage, true);
+            GameLogicLib.DamagePlayer(game_uid, caster, target, damage, true);
         }
-
     }
 
     //----------------------------------------------------------------------------------------------------------------
