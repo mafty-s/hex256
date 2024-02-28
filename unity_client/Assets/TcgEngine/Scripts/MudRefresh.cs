@@ -279,7 +279,7 @@ public class MudRefresh
 
     public static void RefreshCard(MudCardInfo mud_card, TcgEngine.Card card, TcgEngine.Game gamedata, MudGame gameinfo)
     {
-        Debug.Log("RefreshCard" + mud_card.key);
+        Debug.Log("RefreshCard:" + mud_card.key);
         if (card != null)
         {
             Debug.Log("find card:" + mud_card.key + "=>" + mud_card.name);
@@ -297,8 +297,18 @@ public class MudRefresh
             CardData config = CardData.Get(mud_card.name);
             if (config == null)
             {
-                Debug.Log("card config not found:" + mud_card.name);
+                Debug.LogError("card config not found:" + mud_card.name);
                 return;
+            }
+            
+            if (mud_card.slot != 0)
+            {
+                int x = SlotEncoderDecoder.DecodeSlotX(mud_card.slot);
+                int y = SlotEncoderDecoder.DecodeSlotY(mud_card.slot);
+                int p = SlotEncoderDecoder.DecodeSlotP(mud_card.slot);
+
+                Debug.Log("Slot x=" + x + " y=" + y + " p=" + p);
+                card.slot = new Slot(x, y, p);
             }
 
             if (config.name != card.CardData.name)
@@ -371,7 +381,7 @@ public class MudRefresh
             MudPlayerInfo mudPlayerInfo = gameinfo.findPlayerByKey(mud_card.playerId);
             if (mudPlayerInfo == null)
             {
-                Debug.Log("mud player not found:" + mud_card.playerId);
+                Debug.LogError("mud player not found:" + mud_card.playerId);
                 return;
             }
 
@@ -387,7 +397,7 @@ public class MudRefresh
 
             if (owner == null)
             {
-                Debug.Log("player is null:" + player_id + "=>" + mud_card.playerId);
+                Debug.LogError("player is null:" + player_id + "=>" + mud_card.playerId);
                 return;
             }
 
@@ -409,7 +419,7 @@ public class MudRefresh
                 int y = SlotEncoderDecoder.DecodeSlotY(mud_card.slot);
                 int p = SlotEncoderDecoder.DecodeSlotP(mud_card.slot);
 
-                Debug.Log("x=" + x + " y=" + y + " p=" + p);
+                Debug.Log("Slot x=" + x + " y=" + y + " p=" + p);
                 new_card.slot = new Slot(x, y, p);
             }
             // new_card.equipped_uid = mud_card.equippedUid;

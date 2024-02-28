@@ -219,7 +219,9 @@ library CardLogicLib {
         for (uint i = 0; i < status.length; i++) {
             (uint8 status_id, uint8 duration, uint8 value,uint8 unuse) = splitUint32(status[i]);
             if (status_id != uint8(Status.None)) {
-                duration -= 1;
+                if (duration > 0) {
+                    duration -= 1;
+                }
                 if (duration <= 0) {
                     RemoveStatus(card_uid, Status(status_id));
                 } else {
