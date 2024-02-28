@@ -10,15 +10,40 @@ import { ConditionTargetType } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IEffect1System {
-  function EffectAddAttack(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectAddAttack(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectAddGrowth(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectAddGrowth(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectAddHp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectAddHp(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectAddMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectAddMana(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
   function EffectAddSpellDamage(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
@@ -26,43 +51,106 @@ interface IEffect1System {
   ) external;
 
   function EffectClearParalyse(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
     ConditionTargetType is_card
   ) external;
 
-  function EffectClearTaunt(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectClearTaunt(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
   function EffectClearStatusAll(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
     ConditionTargetType is_card
   ) external;
 
-  function EffectDestroy(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectDestroy(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectDraw(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectDraw(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectGainMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectGainMana(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
   function EffectRemoveAbilityAuraHelp(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
     ConditionTargetType is_card
   ) external;
 
-  function EffectResetStats(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectResetStats(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectSetAttack(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectSetAttack(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectSetHp(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectSetHp(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectSetMana(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectSetMana(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectExhaust(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectExhaust(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
-  function EffectUnexhaust(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectUnexhaust(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 }

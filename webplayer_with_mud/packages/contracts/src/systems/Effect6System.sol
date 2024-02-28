@@ -17,33 +17,35 @@ contract Effect6System is System {
 
     }
 
-    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
+    event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
-    function EffectAttackRedirect(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectAttackRedirect(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAttackRedirect", ability_key, caster, target, is_card);
         //todo
     }
 
-    function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectAttack(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAttack", ability_key, caster, target, is_card);
         RunAttacker(ability_key, caster, target, is_card, EffectAttackerType.Self);
     }
 
 
-    function EffectDestroyEquip(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectDestroyEquip(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectDestroyEquip", ability_key, caster, target, is_card);
         if (is_card == ConditionTargetType.Card) {
             if (CardLogicLib.IsEquipment(target)) {
-                GameLogicLib.DiscardCard(target);
+                GameLogicLib.DiscardCard(game_uid, target);
             } else {
                 bytes32 equipped_uid = CardOnBoards.getEquippedUid(target);
-                GameLogicLib.DiscardCard(equipped_uid);
+                if (equipped_uid != 0) {
+                    GameLogicLib.DiscardCard(game_uid, equipped_uid);
+                }
             }
         }
     }
 
 
-    function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectHeal(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectHeal", ability_key, caster, target, is_card);
         int8 value = Ability.getValue(ability_key);
         if (is_card == ConditionTargetType.Card) {
@@ -59,7 +61,7 @@ contract Effect6System is System {
     }
 
 
-    function EffectChangeOwnerSelf(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectChangeOwnerSelf(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectChangeOwnerSelf", ability_key, caster, target, is_card);
         if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
@@ -67,10 +69,10 @@ contract Effect6System is System {
         }
     }
 
-    function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectDiscard(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectDiscard", ability_key, caster, target, is_card);
         if (is_card == ConditionTargetType.Card) {
-            GameLogicLib.DiscardCard(target);
+            GameLogicLib.DiscardCard(game_uid, target);
         } else {
             int8 value = Ability.getValue(ability_key);
             GameLogicLib.DrawDiscardCard(target, value);
@@ -94,7 +96,6 @@ contract Effect6System is System {
 
         }
     }
-
 
     //----------------------------------------------------------------------------------------------------------------
 

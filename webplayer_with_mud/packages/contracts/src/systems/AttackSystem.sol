@@ -42,7 +42,7 @@ contract AttackSystem is System {
         );
 
         int8 attacker_attack = CardOnBoards.getAttack(attacker_key);
-        target_hp = target_hp - attacker_attack;
+//        target_hp = target_hp - attacker_attack;
 
 //        if (target_key == 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071) {
 //            target_hp = 0;//
@@ -52,19 +52,20 @@ contract AttackSystem is System {
 //            target_hp = 1;//
 //        }
 
-        if (target_hp <= 0) {
-            target_hp = 0;
-            GameLogicLib.KillCard(game_key, target_key);
-            SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, game_key, target_key, target_key, ConditionTargetType.Card))
-            );
-            bytes32 target_player = CardOnBoards.getPlayerId(target_key);
-            PlayerLogicLib.RemoveCardFromAllGroups(target_player, target_key);
-            SlotLib.ClearCardFromSlot(target_player, target_key);
-            PlayerCardsDiscard.pushValue(target_player, target_key);
-        }
+//        if (target_hp <= 0) {
+//            target_hp = 0;
+//            GameLogicLib.KillCard(game_key, target_key);
+//            SystemSwitch.call(
+//                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_DEATH, game_key, target_key, target_key, ConditionTargetType.Card))
+//            );
+//            bytes32 target_player = CardOnBoards.getPlayerId(target_key);
+//            PlayerLogicLib.RemoveCardFromAllGroups(target_player, target_key);
+//            SlotLib.ClearCardFromSlot(target_player, target_key);
+//            PlayerCardsDiscard.pushValue(target_player, target_key);
+//        }
 
-        CardOnBoards.setHp(target_key, target_hp);
+//        CardOnBoards.setHp(target_key, target_hp);
+        GameLogicLib.DamageCardByTarget(attacker_key, target_key, attacker_attack, false);
 
         bytes32[] memory players = Games.getPlayers(game_key);
 

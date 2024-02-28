@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
+import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
+import {CardOnBoards, PlayerCardsDiscard} from "../codegen/index.sol";
 import {Games, Cards, Players, GamesExtended} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType} from "../codegen/common.sol";
+import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 
 library GameLogicLib {
 
 
     function AddCard(bytes32 player_key, bytes32 card_config_key) internal returns (bytes32){
+
         uint8 i = Players.getNcards(player_key);
         bytes32 card_uid = keccak256(abi.encode(player_key, i));
 
@@ -27,38 +30,65 @@ library GameLogicLib {
         return card_uid;
     }
 
-    function KillCard(bytes32 caster, bytes32 target) internal {
-        //todo
+    function KillCard(bytes32 game_uid, bytes32 attacker, bytes32 target) internal {
+        if (attacker == 0 || target == 0) {
+            return;
+        }
+
+        if (CardLogicLib.HasStatus(target, Status.Invincibility)) {
+            return; //Cant be killed
+        }
+
+        DiscardCard(target);
+    }
+
+    function DiscardCard(bytes32 game_uid, bytes32 card) internal {
+        if (card == 0) {
+            return;
+        }
+
+        if (CardPosLogicLib.IsInDiscard(card)) {
+            return; //Already discarded
+        }
+
+        bytes32 icard = CardOnBoards.getId(card);
+        bytes32 player = CardOnBoards.getPlayerId(card);
+
+        bool was_on_board = CardPosLogicLib.IsOnBoard(card);//|| game_data.IsEquipped(card);
+
+        //Remove card from board and add to discard
+        PlayerLogicLib.RemoveCardFromAllGroups(player, card);
+        PlayerCardsDiscard.pushValue(player, card);
+        GamesExtended.setLastDestroyed(game_uid, card);
+//        game_data.last_destroyed = card.uid;
+//
+//        //Remove from bearer
+//        Card bearer = player.GetBearerCard(card);
+//        if (bearer != null)
+//            bearer.equipped_uid = null;
+//
+        if (was_on_board)
+        {
+            //Trigger on death abilities
+//            TriggerCardAbilityType(AbilityTrigger.OnDeath, card);
+//            TriggerOtherCardsAbilityType(AbilityTrigger.OnDeathOther, card);
+//            TriggerSecrets(AbilityTrigger.OnDeathOther, card);
+        }
+//
+//        cards_to_clear.Add(card); //Will be Clear() in the next UpdateOngoing, so that simultaneous damage effects work
+//        onCardDiscarded?.Invoke(card);
+//
+
 
     }
 
-    function DiscardCard(bytes32 target) internal {
+    function DrawDiscardCard(bytes32 game_uid, bytes32 target, int8 nb) internal {
         //todo
     }
 
-    function DrawDiscardCard(bytes32 target, int8 nb) internal {
-        //todo
-    }
-
-//public virtual void DamageCard(Card target, int value)
-//{
-//if(target == null)
-//return;
-//
-//if (target.HasStatus(StatusType.Invincibility))
-//return; //Invincible
-//
-//if (target.HasStatus(StatusType.SpellImmunity))
-//return; //Spell immunity
-//
-//target.damage += value;
-//
-//if (target.GetHP() <= 0)
-//DiscardCard(target);
-//}
-
-    function DamageTargetCard(bytes32 target, uint8 value) internal {
-        if (target == 0) {
+    function DamageCard(bytes32 game_uid, bytes32 target, uint8 value) internal {
+        if (target == 0)
+        {
             return;
         }
         if (CardLogicLib.HasStatus(target, Status.Invincibility))
@@ -70,19 +100,14 @@ library GameLogicLib {
         {
             return;//Spell immunity
         }
-        int8 target_hp = CardOnBoards.getHp(target);
-        target_hp = target_hp - (int8)(value);
-        if (target_hp < 0) {
-            target_hp = 0;
+        CardOnBoards.setDamage(target, (int8)(value) + CardOnBoards.getDamage(target));
+        if (CardLogicLib.GetHP(target) <= 0) {
+            DiscardCard(game_uid, target);
         }
-        if (target_hp < 0) {
-
-        }
-        //todo
     }
 
 
-    function DamageCard(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
+    function DamageCardByTarget(bytes32 game_uid, bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
         if (CardLogicLib.HasStatus(target, Status.Invincibility)) {
             return;
         }
@@ -117,7 +142,10 @@ library GameLogicLib {
         //Remove sleep on damage
         //todo target.RemoveStatus(StatusType.Sleep);
 
-
+        //Kill card if no hp
+        if (CardLogicLib.GetHP(target) <= 0) {
+            KillCard(game_uid, attacker, target);
+        }
     }
 
     function DamagePlayer(bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
@@ -178,18 +206,18 @@ library GameLogicLib {
         //todo
     }
 
-    ////Heal a card
-    //public virtual void HealCard(Card target, int value)
-    //{
-    //if (target == null)
-    //return;
-    //
-    //if (target.HasStatus(StatusType.Invincibility))
-    //return;
-    //
-    //target.damage -= value;
-    //target.damage = Mathf.Max(target.damage, 0);
-    //}
+////Heal a card
+//public virtual void HealCard(Card target, int value)
+//{
+//if (target == null)
+//return;
+//
+//if (target.HasStatus(StatusType.Invincibility))
+//return;
+//
+//target.damage -= value;
+//target.damage = Mathf.Max(target.damage, 0);
+//}
 
     function CanPlayCard(bytes32 player_key, bytes32 card_key, bool skip_cost) internal view returns (bool) {
 

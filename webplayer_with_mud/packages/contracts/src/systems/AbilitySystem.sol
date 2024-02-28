@@ -241,7 +241,7 @@ contract AbilitySystem is System {
             bytes4[] memory effects = Ability.getEffects(ability_key);
             if (effects.length > 0) {
                 for (uint i = 0; i < effects.length; i++) {
-                    bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, caster, is_card);
+                    bytes memory data = abi.encodeWithSelector(effects[i], game_uid, ability_key, caster, caster, is_card);
                     SystemSwitch.call(data);
                 }
             }
@@ -249,7 +249,7 @@ contract AbilitySystem is System {
             bytes4[] memory effects = Ability.getEffects(ability_key);
             if (effects.length > 0) {
                 for (uint i = 0; i < effects.length; i++) {
-                    bytes memory data = abi.encodeWithSelector(effects[i], ability_key, caster, target, is_card);
+                    bytes memory data = abi.encodeWithSelector(effects[i], game_uid, ability_key, caster, target, is_card);
                     SystemSwitch.call(data);
                 }
             }

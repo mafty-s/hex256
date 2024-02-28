@@ -19,12 +19,12 @@ contract Effect4System is System {
     event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
     //todo
-    function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectDamage(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectDamage", ability_key, caster, target, is_card);
         int8 value = Ability.getValue(ability_key);
         int8 damage = GetDamage(caster, value, is_card, CardTrait.SpellDamage);
         if (is_card == ConditionTargetType.Card) {
-            GameLogicLib.DamageCard(caster, target, damage, true);
+            GameLogicLib.DamageCardByTarget(caster, target, damage, true);
         }
 
         if (is_card == ConditionTargetType.Player) {
@@ -32,8 +32,6 @@ contract Effect4System is System {
         }
 
     }
-
-
 
     //----------------------------------------------------------------------------------------------------------------
 

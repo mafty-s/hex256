@@ -11,31 +11,52 @@ import { ConditionTargetType } from "./../common.sol";
  */
 interface IEffect6System {
   function EffectAttackRedirect(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
     ConditionTargetType is_card
   ) external;
 
-  function EffectAttack(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectAttack(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
   function EffectDestroyEquip(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
     ConditionTargetType is_card
   ) external;
 
-  function EffectHeal(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectHeal(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
   function EffectChangeOwnerSelf(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
     ConditionTargetType is_card
   ) external;
 
-  function EffectDiscard(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectDiscard(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 
   function EffectPlayCard(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
 }

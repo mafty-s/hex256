@@ -14,10 +14,10 @@ contract Effect5System is System {
 
     }
 
-    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
+    event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
 
-    function EffectRollD6(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectRollD6(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectRollD6", ability_key, caster, target, is_card);
         int8 min = 1;
         int8 max = 6;
@@ -27,13 +27,12 @@ contract Effect5System is System {
         GamesExtended.setRolledValue(game_key, value);
     }
 
-    function EffectAddAttackRoll(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectAddAttackRoll(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectAddAttackRoll", ability_key, caster, target, is_card);
         EffectAddStatRoll(ability_key, caster, target, is_card, EffectStatType.Attack);
     }
 
     //===========
-
 
     //随机属性加成
     function EffectAddStatRoll(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, EffectStatType stat) internal {

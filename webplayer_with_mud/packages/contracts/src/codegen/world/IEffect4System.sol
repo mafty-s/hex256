@@ -10,5 +10,11 @@ import { ConditionTargetType } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IEffect4System {
-  function EffectDamage(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) external;
+  function EffectDamage(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    bytes32 caster,
+    bytes32 target,
+    ConditionTargetType is_card
+  ) external;
 }

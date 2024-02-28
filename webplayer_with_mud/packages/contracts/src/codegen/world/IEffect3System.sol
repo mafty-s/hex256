@@ -11,6 +11,7 @@ import { ConditionTargetType } from "./../common.sol";
  */
 interface IEffect3System {
   function EffectAddAbilityActivateBurst(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
@@ -18,6 +19,7 @@ interface IEffect3System {
   ) external;
 
   function EffectAddAbilityDefendDiscard(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
@@ -25,6 +27,7 @@ interface IEffect3System {
   ) external;
 
   function EffectAddAbilityPlaySacrifice(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
@@ -32,6 +35,7 @@ interface IEffect3System {
   ) external;
 
   function EffectAddAbilitySufferDamage(
+    bytes32 game_uid,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,
