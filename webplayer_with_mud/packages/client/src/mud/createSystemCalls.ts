@@ -836,16 +836,16 @@ export function createSystemCalls(
         console.log("tx-result", tx_result)
 
         return {
-            game: (Number)(tx_result.result.game),
-            players: tx_result.result.players,
-            nb_players: tx_result.result.nbPlayers,
+            game: Number(tx_result.result[0]),
+            players: tx_result.result[1].players,
+            nb_players: tx_result.result[1].nbPlayers,
         };
     }
 
     const checkMatchmaking = async (match_id: number) => {
         const record = await worldContract.read.CheckMatchmaking([match_id]);
         return {
-            game: (Number)(record.game),
+            game:match_id,
             players: record.players,
             nb_players: record.nbPlayers,
         };

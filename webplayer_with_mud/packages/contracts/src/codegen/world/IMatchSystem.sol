@@ -10,7 +10,7 @@ import { MatchesData } from "./../index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IMatchSystem {
-  function StartMatchmaking(uint8 nb_players) external returns (MatchesData memory);
+  function StartMatchmaking(uint8 nb_players) external returns (uint256, MatchesData memory);
 
   function CheckMatchmaking(uint256 matching_id) external view returns (MatchesData memory);
 }

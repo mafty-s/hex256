@@ -563,6 +563,7 @@ namespace TcgEngine.Client
 
         public void OnPlayCardSuccess(string message)
         {
+            return;
             Debug.Log("OnPlayCardSuccess" + message);
 
             MudPlayCard msg = JsonUtility.FromJson<MudPlayCard>(message);

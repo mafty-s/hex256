@@ -197,9 +197,11 @@ export default mudConfig({
             }
         },
         Matches: {
+            keySchema: {
+                id: "uint256"
+            },
             valueSchema: {
                 startTime: "uint256",
-                game: "uint256",
                 nbPlayers: "uint8",
                 players: "address[]",
             }

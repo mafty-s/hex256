@@ -26,12 +26,11 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant MatchesTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0041030120200100000000000000000000000000000000000000000000000000
+  0x0021020120010000000000000000000000000000000000000000000000000000
 );
 
 struct MatchesData {
   uint256 startTime;
-  uint256 game;
   uint8 nbPlayers;
   address[] players;
 }
@@ -51,7 +50,7 @@ library Matches {
    */
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _keySchema = new SchemaType[](1);
-    _keySchema[0] = SchemaType.BYTES32;
+    _keySchema[0] = SchemaType.UINT256;
 
     return SchemaLib.encode(_keySchema);
   }
@@ -61,11 +60,10 @@ library Matches {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](4);
+    SchemaType[] memory _valueSchema = new SchemaType[](3);
     _valueSchema[0] = SchemaType.UINT256;
-    _valueSchema[1] = SchemaType.UINT256;
-    _valueSchema[2] = SchemaType.UINT8;
-    _valueSchema[3] = SchemaType.ADDRESS_ARRAY;
+    _valueSchema[1] = SchemaType.UINT8;
+    _valueSchema[2] = SchemaType.ADDRESS_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -76,7 +74,7 @@ library Matches {
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "key";
+    keyNames[0] = "id";
   }
 
   /**
@@ -84,11 +82,10 @@ library Matches {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](4);
+    fieldNames = new string[](3);
     fieldNames[0] = "startTime";
-    fieldNames[1] = "game";
-    fieldNames[2] = "nbPlayers";
-    fieldNames[3] = "players";
+    fieldNames[1] = "nbPlayers";
+    fieldNames[2] = "players";
   }
 
   /**
@@ -108,9 +105,9 @@ library Matches {
   /**
    * @notice Get startTime.
    */
-  function getStartTime(bytes32 key) internal view returns (uint256 startTime) {
+  function getStartTime(uint256 id) internal view returns (uint256 startTime) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -119,9 +116,9 @@ library Matches {
   /**
    * @notice Get startTime.
    */
-  function _getStartTime(bytes32 key) internal view returns (uint256 startTime) {
+  function _getStartTime(uint256 id) internal view returns (uint256 startTime) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint256(bytes32(_blob)));
@@ -130,9 +127,9 @@ library Matches {
   /**
    * @notice Set startTime.
    */
-  function setStartTime(bytes32 key, uint256 startTime) internal {
+  function setStartTime(uint256 id, uint256 startTime) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((startTime)), _fieldLayout);
   }
@@ -140,103 +137,61 @@ library Matches {
   /**
    * @notice Set startTime.
    */
-  function _setStartTime(bytes32 key, uint256 startTime) internal {
+  function _setStartTime(uint256 id, uint256 startTime) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((startTime)), _fieldLayout);
   }
 
   /**
-   * @notice Get game.
+   * @notice Get nbPlayers.
    */
-  function getGame(bytes32 key) internal view returns (uint256 game) {
+  function getNbPlayers(uint256 id) internal view returns (uint8 nbPlayers) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (uint8(bytes1(_blob)));
   }
 
   /**
-   * @notice Get game.
+   * @notice Get nbPlayers.
    */
-  function _getGame(bytes32 key) internal view returns (uint256 game) {
+  function _getNbPlayers(uint256 id) internal view returns (uint8 nbPlayers) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Set game.
-   */
-  function setGame(bytes32 key, uint256 game) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((game)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set game.
-   */
-  function _setGame(bytes32 key, uint256 game) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((game)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get nbPlayers.
-   */
-  function getNbPlayers(bytes32 key) internal view returns (uint8 nbPlayers) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint8(bytes1(_blob)));
-  }
-
-  /**
-   * @notice Get nbPlayers.
-   */
-  function _getNbPlayers(bytes32 key) internal view returns (uint8 nbPlayers) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint8(bytes1(_blob)));
   }
 
   /**
    * @notice Set nbPlayers.
    */
-  function setNbPlayers(bytes32 key, uint8 nbPlayers) internal {
+  function setNbPlayers(uint256 id, uint8 nbPlayers) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((nbPlayers)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((nbPlayers)), _fieldLayout);
   }
 
   /**
    * @notice Set nbPlayers.
    */
-  function _setNbPlayers(bytes32 key, uint8 nbPlayers) internal {
+  function _setNbPlayers(uint256 id, uint8 nbPlayers) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((nbPlayers)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((nbPlayers)), _fieldLayout);
   }
 
   /**
    * @notice Get players.
    */
-  function getPlayers(bytes32 key) internal view returns (address[] memory players) {
+  function getPlayers(uint256 id) internal view returns (address[] memory players) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_address());
@@ -245,9 +200,9 @@ library Matches {
   /**
    * @notice Get players.
    */
-  function _getPlayers(bytes32 key) internal view returns (address[] memory players) {
+  function _getPlayers(uint256 id) internal view returns (address[] memory players) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_address());
@@ -256,9 +211,9 @@ library Matches {
   /**
    * @notice Set players.
    */
-  function setPlayers(bytes32 key, address[] memory players) internal {
+  function setPlayers(uint256 id, address[] memory players) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((players)));
   }
@@ -266,9 +221,9 @@ library Matches {
   /**
    * @notice Set players.
    */
-  function _setPlayers(bytes32 key, address[] memory players) internal {
+  function _setPlayers(uint256 id, address[] memory players) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode((players)));
   }
@@ -276,9 +231,9 @@ library Matches {
   /**
    * @notice Get the length of players.
    */
-  function lengthPlayers(bytes32 key) internal view returns (uint256) {
+  function lengthPlayers(uint256 id) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
@@ -289,9 +244,9 @@ library Matches {
   /**
    * @notice Get the length of players.
    */
-  function _lengthPlayers(bytes32 key) internal view returns (uint256) {
+  function _lengthPlayers(uint256 id) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
@@ -303,9 +258,9 @@ library Matches {
    * @notice Get an item of players.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemPlayers(bytes32 key, uint256 _index) internal view returns (address) {
+  function getItemPlayers(uint256 id, uint256 _index) internal view returns (address) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     unchecked {
       bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 20, (_index + 1) * 20);
@@ -317,9 +272,9 @@ library Matches {
    * @notice Get an item of players.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemPlayers(bytes32 key, uint256 _index) internal view returns (address) {
+  function _getItemPlayers(uint256 id, uint256 _index) internal view returns (address) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     unchecked {
       bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 20, (_index + 1) * 20);
@@ -330,9 +285,9 @@ library Matches {
   /**
    * @notice Push an element to players.
    */
-  function pushPlayers(bytes32 key, address _element) internal {
+  function pushPlayers(uint256 id, address _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
   }
@@ -340,9 +295,9 @@ library Matches {
   /**
    * @notice Push an element to players.
    */
-  function _pushPlayers(bytes32 key, address _element) internal {
+  function _pushPlayers(uint256 id, address _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, abi.encodePacked((_element)));
   }
@@ -350,9 +305,9 @@ library Matches {
   /**
    * @notice Pop an element from players.
    */
-  function popPlayers(bytes32 key) internal {
+  function popPlayers(uint256 id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 20);
   }
@@ -360,9 +315,9 @@ library Matches {
   /**
    * @notice Pop an element from players.
    */
-  function _popPlayers(bytes32 key) internal {
+  function _popPlayers(uint256 id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 20);
   }
@@ -370,9 +325,9 @@ library Matches {
   /**
    * @notice Update an element of players at `_index`.
    */
-  function updatePlayers(bytes32 key, uint256 _index, address _element) internal {
+  function updatePlayers(uint256 id, uint256 _index, address _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
@@ -383,9 +338,9 @@ library Matches {
   /**
    * @notice Update an element of players at `_index`.
    */
-  function _updatePlayers(bytes32 key, uint256 _index, address _element) internal {
+  function _updatePlayers(uint256 id, uint256 _index, address _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
@@ -396,9 +351,9 @@ library Matches {
   /**
    * @notice Get the full data.
    */
-  function get(bytes32 key) internal view returns (MatchesData memory _table) {
+  function get(uint256 id) internal view returns (MatchesData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
@@ -411,9 +366,9 @@ library Matches {
   /**
    * @notice Get the full data.
    */
-  function _get(bytes32 key) internal view returns (MatchesData memory _table) {
+  function _get(uint256 id) internal view returns (MatchesData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
@@ -426,14 +381,14 @@ library Matches {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, uint256 startTime, uint256 game, uint8 nbPlayers, address[] memory players) internal {
-    bytes memory _staticData = encodeStatic(startTime, game, nbPlayers);
+  function set(uint256 id, uint256 startTime, uint8 nbPlayers, address[] memory players) internal {
+    bytes memory _staticData = encodeStatic(startTime, nbPlayers);
 
     PackedCounter _encodedLengths = encodeLengths(players);
     bytes memory _dynamicData = encodeDynamic(players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -441,14 +396,14 @@ library Matches {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, uint256 startTime, uint256 game, uint8 nbPlayers, address[] memory players) internal {
-    bytes memory _staticData = encodeStatic(startTime, game, nbPlayers);
+  function _set(uint256 id, uint256 startTime, uint8 nbPlayers, address[] memory players) internal {
+    bytes memory _staticData = encodeStatic(startTime, nbPlayers);
 
     PackedCounter _encodedLengths = encodeLengths(players);
     bytes memory _dynamicData = encodeDynamic(players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -456,14 +411,14 @@ library Matches {
   /**
    * @notice Set the full data using the data struct.
    */
-  function set(bytes32 key, MatchesData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.startTime, _table.game, _table.nbPlayers);
+  function set(uint256 id, MatchesData memory _table) internal {
+    bytes memory _staticData = encodeStatic(_table.startTime, _table.nbPlayers);
 
     PackedCounter _encodedLengths = encodeLengths(_table.players);
     bytes memory _dynamicData = encodeDynamic(_table.players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -471,14 +426,14 @@ library Matches {
   /**
    * @notice Set the full data using the data struct.
    */
-  function _set(bytes32 key, MatchesData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.startTime, _table.game, _table.nbPlayers);
+  function _set(uint256 id, MatchesData memory _table) internal {
+    bytes memory _staticData = encodeStatic(_table.startTime, _table.nbPlayers);
 
     PackedCounter _encodedLengths = encodeLengths(_table.players);
     bytes memory _dynamicData = encodeDynamic(_table.players);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -486,12 +441,10 @@ library Matches {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint256 startTime, uint256 game, uint8 nbPlayers) {
+  function decodeStatic(bytes memory _blob) internal pure returns (uint256 startTime, uint8 nbPlayers) {
     startTime = (uint256(Bytes.slice32(_blob, 0)));
 
-    game = (uint256(Bytes.slice32(_blob, 32)));
-
-    nbPlayers = (uint8(Bytes.slice1(_blob, 64)));
+    nbPlayers = (uint8(Bytes.slice1(_blob, 32)));
   }
 
   /**
@@ -520,7 +473,7 @@ library Matches {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (MatchesData memory _table) {
-    (_table.startTime, _table.game, _table.nbPlayers) = decodeStatic(_staticData);
+    (_table.startTime, _table.nbPlayers) = decodeStatic(_staticData);
 
     (_table.players) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -528,9 +481,9 @@ library Matches {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 key) internal {
+  function deleteRecord(uint256 id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -538,9 +491,9 @@ library Matches {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 key) internal {
+  function _deleteRecord(uint256 id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -549,8 +502,8 @@ library Matches {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint256 startTime, uint256 game, uint8 nbPlayers) internal pure returns (bytes memory) {
-    return abi.encodePacked(startTime, game, nbPlayers);
+  function encodeStatic(uint256 startTime, uint8 nbPlayers) internal pure returns (bytes memory) {
+    return abi.encodePacked(startTime, nbPlayers);
   }
 
   /**
@@ -580,11 +533,10 @@ library Matches {
    */
   function encode(
     uint256 startTime,
-    uint256 game,
     uint8 nbPlayers,
     address[] memory players
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(startTime, game, nbPlayers);
+    bytes memory _staticData = encodeStatic(startTime, nbPlayers);
 
     PackedCounter _encodedLengths = encodeLengths(players);
     bytes memory _dynamicData = encodeDynamic(players);
@@ -595,9 +547,9 @@ library Matches {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(uint256 id) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(id));
 
     return _keyTuple;
   }
