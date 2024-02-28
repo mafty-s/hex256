@@ -39,7 +39,7 @@ library GameLogicLib {
             return; //Cant be killed
         }
 
-        DiscardCard(target);
+        DiscardCard(game_uid, target);
     }
 
     function DiscardCard(bytes32 game_uid, bytes32 card) internal {

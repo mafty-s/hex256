@@ -65,7 +65,7 @@ contract AttackSystem is System {
 //        }
 
 //        CardOnBoards.setHp(target_key, target_hp);
-        GameLogicLib.DamageCardByTarget(attacker_key, target_key, attacker_attack, false);
+        GameLogicLib.DamageCardByTarget(game_key, attacker_key, target_key, attacker_attack, false);
 
         bytes32[] memory players = Games.getPlayers(game_key);
 
