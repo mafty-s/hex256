@@ -56,6 +56,7 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToBoard(player_key, card_key);
             CardOnBoards.setExhausted(card_key, true);
             SlotLib.SetCardOnSlot(player_key, card_key, slot.x);
+            CardOnBoards.setSlot(card_key, slot_encode);
             //使用触发器触发技能
             SystemSwitch.call(
                 abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
