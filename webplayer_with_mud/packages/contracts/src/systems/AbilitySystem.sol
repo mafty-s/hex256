@@ -362,7 +362,7 @@ contract AbilitySystem is System {
     }
 
 
-    function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) public {
+    function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         AbilityTrigger trigger = Ability.getTrigger(ability_key);
         AbilityTarget target = Ability.getTarget(ability_key);

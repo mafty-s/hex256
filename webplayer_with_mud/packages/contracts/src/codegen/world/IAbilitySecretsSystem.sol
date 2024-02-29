@@ -10,13 +10,6 @@ import { AbilityTrigger } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IAbilitySecretsSystem {
-  function ResolveSecret(
-    bytes32 game_uid,
-    AbilityTrigger secret_trigger,
-    bytes32 secret_card,
-    bytes32 trigger
-  ) external;
-
   function TriggerSecrets(
     AbilityTrigger secret_trigger,
     bytes32 game_uid,

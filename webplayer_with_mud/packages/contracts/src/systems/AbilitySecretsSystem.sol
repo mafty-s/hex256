@@ -19,7 +19,7 @@ contract AbilitySecretsSystem is System {
 
     event EventResolveSecret(bytes32 game_uid, AbilityTrigger secret_trigger, bytes32 secret_card, bytes32 trigger);
 
-    function ResolveSecret(bytes32 game_uid, AbilityTrigger secret_trigger, bytes32 secret_card, bytes32 trigger) public {
+    function ResolveSecret(bytes32 game_uid, AbilityTrigger secret_trigger, bytes32 secret_card, bytes32 trigger) internal {
         emit EventResolveSecret(game_uid, secret_trigger, secret_card, trigger);
 
         bytes32 icard = CardOnBoards.getId(secret_card);
