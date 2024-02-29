@@ -19,7 +19,7 @@ import {ConditionTargetType} from "../codegen/common.sol";
 contract AbilitySystem is System {
 
     //更具trigger技能触发器,触发指定卡的所有技能
-    event EventTriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card);
+    event EventTriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 ability, bool result);
 
     function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         if (game_uid == 0 || caster == 0) {
@@ -30,11 +30,11 @@ contract AbilitySystem is System {
         if (abilities.length > 0) {
             for (uint i = 0; i < abilities.length; i++) {
                 if (Ability.getTrigger(abilities[i]) == trigger) {
+                    emit EventTriggerCardAbilityType(trigger, game_uid, caster, target, is_card, abilities[i], true);
                     TriggerCardAbility(game_uid, abilities[i], caster, target, is_card);
                 }
             }
         }
-        emit EventTriggerCardAbilityType(trigger, game_uid, caster, target, is_card);
     }
 
     function TriggerOtherCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
@@ -64,23 +64,27 @@ contract AbilitySystem is System {
         emit EventTriggerPlayerCardsAbilityType(trigger, game_uid, player_key);
     }
 
-
 //触发指定技能
-    event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card);
+    event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card,bool result);
 
     function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card) public {
         if (game_uid == 0 || ability_key == 0 || caster == 0) {
+            revert("game_uid == 0 || ability_key == 0 || caster == 0");
             return;
         }
         if (triggerer == 0) {
             triggerer = caster;        //Triggerer is the caster if not set
         }
-        if (!CardLogicLib.HasStatus(triggerer, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
+        if (!CardLogicLib.HasStatus(caster, Status.Silenced) && AreTriggerConditionsMet(game_uid, ability_key, caster, triggerer, ConditionTargetType.Card)) {
 //            UseAbility(game_uid, ability_key, caster, triggerer, is_card);
+            emit EventTriggerCardAbility(game_uid, ability_key, caster, triggerer, is_card,true);
             ResolveCardAbility(game_uid, ability_key, caster, triggerer);
+        } else {
+            emit EventTriggerCardAbility(game_uid, ability_key, caster, triggerer, is_card,false);
         }
-        emit EventTriggerCardAbility(game_uid, ability_key, caster, triggerer, is_card);
     }
+
+    event EventAreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type, bool result);
 
     function AreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) internal returns (bool) {
         bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
@@ -88,9 +92,11 @@ contract AbilitySystem is System {
             bytes4 condition = conditions_trigger[i];
             if (condition != 0) {
                 if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster, condition_type))), (bool))) {
+                    emit EventAreTriggerConditionsMet(game_uid, ability_key, caster, trigger_card, condition_type, false);
                     return false;
                 }
                 if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger_card, condition_type))), (bool))) {
+                    emit EventAreTriggerConditionsMet(game_uid, ability_key, caster, trigger_card, condition_type, false);
                     return false;
                 }
             }
@@ -214,8 +220,9 @@ contract AbilitySystem is System {
     event EventResolveCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer);
 
     function ResolveCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer) internal {
-        if (!CardLogicLib.CanDoAbilities(caster))
+        if (!CardLogicLib.CanDoAbilities(caster)){
             return; //Silenced card cant cast
+        }
 
         emit EventResolveCardAbility(game_uid, ability_key, caster, triggerer);
 
@@ -225,8 +232,9 @@ contract AbilitySystem is System {
         AbilityTarget target_type = Ability.getTarget(ability_key);
 //
         bool is_selector = ResolveCardAbilitySelector(game_uid, ability_key, target_type, caster);
-        if (is_selector)
+        if (is_selector){
             return; //Wait for player to select
+        }
 
         ResolveCardAbilityPlayTarget(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityPlayers(game_uid, ability_key, target_type, caster);
