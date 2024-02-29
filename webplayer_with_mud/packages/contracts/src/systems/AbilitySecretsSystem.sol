@@ -3,10 +3,8 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {IEffectSystem} from "../codegen/world/IEffectSystem.sol";
+import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IConditionSystem} from "../codegen/world/IConditionSystem.sol";
-import {IFilterSystem} from "../codegen/world/IFilterSystem.sol";
-import {IAbilityTargetSystem} from "../codegen/world/IAbilityTargetSystem.sol";
 import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, ActionHistory, Players, Games, GamesExtended, Config} from "../codegen/index.sol";
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType, GameState} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
@@ -64,7 +62,8 @@ contract AbilitySecretsSystem is System {
         return false;
     }
 
-    function TriggerPlayerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster) public returns (bool) {
+    function TriggerPlayerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 player) public returns (bool) {
+        bytes32[] memory cards_secret = PlayerCardsSecret.getValue(player);
 //todo
 //        for (int i = player.cards_secret.Count - 1; i >= 0; i--)
 //        {

@@ -16,8 +16,8 @@ import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IAbilitySecretsSystem} from "../codegen/world/IAbilitySecretsSystem.sol";
 import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
-
 
 contract TurnSystem is System {
 
@@ -65,7 +65,7 @@ contract TurnSystem is System {
         );
 
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (AbilityTrigger.END_OF_TURN, game_key, player_key))
+            abi.encodeCall(IAbilitySecretsSystem.TriggerPlayerSecrets, (AbilityTrigger.END_OF_TURN, game_key, player_key))
         );
 
         StartNextTurn(game_key);
@@ -131,7 +131,7 @@ contract TurnSystem is System {
         );
 
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerPlayerSecrets, (AbilityTrigger.START_OF_TURN, game_key, player_key))
+            abi.encodeCall(IAbilitySecretsSystem.TriggerPlayerSecrets, (AbilityTrigger.START_OF_TURN, game_key, player_key))
         );
 
         SystemSwitch.call(
