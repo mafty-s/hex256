@@ -15,7 +15,6 @@ import {PlayerCardsBoard} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
-import {PlayerCardsSecret} from "../codegen/index.sol";
 
 contract AbilitySystem is System {
 
@@ -42,40 +41,6 @@ contract AbilitySystem is System {
         //todo
     }
 
-    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 trigger_card, ConditionTargetType is_card) public returns (bool) {
-        if (game_uid == 0 || caster == 0) {
-            return false;
-        }
-        if (CardLogicLib.HasStatus(trigger_card, Status.SpellImmunity)) {
-            //Spell Immunity, triggerer is the one that trigger the trap, target is the one attacked, so usually the player who played the trap, so we dont check the target
-            return false;
-        }
-
-        bytes32 trigger_player = CardOnBoards.getPlayerId(trigger_card);
-
-        bytes32[] memory players = Games.getPlayers(game_uid);
-        for (uint p = 0; p < players.length; p++) {
-            if (players[p] != trigger_player) {
-                bytes32 other_player = players[p];
-                bytes32[] memory cards_secret = PlayerCardsSecret.getValue(other_player);
-                for (uint i = 0; i < cards_secret.length; i++) {
-                    bytes32 card_secret = cards_secret[i];
-                    if (card_secret != 0) {
-                        bytes32 card_secret_config_id = CardOnBoards.getId(card_secret);
-                        if (CardLogicLib.IsSecret(card_secret_config_id) && !CardOnBoards.getExhausted(card_secret)) {
-                            if (AreTargetConditionsMet(game_uid, 0, caster, trigger_card, is_card)) {
-                                CardOnBoards.setExhausted(card_secret, true);
-                                ResolveSecret();
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
 
     event EventTriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key);
 
@@ -99,9 +64,6 @@ contract AbilitySystem is System {
         emit EventTriggerPlayerCardsAbilityType(trigger, game_uid, player_key);
     }
 
-    function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) public {
-//todo
-    }
 
 //触发指定技能
     event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card);
@@ -399,9 +361,6 @@ contract AbilitySystem is System {
 //        GamesExtended.setLastTarget(game_uid, target);
     }
 
-    function ResolveSecret() public {
-
-    }
 
     function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) public {
         bytes32 player_key = CardOnBoards.getPlayerId(caster);

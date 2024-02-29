@@ -9,6 +9,7 @@ import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType, ConditionTargetType, AbilityTrigger} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IAbilitySecretsSystem} from "../codegen/world/IAbilitySecretsSystem.sol";
 import {ISlotSystem} from "../codegen/world/ISlotSystem.sol";
 
 library GameLogicLib {
@@ -81,7 +82,7 @@ library GameLogicLib {
                 abi.encodeCall(IAbilitySystem.TriggerOtherCardsAbilityType, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
             );
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySystem.TriggerSecrets, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
+                abi.encodeCall(IAbilitySecretsSystem.TriggerSecrets, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
             );
 
         }

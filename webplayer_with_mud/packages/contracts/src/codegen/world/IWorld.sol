@@ -5,6 +5,7 @@ pragma solidity >=0.8.21;
 
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
+import { IAbilitySecretsSystem } from "./IAbilitySecretsSystem.sol";
 import { IAbilitySystem } from "./IAbilitySystem.sol";
 import { IAbilityTargetSystem } from "./IAbilityTargetSystem.sol";
 import { IActionSystem } from "./IActionSystem.sol";
@@ -43,6 +44,7 @@ import { IUsersSystem } from "./IUsersSystem.sol";
  */
 interface IWorld is
   IBaseWorld,
+  IAbilitySecretsSystem,
   IAbilitySystem,
   IAbilityTargetSystem,
   IActionSystem,

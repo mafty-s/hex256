@@ -26,17 +26,7 @@ interface IAbilitySystem {
     ConditionTargetType is_card
   ) external;
 
-  function TriggerSecrets(
-    AbilityTrigger trigger,
-    bytes32 game_uid,
-    bytes32 caster,
-    bytes32 trigger_card,
-    ConditionTargetType is_card
-  ) external returns (bool);
-
   function TriggerPlayerCardsAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 player_key) external;
-
-  function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) external;
 
   function TriggerCardAbility(
     bytes32 game_uid,
@@ -54,8 +44,6 @@ interface IAbilitySystem {
     AbilityTarget target_type,
     ConditionTargetType is_card
   ) external;
-
-  function ResolveSecret() external;
 
   function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) external;
 }
