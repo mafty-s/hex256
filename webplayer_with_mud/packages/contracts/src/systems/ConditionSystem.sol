@@ -30,9 +30,18 @@ contract ConditionSystem is System {
 
 
     event EventIsTriggerConditionMet(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target, bool result);
+
     function IsTriggerConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, ConditionTargetType condition_type) public returns (bool)
     {
+
         if (!IsConditionFunctionExist(condition)) {
+            return true;
+        }
+
+        if (
+            condition == IConditionSystem.IsCharacter.selector ||
+            condition == IConditionSystem.IsEnemy.selector
+        ) {
             return true;
         }
 
@@ -44,6 +53,7 @@ contract ConditionSystem is System {
 
 
     event EventIsTargetConditionMet(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target, bool result);
+
     function IsTargetConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) public returns (bool)
     {
         if (!IsConditionFunctionExist(condition)) {
@@ -97,15 +107,17 @@ contract ConditionSystem is System {
     }
 
     function AiIsEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionOwnerAI(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        return ConditionOwnerAI(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
     function IsAlly(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionOwner(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionOwner(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
+    function IsEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionOwner(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
+        emit EventCondition("IsEnemy", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function IsArtifact(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
@@ -120,8 +132,10 @@ contract ConditionSystem is System {
         return ConditionCardType(condition_type, CardType.Equipment, CardTeam.None, CardTrait.None, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
-    function IsCharacter(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionCardType(condition_type, CardType.Character, CardTeam.None, CardTrait.None, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    function IsCharacter(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionCardType(condition_type, CardType.Character, CardTeam.None, CardTrait.None, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        emit EventCondition("IsCharacter", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function IsHero(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){

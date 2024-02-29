@@ -62,9 +62,9 @@ contract AbilitySecretsSystem is System {
                     if (card != 0) {
                         bytes32 icard = CardOnBoards.getId(card);
                         if (CardLogicLib.IsSecret(icard) && !CardOnBoards.getExhausted(card)) {
-                            if (AreAbilityConditionsMet(secret_trigger, game_uid, card, card)) {
+                            if (AreAbilityConditionsMet(secret_trigger, game_uid, card, trigger_card)) {
                                 CardOnBoards.setExhausted(card, true);
-                                ResolveSecret(game_uid, secret_trigger, card, card);
+                                ResolveSecret(game_uid, secret_trigger, card, trigger_card);
                                 return true;
                             }
                         }
