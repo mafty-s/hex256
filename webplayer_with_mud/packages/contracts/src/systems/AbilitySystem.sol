@@ -15,6 +15,7 @@ import {PlayerCardsBoard} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
+import {PlayerCardsSecret} from "../codegen/index.sol";
 
 contract AbilitySystem is System {
 
@@ -41,8 +42,38 @@ contract AbilitySystem is System {
         //todo
     }
 
-    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
-        //todo
+    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 trigger_card, ConditionTargetType is_card) public returns (bool) {
+        if (game_uid == 0 || caster == 0) {
+            return false;
+        }
+        if (CardLogicLib.HasStatus(trigger_card, Status.SpellImmunity)) {
+            //Spell Immunity, triggerer is the one that trigger the trap, target is the one attacked, so usually the player who played the trap, so we dont check the target
+            return false;
+        }
+
+        bytes32 trigger_player = CardOnBoards.getPlayerId(trigger_card);
+
+        bytes32[] memory players = Games.getPlayers(game_uid);
+        for (uint p = 0; p < players.length; p++) {
+            if (players[p] != trigger_player) {
+                bytes32 other_player = players[p];
+                bytes32[] memory cards_secret = PlayerCardsSecret.getValue(other_player);
+                for (uint i = 0; i < cards_secret.length; i++) {
+                    bytes32 card_secret = cards_secret[i];
+                    if (card_secret != 0) {
+                        bytes32 card_secret_config_id = CardOnBoards.getId(card_secret);
+                        if (CardLogicLib.IsSecret(card_secret_config_id) && !CardOnBoards.getExhausted(card_secret)) {
+                            if (AreTargetConditionsMet(game_uid, 0, caster, trigger_card, is_card)) {
+                                CardOnBoards.setExhausted(card_secret, true);
+                                ResolveSecret();
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -69,10 +100,10 @@ contract AbilitySystem is System {
     }
 
     function TriggerPlayerSecrets(bytes32 caster, AbilityTrigger trigger) public {
-        //todo
+//todo
     }
 
-    //触发指定技能
+//触发指定技能
     event EventTriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card);
 
     function TriggerCardAbility(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 triggerer, ConditionTargetType is_card) public {
@@ -181,7 +212,7 @@ contract AbilitySystem is System {
 
     function ResolveCardAbilitySelector(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) internal returns (bool){
         if (target == AbilityTarget.SelectTarget) {
-            //Wait for target
+//Wait for target
             GoToSelectTarget(game_uid, ability_key, caster);
             return true;
         } else if (target == AbilityTarget.CardSelector) {
@@ -263,7 +294,7 @@ contract AbilitySystem is System {
                 }
             }
 
-            // 添加状态，如嘲讽等
+// 添加状态，如嘲讽等
             uint8[] memory status = Ability.getStatus(ability_key);
             if (status.length > 0) {
                 uint8 duration = Ability.getDuration(ability_key);
@@ -297,20 +328,20 @@ contract AbilitySystem is System {
 
             if (SlotLib.IsPlayerSlot(slot))
             {
-                //todo
+//todo
 //                Player tplayer = game_data.GetPlayer(slot.p);
 //                if (iability.CanTarget(game_data, caster, tplayer))
 //                    ResolveEffectTarget(iability, caster, tplayer);
             }
             else if (slot_card != 0)
             {
-                //todo
+//todo
 //                if (iability.CanTarget(game_data, caster, slot_card))
 //                    ResolveEffectTarget(iability, caster, slot_card);
             }
             else
             {
-                //todo
+//todo
 //                if (iability.CanTarget(game_data, caster, slot))
 //                    ResolveEffectTarget(iability, caster, slot);
             }
@@ -342,10 +373,10 @@ contract AbilitySystem is System {
 
     function ResolveCardAbilityCards(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster_key) internal
     {
-        //目标
+//目标
         bytes32[] memory targets = GetCardTargets(game_uid, ability_key, target_type, caster_key);
 
-        //Resolve effects
+//Resolve effects
         for (uint t = 0; t < targets.length; t++) {
             if (targets[t] != 0) {
                 bytes32 target = targets[t];
@@ -363,9 +394,13 @@ contract AbilitySystem is System {
     }
 
     function ResolveEffectTarget(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, AbilityTarget target_type, ConditionTargetType is_card) public {
-        //使用效果
+//使用效果
         DoEffects(game_uid, ability_key, target_type, caster, target, is_card);
 //        GamesExtended.setLastTarget(game_uid, target);
+    }
+
+    function ResolveSecret() public {
+
     }
 
     function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) public {
