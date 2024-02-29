@@ -77,7 +77,7 @@ contract PlayCardSystem is System {
             PlayerLogicLib.AddCardToEquipment(player_key, card_key);
 
         } else if (CardLogicLib.IsSecret(card_config_key)) {
-            PlayerLogicLib.AddCardToSecret(card_key, player_key);
+            PlayerLogicLib.AddCardToSecret(player_key, card_key);
         } else if (CardLogicLib.IsSpell(card_config_key)) {
 
             PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);

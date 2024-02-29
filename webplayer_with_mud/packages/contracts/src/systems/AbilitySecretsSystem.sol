@@ -33,6 +33,8 @@ contract AbilitySecretsSystem is System {
     }
 
 
+    event EventTriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card, bytes32 trigger_player, bytes32 target_player);
+
     function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card) public returns (bool) {
         if (game_uid == 0) {
             return false;
@@ -42,12 +44,15 @@ contract AbilitySecretsSystem is System {
             return false;
         }
 
+
         bytes32 trigger_player = CardOnBoards.getPlayerId(trigger_card);
 
         bytes32[] memory players = Games.getPlayers(game_uid);
         for (uint p = 0; p < players.length; p++) {
-            if (players[p] != trigger_player) {
-                bytes32 other_player = players[p];
+            bytes32 other_player = players[p];
+            if (other_player != trigger_player) {
+                emit EventTriggerSecrets(trigger, game_uid, trigger_card, trigger_player, other_player);
+
                 bytes32[] memory cards_secret = PlayerCardsSecret.getValue(other_player);
                 if (cards_secret.length == 0) {
                     return false;
