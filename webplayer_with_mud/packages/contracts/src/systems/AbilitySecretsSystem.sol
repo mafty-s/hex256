@@ -27,8 +27,11 @@ contract AbilitySecretsSystem is System {
         if (CardLogicLib.IsSecret(icard))
         {
             bytes32 tplayer = CardOnBoards.getPlayerId(trigger);
+//            TriggerCardAbilityType(secret_trigger, secret_card, trigger);
             TriggerCardAbilityType(secret_trigger, game_uid, secret_card, trigger, ConditionTargetType.Card);
             GameLogicLib.DiscardCard(game_uid, secret_card);
+        } else {
+            revert("not IsSecret");
         }
     }
 
@@ -132,7 +135,7 @@ contract AbilitySecretsSystem is System {
 
 
     function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal {
-        abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (trigger, game_uid, caster, target, is_card));
+        SystemSwitch.call(abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (trigger, game_uid, caster, target, is_card)));
     }
 
 }
