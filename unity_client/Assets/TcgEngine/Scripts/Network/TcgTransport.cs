@@ -148,7 +148,7 @@ namespace TcgEngine
         
         public virtual void SetClient(string address, ushort port)
         {
-            string url = "ws://" + address + ":" + port;
+            string url = "wss://" + address + ":" + port;
 
             Debug.Log("Websocket Client Starting..."+url );
 

@@ -15,6 +15,6 @@ MonoBehaviour:
   url: 3.28.16.185
   port: 8777
   api_url: 3.28.16.185:8085
-  api_https: 0
+  api_https: 1
   solo_type: 10
   auth_type: 0

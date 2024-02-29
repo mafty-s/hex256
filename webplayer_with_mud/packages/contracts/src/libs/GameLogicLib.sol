@@ -164,7 +164,7 @@ library GameLogicLib {
 
         //Lifesteal
         bytes32 aplayer = CardOnBoards.getPlayerId(attacker);
-        if(PlayerLogicLib.HasStatus(aplayer, Status.LifeSteal))
+        if (PlayerLogicLib.HasStatus(aplayer, Status.LifeSteal))
         {
             int8 hp = Players.getHp(aplayer);
             hp += value;
@@ -177,7 +177,19 @@ library GameLogicLib {
     }
 
     function HealCard(bytes32 target, int8 value) internal {
-        //todo
+        if (target == 0) {
+            return;
+        }
+        if (CardLogicLib.HasStatus(target, Status.Invincibility)) {
+            return;
+        }
+        int8 target_damage = CardOnBoards.getDamage(target);
+        if (value >= target_damage) {
+            target_damage = 0;
+        } else {
+            target_damage -= value;
+        }
+        CardOnBoards.setDamage(target, target_damage);
     }
 
     function EquipCard(bytes32 card, bytes32 equipment) internal {
