@@ -33,7 +33,7 @@ contract AbilitySecretsSystem is System {
     }
 
 
-    event EventTriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card, bytes32 trigger_player, bytes32 target_player);
+    event EventTriggerSecrets(AbilityTrigger secret_trigger, bytes32 game_uid, bytes32 trigger_card, bytes32 trigger_player, bytes32 target_player);
 
     function TriggerSecrets(AbilityTrigger secret_trigger, bytes32 game_uid, bytes32 trigger_card) public returns (bool) {
         if (game_uid == 0) {
@@ -51,7 +51,7 @@ contract AbilitySecretsSystem is System {
         for (uint p = 0; p < players.length; p++) {
             bytes32 other_player = players[p];
             if (other_player != trigger_player) {
-                emit EventTriggerSecrets(trigger, game_uid, trigger_card, trigger_player, other_player);
+                emit EventTriggerSecrets(secret_trigger, game_uid, trigger_card, trigger_player, other_player);
 
                 bytes32[] memory cards_secret = PlayerCardsSecret.getValue(other_player);
                 if (cards_secret.length == 0) {
@@ -95,7 +95,7 @@ contract AbilitySecretsSystem is System {
 
     function AreAbilityConditionsMet(AbilityTrigger ability_trigger, bytes32 game_uid, bytes32 caster, bytes32 triggerer) internal returns (bool){
         bytes32[] memory abilities = Config.getAbility();
-        for (uint i = 0; i < abilities[i]; i++) {
+        for (uint i = 0; i < abilities.length; i++) {
             bytes32 ability = abilities[i];
             AbilityTrigger i_ability_trigger = Ability.getTrigger(ability);
             if (i_ability_trigger == ability_trigger) {
