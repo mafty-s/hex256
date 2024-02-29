@@ -80,8 +80,11 @@ contract AbilitySecretsSystem is System {
         if (cards_secret.length == 0) {
             return false;
         }
-        for (uint i = cards_secret.length; i >= 0; i--) {
+        for (uint i = 0; i < cards_secret.length; i++) {
             bytes32 card = cards_secret[i];
+            if (card == 0) {
+                return false;
+            }
             bytes32 icard = CardOnBoards.getId(card);
             if (CardLogicLib.IsSecret(icard) && !CardOnBoards.getExhausted(card)) {
                 if (AreAbilityConditionsMet(secret_trigger, game_uid, card, card)) {
@@ -93,6 +96,8 @@ contract AbilitySecretsSystem is System {
         return false;
     }
 
+    event EventAreAbilityConditionsMet(AbilityTrigger ability_trigger, bytes32 game_uid, bytes32 caster, bytes32 triggerer, bool result);
+
     function AreAbilityConditionsMet(AbilityTrigger ability_trigger, bytes32 game_uid, bytes32 caster, bytes32 triggerer) internal returns (bool){
         bytes32[] memory abilities = Config.getAbility();
         for (uint i = 0; i < abilities.length; i++) {
@@ -100,10 +105,12 @@ contract AbilitySecretsSystem is System {
             AbilityTrigger i_ability_trigger = Ability.getTrigger(ability);
             if (i_ability_trigger == ability_trigger) {
                 if (AreTriggerConditionsMet(game_uid, ability, caster, triggerer, ConditionTargetType.Card)) {
+                    emit EventAreAbilityConditionsMet(ability_trigger, game_uid, caster, triggerer, true);
                     return true;
                 }
             }
         }
+        emit EventAreAbilityConditionsMet(ability_trigger, game_uid, caster, triggerer, false);
         return false;
     }
 

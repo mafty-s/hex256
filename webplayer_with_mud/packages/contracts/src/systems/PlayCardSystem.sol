@@ -105,18 +105,18 @@ contract PlayCardSystem is System {
 
         } else {
             PlayerLogicLib.AddCardToDiscard(player_key, card_key);
-//            SlotLib.SetCardOnSlot(player_key, 0, slot.x);
         }
 
 //        uint16 slot_encode = SlotLib.EncodeSlot(slot);
-        uint256 len = PlayerActionHistory.length(game_key);
-        bytes32 action_key = keccak256(abi.encode(game_key, len));
-        PlayerActionHistory.push(game_key, action_key);
-        ActionHistory.setActionType(action_key, Action.PlayCard);
-        ActionHistory.setCardId(action_key, card_key);
-        ActionHistory.setSlot(action_key, slot_encode);
-        ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
-
+        if (!CardLogicLib.IsSecret(card_config_key)) {
+            uint256 len = PlayerActionHistory.length(game_key);
+            bytes32 action_key = keccak256(abi.encode(game_key, len));
+            PlayerActionHistory.push(game_key, action_key);
+            ActionHistory.setActionType(action_key, Action.PlayCard);
+            ActionHistory.setCardId(action_key, card_key);
+            ActionHistory.setSlot(action_key, slot_encode);
+            ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
+        }
 
         SystemSwitch.call(
             abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
