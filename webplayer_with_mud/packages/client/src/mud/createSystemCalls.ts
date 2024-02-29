@@ -11,6 +11,7 @@ import {abilities} from "./abilities";
 
 import GMSystemAbi from "contracts/out/GmSystem.sol/GmSystem.abi.json";
 import AbilitySystemAbi from "contracts/out/AbilitySystem.sol/AbilitySystem.abi.json";
+import AbilitySecretsSystemAbi from "contracts/out/AbilitySecretsSystem.sol/AbilitySecretsSystem.abi.json";
 import ConditionSystemAbi from "contracts/out/ConditionSystem.sol/ConditionSystem.abi.json";
 import Effect1SystemAbi from "contracts/out/Effect1System.sol/Effect1System.abi.json";
 import Effect2SystemAbi from "contracts/out/Effect2System.sol/Effect2System.abi.json";
@@ -388,116 +389,127 @@ export function createSystemCalls(
         await waitForTransaction(tx);
         return tx;
     }
-    
-    function getEvent(log){
-        let event=null;
-            try {
-                 event = decodeEventLog({
-                    abi: worldContract.abi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
 
-            }
-            try {
-                 event = decodeEventLog({
-                    abi: GMSystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
+    function getEvent(log) {
+        let event = null;
+        try {
+            event = decodeEventLog({
+                abi: worldContract.abi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            }
-            try {
-                 event = decodeEventLog({
-                    abi: AbilitySystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
+        }
+        try {
+            event = decodeEventLog({
+                abi: GMSystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            }
+        }
+        try {
+            event = decodeEventLog({
+                abi: AbilitySystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            try {
-                 event = decodeEventLog({
-                    abi: ConditionSystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-            }catch (e){
+        }
 
-            }
+        try {
+            event = decodeEventLog({
+                abi: AbilitySecretsSystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            try {
-                 event = decodeEventLog({
-                    abi: Effect1SystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
+        }
 
-            }
+        try {
+            event = decodeEventLog({
+                abi: ConditionSystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+        } catch (e) {
 
-            try {
-                 event = decodeEventLog({
-                    abi: Effect2SystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
+        }
 
-            }
+        try {
+            event = decodeEventLog({
+                abi: Effect1SystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            try {
-                 event = decodeEventLog({
-                    abi: Effect3SystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
+        }
 
-            }
+        try {
+            event = decodeEventLog({
+                abi: Effect2SystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            try {
-                 event = decodeEventLog({
-                    abi: Effect4SystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
-            }catch (e){
+        }
 
-            }
+        try {
+            event = decodeEventLog({
+                abi: Effect3SystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            try {
-                 event = decodeEventLog({
-                    abi: Effect5SystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                return event;
+        }
 
-            }catch (e){
+        try {
+            event = decodeEventLog({
+                abi: Effect4SystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
 
-            }
+        }
 
-            try {
-                 event = decodeEventLog({
-                    abi: Effect6SystemAbi,
-                    data: log.data,
-                    topics: log.topics
-                });
-                 return event;
-            }catch (e){
+        try {
+            event = decodeEventLog({
+                abi: Effect5SystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
 
-            }
+        } catch (e) {
+
+        }
+
+        try {
+            event = decodeEventLog({
+                abi: Effect6SystemAbi,
+                data: log.data,
+                topics: log.topics
+            });
+            return event;
+        } catch (e) {
+
+        }
         return event;
 
     }
@@ -508,16 +520,16 @@ export function createSystemCalls(
         const {functionName, args} = decodeFunctionData({abi: worldContract.abi, data: transaction.input});
 
         let events = [];
-        if(transactionReceipt.logs && transactionReceipt.logs.length>0){
-            for(let i=0;i<transactionReceipt.logs.length;i++){
+        if (transactionReceipt.logs && transactionReceipt.logs.length > 0) {
+            for (let i = 0; i < transactionReceipt.logs.length; i++) {
                 let event = getEvent(transactionReceipt.logs[i]);
-                if(event){
+                if (event) {
                     events.push(event);
                 }
             }
         }
 
-        console.log("events",events);
+        console.log(functionName, "events", events);
 
         const tx_result = await publicClient.simulateContract({
             account: transaction.from,
@@ -845,7 +857,7 @@ export function createSystemCalls(
     const checkMatchmaking = async (match_id: number) => {
         const record = await worldContract.read.CheckMatchmaking([match_id]);
         return {
-            game:match_id,
+            game: match_id,
             players: record.players,
             nb_players: record.nbPlayers,
         };

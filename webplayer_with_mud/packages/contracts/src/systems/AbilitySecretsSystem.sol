@@ -16,7 +16,12 @@ import {ConditionTargetType} from "../codegen/common.sol";
 import {PlayerCardsSecret} from "../codegen/index.sol";
 
 contract AbilitySecretsSystem is System {
+
+    event EventResolveSecret(bytes32 game_uid, AbilityTrigger secret_trigger, bytes32 secret_card, bytes32 trigger);
+
     function ResolveSecret(bytes32 game_uid, AbilityTrigger secret_trigger, bytes32 secret_card, bytes32 trigger) public {
+        emit EventResolveSecret(game_uid, secret_trigger, secret_card, trigger);
+
         bytes32 icard = CardOnBoards.getId(secret_card);
         bytes32 player = CardOnBoards.getPlayerId(secret_card);
         if (CardLogicLib.IsSecret(icard))
@@ -44,6 +49,9 @@ contract AbilitySecretsSystem is System {
             if (players[p] != trigger_player) {
                 bytes32 other_player = players[p];
                 bytes32[] memory cards_secret = PlayerCardsSecret.getValue(other_player);
+                if (cards_secret.length == 0) {
+                    return false;
+                }
                 for (uint i = 0; i < cards_secret.length; i++) {
                     bytes32 card = cards_secret[i];
                     if (card != 0) {
@@ -64,6 +72,9 @@ contract AbilitySecretsSystem is System {
 
     function TriggerPlayerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 player) public returns (bool) {
         bytes32[] memory cards_secret = PlayerCardsSecret.getValue(player);
+        if (cards_secret.length == 0) {
+            return false;
+        }
         for (uint i = cards_secret.length; i >= 0; i--) {
             bytes32 card = cards_secret[i];
             bytes32 icard = CardOnBoards.getId(card);
