@@ -191,6 +191,27 @@ contract AbilityTargetSystem is System {
             }
         }
 
+        if (target == AbilityTarget.LastSummoned)
+        {
+            targets = new bytes32[](1);
+            bytes32 last_summoned = GamesExtended.getLastSummoned(game_uid);
+            if (last_summoned != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, last_summoned, ConditionTargetType.Card)) {
+                targets[numTargets] = last_summoned;
+                numTargets++;
+            }
+        }
+
+        if (target == AbilityTarget.AbilityTriggerer)
+        {
+            targets = new bytes32[](1);
+            bytes32 ability_riggerer = GamesExtended.getAbilityTriggerer(game_uid);
+            if (ability_riggerer != 0 && AreTargetConditionsMet(game_uid, ability_key, caster, ability_riggerer, ConditionTargetType.Card)) {
+                targets[numTargets] = ability_riggerer;
+                numTargets++;
+            }
+        }
+
+
         bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
         if (filters_target.length > 0 && targets.length > 0)
         {
@@ -277,10 +298,9 @@ contract AbilityTargetSystem is System {
         return targets;
     }
 
-    function HasValidSelectTarget() internal{
+    function HasValidSelectTarget() internal {
         //todo
     }
-
 
     /////
     function AddValidCards(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) internal returns (bytes32[] memory){

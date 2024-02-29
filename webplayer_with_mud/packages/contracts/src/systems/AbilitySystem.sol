@@ -226,8 +226,7 @@ contract AbilitySystem is System {
 
         emit EventResolveCardAbility(game_uid, ability_key, caster, triggerer);
 
-        bytes32 triggerer_uid = CardOnBoards.getPlayerId(triggerer);
-        GamesExtended.setAbilityTriggerer(game_uid, triggerer_uid);
+        GamesExtended.setAbilityTriggerer(game_uid, triggerer);
 
         AbilityTarget target_type = Ability.getTarget(ability_key);
 //
