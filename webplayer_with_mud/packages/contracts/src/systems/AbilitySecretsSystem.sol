@@ -64,26 +64,16 @@ contract AbilitySecretsSystem is System {
 
     function TriggerPlayerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 player) public returns (bool) {
         bytes32[] memory cards_secret = PlayerCardsSecret.getValue(player);
-//todo
-//        for (int i = player.cards_secret.Count - 1; i >= 0; i--)
-//        {
-//            Card card = player.cards_secret[i];
-//            CardData icard = card.CardData;
-//            if (icard.type == CardType.Secret && !card.exhausted)
-//            {
-//            if (card.AreAbilityConditionsMet(secret_trigger, game_data, card, card))
-//            {
-//            resolve_queue.AddSecret(secret_trigger, card, card, ResolveSecret);
-//            resolve_queue.SetDelay(0.5f);
-//            card.exhausted = true;
-//
-//            if (onSecretTrigger != null)
-//            onSecretTrigger.Invoke(card, card);
-//
-//            return true; //Trigger only 1 secret per trigger
-//            }
-//            }
-//        }
+        for (uint i = cards_secret.length; i >= 0; i--) {
+            bytes32 card = cards_secret[i];
+            bytes32 icard = CardOnBoards.getId(card);
+            if (CardLogicLib.IsSecret(icard) && !CardOnBoards.getExhausted(card)) {
+                if (AreTargetConditionsMet(game_uid, 0, card, card, ConditionTargetType.Card)) {
+                    CardOnBoards.setExhausted(card, true);
+                    ResolveSecret(game_uid, trigger, card, card);
+                    return true;
+                }}
+        }
         return false;
     }
 
@@ -101,7 +91,7 @@ contract AbilitySecretsSystem is System {
     }
 
     function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal {
-        //todo
+        abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (trigger, game_uid, caster, target, is_card));
     }
 
 }
