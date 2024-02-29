@@ -28,8 +28,8 @@ contract AbilitySecretsSystem is System {
     }
 
 
-    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 trigger_card, ConditionTargetType is_card) public returns (bool) {
-        if (game_uid == 0 || caster == 0) {
+    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card) public returns (bool) {
+        if (game_uid == 0) {
             return false;
         }
         if (CardLogicLib.HasStatus(trigger_card, Status.SpellImmunity)) {
@@ -45,13 +45,13 @@ contract AbilitySecretsSystem is System {
                 bytes32 other_player = players[p];
                 bytes32[] memory cards_secret = PlayerCardsSecret.getValue(other_player);
                 for (uint i = 0; i < cards_secret.length; i++) {
-                    bytes32 card_secret = cards_secret[i];
-                    if (card_secret != 0) {
-                        bytes32 card_secret_config_id = CardOnBoards.getId(card_secret);
-                        if (CardLogicLib.IsSecret(card_secret_config_id) && !CardOnBoards.getExhausted(card_secret)) {
-                            if (AreTargetConditionsMet(game_uid, 0, caster, trigger_card, is_card)) {
-                                CardOnBoards.setExhausted(card_secret, true);
-                                ResolveSecret(game_uid, trigger, card_secret, card_secret);
+                    bytes32 card = cards_secret[i];
+                    if (card != 0) {
+                        bytes32 icard = CardOnBoards.getId(card);
+                        if (CardLogicLib.IsSecret(icard) && !CardOnBoards.getExhausted(card)) {
+                            if (AreTargetConditionsMet(game_uid, 0, card, card, ConditionTargetType.Card)) {
+                                CardOnBoards.setExhausted(card, true);
+                                ResolveSecret(game_uid, trigger, card, card);
                                 return true;
                             }
                         }

@@ -82,7 +82,7 @@ library GameLogicLib {
                 abi.encodeCall(IAbilitySystem.TriggerOtherCardsAbilityType, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
             );
             SystemSwitch.call(
-                abi.encodeCall(IAbilitySecretsSystem.TriggerSecrets, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card, card, ConditionTargetType.Card))
+                abi.encodeCall(IAbilitySecretsSystem.TriggerSecrets, (AbilityTrigger.ON_DEATH_OTHER, game_uid, card))
             );
 
         }

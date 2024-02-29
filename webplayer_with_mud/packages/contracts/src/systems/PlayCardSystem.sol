@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
+import {IAbilitySecretsSystem} from "../codegen/world/IAbilitySecretsSystem.sol";
 import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 import {Cards, Players, CardOnBoards, Games} from "../codegen/index.sol";
 import {GameType, GameState, GamePhase, CardType, AbilityTrigger, Action} from "../codegen/common.sol";
@@ -119,6 +120,10 @@ contract PlayCardSystem is System {
 
         SystemSwitch.call(
             abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
+        );
+
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySecretsSystem.TriggerSecrets, (AbilityTrigger.ON_PLAY_OTHER, game_key, card_key))
         );
 
         return (mana_cost, player_mana);
