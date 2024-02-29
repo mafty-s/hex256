@@ -6,7 +6,7 @@ import {Users, UsersData} from "../codegen/index.sol";
 
 contract UsersSystem is System {
     function addUser(string memory username) public returns (address key) {
-         key = _msgSender();
+        key = _msgSender();
 
 //        UsersData memory userData = UsersData(
 //            _msgSender(),
@@ -22,6 +22,10 @@ contract UsersSystem is System {
 //
 //        Users.set(key, userData);
 
+        if (Users.getCreatedAt(key) != 0) {
+            return key;
+        }
+
         Users.setOwner(key, _msgSender());
         Users.setCoin(key, 1000000);
         Users.setCreatedAt(key, block.timestamp);
@@ -29,7 +33,7 @@ contract UsersSystem is System {
 
     }
 
-    function getUserByKey(address key) public view returns (UsersData memory ) {
+    function getUserByKey(address key) public view returns (UsersData memory) {
         return Users.get(key);
     }
 }
