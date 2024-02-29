@@ -17,7 +17,15 @@ interface IAbilitySecretsSystem {
     bytes32 trigger
   ) external;
 
-  function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card) external returns (bool);
+  function TriggerSecrets(
+    AbilityTrigger secret_trigger,
+    bytes32 game_uid,
+    bytes32 trigger_card
+  ) external returns (bool);
 
-  function TriggerPlayerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 player) external returns (bool);
+  function TriggerPlayerSecrets(
+    AbilityTrigger secret_trigger,
+    bytes32 game_uid,
+    bytes32 player
+  ) external returns (bool);
 }

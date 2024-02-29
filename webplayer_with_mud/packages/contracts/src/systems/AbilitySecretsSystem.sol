@@ -13,7 +13,7 @@ import {PlayerCardsBoard} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
-import {PlayerCardsSecret} from "../codegen/index.sol";
+import {PlayerCardsSecret, Config} from "../codegen/index.sol";
 
 contract AbilitySecretsSystem is System {
 
@@ -35,7 +35,7 @@ contract AbilitySecretsSystem is System {
 
     event EventTriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card, bytes32 trigger_player, bytes32 target_player);
 
-    function TriggerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 trigger_card) public returns (bool) {
+    function TriggerSecrets(AbilityTrigger secret_trigger, bytes32 game_uid, bytes32 trigger_card) public returns (bool) {
         if (game_uid == 0) {
             return false;
         }
@@ -62,9 +62,9 @@ contract AbilitySecretsSystem is System {
                     if (card != 0) {
                         bytes32 icard = CardOnBoards.getId(card);
                         if (CardLogicLib.IsSecret(icard) && !CardOnBoards.getExhausted(card)) {
-                            if (AreTargetConditionsMet(game_uid, 0, card, card, ConditionTargetType.Card)) {
+                            if (AreAbilityConditionsMet(secret_trigger, game_uid, card, card)) {
                                 CardOnBoards.setExhausted(card, true);
-                                ResolveSecret(game_uid, trigger, card, card);
+                                ResolveSecret(game_uid, secret_trigger, card, card);
                                 return true;
                             }
                         }
@@ -75,7 +75,7 @@ contract AbilitySecretsSystem is System {
         return false;
     }
 
-    function TriggerPlayerSecrets(AbilityTrigger trigger, bytes32 game_uid, bytes32 player) public returns (bool) {
+    function TriggerPlayerSecrets(AbilityTrigger secret_trigger, bytes32 game_uid, bytes32 player) public returns (bool) {
         bytes32[] memory cards_secret = PlayerCardsSecret.getValue(player);
         if (cards_secret.length == 0) {
             return false;
@@ -84,27 +84,45 @@ contract AbilitySecretsSystem is System {
             bytes32 card = cards_secret[i];
             bytes32 icard = CardOnBoards.getId(card);
             if (CardLogicLib.IsSecret(icard) && !CardOnBoards.getExhausted(card)) {
-                if (AreTargetConditionsMet(game_uid, 0, card, card, ConditionTargetType.Card)) {
+                if (AreAbilityConditionsMet(secret_trigger, game_uid, card, card)) {
                     CardOnBoards.setExhausted(card, true);
-                    ResolveSecret(game_uid, trigger, card, card);
+                    ResolveSecret(game_uid, secret_trigger, card, card);
                     return true;
                 }}
         }
         return false;
     }
 
-    function AreTargetConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) internal returns (bool) {
-        bytes4[] memory conditions_target = AbilityExtend.getConditionsTarget(ability_key);
-        for (uint i = 0; i < conditions_target.length; i++) {
-            bytes4 condition = conditions_target[i];
+    function AreAbilityConditionsMet(AbilityTrigger ability_trigger, bytes32 game_uid, bytes32 caster, bytes32 triggerer) internal returns (bool){
+        bytes32[] memory abilities = Config.getAbility();
+        for (uint i = 0; i < abilities[i]; i++) {
+            bytes32 ability = abilities[i];
+            AbilityTrigger i_ability_trigger = Ability.getTrigger(ability);
+            if (i_ability_trigger == ability_trigger) {
+                if (AreTriggerConditionsMet(game_uid, ability, caster, triggerer, ConditionTargetType.Card)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function AreTriggerConditionsMet(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 trigger_card, ConditionTargetType condition_type) internal returns (bool) {
+        bytes4[] memory conditions_trigger = AbilityExtend.getConditionsTrigger(ability_key);
+        for (uint i = 0; i < conditions_trigger.length; i++) {
+            bytes4 condition = conditions_trigger[i];
             if (condition != 0) {
-                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, target, condition_type))), (bool))) {
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTriggerConditionMet, (condition, game_uid, ability_key, caster, condition_type))), (bool))) {
+                    return false;
+                }
+                if (!abi.decode(SystemSwitch.call(abi.encodeCall(IConditionSystem.IsTargetConditionMet, (condition, game_uid, ability_key, caster, trigger_card, condition_type))), (bool))) {
                     return false;
                 }
             }
         }
         return true;
     }
+
 
     function TriggerCardAbilityType(AbilityTrigger trigger, bytes32 game_uid, bytes32 caster, bytes32 target, ConditionTargetType is_card) internal {
         abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (trigger, game_uid, caster, target, is_card));
