@@ -43,8 +43,8 @@ contract FilterSystem is System {
     }
 
     function FilterRandom_1(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {
-        return source;
-//        return FilterRandom(1, ability, caster, source);
+//        return source;
+        return FilterRandom(1, ability, caster, source);
     }
 
     function FilterRandom_2(bytes32 ability, bytes32 caster, bytes32[] memory source, ConditionTargetType condition_type) public view returns (bytes32[] memory) {

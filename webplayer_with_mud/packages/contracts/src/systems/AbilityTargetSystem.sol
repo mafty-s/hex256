@@ -249,6 +249,8 @@ contract AbilityTargetSystem is System {
                 }
             }
         }
+        targets = slice_u16(targets, 0, numTargets);
+
         //Filter targets
         bytes4[] memory filters_target = AbilityExtend.getFiltersTarget(ability_key);
         if (filters_target.length > 0 && targets.length > 0)
@@ -267,8 +269,7 @@ contract AbilityTargetSystem is System {
                 }
             }
         }
-
-        return slice_u16(targets, 0, numTargets);
+        return targets;
     }
 
     function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns (bytes32[] memory){
