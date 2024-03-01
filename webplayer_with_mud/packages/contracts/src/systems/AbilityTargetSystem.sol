@@ -256,13 +256,14 @@ contract AbilityTargetSystem is System {
             for (uint i = 0; i < filters_target.length; i++) {
                 bytes4 filter = filters_target[i];
                 if (filter != 0) {
-                    //todo
-//                    targets = abi.decode(
-//                        SystemSwitch.call(
-//                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, targets, ConditionTargetType.Slot))
-//                        ),
-//                        (bytes32[])
-//                    );
+                    bytes32[] memory temp = uint16ArrToBytes32Arr(targets);
+                    temp = abi.decode(
+                        SystemSwitch.call(
+                            abi.encodeCall(IFilterSystem.FilterTargets, (filter, game_uid, ability_key, caster, temp, ConditionTargetType.Slot))
+                        ),
+                        (bytes32[])
+                    );
+                    targets = bytes32ArrToUint16(temp);
                 }
             }
         }
@@ -350,6 +351,22 @@ contract AbilityTargetSystem is System {
         uint16[] memory result = new uint16[](length);
         for (uint256 i = 0; i < length; i++) {
             result[i] = array[start + i];
+        }
+        return result;
+    }
+
+    function uint16ArrToBytes32Arr(uint16[] memory arr) internal pure returns (bytes32[] memory){
+        bytes32[] memory result = new bytes32[](arr.length);
+        for (uint i = 0; i < arr.length; i++) {
+            result[i] = bytes32(uint256(arr[i]));
+        }
+        return result;
+    }
+
+    function bytes32ArrToUint16(bytes32[] memory arr) internal pure returns (uint16[] memory){
+        uint16[] memory result = new uint16[](arr.length);
+        for (uint i = 0; i < arr.length; i++) {
+            result[i] = uint16(uint256(arr[i]));
         }
         return result;
     }

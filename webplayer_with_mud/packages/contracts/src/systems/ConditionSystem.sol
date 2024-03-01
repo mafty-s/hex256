@@ -560,9 +560,9 @@ contract ConditionSystem is System {
     }
 
     function ConditionSlotRange(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal view returns (bool){
-//        if (condition_type == ConditionTargetType.Slot) {
-//
-//            uint16 slot_encode = bytes32ToUint16(target);
+        if (condition_type == ConditionTargetType.Slot) {
+
+//            uint16 slot_encode = uint16(uint256(target));
 //            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
 //
 //            uint16 cslot_encode = CardOnBoards.getSlot(caster);
@@ -573,7 +573,7 @@ contract ConditionSystem is System {
 //            uint8 dist_p = uint8(cslot.p - target_slot.p);
 //
 //            return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
-//        }
+        }
         return true;
     }
 
