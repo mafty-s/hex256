@@ -535,26 +535,26 @@ contract ConditionSystem is System {
     }
 
     function ConditionSlotEmpty(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
-//        if (condition_type == ConditionTargetType.Slot) {
-//            uint16 slot_encode = bytes32ToUint16(target);
-//            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
-//            bytes32 player_key = CardOnBoards.getPlayerId(caster);
-//            bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
-//
-//            return CompareBool(slot_card == 0, oper);
-//        }
+        if (condition_type == ConditionTargetType.Slot) {
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+            bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
+
+            return CompareBool(slot_card == 0, oper);
+        }
         return true;
     }
 
     function ConditionSlotValue(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal view returns (bool){
         if (condition_type == ConditionTargetType.Slot) {
 
-//            uint16 slot_encode = bytes32ToUint16(target);
-//            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
-//
-//            bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
-//            bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
-//            return valid_x && valid_y;
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+
+            bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
+            bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
+            return valid_x && valid_y;
         }
         return true;
     }
