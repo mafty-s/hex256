@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {CardOnBoards, PlayerCardsDiscard} from "../codegen/index.sol";
+import {CardOnBoards} from "../codegen/index.sol";
 import {Games, Cards, Players, GamesExtended} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
@@ -11,6 +11,7 @@ import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IAbilitySecretsSystem} from "../codegen/world/IAbilitySecretsSystem.sol";
 import {ISlotSystem} from "../codegen/world/ISlotSystem.sol";
+import {Slot, SlotLib} from "./SlotLib.sol";
 
 library GameLogicLib {
 
@@ -61,7 +62,7 @@ library GameLogicLib {
 
         //Remove card from board and add to discard
         PlayerLogicLib.RemoveCardFromAllGroups(player, card);
-        PlayerCardsDiscard.pushValue(player, card);
+        PlayerLogicLib.AddCardToDiscard(player, card);
         GamesExtended.setLastDestroyed(game_uid, card);
         SystemSwitch.call(
             abi.encodeCall(ISlotSystem.ClearCardFromSlot, (player, card))
@@ -318,10 +319,28 @@ library GameLogicLib {
     }
 
 
-    function SummonCardHand(bytes32 game_uid, bytes32 player_key, bytes32 card_config_id) internal returns (bytes32){
+    function SummonCardHand(bytes32 game_uid, bytes32 player_key, bytes32 card_config_key) internal returns (bytes32){
         bytes32 acard = GameLogicLib.AddCard(player_key, card_config_key);
         PlayerLogicLib.AddCardToHand(player_key, acard);
-        GamesExtends.setLastSummoned(game_uid, acard);
+        GamesExtended.setLastSummoned(game_uid, acard);
         return acard;
+    }
+
+    function SummonCard(bytes32 game_uid, bytes32 player_key, bytes32 card_config_key, Slot memory slot) internal returns (bytes32){
+
+//        if (!slot.IsValid())
+//            return null;
+//
+//        if (game_data.GetSlotCard(slot) != null)
+//            return null;
+
+        bytes32 acard = SummonCardHand(game_uid, player_key, card_config_key);
+        PlayCard(acard, slot, true);
+
+        return acard;
+    }
+
+    function PlayCard(bytes32 card, Slot memory slot, bool skip_cost) internal {
+
     }
 }

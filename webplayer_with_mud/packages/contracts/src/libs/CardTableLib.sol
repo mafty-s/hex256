@@ -143,87 +143,6 @@ library CardTableLib {
     }
 
     /**
-     * @notice Get the length of value.
-   */
-    function lengthValue(bytes32 key) internal view returns (uint256) {
-        bytes32[] memory _keyTuple = new bytes32[](1);
-        _keyTuple[0] = key;
-
-        uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
-        unchecked {
-            return _byteLength / 32;
-        }
-    }
-
-    /**
-     * @notice Get the length of value.
-   */
-    function length(bytes32 key) internal view returns (uint256) {
-        bytes32[] memory _keyTuple = new bytes32[](1);
-        _keyTuple[0] = key;
-
-        uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
-        unchecked {
-            return _byteLength / 32;
-        }
-    }
-
-    /**
-     * @notice Get the length of value.
-   */
-    function _length(bytes32 key) internal view returns (uint256) {
-        bytes32[] memory _keyTuple = new bytes32[](1);
-        _keyTuple[0] = key;
-
-        uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
-        unchecked {
-            return _byteLength / 32;
-        }
-    }
-
-    /**
-     * @notice Get an item of value.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-    function getItemValue(bytes32 key, uint256 _index) internal view returns (bytes32) {
-        bytes32[] memory _keyTuple = new bytes32[](1);
-        _keyTuple[0] = key;
-
-        unchecked {
-            bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
-            return (bytes32(_blob));
-        }
-    }
-
-    /**
-     * @notice Get an item of value.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-    function _getItemValue(bytes32 key, uint256 _index) internal view returns (bytes32) {
-        bytes32[] memory _keyTuple = new bytes32[](1);
-        _keyTuple[0] = key;
-
-        unchecked {
-            bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
-            return (bytes32(_blob));
-        }
-    }
-
-    /**
-     * @notice Get an item of value.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-    function getItem(bytes32 key, uint256 _index) internal view returns (bytes32) {
-        bytes32[] memory _keyTuple = new bytes32[](1);
-        _keyTuple[0] = key;
-
-        unchecked {
-            bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
-            return (bytes32(_blob));
-        }
-    }
-
-    /**
      * @notice Get an item of value.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
@@ -450,5 +369,36 @@ library CardTableLib {
         ResourceId real_table_id = getTableId(pile);
 
         StoreSwitch.pushToDynamicField(real_table_id, _keyTuple, 0, abi.encodePacked((_element)));
+    }
+
+    /**
+ * @notice Get the length of value.
+   */
+    function length(PileType pile, bytes32 key) internal view returns (uint256) {
+        bytes32[] memory _keyTuple = new bytes32[](1);
+        _keyTuple[0] = key;
+
+        ResourceId real_table_id = getTableId(pile);
+
+        uint256 _byteLength = StoreSwitch.getDynamicFieldLength(real_table_id, _keyTuple, 0);
+        unchecked {
+            return _byteLength / 32;
+        }
+    }
+
+    /**
+ * @notice Get an item of value.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+    function getItem(PileType pile,bytes32 key, uint256 _index) internal view returns (bytes32) {
+        bytes32[] memory _keyTuple = new bytes32[](1);
+        _keyTuple[0] = key;
+
+        ResourceId real_table_id = getTableId(pile);
+
+        unchecked {
+            bytes memory _blob = StoreSwitch.getDynamicFieldSlice(real_table_id, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+            return (bytes32(_blob));
+        }
     }
 }

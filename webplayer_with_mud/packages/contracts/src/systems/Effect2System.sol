@@ -14,49 +14,49 @@ import {ConditionTargetType} from "../codegen/common.sol";
 
 contract Effect2System is System {
 
-    event EventEffect(string name,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
+    event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
-    function EffectSummonEagle(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectSummonEagle(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSummonEagle", ability_key, caster, target, is_card);
         bytes32 flame_eagle = 0xeadaa9330dc55ff4f5a4be2783106cf919f0dccf372920ccfd645f6c9dbf8c0d;
-        EffectSummon(ability_key, caster, target, is_card, flame_eagle);
+        EffectSummon(game_uid, ability_key, caster, target, is_card, flame_eagle);
     }
 
-    function EffectSummonEgg(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectSummonEgg(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSummonEgg", ability_key, caster, target, is_card);
         bytes32 phoenix_egg = 0xaf3ece100d5f745760efadfedc743cbe6077114f7105f0e642e09d1e8cb38de4;
-        EffectSummon(ability_key, caster, target, is_card, phoenix_egg);
+        EffectSummon(game_uid, ability_key, caster, target, is_card, phoenix_egg);
     }
 
-    function EffectSummonWolf(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectSummonWolf(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSummonWolf", ability_key, caster, target, is_card);
         bytes32 wolf_baby = 0xc0fd58a3602c8586b2e1583e65cef9c8e3dbc8bc36449e7fe2666856e4a1e554;
-        EffectSummon(ability_key, caster, target, is_card, wolf_baby);
+        EffectSummon(game_uid, ability_key, caster, target, is_card, wolf_baby);
     }
 
-    function EffectTransformFish(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectTransformFish(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectTransformFish", ability_key, caster, target, is_card);
         bytes32 fish = 0x922d0a331fd751dd3f9f56ab05f7acb5b6a7080eb367ecbe613cc632beee0576;
         EffectTransform(ability_key, caster, target, is_card, fish);
     }
 
-    function EffectTransformPhoenix(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectTransformPhoenix(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectTransformPhoenix", ability_key, caster, target, is_card);
         bytes32 phoenix = 0x45a23f50c4a44900e19828c071b86545a4e54f3522a680d87ff84742258a9071;
         EffectTransform(ability_key, caster, target, is_card, phoenix);
     }
 
-    function EffectSendDeck(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectSendDeck(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSendDeck", ability_key, caster, target, is_card);
         EffectSendPile(ability_key, caster, target, is_card, PileType.Deck);
     }
 
-    function EffectSendHand(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectSendHand(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectSendHand", ability_key, caster, target, is_card);
         EffectSendPile(ability_key, caster, target, is_card, PileType.Hand);
     }
 
-    function EffectShuffleDeck(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectShuffleDeck(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectShuffleDeck", ability_key, caster, target, is_card);
         if (is_card != ConditionTargetType.Card) {
             bytes32[] memory cards = PlayerCardsDeck.getValue(target);
@@ -65,7 +65,7 @@ contract Effect2System is System {
         }
     }
 
-    function EffectClearTemp(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectClearTemp(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectClearTemp", ability_key, caster, target, is_card);
         if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
@@ -75,7 +75,7 @@ contract Effect2System is System {
     }
 
 
-    function EffectCreateTemp(bytes32 game_uid,bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectCreateTemp(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectCreateTemp", ability_key, caster, target, is_card);
         EffectCreate(ability_key, caster, target, is_card, PileType.Temp, false);
     }
@@ -128,24 +128,42 @@ contract Effect2System is System {
     }
 
     //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
-    function EffectSummon(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {
+    function EffectSummon(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {
 //        uint len = CardOnBoards.getLength(caster);
 
-        bytes32 player_key = CardOnBoards.getPlayerId(caster);
-        // 创建一张卡
+//        bytes32 player_key = CardOnBoards.getPlayerId(caster);
+//        // 创建一张卡
+//
+//        bytes32 game_key = Players.getGame(player_key);
+//        bytes32[] memory players = Games.getPlayers(game_key);
+//        uint8 p = players[0] == player_key ? 0 : 1;
+//
+//        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
+//        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+//
+//        bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
+//        CardOnBoards.setSlot(card_uid, slot_encode);
+//
+//        SlotLib.SetCardOnSlot(player_key, card_uid, slot.x);
+//        PlayerCardsBoard.pushValue(player_key, card_uid);
 
-        bytes32 game_key = Players.getGame(player_key);
-        bytes32[] memory players = Games.getPlayers(game_key);
-        uint8 p = players[0] == player_key ? 0 : 1;
+        if (is_card == ConditionTargetType.Player) {
+            GameLogicLib.SummonCardHand(game_uid, target, card_config_key);
+        }
 
-        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
-        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+        if (is_card == ConditionTargetType.Card) {
 
-        bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
-        CardOnBoards.setSlot(card_uid, slot_encode);
+        }
 
-        SlotLib.SetCardOnSlot(player_key, card_uid, slot.x);
-        PlayerCardsBoard.pushValue(player_key, card_uid);
+        if (is_card == ConditionTargetType.Slot) {
+
+        }
+
+        if (is_card == ConditionTargetType.CardData) {
+            bytes32 player = CardOnBoards.getPlayerId(caster);
+            GameLogicLib.SummonCardHand(game_uid, player, target);
+        }
+
     }
 
     //把一张牌变为另一张牌
@@ -153,7 +171,7 @@ contract Effect2System is System {
         if (is_card == ConditionTargetType.Card) {
             string memory card_name = Cards.getTid(card_config_key);
             CardOnBoards.setId(target, card_config_key);
-            CardOnBoards.setName(target,card_name);
+            CardOnBoards.setName(target, card_name);
         }
     }
 

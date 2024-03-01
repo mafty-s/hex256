@@ -85,14 +85,6 @@ contract PlayCardSystem is System {
             if (slot.x != 0) {
                 bytes32 slot_player = slot.p == 0 ? players[0] : players[1];
                 bytes32 card_on_slot = SlotLib.GetCardOnSlot(slot_player, slot.x);
-//                bytes32[] memory abilities = Cards.getAbilities(card_config_key);
-//                //使用触发器触发技能
-////
-//                bytes32 ability_key = 0xd74a4cc73f596bb8617ee6dbf1618769622038ccb004cd10081a7a45acbfcf95;
-//                bytes4 effect = 0x6b1ac047;
-//                bytes memory data = abi.encodeWithSelector(effect, ability_key, card_key, card_on_slot, true);
-//                SystemSwitch.call(data);
-
                 SystemSwitch.call(
                     abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, card_on_slot, ConditionTargetType.Card))
                 );

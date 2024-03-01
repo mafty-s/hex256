@@ -3,8 +3,7 @@ pragma solidity >=0.8.21;
 
 import {Cards, Players} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, Status, CardTrait, PileType} from "../codegen/common.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
-import {BytesArrayTools} from "../utils/BytesArrayTools.sol";
+import {CardOnBoards} from "../codegen/index.sol";
 import {Slot, SlotLib} from "./SlotLib.sol";
 import {CardTableLib} from "./CardTableLib.sol";
 
@@ -61,11 +60,11 @@ library PlayerLogicLib {
     }
 
     function AddCardToDeck(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsDeck.pushValue(player_key, card_key);
+        AddCardTo(PileType.Deck, player_key, card_key);
     }
 
     function GetRandomCard(bytes32 player_key) internal view returns (bytes32) {
-        bytes32[] memory cards = PlayerCardsHand.getValue(player_key);
+        bytes32[] memory cards = CardTableLib.getValue(PileType.Hand, player_key);
         if (cards.length == 0) {
             return 0;
         }
@@ -74,7 +73,11 @@ library PlayerLogicLib {
     }
 
     function IsDead(bytes32 player_key) internal view returns (bool) {
-        if (PlayerCardsHand.getValue(player_key).length == 0 && PlayerCardsBoard.getValue(player_key).length == 0 && PlayerCardsDeck.getValue(player_key).length == 0) {
+        if (
+            CardTableLib.length(PileType.Hand, player_key) == 0 &&
+            CardTableLib.length(PileType.Board, player_key) == 0 &&
+            CardTableLib.length(PileType.Deck, player_key) == 0
+        ) {
             return true;
         }
         if (Players.getHp(player_key) <= 0) {
@@ -195,16 +198,17 @@ library PlayerLogicLib {
 
     function DrawCard(bytes32 player_key, int8 card_number) internal returns (bytes32[] memory){
         require(card_number > 0, "card_number must > 0");
-        bytes32[] memory draw_cards = new bytes32[](uint256(int256(card_number)));
-        for (int8 i = 0; i < card_number; i++) {
-            uint256 len = PlayerCardsDeck.length(player_key);
+        uint nb = uint256(int256(card_number));
+        bytes32[] memory draw_cards = new bytes32[](nb);
+        for (uint i = 0; i < card_number; i++) {
+            uint256 len = CardTableLib.length(PileType.Deck);
             if (len == 0) {
                 break;
             }
-            bytes32 card_uid = PlayerCardsDeck.getItemValue(player_key, len - 1);
-            draw_cards[uint256(int256(i))] = card_uid;
-            PlayerCardsDeck.popValue(player_key);
-            PlayerCardsHand.pushValue(player_key, card_uid);
+            bytes32 card_uid = CardTableLib.getItem(PileType.Deck, player_key, len - 1);
+            draw_cards[i] = card_uid;
+            CardTableLib.popValue(PileType.Deck, player_key);
+            AddCardToHand(player_key, card_uid);
         }
         return draw_cards;
     }
