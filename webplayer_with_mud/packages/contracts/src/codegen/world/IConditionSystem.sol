@@ -181,7 +181,23 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
+  function IsNotInTemp(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
   function IsInHand(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsNotInHand(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
@@ -197,7 +213,23 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
+  function IsNotInDiscard(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
   function IsInDeck(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsNotInDeck(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
@@ -213,6 +245,14 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
+  function IsNotInSecretArea(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
   function IsInEquipment(
     bytes32 game_uid,
     bytes32 ability_key,
@@ -221,7 +261,23 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
-  function IsInBoard(
+  function IsNotInEquipment(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsOnBoard(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsNotOnBoard(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,
@@ -357,6 +413,14 @@ interface IConditionSystem {
     bytes32 target
   ) external view returns (bool);
 
+  function IsYourTurn(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
   function IsNotYourTurn(
     bytes32 game_uid,
     bytes32 ability_key,
@@ -382,6 +446,22 @@ interface IConditionSystem {
   ) external view returns (bool);
 
   function IsNotStealth(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsParalysed(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    ConditionTargetType condition_type,
+    bytes32 caster,
+    bytes32 target
+  ) external view returns (bool);
+
+  function IsNotSpellImmunity(
     bytes32 game_uid,
     bytes32 ability_key,
     ConditionTargetType condition_type,

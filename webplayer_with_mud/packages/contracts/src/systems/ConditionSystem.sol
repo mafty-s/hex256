@@ -63,15 +63,22 @@ contract ConditionSystem is System {
 
             condition == IConditionSystem.IsOnBoard.selector ||
             condition == IConditionSystem.IsNotOnBoard.selector ||
+
             condition == IConditionSystem.IsInDeck.selector ||
             condition == IConditionSystem.IsNotInDeck.selector ||
+
             condition == IConditionSystem.IsInDiscard.selector ||
             condition == IConditionSystem.IsNotInDiscard.selector ||
+
             condition == IConditionSystem.IsInEquipment.selector ||
+            condition == IConditionSystem.IsNotInEquipment.selector ||
+
             condition == IConditionSystem.IsInHand.selector ||
             condition == IConditionSystem.IsNotInHand.selector ||
+
             condition == IConditionSystem.IsInSecretArea.selector ||
             condition == IConditionSystem.IsNotInSecretArea.selector ||
+
             condition == IConditionSystem.IsInTemp.selector ||
             condition == IConditionSystem.IsNotInTemp.selector ||
 
@@ -79,6 +86,7 @@ contract ConditionSystem is System {
             condition == IConditionSystem.IsNotStealth.selector ||
             condition == IConditionSystem.IsNotSpellImmunity.selector ||
             condition == IConditionSystem.IsNotSelf.selector ||
+            condition == IConditionSystem.IsGrowth3.selector ||
 
 
             condition == IConditionSystem.IsWolf.selector
@@ -250,6 +258,10 @@ contract ConditionSystem is System {
     }
 
     function IsInEquipment(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsNotInEquipment(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
