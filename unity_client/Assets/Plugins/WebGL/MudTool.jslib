@@ -82,10 +82,10 @@ mergeInto(LibraryManager.library, {
 
         let slot = {x: slot_x, y: slot_y, p: slot_p};
         let result = await mud.playCard(UTF8ToString(game_uid), UTF8ToString(player_id), UTF8ToString(card_id), slot, skip, UTF8ToString(card_key));
-        console.log("playCard result", result);
+        // console.log("playCard result", result);
 
-        let returnStr = JSON.stringify(result.result);
-        MyUnityInstance.SendMessage("Client", "OnPlayCardSuccess", returnStr);
+        // let returnStr = JSON.stringify(result.result);
+        // MyUnityInstance.SendMessage("Client", "OnPlayCardSuccess", returnStr);
     },
 
     moveCard: async function (game_uid, player_id, card_id, slot_x, slot_y, slot_p, skip, card_key) {
