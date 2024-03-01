@@ -25,18 +25,38 @@ library SlotLib {
     }
 
     function GetAll() internal pure returns (Slot[] memory) {
-        Slot[] memory slots = new Slot[](x_max * y_max * 2);
-        uint8 index = 0;
-        for (uint8 y = y_min; y <= y_max; y++) {
-            for (uint8 x = x_min; x <= x_max; x++) {
-                for (uint8 p = 0; p <= 1; p++) {
-                    Slot memory slot = SlotLib.NewSlot(x, y, p);
-                    slots[index] = slot;
-                    index++;
-                }
-            }
-        }
+        Slot[] memory slots = new Slot[](10);
+        slots[0] = NewSlot(1, 1, 0);
+        slots[1] = NewSlot(1, 1, 1);
+        slots[2] = NewSlot(2, 1, 0);
+        slots[3] = NewSlot(2, 1, 1);
+        slots[4] = NewSlot(3, 1, 0);
+        slots[5] = NewSlot(3, 1, 1);
+        slots[6] = NewSlot(4, 1, 0);
+        slots[7] = NewSlot(4, 1, 1);
+        slots[8] = NewSlot(5, 1, 0);
+        slots[9] = NewSlot(5, 1, 1);
         return slots;
+    }
+
+    function EncodeSlot(Slot memory slot) internal pure returns (uint16) {
+        uint16 x = uint16(slot.x);
+        uint16 y = uint16(slot.y);
+        uint16 p = uint16(slot.p);
+
+        return x + (y * 10) + (p * 100);
+    }
+
+    function DecodeSlotX(uint16 slot) internal pure returns (uint8) {
+        return uint8(slot % 10);
+    }
+
+    function DecodeSlotY(uint16 slot) internal pure returns (uint8) {
+        return uint8((slot / 10) % 10);
+    }
+
+    function DecodeSlotP(uint16 slot) internal pure returns (uint8) {
+        return uint8(slot / 100);
     }
 
 //    function GetAllInP(int8 p) internal pure returns (Slot[] memory) {
@@ -64,25 +84,11 @@ library SlotLib {
         return 0;
     }
 
-    function EncodeSlot(Slot memory slot) internal pure returns (uint16) {
-        return uint16(slot.x) + (uint16(slot.y) * 10) + (uint16(slot.p) * 100);
-    }
+
 
     function ToSlot32(Slot memory slot) internal pure returns (bytes32) {
         uint16 encode = EncodeSlot(slot);
         return bytes32(uint256(encode));
-    }
-
-    function DecodeSlotX(uint16 slot) internal pure returns (uint8) {
-        return uint8(slot % 10);
-    }
-
-    function DecodeSlotY(uint16 slot) internal pure returns (uint8) {
-        return uint8((slot / 10) % 10);
-    }
-
-    function DecodeSlotP(uint16 slot) internal pure returns (uint8) {
-        return uint8(slot / 100);
     }
 
     function DecodeSlot(uint16 encode) internal pure returns (Slot memory){

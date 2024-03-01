@@ -8,7 +8,16 @@ import {Games, Players} from "../codegen/index.sol";
 contract SlotSystem is System {
 
     function GetAllSlot() public pure returns (Slot[] memory) {
-        return SlotLib.GetAll();
+        Slot[] memory origin = SlotLib.GetAll();
+        uint16[] memory temp = new uint16[](origin.length);
+        for (uint i = 0; i < origin.length; i++) {
+            temp[i] = SlotLib.EncodeSlot(origin[i]);
+        }
+        Slot[] memory slots = new Slot[](temp.length);
+        for (uint i = 0; i < temp.length; i++) {
+            slots[i] = SlotLib.DecodeSlot(temp[i]);
+        }
+        return slots;
     }
 
     function GetRandomEmptySlot(bytes32 player_key) public view returns (Slot memory){

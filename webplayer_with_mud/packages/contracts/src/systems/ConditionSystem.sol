@@ -547,36 +547,38 @@ contract ConditionSystem is System {
     }
 
     function ConditionSlotValue(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal view returns (bool){
-//        if (condition_type == ConditionTargetType.Slot) {
-//
+        if (condition_type == ConditionTargetType.Slot) {
+
 //            uint16 slot_encode = bytes32ToUint16(target);
 //            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
 //
 //            bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
 //            bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
 //            return valid_x && valid_y;
-//        }
+        }
         return true;
     }
 
     function ConditionSlotRange(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal view returns (bool){
         if (condition_type == ConditionTargetType.Slot) {
 
-//            uint16 slot_encode = uint16(uint256(target));
-//            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+            uint16 slot_encode = bytes32ToUint16(target);
+            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
 //
-//            uint16 cslot_encode = CardOnBoards.getSlot(caster);
-//            Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+            uint16 cslot_encode = CardOnBoards.getSlot(caster);
+            Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
 //
-//            uint8 dist_x = uint8(cslot.x - target_slot.x);
-//            uint8 dist_y = uint8(cslot.y - target_slot.y);
-//            uint8 dist_p = uint8(cslot.p - target_slot.p);
-//
-//            return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
+            uint8 dist_x = abs(int8(cslot.x) - int8(target_slot.x));
+            uint8 dist_y = abs(int8(cslot.y) - int8(target_slot.y));
+            uint8 dist_p = abs(int8(cslot.p) - int8(target_slot.p));
+            return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
         }
         return true;
     }
 
+    function abs(int8 a) internal pure returns (uint8) {
+        return uint8(a > 0 ? a : - a);
+    }
 
     function ConditionTurn(ConditionTargetType condition_type, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
         if (condition_type != ConditionTargetType.Card) {
@@ -785,7 +787,12 @@ contract ConditionSystem is System {
     }
 
     function bytes32ToUint16(bytes32 data) internal pure returns (uint16) {
-        return uint16(uint256(data));
+        uint temp = uint256(data);
+        if (temp > 65535) {
+            return 0;
+        } else {
+            return uint16(temp);
+        }
     }
 
     function uint16ToBytes32(uint16 data) internal pure returns (bytes32) {

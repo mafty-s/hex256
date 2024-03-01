@@ -523,7 +523,7 @@ export function createSystemCalls(
         if (transactionReceipt.logs && transactionReceipt.logs.length > 0) {
             for (let i = 0; i < transactionReceipt.logs.length; i++) {
                 let event = getEvent(transactionReceipt.logs[i]);
-                if (event) {
+                if (event ) {
                     events.push(event);
                 }
             }
@@ -699,9 +699,9 @@ export function createSystemCalls(
 
         const hash = await worldContract.write.PlayCard([game_key, player_key, card_key, slot_encode]);
         await waitForTransaction(hash);
+        const tx_result = await getTxResult(hash);
 
         return [];
-        // const tx_result = await getTxResult(hash);
         // console.log("tx-result", tx_result)
 
         // const result = {
@@ -1001,8 +1001,8 @@ export function createSystemCalls(
         return slot;
     }
 
-    const getAllSlot = async (p: number) => {
-        const slots = await worldContract.read.GetAllSlot([p]);
+    const getAllSlot = async () => {
+        const slots = await worldContract.read.GetAllSlot([]);
         return slots;
     }
 
