@@ -523,7 +523,7 @@ export function createSystemCalls(
         if (transactionReceipt.logs && transactionReceipt.logs.length > 0) {
             for (let i = 0; i < transactionReceipt.logs.length; i++) {
                 let event = getEvent(transactionReceipt.logs[i]);
-                if (event ) {
+                if (event && event.eventName.startsWith("Event")) {
                     events.push(event);
                 }
             }
