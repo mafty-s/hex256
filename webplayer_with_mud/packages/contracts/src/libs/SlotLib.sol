@@ -68,6 +68,11 @@ library SlotLib {
         return uint16(slot.x) + (uint16(slot.y) * 10) + (uint16(slot.p) * 100);
     }
 
+    function ToSlot32(Slot memory slot) internal pure returns (bytes32) {
+        uint16 encode = EncodeSlot(slot);
+        return bytes32(uint256(encode));
+    }
+
     function DecodeSlotX(uint16 slot) internal pure returns (uint8) {
         return uint8(slot % 10);
     }

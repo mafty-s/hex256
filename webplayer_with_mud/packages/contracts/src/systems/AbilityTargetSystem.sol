@@ -234,15 +234,18 @@ contract AbilityTargetSystem is System {
 
     function GetSlotTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns (uint16[] memory) {
         uint16[] memory targets;
+        uint numTargets = 0;
 
         if (target == AbilityTarget.AllSlots)
         {
             Slot[] memory slots = SlotLib.GetAll();
+            targets = new uint16[](slots.length);
             for (uint i = 0; i < slots.length; i++) {
-                //todo
-//                if (CanTargetSlot(game_uid, ability_key, caster, slots[i].id)) {
-//                    targets.push(bytes32(uint256(slots[i].id)));
-//                }
+                uint16 encode = SlotLib.EncodeSlot(slots[i]);
+                bytes32 slot32 = bytes32(uint256(encode));
+                if (AreTargetConditionsMet(game_uid, ability_key, caster, slot32, ConditionTargetType.Slot)) {
+                    targets[numTargets] = encode;
+                }
             }
         }
         //Filter targets
@@ -263,7 +266,7 @@ contract AbilityTargetSystem is System {
             }
         }
 
-        return targets;
+        return slice(targets, 0, numTargets);
     }
 
     function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns (bytes32[] memory){
