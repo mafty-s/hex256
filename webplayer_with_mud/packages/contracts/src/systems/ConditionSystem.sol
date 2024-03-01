@@ -535,45 +535,45 @@ contract ConditionSystem is System {
     }
 
     function ConditionSlotEmpty(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorBool oper) internal view returns (bool){
-        if (condition_type == ConditionTargetType.Slot) {
-            uint16 slot_encode = bytes32ToUint16(target);
-            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
-            bytes32 player_key = CardOnBoards.getPlayerId(caster);
-            bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
-
-            return CompareBool(slot_card == 0, oper);
-        }
+//        if (condition_type == ConditionTargetType.Slot) {
+//            uint16 slot_encode = bytes32ToUint16(target);
+//            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+//            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+//            bytes32 slot_card = SlotLib.GetCardOnSlot(player_key, slot.x);
+//
+//            return CompareBool(slot_card == 0, oper);
+//        }
         return true;
     }
 
     function ConditionSlotValue(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionOperatorInt oper_x, int8 value_x, ConditionOperatorInt oper_y, int8 value_y) internal view returns (bool){
-        if (condition_type == ConditionTargetType.Slot) {
-
-            uint16 slot_encode = bytes32ToUint16(target);
-            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
-
-            bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
-            bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
-            return valid_x && valid_y;
-        }
+//        if (condition_type == ConditionTargetType.Slot) {
+//
+//            uint16 slot_encode = bytes32ToUint16(target);
+//            Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+//
+//            bool valid_x = CompareInt((int8)(slot.x), oper_x, value_x);
+//            bool valid_y = CompareInt((int8)(slot.y), oper_y, value_y);
+//            return valid_x && valid_y;
+//        }
         return true;
     }
 
     function ConditionSlotRange(ConditionTargetType condition_type, bytes32 ability_key, bytes32 caster, bytes32 target, int8 range_x, int8 range_y, int8 range_p) internal view returns (bool){
-        if (condition_type == ConditionTargetType.Slot) {
-
-            uint16 slot_encode = bytes32ToUint16(target);
-            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
-
-            uint16 cslot_encode = CardOnBoards.getSlot(caster);
-            Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
-
-            uint8 dist_x = uint8(cslot.x - target_slot.x);
-            uint8 dist_y = uint8(cslot.y - target_slot.y);
-            uint8 dist_p = uint8(cslot.p - target_slot.p);
-
-            return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
-        }
+//        if (condition_type == ConditionTargetType.Slot) {
+//
+//            uint16 slot_encode = bytes32ToUint16(target);
+//            Slot memory target_slot = SlotLib.DecodeSlot(slot_encode);
+//
+//            uint16 cslot_encode = CardOnBoards.getSlot(caster);
+//            Slot memory cslot = SlotLib.DecodeSlot(cslot_encode);
+//
+//            uint8 dist_x = uint8(cslot.x - target_slot.x);
+//            uint8 dist_y = uint8(cslot.y - target_slot.y);
+//            uint8 dist_p = uint8(cslot.p - target_slot.p);
+//
+//            return dist_x <= uint8(range_x) && dist_y <= uint8(range_y) && dist_p <= uint8(range_p);
+//        }
         return true;
     }
 

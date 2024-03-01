@@ -317,4 +317,11 @@ library GameLogicLib {
         Games.setGamePhase(game_uid, GamePhase.MAIN);
     }
 
+
+    function SummonCardHand(bytes32 game_uid, bytes32 player_key, bytes32 card_config_id) internal returns (bytes32){
+        bytes32 acard = GameLogicLib.AddCard(player_key, card_config_key);
+        PlayerLogicLib.AddCardToHand(player_key, acard);
+        GamesExtends.setLastSummoned(game_uid, acard);
+        return acard;
+    }
 }

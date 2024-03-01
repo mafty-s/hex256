@@ -245,6 +245,7 @@ contract AbilityTargetSystem is System {
                 bytes32 slot32 = bytes32(uint256(encode));
                 if (AreTargetConditionsMet(game_uid, ability_key, caster, slot32, ConditionTargetType.Slot)) {
                     targets[numTargets] = encode;
+                    numTargets++;
                 }
             }
         }

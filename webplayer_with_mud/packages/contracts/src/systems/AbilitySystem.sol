@@ -318,13 +318,16 @@ contract AbilitySystem is System {
         }
     }
 
+    event EventResolveCardAbilitySlots(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster, uint16[]  targets);
+
     function ResolveCardAbilitySlots(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster) internal
     {
         uint16[] memory targets = GetSlotTargets(game_uid, ability_key, target_type, caster);
+        emit EventResolveCardAbilitySlots(game_uid, ability_key, target_type, caster, targets);
         for (uint i = 0; i < targets.length; i++) {
             uint16 target = targets[i];
             if (target != 0) {
-                ResolveEffectTarget(game_uid, ability_key, caster, bytes32(uint256(target)), target_type, ConditionTargetType.Slot );
+                ResolveEffectTarget(game_uid, ability_key, caster, bytes32(uint256(target)), target_type, ConditionTargetType.Slot);
             }
         }
     }
