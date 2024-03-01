@@ -50,6 +50,8 @@ contract Effect7System is System {
         if (is_card == ConditionTargetType.Slot) {
             bytes32 player = CardOnBoards.getPlayerId(caster);
             bytes32 acard = GameLogicLib.SummonCardHand(game_uid, player, card_config_key);
+            uint16 target_slot_encode = uint16(uint256(target));
+            GameLogicLib.PlayCard(game_uid, player, acard, target_slot_encode, true);
         }
 
         if (is_card == ConditionTargetType.CardData) {
