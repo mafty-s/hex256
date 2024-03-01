@@ -58,6 +58,29 @@ contract ConditionSystem is System {
             condition == IConditionSystem.IsRed.selector ||
             condition == IConditionSystem.IsBlue.selector ||
             condition == IConditionSystem.IsGreen.selector ||
+            condition == IConditionSystem.IsPlayer.selector ||
+            condition == IConditionSystem.IsParalysed.selector ||
+
+            condition == IConditionSystem.IsOnBoard.selector ||
+            condition == IConditionSystem.IsNotOnBoard.selector ||
+            condition == IConditionSystem.IsInDeck.selector ||
+            condition == IConditionSystem.IsNotInDeck.selector ||
+            condition == IConditionSystem.IsInDiscard.selector ||
+            condition == IConditionSystem.IsNotInDiscard.selector ||
+            condition == IConditionSystem.IsInEquipment.selector ||
+            condition == IConditionSystem.IsInHand.selector ||
+            condition == IConditionSystem.IsNotInHand.selector ||
+            condition == IConditionSystem.IsInSecretArea.selector ||
+            condition == IConditionSystem.IsNotInSecretArea.selector ||
+            condition == IConditionSystem.IsInTemp.selector ||
+            condition == IConditionSystem.IsNotInTemp.selector ||
+
+
+            condition == IConditionSystem.IsNotStealth.selector ||
+            condition == IConditionSystem.IsNotSpellImmunity.selector ||
+            condition == IConditionSystem.IsNotSelf.selector ||
+
+
             condition == IConditionSystem.IsWolf.selector
         ) {
             return true;
@@ -190,15 +213,31 @@ contract ConditionSystem is System {
         return ConditionCardPile(condition_type, PileType.Temp, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
+    function IsNotInTemp(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Temp, ConditionOperatorBool.IsFalse, ability_key, caster, target);
+    }
+
     function IsInHand(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Hand, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsNotInHand(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Hand, ConditionOperatorBool.IsFalse, ability_key, caster, target);
     }
 
     function IsInDiscard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Discard, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
+    function IsNotInDiscard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Discard, ConditionOperatorBool.IsFalse, ability_key, caster, target);
+    }
+
     function IsInDeck(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsNotInDeck(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Deck, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
@@ -206,12 +245,20 @@ contract ConditionSystem is System {
         return ConditionCardPile(condition_type, PileType.Secret, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
+    function IsNotInSecretArea(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Secret, ConditionOperatorBool.IsFalse, ability_key, caster, target);
+    }
+
     function IsInEquipment(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Equipped, ConditionOperatorBool.IsTrue, ability_key, caster, target);
     }
 
-    function IsInBoard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+    function IsOnBoard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionCardPile(condition_type, PileType.Board, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsNotOnBoard(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionCardPile(condition_type, PileType.Board, ConditionOperatorBool.IsFalse, ability_key, caster, target);
     }
 
     function IsSlot(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public pure returns (bool){
@@ -297,6 +344,14 @@ contract ConditionSystem is System {
 
     function IsNotStealth(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionStatus(condition_type, Status.Stealth, 0, ConditionOperatorBool.IsFalse, ability_key, caster, target);
+    }
+
+    function IsParalysed(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionStatus(condition_type, Status.Paralysed, 0, ConditionOperatorBool.IsTrue, ability_key, caster, target);
+    }
+
+    function IsNotSpellImmunity(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionStatus(condition_type, Status.SpellImmunity, 0, ConditionOperatorBool.IsFalse, ability_key, caster, target);
     }
 
 //=======================================//=======================================//=======================================
