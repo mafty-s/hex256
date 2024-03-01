@@ -266,7 +266,7 @@ contract AbilityTargetSystem is System {
             }
         }
 
-        return slice(targets, 0, numTargets);
+        return slice_u16(targets, 0, numTargets);
     }
 
     function GetCardDataTargets(bytes32 game_uid, bytes32 ability_key, AbilityTarget target, bytes32 caster) public returns (bytes32[] memory){
@@ -338,6 +338,15 @@ contract AbilityTargetSystem is System {
     function slice(bytes32[] memory array, uint256 start, uint256 length) internal pure returns (bytes32[] memory) {
         require(start + length <= array.length, "Invalid slice range");
         bytes32[] memory result = new bytes32[](length);
+        for (uint256 i = 0; i < length; i++) {
+            result[i] = array[start + i];
+        }
+        return result;
+    }
+
+    function slice_u16(uint16[] memory array, uint256 start, uint256 length) internal pure returns (uint16[] memory) {
+        require(start + length <= array.length, "Invalid slice range");
+        uint16[] memory result = new uint16[](length);
         for (uint256 i = 0; i < length; i++) {
             result[i] = array[start + i];
         }
