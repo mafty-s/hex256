@@ -3,15 +3,10 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Cards} from "../codegen/index.sol";
-import {Packs, PacksData} from "../codegen/index.sol";
-import {Decks, DecksData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, GamePhase, Action, Status, SelectorType} from "../codegen/common.sol";
-import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
 import {Games, GamesExtended} from "../codegen/index.sol";
-import {AiLogicLib} from "../libs/AiLogicLib.sol";
-import {PlayerCardsHand, PlayerCardsDeck, PlayerCardsEquip, PlayerCardsBoard, Players} from "../codegen/index.sol";
-import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
+import {PlayerCardsBoard, Players} from "../codegen/index.sol";
+import {PlayerActionHistory} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
@@ -54,10 +49,10 @@ contract TurnSystem is System {
             for (uint c = 0; c < cards_onboard.length; c++) {
                 CardLogicLib.ReduceStatusDurations(cards_onboard[c]);
             }
-            bytes32[] memory cards_equipped = PlayerCardsEquip.getValue(players[i]);
-            for (uint c = 0; c < cards_equipped.length; c++) {
-                CardLogicLib.ReduceStatusDurations(cards_equipped[c]);
-            }
+//            bytes32[] memory cards_equipped = PlayerCardsEquip.getValue(players[i]);
+//            for (uint c = 0; c < cards_equipped.length; c++) {
+//                CardLogicLib.ReduceStatusDurations(cards_equipped[c]);
+//            }
         }
 
         SystemSwitch.call(

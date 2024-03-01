@@ -2,12 +2,14 @@
 pragma solidity >=0.8.21;
 
 import {Cards, Players} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, Status, CardTrait} from "../codegen/common.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsSecret, PlayerCardsEquip} from "../codegen/index.sol";
+import {CardType, GameType, GameState, GamePhase, Status, CardTrait, PileType} from "../codegen/common.sol";
+import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, CardOnBoards} from "../codegen/index.sol";
 import {BytesArrayTools} from "../utils/BytesArrayTools.sol";
-import "./SlotLib.sol";
+import {Slot, SlotLib} from "./SlotLib.sol";
+import {CardTableLib} from "./CardTableLib.sol";
 
 library PlayerLogicLib {
+
 
     function CanAttack(bool skip_cost) internal pure returns (bool) {
         //todo
@@ -18,48 +20,48 @@ library PlayerLogicLib {
         return Players.getMana(player_key) > Cards.getMana(card_key);
     }
 
-    function RemoveCardFromAllGroups(bytes32 player_key, bytes32 card_key) internal {
-        RemoveCardFromBoard(player_key, card_key);
-        RemoveCardFromHand(player_key, card_key);
-        RemoveCardFromDeck(player_key, card_key);
+    function RemoveCardFromAllGroups(bytes32 player, bytes32 card) internal {
+        RemoveCardFrom(PileType.Board, player, card);
+        RemoveCardFrom(PileType.Hand, player, card);
+        RemoveCardFrom(PileType.Deck, player, card);
+        RemoveCardFrom(PileType.Discard, player, card);
+        RemoveCardFrom(PileType.Secret, player, card);
+        RemoveCardFrom(PileType.Equipped, player, card);
+        RemoveCardFrom(PileType.Temp, player, card);
+    }
+
+    function RemoveCardFrom(PileType pile, bytes32 player, bytes32 card) internal {
+        bytes32[] memory cards = CardTableLib.getValue(pile, player);
+        cards = CardTableLib.removeElementFromArray(cards, card);
+        CardTableLib.setValue(pile, player, cards);
+    }
+
+    function AddCardTo(PileType pile, bytes32 player_key, bytes32 card_key) internal {
+        CardTableLib.pushValue(pile, player_key, card_key);
     }
 
     function AddCardToBoard(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsBoard.pushValue(player_key, card_key);
+        AddCardTo(PileType.Board, player_key, card_key);
     }
 
     function AddCardToHand(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsHand.pushValue(player_key, card_key);
+        AddCardTo(PileType.Hand, player_key, card_key);
     }
 
-
     function AddCardToSecret(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsSecret.pushValue(player_key, card_key);
+        AddCardTo(PileType.Secret, player_key, card_key);
     }
 
     function AddCardToEquipment(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsEquip.pushValue(player_key, card_key);
+        AddCardTo(PileType.Equipped, player_key, card_key);
     }
 
     function AddCardToDiscard(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsDiscard.pushValue(player_key, card_key);
+        AddCardTo(PileType.Discard, player_key, card_key);
     }
 
     function AddCardToDeck(bytes32 player_key, bytes32 card_key) internal {
         PlayerCardsDeck.pushValue(player_key, card_key);
-    }
-
-    function RemoveCardFromBoard(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsBoard.setValue(player_key, BytesArrayTools.removeElementFromArray(PlayerCardsBoard.getValue(player_key), card_key));
-    }
-
-
-    function RemoveCardFromHand(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsHand.setValue(player_key, BytesArrayTools.removeElementFromArray(PlayerCardsHand.getValue(player_key), card_key));
-    }
-
-    function RemoveCardFromDeck(bytes32 player_key, bytes32 card_key) internal {
-        PlayerCardsDeck.setValue(player_key, BytesArrayTools.removeElementFromArray(PlayerCardsDeck.getValue(player_key), card_key));
     }
 
     function GetRandomCard(bytes32 player_key) internal view returns (bytes32) {
@@ -185,7 +187,7 @@ library PlayerLogicLib {
             uint8 trait_value = uint8(trait_data >> 8);
             trait_value = trait_value + uint8(value);
             uint16 new_trait_data = (uint16(trait_id) << 8) | uint16(trait_value);
-            Players.updateTrait(caster,trait_index,new_trait_data);
+            Players.updateTrait(caster, trait_index, new_trait_data);
         } else {
             SetTrait(caster, trait, (uint8)(value));
         }
