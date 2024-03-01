@@ -40,7 +40,25 @@ contract ConditionSystem is System {
 
         if (
             condition == IConditionSystem.IsCharacter.selector ||
-            condition == IConditionSystem.IsEnemy.selector
+            condition == IConditionSystem.IsEnemy.selector ||
+            condition == IConditionSystem.AiIsAlly.selector ||
+            condition == IConditionSystem.AiIsEnemy.selector ||
+            condition == IConditionSystem.IsAlly.selector ||
+            condition == IConditionSystem.IsArtifact.selector ||
+            condition == IConditionSystem.IsSpell.selector ||
+            condition == IConditionSystem.IsSlot.selector ||
+            condition == IConditionSystem.IsSlotEmpty.selector ||
+            condition == IConditionSystem.IsSlotInRange.selector ||
+            condition == IConditionSystem.IsSlotNextTo.selector ||
+            condition == IConditionSystem.IsSlotSameP.selector ||
+            condition == IConditionSystem.IsSlotX1.selector ||
+            condition == IConditionSystem.IsNotEmptySlot.selector ||
+            condition == IConditionSystem.IsSecret.selector ||
+            condition == IConditionSystem.IsEquipment.selector ||
+            condition == IConditionSystem.IsRed.selector ||
+            condition == IConditionSystem.IsBlue.selector ||
+            condition == IConditionSystem.IsGreen.selector ||
+            condition == IConditionSystem.IsWolf.selector
         ) {
             return true;
         }
@@ -57,6 +75,14 @@ contract ConditionSystem is System {
     function IsTargetConditionMet(bytes4 condition, bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType condition_type) public returns (bool)
     {
         if (!IsConditionFunctionExist(condition)) {
+            return true;
+        }
+
+        if (
+            condition == IConditionSystem.IsNotYourTurn.selector ||
+            condition == IConditionSystem.IsYourTurn.selector ||
+            condition == IConditionSystem.OncePerTurn.selector
+        ) {
             return true;
         }
 
@@ -250,6 +276,11 @@ contract ConditionSystem is System {
 
     function OncePerTurn(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionOnce(condition_type, game_uid, ability_key, caster, target);
+    }
+
+
+    function IsYourTurn(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
+        return ConditionTurn(condition_type, game_uid, ability_key, caster, target, ConditionOperatorBool.IsTrue);
     }
 
     function IsNotYourTurn(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
