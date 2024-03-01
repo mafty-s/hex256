@@ -11,10 +11,11 @@ import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, Action
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType, GameState} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
-import {PlayerCardsBoard, PlayerCardsHand, PlayerCardsEquip, PlayerCardsTemp, PlayerCardsSecret, PlayerCardsDiscard, PlayerCardsDeck} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
+import {CardTableLib} from "../libs/CardTableLib.sol";
+import {PileType} from "../codegen/common.sol";
 
 contract AbilityTargetSystem is System {
 
@@ -103,8 +104,8 @@ contract AbilityTargetSystem is System {
         {
 
 //            targets = new bytes32[](0);
-            bytes32[] memory cards_board_a = PlayerCardsBoard.getValue(players[0]);
-            bytes32[] memory cards_board_b = PlayerCardsBoard.getValue(players[1]);
+            bytes32[] memory cards_board_a = CardTableLib.getValue(PileType.Board, players[0]);
+            bytes32[] memory cards_board_b = CardTableLib.getValue(PileType.Board, players[1]);
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
@@ -129,8 +130,8 @@ contract AbilityTargetSystem is System {
 
         if (target == AbilityTarget.AllCardsHand)
         {
-            bytes32[] memory cards_board_a = PlayerCardsHand.getValue(players[0]);
-            bytes32[] memory cards_board_b = PlayerCardsHand.getValue(players[1]);
+            bytes32[] memory cards_board_a = CardTableLib.getValue(PileType.Hand, players[0]);
+            bytes32[] memory cards_board_b = CardTableLib.getValue(PileType.Hand, players[1]);
 
             targets = new bytes32[](cards_board_a.length + cards_board_b.length);
             for (uint i = 0; i < cards_board_a.length; i++) {
@@ -151,13 +152,13 @@ contract AbilityTargetSystem is System {
         {
             for (uint i = 0; i < players.length; i++) {
                 bytes32 player_key = players[i];
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsDeck.getValue(player_key), ConditionTargetType.Card));
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsDiscard.getValue(player_key), ConditionTargetType.Card));
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsHand.getValue(player_key), ConditionTargetType.Card));
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsBoard.getValue(player_key), ConditionTargetType.Card));
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsEquip.getValue(player_key), ConditionTargetType.Card));
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsSecret.getValue(player_key), ConditionTargetType.Card));
-                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, PlayerCardsTemp.getValue(player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Board, player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Hand, player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Deck, player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Discard, player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Secret, player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Equipped, player_key), ConditionTargetType.Card));
+                targets = concatArrays(targets, AddValidCards(game_uid, ability_key, caster, CardTableLib.getValue(PileType.Temp, player_key), ConditionTargetType.Card));
             }
         }
 

@@ -9,7 +9,6 @@ import {Ability, AbilityExtend, CardOnBoards, Cards, PlayerActionHistory, Action
 import {AbilityTrigger, Status, Action, AbilityTarget, SelectorType, ConditionTargetType, GameState} from "../codegen/common.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
-import {PlayerCardsBoard} from "../codegen/index.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
