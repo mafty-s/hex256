@@ -6,12 +6,14 @@ import {CardOnBoards} from "../codegen/index.sol";
 import {Games, Cards, Players, GamesExtended} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {CardLogicLib} from "../libs/CardLogicLib.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType, ConditionTargetType, AbilityTrigger} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, Status, SelectorType, ConditionTargetType, AbilityTrigger, Action} from "../codegen/common.sol";
 import {CardPosLogicLib} from "../libs/CardPosLogicLib.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IAbilitySecretsSystem} from "../codegen/world/IAbilitySecretsSystem.sol";
+import {IOnGoingSystem} from "../codegen/world/IOnGoingSystem.sol";
 import {ISlotSystem} from "../codegen/world/ISlotSystem.sol";
 import {Slot, SlotLib} from "./SlotLib.sol";
+import {PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
 
 library GameLogicLib {
 
@@ -326,21 +328,91 @@ library GameLogicLib {
         return acard;
     }
 
-    function SummonCard(bytes32 game_uid, bytes32 player_key, bytes32 card_config_key, Slot memory slot) internal returns (bytes32){
+    function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, uint16 slot_encode, bool skip_cost) internal {
 
-//        if (!slot.IsValid())
-//            return null;
-//
-//        if (game_data.GetSlotCard(slot) != null)
-//            return null;
 
-        bytes32 acard = SummonCardHand(game_uid, player_key, card_config_key);
-        PlayCard(acard, slot, true);
+        if (!skip_cost) {
+//            PayMana(player_key, card_key);
 
-        return acard;
-    }
+            int8 mana_cost = CardOnBoards.getMana(card_key);
+            int8 player_mana = Players.getMana(player_key);
+            require(player_mana >= mana_cost, "not enough mana");
+            player_mana -= mana_cost;
+            Players.setMana(player_key, player_mana);
+        }
 
-    function PlayCard(bytes32 card, Slot memory slot, bool skip_cost) internal {
+        PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
+
+        bytes32 card_config_key = CardOnBoards.getId(card_key);
+        bytes32[] memory players = Games.getPlayers(game_key);
+
+        Slot memory slot = SlotLib.DecodeSlot(slot_encode);
+
+        if (CardLogicLib.IsBoardCard(card_config_key)) {
+            PlayerLogicLib.AddCardToBoard(player_key, card_key);
+            CardOnBoards.setExhausted(card_key, true);
+            SlotLib.SetCardOnSlot(player_key, card_key, slot.x);
+            CardOnBoards.setSlot(card_key, slot_encode);
+            //使用触发器触发技能
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (
+                    AbilityTrigger.ON_PLAY, game_key, card_key, 0, ConditionTargetType.Card))
+            );
+        } else if (CardLogicLib.IsEquipment(card_config_key)) {
+//            bytes32 bearer = BaseLogicLib.GetSlotCard(game_key, slot);
+//            GameLogicLib.EquipCard(bearer, card_key);
+            bytes32 card_on_slot = SlotLib.GetCardOnSlot(player_key, slot.x);
+            if (card_on_slot == 0) {
+                revert("try equipment buf slot is empty");
+            }
+            CardOnBoards.setExhausted(card_key, true);
+            CardOnBoards.setEquippedUid(card_on_slot, card_key);
+
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
+            PlayerLogicLib.AddCardToEquipment(player_key, card_key);
+
+        } else if (CardLogicLib.IsSecret(card_config_key)) {
+            PlayerLogicLib.AddCardToSecret(player_key, card_key);
+        } else if (CardLogicLib.IsSpell(card_config_key)) {
+
+            PlayerLogicLib.RemoveCardFromAllGroups(player_key, card_key);
+            PlayerLogicLib.AddCardToDiscard(player_key, card_key);
+
+            if (slot.x != 0) {
+                bytes32 slot_player = slot.p == 0 ? players[0] : players[1];
+                bytes32 card_on_slot = SlotLib.GetCardOnSlot(slot_player, slot.x);
+                SystemSwitch.call(
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, card_on_slot, ConditionTargetType.Card))
+                );
+            } else {
+                SystemSwitch.call(
+                    abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_PLAY, game_key, card_key, 0, ConditionTargetType.Card))
+                );
+            }
+
+        } else {
+            PlayerLogicLib.AddCardToDiscard(player_key, card_key);
+        }
+
+//        uint16 slot_encode = SlotLib.EncodeSlot(slot);
+        if (!CardLogicLib.IsSecret(card_config_key)) {
+            uint256 len = PlayerActionHistory.length(game_key);
+            bytes32 action_key = keccak256(abi.encode(game_key, len));
+            PlayerActionHistory.push(game_key, action_key);
+            ActionHistory.setActionType(action_key, Action.PlayCard);
+            ActionHistory.setCardId(action_key, card_key);
+            ActionHistory.setSlot(action_key, slot_encode);
+            ActionHistory.setPlayerId(action_key, players[0] == player_key ? 0 : 1);
+        }
+
+        SystemSwitch.call(
+            abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_key))
+        );
+
+        SystemSwitch.call(
+            abi.encodeCall(IAbilitySecretsSystem.TriggerSecrets, (AbilityTrigger.ON_PLAY_OTHER, game_key, card_key))
+        );
+
 
     }
 }

@@ -10,30 +10,6 @@ import { ConditionTargetType } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IEffect2System {
-  function EffectSummonEagle(
-    bytes32 game_uid,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    ConditionTargetType is_card
-  ) external;
-
-  function EffectSummonEgg(
-    bytes32 game_uid,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    ConditionTargetType is_card
-  ) external;
-
-  function EffectSummonWolf(
-    bytes32 game_uid,
-    bytes32 ability_key,
-    bytes32 caster,
-    bytes32 target,
-    ConditionTargetType is_card
-  ) external;
-
   function EffectTransformFish(
     bytes32 game_uid,
     bytes32 ability_key,

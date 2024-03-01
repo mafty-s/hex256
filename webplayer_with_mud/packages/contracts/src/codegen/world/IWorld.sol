@@ -20,6 +20,7 @@ import { IEffect3System } from "./IEffect3System.sol";
 import { IEffect4System } from "./IEffect4System.sol";
 import { IEffect5System } from "./IEffect5System.sol";
 import { IEffect6System } from "./IEffect6System.sol";
+import { IEffect7System } from "./IEffect7System.sol";
 import { IEffectSystem } from "./IEffectSystem.sol";
 import { IFilterSystem } from "./IFilterSystem.sol";
 import { IGameStartSystem } from "./IGameStartSystem.sol";
@@ -59,6 +60,7 @@ interface IWorld is
   IEffect4System,
   IEffect5System,
   IEffect6System,
+  IEffect7System,
   IEffectSystem,
   IFilterSystem,
   IGameStartSystem,

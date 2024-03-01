@@ -200,8 +200,8 @@ library PlayerLogicLib {
         require(card_number > 0, "card_number must > 0");
         uint nb = uint256(int256(card_number));
         bytes32[] memory draw_cards = new bytes32[](nb);
-        for (uint i = 0; i < card_number; i++) {
-            uint256 len = CardTableLib.length(PileType.Deck);
+        for (uint i = 0; i < nb; i++) {
+            uint256 len = CardTableLib.length(PileType.Deck, player_key);
             if (len == 0) {
                 break;
             }
@@ -230,6 +230,8 @@ library PlayerLogicLib {
         uint8 d = uint8(value & 0xFF);
         return (a, b, c, d);
     }
+
+
 
 //public Card GetBearerCard(Card equipment)
 //{

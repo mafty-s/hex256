@@ -697,21 +697,22 @@ export function createSystemCalls(
 
         const slot_encode = EncodeSlot(slot);
 
-        const hash = await worldContract.write.PlayCard([game_key, player_key, card_key, slot_encode, skip_cost]);
+        const hash = await worldContract.write.PlayCard([game_key, player_key, card_key, slot_encode]);
         await waitForTransaction(hash);
 
-        const tx_result = await getTxResult(hash);
-        console.log("tx-result", tx_result)
+        return [];
+        // const tx_result = await getTxResult(hash);
+        // console.log("tx-result", tx_result)
 
-        const result = {
-            card_uid: card_key,
-            slot_x: slot.x,
-            slot_y: 1,//slot.y,
-            slot_p: slot.p,
-            mana_cost: tx_result.result[0],
-            player_mana: tx_result.result[1],
-        }
-        return convertBigIntToInt({hash, tx_result, result});
+        // const result = {
+        //     card_uid: card_key,
+        //     slot_x: slot.x,
+        //     slot_y: 1,//slot.y,
+        //     slot_p: slot.p,
+        //     mana_cost: tx_result.result[0],
+        //     player_mana: tx_result.result[1],
+        // }
+        // return convertBigIntToInt({hash, tx_result, result});
     }
 
     const moveCard = async (game_id, player_id, card_id, slot, skip_cost, card_key) => {

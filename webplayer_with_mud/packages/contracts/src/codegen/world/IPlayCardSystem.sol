@@ -8,13 +8,5 @@ pragma solidity >=0.8.21;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IPlayCardSystem {
-  function PlayCard(
-    bytes32 game_key,
-    bytes32 player_key,
-    bytes32 card_key,
-    uint16 slot_encode,
-    bool skip_cost
-  ) external returns (int8, int8);
-
-  function PayMana(bytes32 player_key, bytes32 card_key) external;
+  function PlayCard(bytes32 game_key, bytes32 player_key, bytes32 card_key, uint16 slot_encode) external;
 }

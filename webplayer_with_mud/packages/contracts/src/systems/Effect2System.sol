@@ -4,35 +4,16 @@ pragma solidity >=0.8.21;
 import {System} from "@latticexyz/world/src/System.sol";
 import {Players, Ability, Games, GamesExtended, PlayerActionHistory, ActionHistory} from "../codegen/index.sol";
 import {Action, PileType} from "../codegen/common.sol";
-import {MathLib} from "../libs/MathLib.sol";
 import {Cards, CardOnBoards} from "../codegen/index.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsDiscard, PlayerCardsTemp, PlayerCardsBoard} from "../codegen/index.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {Slot, SlotLib} from "../libs/SlotLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
 import {ConditionTargetType} from "../codegen/common.sol";
+import {CardTableLib} from "../libs/CardTableLib.sol";
 
 contract Effect2System is System {
 
     event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
-
-    function EffectSummonEagle(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
-        emit EventEffect("EffectSummonEagle", ability_key, caster, target, is_card);
-        bytes32 flame_eagle = 0xeadaa9330dc55ff4f5a4be2783106cf919f0dccf372920ccfd645f6c9dbf8c0d;
-        EffectSummon(game_uid, ability_key, caster, target, is_card, flame_eagle);
-    }
-
-    function EffectSummonEgg(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
-        emit EventEffect("EffectSummonEgg", ability_key, caster, target, is_card);
-        bytes32 phoenix_egg = 0xaf3ece100d5f745760efadfedc743cbe6077114f7105f0e642e09d1e8cb38de4;
-        EffectSummon(game_uid, ability_key, caster, target, is_card, phoenix_egg);
-    }
-
-    function EffectSummonWolf(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
-        emit EventEffect("EffectSummonWolf", ability_key, caster, target, is_card);
-        bytes32 wolf_baby = 0xc0fd58a3602c8586b2e1583e65cef9c8e3dbc8bc36449e7fe2666856e4a1e554;
-        EffectSummon(game_uid, ability_key, caster, target, is_card, wolf_baby);
-    }
 
     function EffectTransformFish(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectTransformFish", ability_key, caster, target, is_card);
@@ -59,9 +40,9 @@ contract Effect2System is System {
     function EffectShuffleDeck(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectShuffleDeck", ability_key, caster, target, is_card);
         if (is_card != ConditionTargetType.Card) {
-            bytes32[] memory cards = PlayerCardsDeck.getValue(target);
+            bytes32[] memory cards = CardTableLib.getValue(PileType.Deck, target);
             cards = shuffle(cards);
-            PlayerCardsDeck.setValue(target, cards);
+            CardTableLib.setValue(PileType.Deck, target, cards);
         }
     }
 
@@ -70,7 +51,7 @@ contract Effect2System is System {
         if (is_card == ConditionTargetType.Card) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             bytes32[] memory empty = new bytes32[](0);
-            PlayerCardsTemp.set(player_key, empty);
+            CardTableLib.setValue(PileType.Temp, player_key, empty);
         }
     }
 
@@ -92,18 +73,7 @@ contract Effect2System is System {
             }
             bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_id);
             GamesExtended.setLastSummoned(game_uid, card_uid);
-            if (create_pile == PileType.Deck) {
-                PlayerCardsDeck.pushValue(player_key, card_uid);
-            }
-            if (create_pile == PileType.Hand) {
-                PlayerCardsHand.pushValue(player_key, card_uid);
-            }
-            if (create_pile == PileType.Discard) {
-                PlayerCardsDiscard.pushValue(player_key, card_uid);
-            }
-            if (create_pile == PileType.Temp) {
-                PlayerCardsTemp.pushValue(player_key, card_uid);
-            }
+            CardTableLib.pushValue(create_pile, player_key, card_uid);
         }
     }
 
@@ -127,44 +97,6 @@ contract Effect2System is System {
         return shuffled;
     }
 
-    //召唤一张卡，比如凤凰死亡的时候会出现凤凰蛋
-    function EffectSummon(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {
-//        uint len = CardOnBoards.getLength(caster);
-
-//        bytes32 player_key = CardOnBoards.getPlayerId(caster);
-//        // 创建一张卡
-//
-//        bytes32 game_key = Players.getGame(player_key);
-//        bytes32[] memory players = Games.getPlayers(game_key);
-//        uint8 p = players[0] == player_key ? 0 : 1;
-//
-//        Slot memory slot = SlotLib.GetRandomEmptySlot(player_key, p);
-//        uint16 slot_encode = SlotLib.EncodeSlot(slot);
-//
-//        bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_key);
-//        CardOnBoards.setSlot(card_uid, slot_encode);
-//
-//        SlotLib.SetCardOnSlot(player_key, card_uid, slot.x);
-//        PlayerCardsBoard.pushValue(player_key, card_uid);
-
-        if (is_card == ConditionTargetType.Player) {
-            GameLogicLib.SummonCardHand(game_uid, target, card_config_key);
-        }
-
-        if (is_card == ConditionTargetType.Card) {
-
-        }
-
-        if (is_card == ConditionTargetType.Slot) {
-
-        }
-
-        if (is_card == ConditionTargetType.CardData) {
-            bytes32 player = CardOnBoards.getPlayerId(caster);
-            GameLogicLib.SummonCardHand(game_uid, player, target);
-        }
-
-    }
 
     //把一张牌变为另一张牌
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {
@@ -178,18 +110,7 @@ contract Effect2System is System {
     //将卡牌移动到指定区域，手牌区、弃牌区、显示区等
     function EffectSendPile(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, PileType pile_type) internal {
         bytes32 player_key = CardOnBoards.getPlayerId(target);
-        if (pile_type == PileType.Deck) {
-            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
-            PlayerCardsDeck.pushValue(player_key, target);
-        } else if (pile_type == PileType.Hand) {
-            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
-            PlayerCardsHand.pushValue(player_key, target);
-        } else if (pile_type == PileType.Discard) {
-            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
-            PlayerCardsDiscard.pushValue(player_key, target);
-        } else if (pile_type == PileType.Temp) {
-            PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
-            PlayerCardsTemp.pushValue(player_key, target);
-        }
+        PlayerLogicLib.RemoveCardFromAllGroups(player_key, target);
+        CardTableLib.pushValue(pile_type, player_key, target);
     }
 }
