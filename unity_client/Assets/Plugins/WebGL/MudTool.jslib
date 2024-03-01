@@ -234,7 +234,7 @@ mergeInto(LibraryManager.library, {
     },
 
     cancelSelection: async function (game_uid) {
-        let result = await mud.CancelSelection(UTF8ToString(game_uid));
+        let result = await mud.cancelSelection(UTF8ToString(game_uid));
     }
 
 });
