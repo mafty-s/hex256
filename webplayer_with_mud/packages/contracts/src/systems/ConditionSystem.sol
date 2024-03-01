@@ -167,8 +167,10 @@ contract ConditionSystem is System {
         return ConditionOwnerAI(condition_type, ability_key, caster, target, ConditionOperatorBool.IsFalse);
     }
 
-    function IsAlly(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionOwner(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    function IsAlly(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionOwner(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        emit EventCondition("IsAlly", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function IsEnemy(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
@@ -285,16 +287,20 @@ contract ConditionSystem is System {
         return ConditionSlotRange(condition_type, ability_key, caster, target, 99, 99, 0);
     }
 
-    function IsSlotNextTo(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotRange(condition_type, ability_key, caster, target, 1, 1, 0);
+    function IsSlotNextTo(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionSlotRange(condition_type, ability_key, caster, target, 1, 1, 0);
+        emit EventCondition("IsSlotNextTo", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function IsSlotInRange(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
         return ConditionSlotRange(condition_type, ability_key, caster, target, 1, 1, 1);
     }
 
-    function IsSlotEmpty(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){
-        return ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+    function IsSlotEmpty(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public returns (bool){
+        bool result = ConditionSlotEmpty(condition_type, ability_key, caster, target, ConditionOperatorBool.IsTrue);
+        emit EventCondition("IsSlotEmpty", game_uid, ability_key, condition_type, caster, target, result);
+        return result;
     }
 
     function IsNotEmptySlot(bytes32 game_uid, bytes32 ability_key, ConditionTargetType condition_type, bytes32 caster, bytes32 target) public view returns (bool){

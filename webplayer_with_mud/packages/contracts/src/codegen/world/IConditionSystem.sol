@@ -91,7 +91,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function IsEnemy(
     bytes32 game_uid,
@@ -315,7 +315,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function IsSlotInRange(
     bytes32 game_uid,
@@ -331,7 +331,7 @@ interface IConditionSystem {
     ConditionTargetType condition_type,
     bytes32 caster,
     bytes32 target
-  ) external view returns (bool);
+  ) external returns (bool);
 
   function IsNotEmptySlot(
     bytes32 game_uid,
