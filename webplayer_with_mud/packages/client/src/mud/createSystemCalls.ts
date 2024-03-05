@@ -309,7 +309,7 @@ export function createSystemCalls(
         const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
         const target_code = getAbilityTarget((target));
         let status_code = [];
-        if (status.length != "") {
+        if (status.length !== 0) {
             status_code = status.split("|").map((i) => {
                 let name = convertToCamelCase(i);
                 let status = getStatus(name);

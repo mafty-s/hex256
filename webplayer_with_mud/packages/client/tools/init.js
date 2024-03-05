@@ -171,7 +171,7 @@ const getEffectSelector = (name) => {
 const getStatus = (str) => {
     const status = common.Status[str];
     if (status === undefined) {
-        // console.error("not exist getStatus", str)
+        console.error("not exist getStatus", str)
         return common.Status.None;
     }
     return status;
@@ -185,19 +185,19 @@ const initAbility = async (id, trigger, target, value, manaCost, duration, exhau
     const trigger_code = getAbilityTrigger(convertToEnumFormat(trigger));
     const target_code = getAbilityTarget((target));
     let status_code = [];
-    if (status.length !== "") {
+    if (status.length !== 0) {
         status_code = status.split("|").map((i) => {
             let name = convertToCamelCase(i);
             let status = getStatus(name);
             if (status) {
                 return status;
             } else {
-                console.error("status not found", name);
+                // console.error("status not found", name);
             }
         });
     }
     status_code = status_code.filter((i) => {
-        return i !== undefined
+        return i !== undefined && i!==null
     });
     // console.log("initAbility", id, key, status, status_code);
     //
@@ -252,7 +252,7 @@ const getFilterSelector = (name) => {
     // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
     const functionName = convertToPascalCase(name) + '(bytes32,bytes32,bytes32[],uint8)';
     const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
-    console.log(functionName, functionSelector)
+    // console.log(functionName, functionSelector)
 
     return functionSelector;
 }
