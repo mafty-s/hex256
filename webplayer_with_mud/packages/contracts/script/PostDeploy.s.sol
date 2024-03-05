@@ -7,19 +7,23 @@ import {StoreSwitch} from "@latticexyz/store/src/StoreSwitch.sol";
 
 import {IWorld} from "../src/codegen/world/IWorld.sol";
 
+import {Decks, Ability, AbilityExtend} from "../src/codegen/index.sol";
+
 contract PostDeploy is Script {
     function run(address worldAddress) external {
         // Specify a store so that you can use tables directly in PostDeploy
         StoreSwitch.setStoreAddress(worldAddress);
 
-        // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
+//         Load the private key from the `PRIVATE_KEY` environment variable (in .env)
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
-        // Start broadcasting transactions from the deployer account
+//         Start broadcasting transactions from the deployer account
         vm.startBroadcast(deployerPrivateKey);
 
-        // We can set table records directly
+        IWorld(worldAddress).initDeck("", bytes32(0), new bytes32[](0));
 
-        vm.stopBroadcast();
+         vm.stopBroadcast();
     }
+
+
 }

@@ -143,6 +143,7 @@ export const App = () => {
             let card_key = calculateKeccak256Hash(card_id);
             cards_keys.push(card_key);
         }
+        console.log("deck",name, calculateKeccak256Hash(hero), cards_keys)
         initDeck(name, calculateKeccak256Hash(hero), cards_keys);
     }
 

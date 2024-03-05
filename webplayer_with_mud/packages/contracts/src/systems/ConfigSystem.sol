@@ -15,7 +15,6 @@ contract ConfigSystem is System {
 
 
     constructor() {
-
     }
 
     function initCard(string memory name, int8 mana, int8 attack, int8 hp, uint32 cost, bytes32[] memory abilities, CardType cardType, RarityType rarity, bool is_deckbuilding, CardTrait trait) public returns (bytes32 key)  {

@@ -118,6 +118,7 @@ library GameLogicLib {
     }
 
 
+
     function DamageCardByTarget(bytes32 game_uid, bytes32 attacker, bytes32 target, int8 value, bool spell_damage) internal {
         if (CardLogicLib.HasStatus(target, Status.Invincibility)) {
             return;

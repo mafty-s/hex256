@@ -383,7 +383,7 @@ contract AbilitySystem is System {
 
         GameLogicLib.CheckForWinner(game_uid);
 
-//Chain ability
+        //Chain ability 链式技能调用
         if (target != AbilityTarget.ChoiceSelector && Games.getGameState(game_uid) != GameState.GAME_ENDED)
         {
             bytes32[] memory chain_abilities = AbilityExtend.getChainAbilities(ability_key);
