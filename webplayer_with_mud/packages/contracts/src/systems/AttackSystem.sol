@@ -172,7 +172,7 @@ contract AttackSystem is System {
             bytes32[] memory players = Games.getPlayers(game_uid);
             address player_0_owner = Players.getOwner(players[0]);
             address player_1_owner = Players.getOwner(players[1]);
-            bytes32 winner = player_0_owner == _msgSender() ? player[1] : player[0];
+            bytes32 winner = player_0_owner == _msgSender() ? players[1] : players[0];
             GameLogicLib.EndGame(game_uid, winner);
         }
     }
