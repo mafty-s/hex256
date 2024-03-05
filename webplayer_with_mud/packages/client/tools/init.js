@@ -196,6 +196,9 @@ const initAbility = async (id, trigger, target, value, manaCost, duration, exhau
             }
         });
     }
+    status_code = status_code.filter((i) => {
+        return i !== undefined
+    });
     // console.log("initAbility", id, key, status, status_code);
     //
     //
@@ -204,7 +207,17 @@ const initAbility = async (id, trigger, target, value, manaCost, duration, exhau
     const filtersTarget_byes32 = getSelectorFromArrStr(filtersTarget, getFilterSelector);
     const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
 
-    const tx = await world_contract.initAbility([
+    console.log( id,
+        trigger_code,
+        target_code,
+        value,
+        manaCost,
+        duration,
+        exhaust,
+        getSelectorFromArrStr(effect_str, getEffectSelector),
+        status_code);
+
+    const tx = await world_contract.([
         id,
         trigger_code,
         target_code,
@@ -231,7 +244,7 @@ const initAbility = async (id, trigger, target, value, manaCost, duration, exhau
     // await waitForTransaction(tx2);
 
     // ablities[key.toString()] = id;
-    return tx;
+    // return tx;
 }
 
 const getFilterSelector = (name) => {
