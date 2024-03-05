@@ -207,17 +207,7 @@ const initAbility = async (id, trigger, target, value, manaCost, duration, exhau
     const filtersTarget_byes32 = getSelectorFromArrStr(filtersTarget, getFilterSelector);
     const chainAbilities_byes32 = arrStr2Bytes32(chainAbilities);
 
-    console.log( id,
-        trigger_code,
-        target_code,
-        value,
-        manaCost,
-        duration,
-        exhaust,
-        getSelectorFromArrStr(effect_str, getEffectSelector),
-        status_code);
-
-    const tx = await world_contract.([
+    const tx = await world_contract.initAbility(
         id,
         trigger_code,
         target_code,
@@ -226,20 +216,27 @@ const initAbility = async (id, trigger, target, value, manaCost, duration, exhau
         duration,
         exhaust,
         getSelectorFromArrStr(effect_str, getEffectSelector),
-        status_code
-    ], {
-        nonce: nonce++
-    });
+        status_code,
+        {
+            nonce: nonce++
+        }
+    );
     tx.wait().then((receipt) => {
         console.log("initAbility", id, receipt.hash);
     });
-    // const tx2 = await world_contract.initAbilityExtend([
-    //     id,
-    //     conditionsTarget_byes32,
-    //     conditionsTrigger_byes32,
-    //     filtersTarget_byes32,
-    //     chainAbilities_byes32,
-    // ]);
+    const tx2 = await world_contract.initAbilityExtend(
+        id,
+        conditionsTarget_byes32,
+        conditionsTrigger_byes32,
+        filtersTarget_byes32,
+        chainAbilities_byes32,
+        {
+            nonce: nonce++,
+        });
+
+    tx2.wait().then((receipt) => {
+        console.log("initAbilityExtend", id, receipt.hash);
+    });
 
     // await waitForTransaction(tx2);
 
