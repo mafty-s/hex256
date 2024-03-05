@@ -262,20 +262,20 @@ export function createSystemCalls(
         const rarityCode = getRarityType(rarity_str.substr(2,));
         const traitCode = getCardTrait(convertToCamelCase(trait));
         const tx = await worldContract.write.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding, traitCode]);
-        await waitForTransaction(tx);
+        // await waitForTransaction(tx);
         console.log("init_card", name, calculateKeccak256Hash(name));
         return tx;
     };
 
     const initPack = async (name: string, packType: number, cards: number, rarities: number[], cost: number) => {
         const tx = await worldContract.write.initPack([name, packType, cards, rarities, cost]);
-        await waitForTransaction(tx);
+        // await waitForTransaction(tx);
         return tx;
     };
 
     const initDeck = async (name: string, hero: string, cards: string[]) => {
         const tx = await worldContract.write.initDeck([name, hero, cards]);
-        await waitForTransaction(tx);
+        // await waitForTransaction(tx);
         return tx;
     };
 
@@ -340,7 +340,7 @@ export function createSystemCalls(
             status_code
         ]);
 
-        await waitForTransaction(tx);
+        // await waitForTransaction(tx);
 
         const tx2 = await worldContract.write.initAbilityExtend([
             id,
@@ -350,7 +350,7 @@ export function createSystemCalls(
             chainAbilities_byes32,
         ]);
 
-        await waitForTransaction(tx2);
+        // await waitForTransaction(tx2);
 
         // ablities[key.toString()] = id;
         return tx;
