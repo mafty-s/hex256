@@ -359,6 +359,12 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern string cancelSelection(string game_uid);
+    
+    [DllImport("__Internal")]
+    private static extern string castAbility(string game_uid,string caster,string ability);
+    
+    [DllImport("__Internal")]
+    private static extern string resign(string player);
 
 #endif
 
@@ -685,4 +691,19 @@ public class MudManager : MonoBehaviour
         cancelSelection(game_uid);
 #endif
     }
+    
+    public void CastAbility(string game_uid,string caster, string ability)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        castAbility(game_uid,caster,ability);
+#endif
+    }
+
+    public void Resign(string player)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        resign(player);
+#endif
+    }
+
 }

@@ -694,6 +694,10 @@ namespace TcgEngine.Client
             mdata.ability_id = ability.id;
             mdata.target_uid = "";
             SendAction(GameAction.CastAbility, mdata);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().CastAbility(game_data.game_uid, card.uid, ability.id);
+            }
         }
 
         public void SelectCard(Card card)
@@ -785,6 +789,10 @@ namespace TcgEngine.Client
         public void Resign()
         {
             SendAction(GameAction.Resign);
+            if (MudManager.Get().useMud)
+            {
+                MudManager.Get().Resign(GetPlayer().username);
+            }
         }
 
         public void SetObserverMode(int player_id)

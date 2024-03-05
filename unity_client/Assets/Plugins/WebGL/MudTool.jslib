@@ -235,6 +235,14 @@ mergeInto(LibraryManager.library, {
 
     cancelSelection: async function (game_uid) {
         let result = await mud.cancelSelection(UTF8ToString(game_uid));
+    },
+
+    castAbility: async function(game_uid,caster,ability){
+        let result = await mud.castAbility(UTF8ToString(game_uid),UTF8ToString(caster),UTF8ToString(ability));
+    },
+
+    resign: async function(player){
+        let result = await mud.resign(UTF8ToString(player));
     }
 
 });
