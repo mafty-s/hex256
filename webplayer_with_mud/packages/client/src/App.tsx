@@ -69,6 +69,12 @@ export const App = () => {
 
         for (const player of game.player_objs) {
 
+            if(player.hero!="0x0000000000000000000000000000000000000000000000000000000000000000"){
+               let hero = state.getValue(tables.CardOnBoards, {card_key: player.hero});
+                hero.key = player.hero;
+                cards.push(hero);
+            }
+
             for (const card_key of player.deck) {
                 let card = state.getValue(tables.CardOnBoards, {card_key});
                 card.key = card_key

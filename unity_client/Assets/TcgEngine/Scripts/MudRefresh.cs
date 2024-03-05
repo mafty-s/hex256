@@ -278,7 +278,15 @@ public class MudRefresh
         if (mud_player.hero != "0x0000000000000000000000000000000000000000000000000000000000000000")
         {
             Card hero = gamedata.GetCard(mud_player.hero);
-            player.hero = hero;
+            if (hero == null)
+            {
+                Debug.Log("hero not found:" + mud_player.hero);
+            }
+            else
+            {
+                Debug.Log("find hero:" + hero.card_id + ":" + hero.uid);
+                player.hero = hero;
+            }
         }
 
         // player.history_list.Clear();
