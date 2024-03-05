@@ -1052,6 +1052,18 @@ export function createSystemCalls(
         return await worldContract.write.SetGameEnd([game_key]);
     }
 
+    const castAbility = async(game_uid: string, caster: string, ability: string)=> {
+        console.log(game_uid,caster,ability)
+        const game_key = calculateKeccak256Hash(game_uid);
+        const ability_key = calculateKeccak256Hash(ability);
+
+        await worldContract.write.CastAbility([game_key,caster,ability_key]);
+    }
+
+    const resgin = async(player_id:string)=>{
+        await worldContract.write.Resgin([player_id])
+    }
+
     const out = {
         convertBigIntToInt,
         calculateKeccak256Hash,
@@ -1107,6 +1119,8 @@ export function createSystemCalls(
         triggerCardAbilityType,
         isConditionFunctionExist,
         setGameEnd,
+        castAbility,
+        resgin,
         // ablities,
     };
 
