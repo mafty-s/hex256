@@ -82,15 +82,17 @@ contract TurnSystem is System {
         }
 
         //Mana
-        int8 mana = Players.getMana(player_key);
-        int8 mana_max = Players.getManaMax(player_key);
-        mana += 1;
-        mana_max += 1;
-        if (mana > mana_max) {
-            mana = mana_max;
+        int8 mana_per_turn = 1;
+        int8 mana_max = 15;
+        int8 player_mana = Players.getMana(player_key);
+        int8 player_mana_max = Players.getManaMax(player_key);
+        player_mana_max += mana_per_turn;
+        if (player_mana_max > mana_max) {
+            player_mana_max = mana_max;
         }
-        Players.setMana(player_key, mana);
-        Players.setManaMax(player_key, mana_max);
+        player_mana = player_mana_max;
+        Players.setMana(player_key, player_mana);
+        Players.setManaMax(player_key, player_mana_max);
 
         //Turn timer and history
         PlayerActionHistory.setValue(game_key, new bytes32[](0));

@@ -75,7 +75,8 @@ contract GameStartSystem is System {
 
         bytes32 hero = Decks.getHero(desk_key);
         if (hero != 0) {
-            Players.setHero(player_key.hero);
+            bytes32 hero_uid = GameLogicLib.AddCard(player_key, hero);
+            Players.setHero(player_key, hero_uid);
         }
 
         bytes32[] memory cards = Decks.getCards(desk_key);
