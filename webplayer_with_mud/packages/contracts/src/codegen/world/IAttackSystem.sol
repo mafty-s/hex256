@@ -18,4 +18,6 @@ interface IAttackSystem {
   function AttackPlayer(bytes32 game_key, bytes32 attacker_key, uint256 target, bool skip_cost) external;
 
   function CastAbility(bytes32 game_uid, bytes32 caster, bytes32 ability_key) external;
+
+  function Resign(bytes32 game_uid, bytes32 player_id) external;
 }

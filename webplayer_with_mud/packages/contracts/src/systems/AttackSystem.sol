@@ -165,4 +165,13 @@ contract AttackSystem is System {
 
     }
 
+    function Resign(bytes32 game_uid, bytes32 player_id) public {
+        require(Players.getOwner() == _msgSender(), "only owner can resign");
+        if (Games.getGameState(game_uid) != GameState.GAME_ENDED)
+        {
+            bytes32[] memory players = Games.getPlayers(game_uid);
+            bytes32 winner = player_id == players[0] ? players[1] : players[0];
+            GameLogicLib.EndGame(game_uid, winner);
+        }
+    }
 }

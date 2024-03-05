@@ -53,6 +53,7 @@ public class MudPlayerInfo
     public string[] secret;
     public string[] temp;
     public uint[] trait;
+    public string hero;
 }
 
 [System.Serializable]
@@ -274,6 +275,12 @@ public class MudRefresh
             player.cards_board.Add(gamedata.GetCard(card));
         }
 
+        if (mud_player.hero != "0x0000000000000000000000000000000000000000000000000000000000000000")
+        {
+            Card hero = gamedata.GetCard(mud_player.hero);
+            player.hero = hero;
+        }
+
         // player.history_list.Clear();
     }
 
@@ -300,7 +307,7 @@ public class MudRefresh
                 Debug.LogError("card config not found:" + mud_card.name);
                 return;
             }
-            
+
             if (mud_card.slot != 0)
             {
                 int x = SlotEncoderDecoder.DecodeSlotX(mud_card.slot);
@@ -372,7 +379,7 @@ public class MudRefresh
                     string traitName = MudEnum.GetTraitById((Mud.CardTrait)(trait_id));
                     Debug.Log("trait:" + trait_id + " value:" + (int)trait_value + " card_key: " +
                               mud_card.key + " card_name:" + mud_card.name + " traitName:" + traitName);
-                    card.AddTrait(traitName,(int)(trait_value));
+                    card.AddTrait(traitName, (int)(trait_value));
                 }
             }
         }
