@@ -5,7 +5,7 @@ import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
 import {Cards, CardOnBoards, Games, PlayerCardsDiscard, Players} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
-import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, Action} from "../codegen/common.sol";
+import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, Action, Status} from "../codegen/common.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
 import {IAbilitySecretsSystem} from "../codegen/world/IAbilitySecretsSystem.sol";
 import {BaseLogicLib} from "../libs/BaseLogicLib.sol";
@@ -157,5 +157,12 @@ contract AttackSystem is System {
         GameLogicLib.CheckForWinner(game_key);
     }
 
+    function CastAbility(bytes32 game_uid, bytes32 caster, bytes32 ability_key) public {
+
+
+        CardLogicLib.RemoveStatus(caster, Status.Stealth);
+        SystemSwitch.call(abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, 0, ConditionTargetType.Card)));
+
+    }
 
 }

@@ -728,6 +728,7 @@ export function createSystemCalls(
 
         const tx = await worldContract.write.MoveCard([game_key, player_key, card_key, slot]);
         await waitForTransaction(tx);
+        const tx_result = await getTxResult(tx);
 
         const result = {
             card_uid: card_key,
@@ -742,6 +743,7 @@ export function createSystemCalls(
         const game_key = calculateKeccak256Hash(game_id);
         const tx = await worldContract.write.AttackTarget([game_key, attacker_key, target_key, false]);
         await waitForTransaction(tx);
+        const tx_result = await getTxResult(tx);
 
         return {
             attacker_uid: attacker_key,

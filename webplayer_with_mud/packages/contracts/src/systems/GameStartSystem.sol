@@ -73,6 +73,11 @@ contract GameStartSystem is System {
         Players.setIsAI(player_key, is_ai);
         Players.setGame(player_key, game_key);
 
+        bytes32 hero = Decks.getHero(desk_key);
+        if (hero != 0) {
+            Players.setHero(player_key.hero);
+        }
+
         bytes32[] memory cards = Decks.getCards(desk_key);
         if (need_shuffle) {
             cards = shuffle(cards);
@@ -128,8 +133,6 @@ contract GameStartSystem is System {
         //Start state
         GameLogicLib.StartMainPhase(game_key);
     }
-
-
 
 
     function GetPlayerByGame(bytes32 game_key) public view returns (bytes32[] memory players){
