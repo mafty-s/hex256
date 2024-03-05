@@ -158,12 +158,34 @@ contract AttackSystem is System {
     }
 
     function CastAbility(bytes32 game_uid, bytes32 caster, bytes32 ability_key) public {
-
-
         CardLogicLib.RemoveStatus(caster, Status.Stealth);
         SystemSwitch.call(abi.encodeCall(IAbilitySystem.TriggerCardAbility, (game_uid, ability_key, caster, 0, ConditionTargetType.Card)));
-
     }
+
+    function CanCastAbility(bytes32 game_uid, bytes32 card, bytes32 ability_key) internal returns (bool){
+        if (game_uid == 0 || card == 0 || ability_key == 0) {
+            return false;
+        }
+        return false;
+    }
+
+//public virtual bool CanCastAbility(Card card, AbilityData ability)
+//{
+//if (ability == null || card == null || !card.CanDoActivatedAbilities())
+//return false; //This card cant cast
+//
+//if (ability.trigger != AbilityTrigger.Activate)
+//return false; //Not an activated ability
+//
+//Player player = GetPlayer(card.player_id);
+//if (!player.CanPayAbility(card, ability))
+//return false; //Cant pay for ability
+//
+//if (!ability.AreTriggerConditionsMet(this, card))
+//return false; //Conditions not met
+//
+//return true;
+}
 
     function Resign() public {
         bytes32 game_uid = Users.getGame(_msgSender());

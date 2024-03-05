@@ -241,7 +241,7 @@ contract AbilitySystem is System {
         ResolveCardAbilitySlots(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityCardData(game_uid, ability_key, target_type, caster);
         ResolveCardAbilityNoTarget(game_uid, ability_key, target_type, caster);
-        AfterAbilityResolved(game_uid, ability_key, caster);
+        AfterAbilityResolved(game_uid, ability_key, target_type, caster);
     }
 
 
@@ -318,7 +318,7 @@ contract AbilitySystem is System {
         }
     }
 
-    event EventResolveCardAbilitySlots(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster, uint16[]  targets);
+    event EventResolveCardAbilitySlots(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster, uint16[] targets);
 
     function ResolveCardAbilitySlots(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster) internal
     {
@@ -372,10 +372,13 @@ contract AbilitySystem is System {
     }
 
 
-    function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, bytes32 caster) internal {
+    function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster) internal {
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         AbilityTrigger trigger = Ability.getTrigger(ability_key);
-        AbilityTarget target = Ability.getTarget(ability_key);
+        //Add to played
+//        game_data.ability_played.Add(iability.id);
+
+        //Pay cost
         if (trigger == AbilityTrigger.ACTIVATE) {
             Players.setMana(player_key, Players.getMana(player_key) - (int8)(Ability.getManaCost(ability_key)));
             CardOnBoards.setExhausted(caster, CardOnBoards.getExhausted(caster) || Ability.getExhaust(ability_key));
@@ -384,7 +387,7 @@ contract AbilitySystem is System {
         GameLogicLib.CheckForWinner(game_uid);
 
         //Chain ability 链式技能调用
-        if (target != AbilityTarget.ChoiceSelector && Games.getGameState(game_uid) != GameState.GAME_ENDED)
+        if (target_type != AbilityTarget.ChoiceSelector && Games.getGameState(game_uid) != GameState.GAME_ENDED)
         {
             bytes32[] memory chain_abilities = AbilityExtend.getChainAbilities(ability_key);
             for (uint i = 0; i < chain_abilities.length; i++) {
