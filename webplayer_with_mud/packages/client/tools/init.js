@@ -1,10 +1,9 @@
 import {Contract, ethers, JsonRpcProvider, Wallet} from 'ethers';
 // import IWorldAbi from "../../contracts/out/IWorld.sol/IWorld.abi.json";
 import * as fs from 'fs';
+import * as common from "./common.cjs";
 
 // @ts-ignore
-// const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL("../../contracts/out/IWorld.sol/IWorld.abi.json")));
-
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
 const sleep = (ms) => {
@@ -33,17 +32,75 @@ let createDeck = async (name, hero, cards) => {
     });
 }
 
+const getCardType = (str) => {
+    const cardType = common.CardType[str];
+    if (cardType === undefined) {
+        console.error("not exist getCardType", str)
+    }
+    return cardType;
+}
+
+const getRarityType = (str) => {
+    const cardType = common.RarityType[str];
+    if (cardType === undefined) {
+        // console.error("not exist getRarityType", str)
+        return  common.RarityType.NONE;
+    }
+    return cardType;
+}
+
+const getCardTrait = (str) => {
+    const cardType = common.CardTrait[str];
+    if (cardType === undefined) {
+        // console.error("not exist getCardTrait", str)
+        return common.CardTrait.None;
+    }
+    return cardType;
+}
+
+function convertToCamelCase(str) {
+    var words = str.split('_');
+    for (var i = 1; i < words.length; i++) {
+        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+    }
+    str = words.join('');
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function convertToEnumFormat(str) {
+    // 将字符串中的大写字母前添加下划线，然后全部转为大写
+    const formattedStr = str.replace(/([A-Z])/g, '_$1').toUpperCase();
+
+    // 如果字符串以下划线开头，则去掉开头的下划线
+    if (formattedStr.startsWith('_')) {
+        return formattedStr.slice(1);
+    }
+
+    return formattedStr;
+}
+
+const arrStr2Bytes32 = (arr_str) => {
+    if (arr_str.length == 0) {
+        return [];
+    }
+    const arr = arr_str.split('|');
+    const arr_bytes32 = arr.map((item) => {
+        return calculateKeccak256Hash(item);
+    });
+    return arr_bytes32;
+}
+
 const initCard = async (name, mana, attack, hp, cost, abilities_str, cardType, rarity, is_deckbuilding, trait) => {
-    // const cardTypeCode = getCardType((cardType));
-    // let rarity_str = convertToEnumFormat(rarity);
-    // const rarityCode = getRarityType(rarity_str.substr(2,));
-    // const traitCode = getCardTrait(convertToCamelCase(trait));
-    // const tx = await worldContract.initCard([name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding, traitCode],{
-    //     nonce:nonce++
-    // });
-    // tx.wait().then((receipt) => {
-    //     console.log("initCard", name, receipt.hash);
-    // });
+    const cardTypeCode = getCardType(cardType);
+    let rarity_str = convertToEnumFormat(rarity);
+    const rarityCode = getRarityType(rarity_str.substr(2,));
+    const traitCode = getCardTrait(convertToCamelCase(trait));
+    const tx = await world_contract.initCard(name, mana, attack, hp, cost, arrStr2Bytes32(abilities_str), cardTypeCode, rarityCode, is_deckbuilding, traitCode,{
+        nonce:nonce++
+    });
+    tx.wait().then((receipt) => {
+        console.log("initCard", name, receipt.hash);
+    });
 };
 
 let nonce = 0;
