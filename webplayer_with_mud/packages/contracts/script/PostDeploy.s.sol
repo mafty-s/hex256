@@ -20,9 +20,12 @@ contract PostDeploy is Script {
 //         Start broadcasting transactions from the deployer account
         vm.startBroadcast(deployerPrivateKey);
 
-        IWorld(worldAddress).initDeck("", bytes32(0), new bytes32[](0));
+//        bytes32[] memory a = new bytes32[](1);
+//
+//
+//        IWorld(worldAddress).initDeck("", bytes32(0), a);
 
-         vm.stopBroadcast();
+        vm.stopBroadcast();
     }
 
 
