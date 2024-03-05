@@ -163,7 +163,7 @@ const getEffectSelector = (name) => {
     // bytes32 ability_key, bytes32 caster, bytes32 target, bool is_card
     const functionName = 'Effect' + convertToPascalCase(name) + '(bytes32,bytes32,bytes32,bytes32,uint8)';
     const functionSelector = ethers.keccak256(ethers.toUtf8Bytes(functionName)).slice(0, 10);
-    console.log(functionName, functionSelector)
+    // console.log(functionName, functionSelector)
 
     return functionSelector;
 }
