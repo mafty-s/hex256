@@ -1060,8 +1060,8 @@ export function createSystemCalls(
         await worldContract.write.CastAbility([game_key,caster,ability_key]);
     }
 
-    const resgin = async(player_id:string)=>{
-        await worldContract.write.Resgin([player_id])
+    const resign = async(player_id:string)=>{
+        await worldContract.write.Resign([])
     }
 
     const out = {
@@ -1120,7 +1120,7 @@ export function createSystemCalls(
         isConditionFunctionExist,
         setGameEnd,
         castAbility,
-        resgin,
+        resign,
         // ablities,
     };
 

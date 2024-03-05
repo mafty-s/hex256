@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import {System} from "@latticexyz/world/src/System.sol";
 import {SystemSwitch} from "@latticexyz/world-modules/src/utils/SystemSwitch.sol";
-import {Cards, CardOnBoards, Games, PlayerCardsDiscard, Players} from "../codegen/index.sol";
+import {Cards, CardOnBoards, Games, PlayerCardsDiscard, Players, Users} from "../codegen/index.sol";
 import {PlayerActionHistory, ActionHistory, ActionHistoryData} from "../codegen/index.sol";
 import {CardType, GameType, GameState, GamePhase, PackType, RarityType, AbilityTrigger, Action, Status} from "../codegen/common.sol";
 import {IAbilitySystem} from "../codegen/world/IAbilitySystem.sol";
@@ -165,13 +165,14 @@ contract AttackSystem is System {
 
     }
 
-    function Resign(bytes32 player_id) public {
-        require(Players.getOwner(player_id) == _msgSender(), "only owner can resign");
-        bytes32 game_uid = Players.getGame(player_id);
+    function Resign() public {
+        bytes32 game_uid = Users.getGame(_msgSender());
         if (Games.getGameState(game_uid) != GameState.GAME_ENDED)
         {
             bytes32[] memory players = Games.getPlayers(game_uid);
-            bytes32 winner = player_id == players[0] ? players[1] : players[0];
+            address player_0_owner = Players.getOwner(players[0]);
+            address player_1_owner = Players.getOwner(players[1]);
+            bytes32 winner = player_0_owner == _msgSender() ? player[1] : player[0];
             GameLogicLib.EndGame(game_uid, winner);
         }
     }
