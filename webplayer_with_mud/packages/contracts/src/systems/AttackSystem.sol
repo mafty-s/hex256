@@ -165,8 +165,9 @@ contract AttackSystem is System {
 
     }
 
-    function Resign(bytes32 game_uid, bytes32 player_id) public {
-        require(Players.getOwner() == _msgSender(), "only owner can resign");
+    function Resign(bytes32 player_id) public {
+        require(Players.getOwner(player_id) == _msgSender(), "only owner can resign");
+        bytes32 game_uid = Players.getGame(player_id);
         if (Games.getGameState(game_uid) != GameState.GAME_ENDED)
         {
             bytes32[] memory players = Games.getPlayers(game_uid);

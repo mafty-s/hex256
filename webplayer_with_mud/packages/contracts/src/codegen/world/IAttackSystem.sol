@@ -19,5 +19,5 @@ interface IAttackSystem {
 
   function CastAbility(bytes32 game_uid, bytes32 caster, bytes32 ability_key) external;
 
-  function Resign(bytes32 game_uid, bytes32 player_id) external;
+  function Resign(bytes32 player_id) external;
 }
