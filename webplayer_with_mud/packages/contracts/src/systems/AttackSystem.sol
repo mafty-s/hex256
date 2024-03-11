@@ -166,7 +166,8 @@ contract AttackSystem is System {
         if (game_uid == 0 || card == 0 || ability_key == 0) {
             return false;
         }
-        return false;
+        
+        return true;
     }
 
 //public virtual bool CanCastAbility(Card card, AbilityData ability)
@@ -185,7 +186,7 @@ contract AttackSystem is System {
 //return false; //Conditions not met
 //
 //return true;
-}
+//}
 
     function Resign() public {
         bytes32 game_uid = Users.getGame(_msgSender());
