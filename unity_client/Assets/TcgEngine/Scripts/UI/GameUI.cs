@@ -76,7 +76,14 @@ namespace TcgEngine.UI
             int player_id = GameClient.Get().GetPlayerID();
 
             LoadPanel.Get().SetVisible(is_connecting && !data.HasStarted());
-            end_turn_button.interactable = yourturn && end_turn_timer > 1f;
+            if (yourturn)
+            {
+                end_turn_button.interactable = true;
+            }
+            else
+            {
+                end_turn_button.interactable = Mathf.RoundToInt(data.turn_timer) <= 0;
+            }
             end_turn_timer += Time.deltaTime;
 
             //Timer
