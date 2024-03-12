@@ -114,6 +114,7 @@ contract TurnSystem is System {
         bytes32 hero = Players.getHero(player_key);
         if (hero != 0) {
             CardLogicLib.ReduceStatusDurations(hero);
+            CardLogicLib.Refresh(hero);
         }
 
         //Refresh Cards and Status Effects
