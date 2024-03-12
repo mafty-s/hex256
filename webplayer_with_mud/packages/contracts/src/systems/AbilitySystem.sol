@@ -372,6 +372,7 @@ contract AbilitySystem is System {
     }
 
 
+    event EventAfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster);
     function AfterAbilityResolved(bytes32 game_uid, bytes32 ability_key, AbilityTarget target_type, bytes32 caster) internal {
         bytes32 player_key = CardOnBoards.getPlayerId(caster);
         AbilityTrigger trigger = Ability.getTrigger(ability_key);
@@ -382,6 +383,7 @@ contract AbilitySystem is System {
         if (trigger == AbilityTrigger.ACTIVATE) {
             Players.setMana(player_key, Players.getMana(player_key) - (int8)(Ability.getManaCost(ability_key)));
             CardOnBoards.setExhausted(caster, CardOnBoards.getExhausted(caster) || Ability.getExhaust(ability_key));
+            emit EventAfterAbilityResolved(game_uid, ability_key, target_type, caster);
         }
 
         GameLogicLib.CheckForWinner(game_uid);

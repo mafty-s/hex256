@@ -474,6 +474,7 @@ export const App = () => {
             if (a) {
                 if (a.owner == "0x0000000000000000000000000000000000000000") {
                     await addUser(walletClient.account.address);
+                    clearInterval(interval);
                 } else {
                     clearInterval(interval);
                     initUnity();

@@ -121,6 +121,7 @@ contract GameStartSystem is System {
         Games.setFirstPlayer(game_key, player_keys[0]);
         Games.setCurrentPlayer(game_key, player_keys[0]);
         Games.setTurnCount(game_key, 1);
+//        Games.setTurnDuration(game_key, block.timestamp);
         GamesExtended.setSelector(game_key, SelectorType.None);
 
         //Init each players
