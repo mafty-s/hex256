@@ -44,4 +44,11 @@ interface IAbilitySystem {
     AbilityTarget target_type,
     ConditionTargetType is_card
   ) external;
+
+  function AfterAbilityResolved(
+    bytes32 game_uid,
+    bytes32 ability_key,
+    AbilityTarget target_type,
+    bytes32 caster
+  ) external;
 }
