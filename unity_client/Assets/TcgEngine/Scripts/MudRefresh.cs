@@ -65,6 +65,7 @@ public class MudGame
     public string firstPlayer;
     public string currentPlayer;
     public int turnCount;
+    public long turnDuration;
     public int nbPlayer;
     public string level;
     public string uid;
@@ -191,6 +192,16 @@ public class MudRefresh
         gamedata.selector_player_id = mud_game.getPlayerIndex(mud_game.selectorPlayerId);
         gamedata.first_player = mud_game.getPlayerIndex(mud_game.firstPlayer);
         gamedata.current_player = mud_game.getPlayerIndex(mud_game.currentPlayer);
+        
+        DateTimeOffset now = DateTimeOffset.Now;
+        long timestamp = now.ToUnixTimeSeconds();
+        long duration = timestamp + 60 - mud_game.turnDuration;
+        if (duration > 60)
+        {
+            duration = 60;
+        }
+        gamedata.turn_timer = duration;
+        Debug.Log("turn timer:" + duration + " now:"+ timestamp + " turnDuration:" + mud_game.turnDuration);
 
 
         foreach (var card in mud_game.cards)

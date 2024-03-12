@@ -34,6 +34,12 @@ contract TurnSystem is System {
 
         bytes32 player_key = Games.getCurrentPlayer(game_key);
 
+        uint256 turnDuration = Games.getTurnDuration(game_key);
+        int256 duration = int256(turnDuration) + 60 - int256(block.timestamp);
+
+        if (duration > 0 && _msgSender() != Players.getOwner(player_key)) {
+            revert("not your turn");
+        }
 //        EndTurnResultData memory result = EndTurnResultData
 
 //        uint256 len = PlayerActionHistory.length(game_key);
