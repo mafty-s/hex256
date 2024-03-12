@@ -169,9 +169,9 @@ contract GameStartSystem is System {
         mana = Players.getMana(player_key);
         hp = Players.getHp(player_key);
 
-        hand = CardLogicLib.getValue(PileType.Hand, player_key);
-        deck = CardLogicLib.getValue(PileType.Deck, player_key);
-        board = CardLogicLib.getValue(PileType.Board, player_key);
+        hand = CardTableLib.getValue(PileType.Hand, player_key);
+        deck = CardTableLib.getValue(PileType.Deck, player_key);
+        board = CardTableLib.getValue(PileType.Board, player_key);
 
         bytes32[] memory cards = new bytes32[](hand.length + deck.length);
 
