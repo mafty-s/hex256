@@ -6,11 +6,11 @@ import {Cards, Users} from "../codegen/index.sol";
 import {Decks, DecksData} from "../codegen/index.sol";
 import {Games, GamesData, GamesExtended} from "../codegen/index.sol";
 import {Players, PlayersData} from "../codegen/index.sol";
-import {PlayerCardsDeck, PlayerCardsHand, PlayerCardsBoard, PlayerCardsDiscard, PlayerCardsEquip, PlayerCardsSecret, PlayerCardsTemp} from "../codegen/index.sol";
 import {CardOnBoards, CardOnBoardsData} from "../codegen/index.sol";
-import {GameType, GameState, GamePhase, SelectorType} from "../codegen/common.sol";
+import {GameType, GameState, GamePhase, SelectorType, PileType} from "../codegen/common.sol";
 import {PlayerLogicLib} from "../libs/PlayerLogicLib.sol";
 import {GameLogicLib} from "../libs/GameLogicLib.sol";
+import {CardTableLib} from "../libs/CardTableLib.sol";
 
 //    struct PlayerSettingResult {
 //        CardTuple[] cards;
@@ -84,17 +84,17 @@ contract GameStartSystem is System {
             cards = shuffle(cards);
         }
 
-        PlayerCardsDiscard.setValue(player_key, new bytes32[](0));
-        PlayerCardsEquip.setValue(player_key, new bytes32[](0));
-        PlayerCardsSecret.setValue(player_key, new bytes32[](0));
-        PlayerCardsTemp.setValue(player_key, new bytes32[](0));
-        PlayerCardsBoard.setValue(player_key, new bytes32[](0));
-        PlayerCardsDeck.setValue(player_key, new bytes32[](0));
-        PlayerCardsHand.setValue(player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Board, player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Hand, player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Deck, player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Discard, player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Secret, player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Equipped, player_key, new bytes32[](0));
+        CardTableLib.setValue(PileType.Temp, player_key, new bytes32[](0));
 
         for (uint i = 0; i < cards.length; i++) {
             bytes32 on_board_card_key = GameLogicLib.AddCard(player_key, cards[i]);
-            PlayerCardsDeck.pushValue(player_key, on_board_card_key);
+            CardTableLib.pushValue(PileType.Deck, player_key, on_board_card_key);
         }
 
 
@@ -103,7 +103,7 @@ contract GameStartSystem is System {
         }
 
         Users.setGame(_msgSender(), game_key);
-        return PlayerCardsDeck.getValue(player_key);
+        return CardTableLib.getValue(PileType.Deck, player_key);
 
     }
 
@@ -121,7 +121,7 @@ contract GameStartSystem is System {
         Games.setFirstPlayer(game_key, player_keys[0]);
         Games.setCurrentPlayer(game_key, player_keys[0]);
         Games.setTurnCount(game_key, 1);
-//        Games.setTurnDuration(game_key, block.timestamp);
+        Games.setTurnDuration(game_key, block.timestamp);
         GamesExtended.setSelector(game_key, SelectorType.None);
 
         //Init each players
@@ -169,9 +169,9 @@ contract GameStartSystem is System {
         mana = Players.getMana(player_key);
         hp = Players.getHp(player_key);
 
-        hand = PlayerCardsHand.getValue(player_key);
-        deck = PlayerCardsDeck.getValue(player_key);
-        board = PlayerCardsBoard.getValue(player_key);
+        hand = CardLogicLib.getValue(PileType.Hand, player_key);
+        deck = CardLogicLib.getValue(PileType.Deck, player_key);
+        board = CardLogicLib.getValue(PileType.Board, player_key);
 
         bytes32[] memory cards = new bytes32[](hand.length + deck.length);
 
