@@ -104,6 +104,11 @@ export default mudConfig({
             accessList: ["0xcF1A02C9836558e8fd04Cff8F072b71D4F03f94e"],
             name: "GmSystem",
         },
+        ConfigSystem: {
+            openAccess: false,
+            accessList: ["0xcF1A02C9836558e8fd04Cff8F072b71D4F03f94e"],
+            name: "ConfigSystem",
+        },
     },
     tables: {
         MatchingSingleton: {
