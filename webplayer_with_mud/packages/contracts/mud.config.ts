@@ -99,11 +99,11 @@ export default mudConfig({
             accessList: [],
             name: "OnGoingSystem",
         },
-        // GmSystem: {
-        //     openAccess: false,
-        //     accessList: [],
-        //     name: "GmSystem",
-        // },
+        GmSystem: {
+            openAccess: false,
+            accessList: ["0xcF1A02C9836558e8fd04Cff8F072b71D4F03f94e"],
+            name: "GmSystem",
+        },
     },
     tables: {
         MatchingSingleton: {
