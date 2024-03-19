@@ -79,6 +79,21 @@ export default mudConfig({
             accessList: [],
             name: "Effect7System",
         },
+        FilterSystem: {
+            openAccess: false,
+            accessList: [],
+            name: "FilterSystem",
+        },
+        ConditionSystem: {
+            openAccess: false,
+            accessList: [],
+            name: "ConditionSystem",
+        },
+        DebugSystem: {
+            openAccess: false,
+            accessList: [],
+            name: "DebugSystem",
+        },
     },
     tables: {
         MatchingSingleton: {
