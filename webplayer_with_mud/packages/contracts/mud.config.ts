@@ -89,11 +89,21 @@ export default mudConfig({
             accessList: [],
             name: "ConditionSystem",
         },
-        DebugSystem: {
+        SlotSystem: {
             openAccess: false,
             accessList: [],
-            name: "DebugSystem",
+            name: "SlotSystem",
         },
+        OnGoingSystem: {
+            openAccess: false,
+            accessList: [],
+            name: "OnGoingSystem",
+        },
+        // GmSystem: {
+        //     openAccess: false,
+        //     accessList: [],
+        //     name: "GmSystem",
+        // },
     },
     tables: {
         MatchingSingleton: {
