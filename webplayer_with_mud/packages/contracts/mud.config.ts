@@ -28,6 +28,58 @@ export default mudConfig({
         ConditionOperatorBool: ['IsTrue', 'IsFalse'],
         ConditionTargetType: ["None", "Card", "Player", "Slot", "CardData"],
     },
+    systems: {
+        AbilitySecretsSystem: {
+            openAccess: false,
+            accessList: [],
+            name: "AbilitySecretsSystem",
+        },
+        AbilitySystem: {
+            openAccess: false,
+            accessList: [],
+            name: "AbilitySystem",
+        },
+        AbilityTargetSystem: {
+            openAccess: false,
+            accessList: [],
+            name: "AbilityTargetSystem",
+        },
+        Effect1System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect1System",
+        },
+        Effect2System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect2System",
+        },
+        Effect3System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect3System",
+        },
+        Effect4System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect4System",
+        },
+        Effect5System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect5System",
+        },
+        Effect6System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect6System",
+        },
+        Effect7System: {
+            openAccess: false,
+            accessList: [],
+            name: "Effect7System",
+        },
+    },
     tables: {
         MatchingSingleton: {
             keySchema: {},
