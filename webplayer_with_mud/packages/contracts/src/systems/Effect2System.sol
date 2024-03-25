@@ -58,22 +58,42 @@ contract Effect2System is System {
 
     function EffectCreateTemp(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectCreateTemp", ability_key, caster, target, is_card);
-        EffectCreate(ability_key, caster, target, is_card, PileType.Temp, false);
+        EffectCreate(game_uid, ability_key, caster, target, is_card, PileType.Temp, false);
     }
 
     //----------------------------------------------------------------------------------------------------------------
 
-    function EffectCreate(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, PileType create_pile, bool create_opponent) internal {
-        if (is_card == ConditionTargetType.Card) {
-            bytes32 card_config_id = CardOnBoards.getId(target);
+    function EffectCreate(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, PileType create_pile, bool create_opponent) internal {
+//        if (is_card == ConditionTargetType.Card) {
+//            bytes32 card_config_id = CardOnBoards.getId(target);
+//            bytes32 player_key = CardOnBoards.getPlayerId(caster);
+//            if (create_opponent) {
+//                player_key = GameLogicLib.GetOpponent(game_uid, player_key);
+//            }
+//            bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_id);
+//            GamesExtended.setLastSummoned(game_uid, card_uid);
+//            CardTableLib.pushValue(create_pile, player_key, card_uid);
+//        }
+        if (is_card == ConditionTargetType.CardData) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
-            bytes32 game_uid = Players.getGame(player_key);
             if (create_opponent) {
                 player_key = GameLogicLib.GetOpponent(game_uid, player_key);
             }
-            bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_id);
+
+            bytes32 card_uid = GameLogicLib.AddCard(player_key, target);
             GamesExtended.setLastSummoned(game_uid, card_uid);
-            CardTableLib.pushValue(create_pile, player_key, card_uid);
+
+            if (create_pile == PileType.Deck)
+                CardTableLib.pushValue(PileType.Deck, player_key, card_uid);
+
+            if (create_pile == PileType.Discard)
+                CardTableLib.pushValue(PileType.Discard, player_key, card_uid);
+
+            if (create_pile == PileType.Hand)
+                CardTableLib.pushValue(PileType.Hand, player_key, card_uid);
+
+            if (create_pile == PileType.Temp)
+                CardTableLib.pushValue(PileType.Temp, player_key, card_uid);
         }
     }
 
@@ -96,7 +116,6 @@ contract Effect2System is System {
 
         return shuffled;
     }
-
 
     //把一张牌变为另一张牌
     function EffectTransform(bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, bytes32 card_config_key) internal {

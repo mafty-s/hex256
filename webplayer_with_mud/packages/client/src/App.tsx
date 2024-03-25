@@ -353,7 +353,7 @@ export const App = () => {
         initAbility('spell_damage3', 'OnPlay', 'PlayTarget', 3, 0, 0, false, 'damage', 'is_not_empty|ai_is_enemy', '', '', '', '');
         initAbility('spell_destroy', 'OnPlay', 'PlayTarget', 0, 0, 0, false, 'destroy', 'is_card|ai_is_enemy', '', '', '', '');
         initAbility('spell_destroy_all', 'OnPlay', 'AllCardsBoard', 0, 0, 0, false, 'destroy', 'is_character', '', '', '', '');
-        initAbility('spell_dragon_create', 'OnPlay', 'AllCardData', 0, 0, 0, false, 'create_temp', 'is_dragon|is_deckbuilding', '', 'filter_random_3', 'chain_discover|chain_clear_temp', '');
+        initAbility('spell_dragon_create', 'OnPlay', 'AllCardData', 0, 0, 0, false, 'create_temp', 'is_dragon|is_deckbuilding', '', 'filter_random_3', 'chain_discover', '');
         initAbility('spell_draw1', 'OnPlay', 'PlayerSelf', 1, 0, 0, false, 'draw', '', '', '', '', '');
         initAbility('spell_fury', 'OnPlay', 'PlayTarget', 0, 0, 0, false, '', 'is_character|is_ally', '', '', '', 'fury');
         initAbility('spell_heal_full', 'OnPlay', 'PlayTarget', 99, 0, 0, false, 'heal', 'is_card|is_ally', '', '', '', '');
