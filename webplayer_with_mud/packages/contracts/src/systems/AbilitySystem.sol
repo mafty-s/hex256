@@ -338,7 +338,7 @@ contract AbilitySystem is System {
         for (uint t = 0; t < targets.length; t++) {
             if (targets[t] != 0) {
                 bytes32 target = targets[t];
-                DoEffects(game_uid, ability_key, target_type, caster_key, 0, ConditionTargetType.CardData);
+                DoEffects(game_uid, ability_key, target_type, caster_key, target, ConditionTargetType.CardData);
             }
         }
     }
