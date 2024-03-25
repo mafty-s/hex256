@@ -50,6 +50,13 @@ export const App = () => {
         game.action_history = action_historys;
         let cards = [];
 
+        if(game.selectorAbility!='0x0000000000000000000000000000000000000000000000000000000000000000'){
+            console.log("game.selectorAbility",game.selectorAbility)
+            if(game.selectorAbility==='0x3d0c04ed556b3d352a262f08393772acf1137d7de55a141c5665ff3859083529'){
+                game.selectorAbility='chain_discover';
+            }
+        }
+
         for (const player_key of game.players) {
             if (player_key != "0x0000000000000000000000000000000000000000000000000000000000000000") {
                 const player = state.getValue(tables.Players, {player_key});
@@ -353,7 +360,7 @@ export const App = () => {
         initAbility('spell_damage3', 'OnPlay', 'PlayTarget', 3, 0, 0, false, 'damage', 'is_not_empty|ai_is_enemy', '', '', '', '');
         initAbility('spell_destroy', 'OnPlay', 'PlayTarget', 0, 0, 0, false, 'destroy', 'is_card|ai_is_enemy', '', '', '', '');
         initAbility('spell_destroy_all', 'OnPlay', 'AllCardsBoard', 0, 0, 0, false, 'destroy', 'is_character', '', '', '', '');
-        initAbility('spell_dragon_create', 'OnPlay', 'AllCardData', 0, 0, 0, false, 'create_temp', 'is_dragon|is_deckbuilding', '', 'filter_random_3', 'chain_discover', '');
+        initAbility('spell_dragon_create', 'OnPlay', 'AllCardData', 0, 0, 0, false, 'create_temp', 'is_dragon', '', '', 'chain_discover', '');
         initAbility('spell_draw1', 'OnPlay', 'PlayerSelf', 1, 0, 0, false, 'draw', '', '', '', '', '');
         initAbility('spell_fury', 'OnPlay', 'PlayTarget', 0, 0, 0, false, '', 'is_character|is_ally', '', '', '', 'fury');
         initAbility('spell_heal_full', 'OnPlay', 'PlayTarget', 99, 0, 0, false, 'heal', 'is_card|is_ally', '', '', '', '');

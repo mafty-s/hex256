@@ -185,6 +185,8 @@ public class MudRefresh
             mud_game.selectorAbility == "0x0000000000000000000000000000000000000000000000000000000000000000"
                 ? null
                 : mud_game.selectorAbility;
+        
+        
         gamedata.selector_caster_uid =
             mud_game.selectorCasterUid == "0x0000000000000000000000000000000000000000000000000000000000000000"
                 ? null
