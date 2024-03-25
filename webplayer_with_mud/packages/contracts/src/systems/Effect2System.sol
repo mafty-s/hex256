@@ -64,16 +64,11 @@ contract Effect2System is System {
     //----------------------------------------------------------------------------------------------------------------
 
     function EffectCreate(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card, PileType create_pile, bool create_opponent) internal {
-//        if (is_card == ConditionTargetType.Card) {
-//            bytes32 card_config_id = CardOnBoards.getId(target);
-//            bytes32 player_key = CardOnBoards.getPlayerId(caster);
-//            if (create_opponent) {
-//                player_key = GameLogicLib.GetOpponent(game_uid, player_key);
-//            }
-//            bytes32 card_uid = GameLogicLib.AddCard(player_key, card_config_id);
-//            GamesExtended.setLastSummoned(game_uid, card_uid);
-//            CardTableLib.pushValue(create_pile, player_key, card_uid);
-//        }
+        if (is_card == ConditionTargetType.Card) {
+//          DoEffect(logic, ability, caster, target.CardData); //Create a copy
+            target = CardOnBoards.getId(target);
+            is_card = ConditionTargetType.CardData;
+        }
         if (is_card == ConditionTargetType.CardData) {
             bytes32 player_key = CardOnBoards.getPlayerId(caster);
             if (create_opponent) {
