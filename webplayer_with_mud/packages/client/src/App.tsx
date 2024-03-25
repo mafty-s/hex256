@@ -102,6 +102,11 @@ export const App = () => {
                 card.key = card_key
                 cards.push(card);
             }
+            for (const card_key of player.temp) {
+                let card = state.getValue(tables.CardOnBoards, {card_key});
+                card.key = card_key
+                cards.push(card);
+            }
         }
 
         game.cards = cards;
