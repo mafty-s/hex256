@@ -72,6 +72,34 @@ contract SelectSystem is System {
                 abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_uid))
             );
 
+        } else if (selector == SelectorType.SelectorCard) {
+
+            //todo
+//            if (!ability.IsCardSelectionValid(game_data, caster, target, card_array))
+//                return; //Supports conditions and filters
+//
+//            game_data.selector = SelectorType.None;
+//            ResolveEffectTarget(ability, caster, target);
+//            AfterAbilityResolved(ability, caster);
+//            resolve_queue.ResolveAll();
+
+            GamesExtended.setSelector(game_uid, SelectorType.None);
+
+            AbilityTarget ability_target = Ability.getTarget(ability_key);
+
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.ResolveEffectTarget, (game_uid, ability_key, caster, target, ability_target, ConditionTargetType.Card))
+            );
+
+            SystemSwitch.call(
+                abi.encodeCall(IAbilitySystem.AfterAbilityResolved, (game_uid, ability_key, target_type, caster))
+            );
+
+            SystemSwitch.call(
+                abi.encodeCall(IOnGoingSystem.UpdateOngoing, (game_uid))
+            );
+
+
         } else {
             revert("SelectCard: selector type not supported");
         }
