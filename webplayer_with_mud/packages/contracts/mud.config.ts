@@ -100,11 +100,15 @@ export default mudConfig({
             name: "OnGoingSystem",
         },
         GmSystem: {
+            openAccess: true,
+            accessList: [],
             // openAccess: false,
             // accessList: ["0xcF1A02C9836558e8fd04Cff8F072b71D4F03f94e","0x891014E466EF515ECe0C91Ba9d491f5f48b9b2AF"],
             name: "GmSystem",
         },
         ConfigSystem: {
+            openAccess: true,
+            accessList: [],
             // openAccess: false,
             // accessList: ["0xcF1A02C9836558e8fd04Cff8F072b71D4F03f94e","0x891014E466EF515ECe0C91Ba9d491f5f48b9b2AF"],
             name: "ConfigSystem",
