@@ -937,7 +937,7 @@ export function createSystemCalls(
                 res.type = 2015;
             }
 
-            console.log("action", res);
+            console.log("action",index, res);
 
             index++;
             return res;

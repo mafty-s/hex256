@@ -96,6 +96,9 @@ contract AttackSystem is System {
         SystemSwitch.call(
             abi.encodeCall(IAbilitySecretsSystem.TriggerPlayerSecrets, (AbilityTrigger.ON_AFTER_DEFEND, game_key, target_key))
         );
+
+        CardOnBoards.setExhausted(attacker_key, true);
+
         return (
             target_hp
         );
@@ -154,6 +157,7 @@ contract AttackSystem is System {
                 AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Player))
         );
 
+        CardOnBoards.setExhausted(attacker_key, true);
         GameLogicLib.CheckForWinner(game_key);
     }
 
@@ -166,7 +170,7 @@ contract AttackSystem is System {
         if (game_uid == 0 || card == 0 || ability_key == 0) {
             return false;
         }
-        
+
         return true;
     }
 
