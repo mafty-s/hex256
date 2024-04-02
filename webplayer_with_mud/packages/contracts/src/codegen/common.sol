@@ -140,7 +140,8 @@ enum Action {
   EndTurn,
   ChangeMana,
   AddStatus,
-  ChangeCard
+  ChangeCard,
+  Dice
 }
 
 enum PileType {

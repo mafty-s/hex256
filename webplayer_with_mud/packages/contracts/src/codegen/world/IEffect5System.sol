@@ -11,7 +11,7 @@ import { ConditionTargetType } from "./../common.sol";
  */
 interface IEffect5System {
   function EffectRollD6(
-    bytes32 game_uid,
+    bytes32 game_key,
     bytes32 ability_key,
     bytes32 caster,
     bytes32 target,

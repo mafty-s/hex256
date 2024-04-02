@@ -17,14 +17,20 @@ contract Effect5System is System {
     event EventEffect(string name, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card);
 
 
-    function EffectRollD6(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
+    function EffectRollD6(bytes32 game_key, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
         emit EventEffect("EffectRollD6", ability_key, caster, target, is_card);
         int8 min = 1;
         int8 max = 6;
         int8 value = int8(uint8(uint256(keccak256(abi.encodePacked(block.prevrandao, block.prevrandao, msg.sender))) % (uint8(max - min + 1))) + uint8(min));
-        bytes32 player_key = CardOnBoards.getPlayerId(caster);
-        bytes32 game_key = Players.getGame(player_key);
         GamesExtended.setRolledValue(game_key, value);
+
+        uint256 len = PlayerActionHistory.length(game_key);
+        bytes32 action_key = keccak256(abi.encode(game_key, len));
+        PlayerActionHistory.push(game_key, action_key);
+        ActionHistory.setActionType(action_key, Action.Dice);
+        ActionHistory.setValue(action_key, value);
+//        ActionHistory.setCardId(action_key, attacker_key);
+//        ActionHistory.setTarget(action_key, bytes32(target));
     }
 
     function EffectAddAttackRoll(bytes32 game_uid, bytes32 ability_key, bytes32 caster, bytes32 target, ConditionTargetType is_card) public {
