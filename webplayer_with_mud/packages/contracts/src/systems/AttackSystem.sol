@@ -36,10 +36,10 @@ contract AttackSystem is System {
 
         //使用触发器触发技能
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySecretsSystem.TriggerPlayerSecrets, (AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key))
+            abi.encodeCall(IAbilitySecretsSystem.TriggerPlayerSecrets, (AbilityTrigger.ON_BEFORE_ATTACK, game_key, attacker_key))
         );
         SystemSwitch.call(
-            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_AFTER_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Card))
+            abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_BEFORE_ATTACK, game_key, attacker_key, target_key, ConditionTargetType.Card))
         );
         SystemSwitch.call(
             abi.encodeCall(IAbilitySystem.TriggerCardAbilityType, (AbilityTrigger.ON_BEFORE_DEFEND, game_key, target_key, attacker_key, ConditionTargetType.Card))

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEditor;
 using LitJson;
 using Mud;
+using TcgEngine.Client;
 using SelectorType = TcgEngine.SelectorType;
 
 [System.Serializable]
@@ -176,7 +177,12 @@ public class MudRefresh
                 ? null
                 : mud_game.lastTarget;
 
-        gamedata.rolled_value = mud_game.rolledValue;
+        // if (mud_game.rolledValue != 0)
+        // {
+        //     gamedata.rolled_value = mud_game.rolledValue;
+        //     GameClient.Get().onValueRolled(mud_game.rolledValue);
+        // }
+
         gamedata.state = MudEnum.ConvertGameState((Mud.GameState)mud_game.gameState);
         gamedata.phase = MudEnum.ConvertGamePhase((Mud.GamePhase)mud_game.gamePhase);
 
@@ -185,8 +191,8 @@ public class MudRefresh
             mud_game.selectorAbility == "0x0000000000000000000000000000000000000000000000000000000000000000"
                 ? null
                 : mud_game.selectorAbility;
-        
-        
+
+
         gamedata.selector_caster_uid =
             mud_game.selectorCasterUid == "0x0000000000000000000000000000000000000000000000000000000000000000"
                 ? null

@@ -1154,6 +1154,9 @@ namespace TcgEngine.Client
 
                     onGameEnd?.Invoke(target_id);
                     break;
+                case 14:
+                    onValueRolled(action.value);
+                    break;
                 default:
                     Debug.Log("unknown action type:" + action.type);
                     break;
