@@ -670,7 +670,7 @@ export function createSystemCalls(
         //     res.player_name = "test"
         // }
 
-        await sleep(1500);
+        // await sleep(1500);
         return convertBigIntToInt({hash, tx_result, res});
     }
 
