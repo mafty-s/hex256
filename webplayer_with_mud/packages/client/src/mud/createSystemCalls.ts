@@ -340,7 +340,7 @@ export function createSystemCalls(
             status_code
         ]);
 
-        // await waitForTransaction(tx);
+        await waitForTransaction(tx);
 
         const tx2 = await worldContract.write.initAbilityExtend([
             id,
@@ -350,7 +350,7 @@ export function createSystemCalls(
             chainAbilities_byes32,
         ]);
 
-        // await waitForTransaction(tx2);
+        await waitForTransaction(tx2);
 
         // ablities[key.toString()] = id;
         return tx;

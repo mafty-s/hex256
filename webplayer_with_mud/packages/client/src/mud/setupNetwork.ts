@@ -46,6 +46,10 @@ export async function setupNetwork() {
         api_url = "http://" + domainWithPort + "/api";
     }
 
+    //redstone
+    websocket_url = "wss://rpc.holesky.redstone.xyz/ws"
+    api_url = "https://rpc.holesky.redstone.xyz"
+
     const clientOptions = {
         chain: networkConfig.chain,
         // transport: transportObserver(fallback([webSocket("ws://127.0.0.1:8545"), http("http://127.0.0.1:8545")])),

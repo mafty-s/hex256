@@ -265,7 +265,7 @@ async function init() {
 
     const world_abi = loadJSON('../../contracts/out/IWorld.sol/IWorld.abi.json');
 
-    let world_address = "0x6e9474e9c83676b9a71133ff96db43e7aa0a4342";
+    let world_address = '0x6e9474e9c83676b9a71133ff96db43e7aa0a4342';//"0x6e9474e9c83676b9a71133ff96db43e7aa0a4342";
     world_contract = new Contract(world_address, world_abi, wallet);
 
     nonce = await provider.getTransactionCount(wallet.address);
