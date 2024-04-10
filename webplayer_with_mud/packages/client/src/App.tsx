@@ -443,7 +443,8 @@ export const App = () => {
                 window.MyUnityInstance = unityInstance;
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
-                    unitynstance.SetFullscreen(1);
+                    console.log("fullscreenButton");
+                    window.MyUnityInstance.SetFullscreen(1);
                 };
             }).catch((message) => {
                 console.error(message);
