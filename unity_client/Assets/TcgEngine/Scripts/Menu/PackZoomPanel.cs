@@ -120,14 +120,16 @@ namespace TcgEngine.UI
 
         public void OnClickBuy()
         {
-            if (Authenticator.Get().IsTest())
-            {
-                BuyPackTest();
-            }
-            if (Authenticator.Get().IsApi())
-            {
-                BuyPackApi();
-            }
+            // if (Authenticator.Get().IsTest())
+            // {
+            //     BuyPackTest();
+            // }
+            // if (Authenticator.Get().IsApi())
+            // {
+            //     MudManager.Get().BuyPack(pack.id,GetBuyQuantity());
+            //     // BuyPackApi();
+            // }
+            MudManager.Get().BuyPack(pack.id,GetBuyQuantity());
         }
 
         private void OnClickTab(TabButton btn)
