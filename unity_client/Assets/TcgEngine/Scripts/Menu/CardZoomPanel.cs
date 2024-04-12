@@ -187,14 +187,17 @@ namespace TcgEngine.UI
 
         public void OnClickBuy()
         {
-            if (Authenticator.Get().IsTest())
-            {
-                BuyCardTest();
-            }
-            if (Authenticator.Get().IsApi())
-            {
-                BuyCardApi();
-            }
+            // if (Authenticator.Get().IsTest())
+            // {
+            //     BuyCardTest();
+            // }
+            // if (Authenticator.Get().IsApi())
+            // {
+            //     MudManager.Get().BuyCard(card.id,GetBuyQuantity());
+            //     // BuyCardApi();
+            // }
+            MudManager.Get().BuyCard(card.id,GetBuyQuantity());
+
         }
 
         public void OnClickSell()

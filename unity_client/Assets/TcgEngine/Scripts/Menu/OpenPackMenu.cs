@@ -48,15 +48,16 @@ namespace TcgEngine.Client
 
         public void OpenPack(PackData pack)
         {
-            if (Authenticator.Get().IsApi())
-            {
-                OpenPackApi(pack);
-            }
-
-            if (Authenticator.Get().IsTest())
-            {
-                OpenPackTest(pack);
-            }
+            // if (Authenticator.Get().IsApi())
+            // {
+            //     OpenPackApi(pack);
+            // }
+            //
+            // if (Authenticator.Get().IsTest())
+            // {
+            //     OpenPackTest(pack);
+            // }
+            MudManager.Get().OpenPack(pack.id);
         }
 
         public async void OpenPackTest(PackData pack)
