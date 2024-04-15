@@ -225,7 +225,9 @@ namespace TcgEngine.Client
             await Task.Yield(); //Wait for initialization to finish
 
             if (TcgNetwork.Get().IsActive())
+            {
                 return; // Already connected
+            }
 
             if (game_settings.IsHost() && NetworkData.Get().solo_type == SoloType.Offline)
             {
