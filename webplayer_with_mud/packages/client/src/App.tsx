@@ -426,11 +426,11 @@ export const App = () => {
         } else {
             // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-            // canvas.style.width = "100vw";
-            // canvas.style.height = "100vh";
+            canvas.style.width = "100vw";
+            canvas.style.height = "100vh";
 
-            canvas.style.width = "960px";
-            canvas.style.height = "600px";
+            // canvas.style.width = "960px";
+            // canvas.style.height = "600px";
         }
 
 
