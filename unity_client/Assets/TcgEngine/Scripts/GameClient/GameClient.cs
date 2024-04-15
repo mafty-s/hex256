@@ -169,8 +169,11 @@ namespace TcgEngine.Client
                 if (action_timer > 1f)
                 {
                     action_timer = 0f;
-                    MudManager.Get().CheckAction(game_data.GetOpponentPlayer(GetPlayerID()).username,
-                        game_data.game_uid);
+                    if ( game_settings.game_type == GameType.Multiplayer)
+                    {
+                        MudManager.Get().CheckAction(game_data.GetOpponentPlayer(GetPlayerID()).username,
+                            game_data.game_uid);
+                    }
                 }
             }
 
@@ -374,8 +377,9 @@ namespace TcgEngine.Client
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
 
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
+                
                 bool shuffer = pdeck != null ? pdeck.dont_shuffle_deck : false;
                 Debug.Log("shuffer:" + shuffer);
                 MudManager.Get().PlayerSetting(GetPlayer().username, game_settings.game_uid, psettings.deck.tid, false,
@@ -523,7 +527,7 @@ namespace TcgEngine.Client
             //Draw starting cards
             int dcards = pdeck != null ? pdeck.start_cards : GameplayData.Get().cards_start;
 
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 bool shuffer = pdeck != null ? !pdeck.dont_shuffle_deck : false;
                 MudManager.Get().PlayerSetting(psettings.username, game_settings.game_uid, psettings.deck.tid, true,
@@ -535,7 +539,8 @@ namespace TcgEngine.Client
 
         public void SendGameplaySettings(GameSettings settings)
         {
-            if (MudManager.Get().useMud)
+        
+            if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().GameSetting(settings.game_uid, settings.nb_players, settings.level);
             }
@@ -555,7 +560,7 @@ namespace TcgEngine.Client
 
             string player_name = GetPlayer().username;
 
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().PlayCard(this.game_data.game_uid, player_name, card.CardData.id, slot.x,
                     slot.y,
@@ -623,7 +628,7 @@ namespace TcgEngine.Client
             mdata.attacker_uid = card.uid;
             mdata.target_uid = target.uid;
 
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().AttackCard(game_data.game_uid, GetPlayer().username, card.uid, target.uid);
             }
@@ -639,7 +644,7 @@ namespace TcgEngine.Client
 
 
             SendAction(GameAction.AttackPlayer, mdata);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().AttackPlayer(game_data.game_uid, card.uid, target.player_id);
             }
@@ -653,7 +658,7 @@ namespace TcgEngine.Client
             SendAction(GameAction.Move, mdata);
 
 
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 string player_name = GetPlayer().username;
 
@@ -696,7 +701,7 @@ namespace TcgEngine.Client
             mdata.ability_id = ability.id;
             mdata.target_uid = "";
             SendAction(GameAction.CastAbility, mdata);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().CastAbility(game_data.game_uid, card.uid, ability.id);
             }
@@ -707,7 +712,7 @@ namespace TcgEngine.Client
             MsgCard mdata = new MsgCard();
             mdata.card_uid = card.uid;
             SendAction(GameAction.SelectCard, mdata);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().SelectCard(game_data.game_uid, card.CardData.id, card.uid);
             }
@@ -736,7 +741,7 @@ namespace TcgEngine.Client
             MsgPlayer mdata = new MsgPlayer();
             mdata.player_id = player.player_id;
             SendAction(GameAction.SelectPlayer, mdata);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().SelectPlayer(game_data.game_uid, player.username);
             }
@@ -745,7 +750,7 @@ namespace TcgEngine.Client
         public void SelectSlot(Slot slot)
         {
             SendAction(GameAction.SelectSlot, slot);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().SelectSlot(game_data.game_uid, slot.x, slot.y, slot.p);
             }
@@ -756,7 +761,7 @@ namespace TcgEngine.Client
             MsgInt choice = new MsgInt();
             choice.value = c;
             SendAction(GameAction.SelectChoice, choice);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().SelectChoice(game_data.game_uid, c);
             }
@@ -765,7 +770,7 @@ namespace TcgEngine.Client
         public void CancelSelection()
         {
             SendAction(GameAction.CancelSelect);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().CancelSelection(game_data.game_uid);
             }
@@ -782,7 +787,7 @@ namespace TcgEngine.Client
         public void EndTurn()
         {
             SendAction(GameAction.EndTurn);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().EndTurn(game_data.game_uid, GetPlayer().username, GetPlayerID());
             }
@@ -791,7 +796,7 @@ namespace TcgEngine.Client
         public void Resign()
         {
             SendAction(GameAction.Resign);
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 MudManager.Get().Resign(GetPlayer().username);
             }
@@ -1362,7 +1367,7 @@ namespace TcgEngine.Client
 
         public virtual bool IsReady()
         {
-            if (MudManager.Get().useMud)
+             if (MudManager.Get().useMud && game_settings.game_type == GameType.Multiplayer)
             {
                 return game_data != null;
             }
