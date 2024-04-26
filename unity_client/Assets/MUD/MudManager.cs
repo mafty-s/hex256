@@ -434,6 +434,9 @@ public class MudManager : MonoBehaviour
         Debug.Log(this.msg);
     }
 
+
+
+    
     public MudUserData GetUserData()
     {
         if (useMud == false)
@@ -704,6 +707,14 @@ public class MudManager : MonoBehaviour
 #if !UNITY_EDITOR && UNITY_WEBGL
         resign(player);
 #endif
+    }
+    
+    public string  getWalletAddress()
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+       return walletAddress();
+#endif
+        return "";
     }
 
 }

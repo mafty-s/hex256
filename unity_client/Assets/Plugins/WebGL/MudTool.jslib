@@ -245,7 +245,7 @@ mergeInto(LibraryManager.library, {
         let result = await mud.resign(UTF8ToString(player));
     },
 
-    walletAddress function(){
+    walletAddress: function(){
         return window.walletAddress;
     }
 
