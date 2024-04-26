@@ -243,6 +243,10 @@ mergeInto(LibraryManager.library, {
 
     resign: async function(player){
         let result = await mud.resign(UTF8ToString(player));
+    },
+
+    walletAddress function(){
+        return window.walletAddress;
     }
 
 });

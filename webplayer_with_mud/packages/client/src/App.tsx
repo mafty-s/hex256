@@ -463,6 +463,7 @@ export const App = () => {
     useEffect(() => {
 
         // window.game_uid = game_uid;
+        window.walletAddress = walletClient.account.address;
         window.setGameUid = setGameUid;
         // window.gameInstance = gameInstance;
         // window.refresh = refresh;

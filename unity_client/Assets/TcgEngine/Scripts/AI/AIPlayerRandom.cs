@@ -9,6 +9,7 @@ namespace TcgEngine.AI
     /// <summary>
     /// AI player making completely random decisions, really bad AI but useful for testing
     /// </summary>
+    
     public class AIPlayerRandom : AIPlayer
     {
         private bool is_playing = false;
@@ -32,14 +33,13 @@ namespace TcgEngine.AI
 
             if (game_data.IsPlayerTurn(player) && !gameplay.IsResolving())
             {
-                if (!is_playing && game_data.selector == SelectorType.None && game_data.current_player == player_id)
+                if(!is_playing && game_data.selector == SelectorType.None && game_data.current_player == player_id)
                 {
                     is_playing = true;
                     TimeTool.StartCoroutine(AiTurn());
                 }
 
-                if (!is_selecting && game_data.selector != SelectorType.None &&
-                    game_data.selector_player_id == player_id)
+                if (!is_selecting && game_data.selector != SelectorType.None && game_data.selector_player_id == player_id)
                 {
                     if (game_data.selector == SelectorType.SelectTarget)
                     {
@@ -89,9 +89,9 @@ namespace TcgEngine.AI
 
             yield return new WaitForSeconds(0.5f);
 
-            // AttackPlayer();
-            //
-            // yield return new WaitForSeconds(0.5f);
+            AttackPlayer();
+
+            yield return new WaitForSeconds(0.5f);
 
             EndTurn();
 
@@ -140,7 +140,6 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
-            Debug.Log("AI PlayCard");
 
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
@@ -152,18 +151,11 @@ namespace TcgEngine.AI
                 if (random != null && random.CardData.IsRequireTargetSpell())
                     slot = game_data.GetRandomSlot(rand); //Spell can target any slot, not just your side
 
-                if (random != null && random.CardData.IsEquipment())
+                if(random != null && random.CardData.IsEquipment())
                     slot = player.GetRandomOccupiedSlot(rand);
 
                 if (random != null)
-                {
-                    if (game_data.CanPlayCard(random, slot, true))
-                    {
-                        //gameplay.PlayCard(random, slot);
-                        MudManager.Get().PlayCard(game_data.game_uid, player.username, random.card_id,
-                            slot.x, Slot.y_min, slot.p, false, random.uid);
-                    }
-                }
+                    gameplay.PlayCard(random, slot);
             }
         }
 
@@ -172,20 +164,14 @@ namespace TcgEngine.AI
             if (!CanPlay())
                 return;
 
-            Debug.Log("AI Attack");
-
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
-            Player opponent = game_data.GetPlayer(player_id == 0 ? 1 : 0);
             if (player.cards_board.Count > 0 && game_data.IsPlayerActionTurn(player))
             {
                 Card random = player.GetRandomCard(player.cards_board, rand);
-                Card rtarget = opponent.GetRandomCard(opponent.cards_board, rand);
+                Card rtarget = game_data.GetRandomBoardCard(rand);
                 if (random != null && rtarget != null)
-                {
-                    // gameplay.AttackTarget(random, rtarget);
-                    MudManager.Get().AttackCard(game_data.game_uid, player.username, random.uid, rtarget.uid);
-                }
+                    gameplay.AttackTarget(random, rtarget);
             }
         }
 
@@ -194,7 +180,6 @@ namespace TcgEngine.AI
             if (!CanPlay())
                 return;
 
-            Debug.Log("AI AttackPlayer");
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
             Player oplayer = game_data.GetRandomPlayer(rand);
@@ -210,8 +195,6 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
-
-            Debug.Log("AI SelectCard");
 
             Game game_data = gameplay.GetGameData();
             Player player = game_data.GetPlayer(player_id);
@@ -232,8 +215,6 @@ namespace TcgEngine.AI
         {
             if (!CanPlay())
                 return;
-
-            Debug.Log("SelectTarget");
 
             Game game_data = gameplay.GetGameData();
             if (game_data.selector != SelectorType.None)
@@ -258,8 +239,6 @@ namespace TcgEngine.AI
             if (!CanPlay())
                 return;
 
-            Debug.Log("AI SelectChoice");
-
             Game game_data = gameplay.GetGameData();
             if (game_data.selector != SelectorType.None)
             {
@@ -276,7 +255,6 @@ namespace TcgEngine.AI
         {
             if (CanPlay())
             {
-                Debug.Log("AI CancelSelect");
                 gameplay.CancelSelection();
             }
         }
@@ -285,10 +263,9 @@ namespace TcgEngine.AI
         {
             if (CanPlay())
             {
-                Debug.Log("AI EndTurn");
-                MudManager.Get().EndTurn(gameplay.GetGameData().game_uid, "AI", this.player_id);
-                //gameplay.EndTurn();
+                gameplay.EndTurn();
             }
         }
     }
+
 }
