@@ -246,7 +246,11 @@ mergeInto(LibraryManager.library, {
     },
 
     walletAddress: function(){
-        return window.walletAddress;
+        let returnStr = window.walletAddress;
+        let size = lengthBytesUTF8(returnStr);
+        let buffer = _malloc(size);
+        stringToUTF8(returnStr,buffer,size);
+        return buffer;
     }
 
 });

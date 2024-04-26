@@ -491,10 +491,12 @@ export const App = () => {
                     clearInterval(interval);
                 } else {
                     clearInterval(interval);
-                    initUnity();
+                    // initUnity();
                 }
             }
         }, 1000);
+
+        initUnity();
 
         return () => {
         };

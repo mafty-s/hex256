@@ -365,7 +365,10 @@ public class MudManager : MonoBehaviour
     
     [DllImport("__Internal")]
     private static extern string resign(string player);
-
+    
+    [DllImport("__Internal")]
+    private static extern string walletAddress();
+    
 #endif
 
     public static void SendTask(ushort code)
