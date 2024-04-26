@@ -8,30 +8,25 @@ namespace TcgEngine.UI
     /// <summary>
     /// Main script for the login menu scene
     /// </summary>
-
     public class LoginMenu : MonoBehaviour
     {
-        [Header("Login")]
-        public UIPanel login_panel;
+        [Header("Login")] public UIPanel login_panel;
         public InputField login_user;
         public InputField login_password;
         public Button login_button;
         public GameObject login_bottom;
         public Text error_msg;
 
-        [Header("Register")]
-        public UIPanel register_panel;
+        [Header("Register")] public UIPanel register_panel;
         public InputField register_username;
         public InputField register_email;
         public InputField register_password;
         public InputField register_password_confirm;
         public Button register_button;
 
-        [Header("Other")]
-        public GameObject test_area;
+        [Header("Other")] public GameObject test_area;
 
-        [Header("Music")]
-        public AudioClip music;
+        [Header("Music")] public AudioClip music;
 
         private bool clicked = false;
 
@@ -49,7 +44,7 @@ namespace TcgEngine.UI
             error_msg.text = "";
             test_area.SetActive(Authenticator.Get().IsTest());
 
-            string user  = PlayerPrefs.GetString("tcg_last_user", "");
+            string user = PlayerPrefs.GetString("tcg_last_user", "");
             login_user.text = user;
 
             if (Authenticator.Get().IsTest())
@@ -67,16 +62,22 @@ namespace TcgEngine.UI
 
         void Update()
         {
-            if (MudManager.Get().HasMudInstalled())
+            if (login_user.text == "" && MudManager.Get().useMud)
             {
-                login_user.text = MudManager.Get().GetUserData().owner;
-                login_user.readOnly = true;
+                Debug.Log("MudManager.Get().getWalletAddress()" + MudManager.Get().getWalletAddress());
+                if (MudManager.Get().getWalletAddress() != "")
+                {
+                    login_user.text = MudManager.Get().getWalletAddress();
+                    login_user.readOnly = true;
+                }
             }
-            
-            
+
+
             login_button.interactable = !clicked && !string.IsNullOrWhiteSpace(login_user.text);
-            register_button.interactable = !clicked && !string.IsNullOrWhiteSpace(register_username.text) && !string.IsNullOrWhiteSpace(register_email.text)
-                && !string.IsNullOrWhiteSpace(register_password.text) && register_password.text == register_password_confirm.text;
+            register_button.interactable = !clicked && !string.IsNullOrWhiteSpace(register_username.text) &&
+                                           !string.IsNullOrWhiteSpace(register_email.text)
+                                           && !string.IsNullOrWhiteSpace(register_password.text) &&
+                                           register_password.text == register_password_confirm.text;
 
             if (login_panel.IsVisible())
             {
@@ -154,7 +155,8 @@ namespace TcgEngine.UI
             clicked = true;
             error_msg.text = "";
 
-            bool success = await Authenticator.Get().Register(register_email.text, register_username.text, register_password.text);
+            bool success = await Authenticator.Get()
+                .Register(register_email.text, register_username.text, register_password.text);
             if (success)
             {
                 login_user.text = register_username.text;
@@ -166,6 +168,7 @@ namespace TcgEngine.UI
             {
                 error_msg.text = Authenticator.Get().GetError();
             }
+
             clicked = false;
         }
 
