@@ -5,10 +5,16 @@ mergeInto(LibraryManager.library, {
     },
 
     addTask: async function (msg) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         await mud.addTask(UTF8ToString(msg));
     },
 
     addUser: async function (name) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         await mud.addUser(name);
     },
 
@@ -26,6 +32,9 @@ mergeInto(LibraryManager.library, {
     },
 
     buyCard: async function (card_id, quantity) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         await mud.buyCard(UTF8ToString(card_id), quantity);
         let user = await getUser();
         let returnStr = JSON.stringify(user);
@@ -34,6 +43,9 @@ mergeInto(LibraryManager.library, {
     },
 
     sellCard: async function (card_id, quantity) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         await mud.sellCard(UTF8ToString(card_id), quantity);
         let user = await getUser();
         let returnStr = JSON.stringify(user);
@@ -42,6 +54,9 @@ mergeInto(LibraryManager.library, {
     },
 
     buyPack: async function (pack_id, quantity) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         await mud.buyPack(UTF8ToString(pack_id), quantity);
         let user = await getUser();
         let returnStr = JSON.stringify(user);
@@ -50,6 +65,9 @@ mergeInto(LibraryManager.library, {
     },
 
     openPack: async function (pack_id) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.openPack(UTF8ToString(pack_id));
         let user = await getUser();
         let returnStr = JSON.stringify(user);
@@ -65,6 +83,9 @@ mergeInto(LibraryManager.library, {
     },
 
     playerSetting: async function (username, game_uid, deck_id, is_ai, hp, mana, dcards, pid, shuffle) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.playerSetting(UTF8ToString(username), UTF8ToString(game_uid), UTF8ToString(deck_id), is_ai, hp, mana, dcards, pid, shuffle);
         console.log("playerSetting result", result);
 
@@ -74,6 +95,9 @@ mergeInto(LibraryManager.library, {
     },
 
     playCard: async function (game_uid, player_id, card_id, slot_x, slot_y, slot_p, skip, card_key) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("playCard=====================================");
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("player_id", UTF8ToString(player_id));
@@ -89,6 +113,9 @@ mergeInto(LibraryManager.library, {
     },
 
     moveCard: async function (game_uid, player_id, card_id, slot_x, slot_y, slot_p, skip, card_key) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("moveCard=====================================");
 
         console.log("game_uid", UTF8ToString(game_uid));
@@ -108,6 +135,9 @@ mergeInto(LibraryManager.library, {
     },
 
     attackCard: async function (game_uid, player_id, attacker_key, target_key, slot_x, slot_y, slot_p, skip,) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("attackCard=====================================");
 
         console.log("game_uid", UTF8ToString(game_uid));
@@ -127,6 +157,9 @@ mergeInto(LibraryManager.library, {
     },
 
     attackPlayer: async function (game_uid, cardkey, target_id) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("attackPlayer=====================================");
         console.log("game_uid", UTF8ToString(game_uid));
         console.log("cardkey", UTF8ToString(cardkey));
@@ -137,6 +170,9 @@ mergeInto(LibraryManager.library, {
     },
 
     saveDeck: async function (tid, hero, cards) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("tid", UTF8ToString(tid));
         console.log("hero", UTF8ToString(hero));
         console.log("cards", UTF8ToString(cards));
@@ -157,6 +193,9 @@ mergeInto(LibraryManager.library, {
     },
 
     endTurn: async function (game_uid, player_name, player_id) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("player_name", UTF8ToString(player_name));
 
         let result = await mud.endTurn(UTF8ToString(game_uid), UTF8ToString(player_name), player_id);
@@ -167,6 +206,9 @@ mergeInto(LibraryManager.library, {
     },
 
     startMatchmaking: async function (game_uid, nb_players) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("startMatchmaking=====================================");
         let result = await mud.startMatchmaking(UTF8ToString(game_uid), nb_players);
         console.log(result);
@@ -179,6 +221,9 @@ mergeInto(LibraryManager.library, {
     },
 
     checkMatchmaking: async function (match_id) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("checkMatchmaking=====================================");
         let result = await mud.checkMatchmaking(match_id);
         console.log(result);
@@ -191,6 +236,9 @@ mergeInto(LibraryManager.library, {
     },
 
     checkPlayerSetting: async function (username, game_uid) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         console.log("checkPlayerSetting=====================================");
         console.log("username", UTF8ToString(username));
         console.log("game_uid", UTF8ToString(game_uid));
@@ -201,6 +249,9 @@ mergeInto(LibraryManager.library, {
     },
 
     checkAction: async function (username, game_uid) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         //console.log("checkAction=====================================");
         //console.log("username", UTF8ToString(username));
         //console.log("game_uid", UTF8ToString(game_uid));
@@ -213,6 +264,9 @@ mergeInto(LibraryManager.library, {
     },
 
     selectCard: async function (game_uid, card_id,card_uid) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.selectCard(UTF8ToString(game_uid), UTF8ToString(card_id), UTF8ToString(card_uid));
         if (result != null) {
                     let returnStr = JSON.stringify(result);
@@ -222,26 +276,44 @@ mergeInto(LibraryManager.library, {
     },
 
     selectPlayer: async function (game_uid, caster) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.selectplayer(UTF8ToString(game_uid), UTF8ToString(caster));
     },
 
     selectSlot: async function (game_uid, slot_x, slot_y, slot_p) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.selectSlot(UTF8ToString(game_uid), slot_x, slot_y, slot_p);
     },
 
     selectChoice: async function(game_uid ,choice){
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.selectSlot(UTF8ToString(game_uid), choice);
     },
 
     cancelSelection: async function (game_uid) {
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.cancelSelection(UTF8ToString(game_uid));
     },
 
     castAbility: async function(game_uid,caster,ability){
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.castAbility(UTF8ToString(game_uid),UTF8ToString(caster),UTF8ToString(ability));
     },
 
     resign: async function(player){
+        if(typeof mud === 'undefined'){
+            return;
+        }
         let result = await mud.resign(UTF8ToString(player));
     },
 
