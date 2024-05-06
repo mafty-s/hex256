@@ -86,13 +86,13 @@ namespace TcgEngine.AI
         public void Start()
         {
             running = true;
-
+            Debug.Log("AiLogic start!!");
             //Uncomment these lines to run on separate thread (and comment Execute()), better for production so it doesn't freeze the UI while calculating the AI
-            ai_thread = new Thread(Execute);
-            ai_thread.Start();
+            // ai_thread = new Thread(Execute);
+            // ai_thread.Start();
 
             //Uncomment this line to run on main thread (and comment the thread one), better for debuging since you will be able to use breakpoints, profiler and Debug.Log
-            //Execute();
+            Execute();
         }
 
         public void Stop()

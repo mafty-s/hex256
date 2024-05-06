@@ -54,39 +54,42 @@ namespace TcgEngine
                 udata.id = username;
             }
 
-            Debug.Log("LoadUserData:" + MudManager.Get().msg);
-            MudUserData mud_userdata = MudManager.Get().GetUserData();
-            if (mud_userdata != null)
+            if (MudManager.Get().useMud)
             {
-                udata.username = mud_userdata.id;
-                udata.coins = mud_userdata.coin;
-                List<UserCardData> cardList = new List<UserCardData>();
-                for (int i = 0; i < mud_userdata.cards.Length; i++)
+                Debug.Log("LoadUserData:" + MudManager.Get().msg);
+                MudUserData mud_userdata = MudManager.Get().GetUserData();
+                if (mud_userdata != null)
                 {
-                    string hex = mud_userdata.cards[i];
-                    string card_id = MudManager.Get().GetCardIdByHex(hex);
-                    if (card_id != "Unknown")
+                    udata.username = mud_userdata.id;
+                    udata.coins = mud_userdata.coin;
+                    List<UserCardData> cardList = new List<UserCardData>();
+                    for (int i = 0; i < mud_userdata.cards.Length; i++)
                     {
-                        cardList.Add(new UserCardData(card_id, "normal"));
-                        udata.cards = cardList.ToArray();
+                        string hex = mud_userdata.cards[i];
+                        string card_id = MudManager.Get().GetCardIdByHex(hex);
+                        if (card_id != "Unknown")
+                        {
+                            cardList.Add(new UserCardData(card_id, "normal"));
+                            udata.cards = cardList.ToArray();
+                        }
                     }
-                }
 
-                List<UserCardData> packList = new List<UserCardData>();
-                for (int i = 0; i < mud_userdata.packs.Length; i++)
-                {
-                    string hex = mud_userdata.packs[i];
-                    string pack_id = MudManager.Get().GetCardIdByHex(hex);
-                    if (pack_id != "Unknown")
+                    List<UserCardData> packList = new List<UserCardData>();
+                    for (int i = 0; i < mud_userdata.packs.Length; i++)
                     {
-                        packList.Add(new UserCardData(pack_id, "normal"));
-                        udata.packs = packList.ToArray();
+                        string hex = mud_userdata.packs[i];
+                        string pack_id = MudManager.Get().GetCardIdByHex(hex);
+                        if (pack_id != "Unknown")
+                        {
+                            packList.Add(new UserCardData(pack_id, "normal"));
+                            udata.packs = packList.ToArray();
+                        }
                     }
                 }
-            }
-            else
-            {
-                return null;
+                else
+                {
+                    return null;
+                }
             }
 
             await Task.Yield(); //Do nothing

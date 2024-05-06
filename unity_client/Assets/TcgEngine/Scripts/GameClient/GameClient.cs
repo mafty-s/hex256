@@ -169,7 +169,7 @@ namespace TcgEngine.Client
                 if (action_timer > 1f)
                 {
                     action_timer = 0f;
-                    if ( game_settings.game_type == GameType.Multiplayer)
+                    if ( game_settings.game_type == GameType.Multiplayer && MudManager.Get().useMud)
                     {
                         MudManager.Get().CheckAction(game_data.GetOpponentPlayer(GetPlayerID()).username,
                             game_data.game_uid);
@@ -419,6 +419,10 @@ namespace TcgEngine.Client
 
         public void OnPlayerSettingSuccess(string message)
         {
+            if (!MudManager.Get().useMud)
+            {
+                return;
+            }
             Debug.Log("OnPlayerSettingSuccess:" + message);
             MudPlayerSettingResult result = JsonUtility.FromJson<MudPlayerSettingResult>(message);
             foreach (var player in game_data.players)
